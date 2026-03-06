@@ -714,51 +714,143 @@
     ];
 
     const appsGrid = document.getElementById("appsGrid");
-    const modal = document.getElementById("productModal");
-    const searchInput = document.getElementById("searchInput");
+const modal = document.getElementById("modal");
 
-    function createCard(product){
-      const badgeClass = product.badge === "low" ? "low" : "available";
+function createCard(product){
 
-      const iconHtml = product.iconType === "image"
-        ? `<img src="${product.icon}" alt="${product.name}">`
-        : `<div class="emoji-icon">${product.icon}</div>`;
+const badgeClass = product.badge === "low" ? "low" : "available";
 
-      return `
-        <div class="card" data-name="${product.search}" onclick="openProduct('${product.id}')">
-          <span class="badge ${badgeClass}">${product.badge === "low" ? "Low Stock" : "Available"}</span>
-          ${iconHtml}
-          <h3>${product.name}</h3>
-          <p>${product.subtitle}</p>
-        </div>
-      `;
-    }
+const iconHtml = product.iconType === "image"
+? `<img src="${product.icon}" alt="${product.name}">`
+: `<div class="emoji-icon">${product.icon}</div>`;
 
-    function renderCards(list){
-      appsGrid.innerHTML = list.map(createCard).join("");
-    }
+return `
+<div class="card" data-name="${product.search}" onclick="openProduct('${product.id}')">
+<span class="badge ${badgeClass}">
+${product.badge === "low" ? "Low Stock" : "Available"}
+</span>
 
-    function openProduct(id){
-      const product = products.find(p => p.id === id);
-      if(!product) return;
+${iconHtml}
 
-      const options = product.plans.map(plan => `<option value="${escapeHtml(plan)}">${escapeHtml(plan)}</option>`).join("");
+<h3>${product.name}</h3>
+<p>${product.subtitle}</p>
+</div>
+`;
+}
 
-      modal.innerHTML = `
-        <button class="back-btn" onclick="goBack()">⬅ Back</button>
-        <h3 class="neon">${escapeHtml(product.name)}</h3>
+function renderCards(list){
+appsGrid.innerHTML = list.map(createCard).join("");
+}
 
-        <div class="selector-wrap">
-          <div class="selector-label">Select plan</div>
-          <select id="currentPlanSelect" onchange="updatePreview('${escapeJs(product.name)}')">
-            ${options}
-          </select>
-        </div>
+function openProduct(id){
 
-        ${product.note ? `<p class="note">${escapeHtml(product.note)}</p>` : ""}
+const product = products.find(p => p.id === id);
+if(!product) return;
 
-        <div class="order-preview" id="orderPreviewBox"></div>
+const options = product.plans.map(plan =>
+`<option value="${escapeHtml(plan)}">${escapeHtml(plan)}</option>`
+).join("");
 
-        <div class="action-row">
-          <button onclick="sendOrder('${escapeJs(product.name)}')">Order via Telegram</button>
-        
+modal.innerHTML = `
+<button class="back-btn" onclick="goBack()">⬅ Back</button>
+
+<h3 class="neon">${escapeHtml(product.name)}</h3>
+
+<div class="selector-wrap">
+<div class="selector-label">Select plan</div>
+
+<select id="currentPlanSelect" onchange="updatePreview('${escapeJs(product.name)}')">
+${options}
+</select>
+
+</div>
+
+${product.note ? `<p class="note">${escapeHtml(product.note)}</p>` : ""}
+
+<div class="order-preview" id="orderPreviewBox"></div>
+
+<div class="action-row">
+<button onclick="sendOrder('${escapeJs(product.name)}')">
+Order via Telegram
+</button>
+</div>
+`;
+
+appsGrid.style.display="none";
+modal.style.display="block";
+
+updatePreview(product.name);
+}
+
+function goBack(){
+
+modal.style.display="none";
+appsGrid.style.display="grid";
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+}
+
+function updatePreview(product){
+
+const select = document.getElementById("currentPlanSelect");
+const preview = document.getElementById("orderPreviewBox");
+
+if(!select) return;
+
+const plan = select.value;
+
+preview.innerHTML = `
+<strong>Product:</strong> ${product}<br>
+<strong>Plan:</strong> ${plan}
+`;
+}
+
+function sendOrder(product){
+
+const select = document.getElementById("currentPlanSelect");
+const plan = select.value;
+
+const text =
+"Order Request%0A"+
+"Product: "+product+"%0A"+
+"Plan: "+plan;
+
+window.open("https://t.me/angsthtun?text="+text);
+}
+
+function filterApps(){
+
+const input =
+document.getElementById("searchInput").value.toLowerCase();
+
+const cards =
+document.querySelectorAll(".card");
+
+cards.forEach(card => {
+
+const name = card.dataset.name;
+
+if(name.includes(input)){
+card.style.display="flex";
+}else{
+card.style.display="none";
+}
+
+});
+}
+
+function escapeHtml(text){
+return text
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;");
+}
+
+function escapeJs(text){
+return text.replace(/'/g,"\\'");
+}
+
+renderCards(products);
