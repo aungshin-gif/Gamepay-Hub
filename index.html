@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <title>GamePay Hub</title>
 
 <style>
@@ -11,6 +10,7 @@ background:#140021;
 font-family:sans-serif;
 color:white;
 text-align:center;
+margin:0;
 }
 
 h1{
@@ -29,8 +29,8 @@ padding:20px;
 background:#240033;
 padding:20px;
 border-radius:12px;
-box-shadow:0 0 15px #9d4edd;
 cursor:pointer;
+box-shadow:0 0 15px #9d4edd;
 }
 
 .card img{
@@ -38,20 +38,12 @@ width:60px;
 margin-bottom:10px;
 }
 
-.neon{
-color:white;
-text-shadow:
-0 0 5px #fff,
-0 0 10px #fff,
-0 0 20px #9d4edd;
-}
-
 .pricebox{
 display:none;
-background:#240033;
+background:#1f0030;
 margin:20px;
 padding:20px;
-border-radius:10px;
+border-radius:12px;
 }
 
 button{
@@ -61,10 +53,17 @@ border:none;
 padding:10px 20px;
 border-radius:6px;
 margin-top:10px;
+cursor:pointer;
+}
+
+.neon{
+text-shadow:
+0 0 5px #fff,
+0 0 10px #c77dff,
+0 0 20px #9d4edd;
 }
 
 </style>
-
 </head>
 
 <body>
@@ -75,59 +74,37 @@ margin-top:10px;
 
 <div class="card" onclick="toggle('chatgpt')">
 <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg">
-<h3 class="neon">Chat GPT</h3>
+<h3>ChatGPT</h3>
 <p>Tap to see prices</p>
 </div>
 
 <div class="card" onclick="toggle('spotify')">
 <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg">
-<h3 class="neon">Spotify</h3>
+<h3>Spotify</h3>
 <p>Tap to see prices</p>
 </div>
 
 <div class="card" onclick="toggle('picsart')">
 <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/PicsArt_Logo.svg">
-<h3 class="neon">PicsArt</h3>
-<p>Tap to see prices</p>
-</div>
-
-<div class="card" onclick="toggle('alight')">
-<img src="https://cdn-icons-png.flaticon.com/512/5968/5968524.png">
-<h3 class="neon">Alight Motion</h3>
+<h3>PicsArt</h3>
 <p>Tap to see prices</p>
 </div>
 
 <div class="card" onclick="toggle('vpn')">
 <img src="https://cdn-icons-png.flaticon.com/512/565/565547.png">
-<h3 class="neon">Express VPN</h3>
-<p>Tap to see prices</p>
-</div>
-
-<div class="card" onclick="toggle('telegram')">
-<img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg">
-<h3 class="neon">Telegram Premium</h3>
+<h3>VPN</h3>
 <p>Tap to see prices</p>
 </div>
 
 </div>
 
-
-<!-- CHATGPT -->
 
 <div id="chatgpt" class="pricebox">
 
-<h3>Chat GPT Plus</h3>
+<h3>ChatGPT Plus</h3>
 
-<p>1 month – 6000ks (Share)</p>
-<p>1 month – 6500ks (Private)</p>
-<p>3 months – 9000ks (Private)</p>
-<p>3 months – 8000ks (Share)</p>
-
-<h3>Chat GPT Business</h3>
-
-<p>1 month – 6000ks (Share)</p>
-<p>12 months – 13000ks (Private)</p>
-<p>12 months – 12000ks (Share)</p>
+<p>1 month – 6000 MMK</p>
+<p>3 months – 15000 MMK</p>
 
 <a href="https://t.me/angsthtun">
 <button>Buy via Telegram</button>
@@ -136,17 +113,64 @@ margin-top:10px;
 </div>
 
 
-<!-- SPOTIFY -->
-
 <div id="spotify" class="pricebox">
 
-<h3>Family Plan</h3>
+<h3>Spotify Premium</h3>
 
-<p>1 Month – 8000ks</p>
-<p>2 Months – 12000ks</p>
-<p>3 Months – 24000ks</p>
-<p>6 Months – 65000ks</p>
+<p>1 month – 8000 MMK</p>
+<p>3 months – 20000 MMK</p>
 
-<h3>Individual Plan</h3>
+<a href="https://t.me/angsthtun">
+<button>Buy via Telegram</button>
+</a>
 
-<p>1 Month – 13000
+</div>
+
+
+<div id="picsart" class="pricebox">
+
+<h3>PicsArt Gold</h3>
+
+<p>1 month – 5000 MMK</p>
+<p>3 months – 12000 MMK</p>
+
+<a href="https://t.me/angsthtun">
+<button>Buy via Telegram</button>
+</a>
+
+</div>
+
+
+<div id="vpn" class="pricebox">
+
+<h3>Premium VPN</h3>
+
+<p>1 month – 3000 MMK</p>
+<p>6 months – 15000 MMK</p>
+
+<a href="https://t.me/angsthtun">
+<button>Buy via Telegram</button>
+</a>
+
+</div>
+
+
+<script>
+
+function toggle(id){
+
+var box = document.getElementById(id);
+
+if(box.style.display === "block"){
+box.style.display = "none";
+}else{
+box.style.display = "block";
+}
+
+}
+
+</script>
+
+
+</body>
+</html>
