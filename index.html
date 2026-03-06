@@ -14,7 +14,7 @@ margin:0;
 }
 
 h1{
-color:#c77dff;
+color:white;
 margin-top:30px;
 }
 
@@ -60,12 +60,33 @@ cursor:pointer;
 }
 
 .neon{
+color:white;
 text-shadow:
-0 0 5px #fff,
-0 0 10px #c77dff,
-0 0 20px #9d4edd;
+0 0 3px #fff,
+0 0 6px #c77dff,
+0 0 12px #9d4edd;
+}
+.card{
+transition:0.3s;
 }
 
+.card:hover{
+transform:scale(1.05);
+box-shadow:0 0 30px #c77dff;
+}
+
+.card img{
+filter:drop-shadow(0 0 5px #c77dff);
+}
+
+button{
+transition:0.3s;
+}
+
+button:hover{
+background:#c77dff;
+transform:scale(1.05);
+}
 </style>
 </head>
 
@@ -98,24 +119,27 @@ text-shadow:
 <h3>VPN</h3>
 <p>Tap to see prices</p>
 </div>
+
 <div class="card" onclick="toggle('telegram')">
 <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png">
 <h3>Telegram Premium</h3>
 <p>Tap to see prices</p>
 </div>
-  
+
 </div>
 
 
+<!-- ChatGPT -->
+
 <div id="chatgpt" class="pricebox">
 <button onclick="location.reload()">⬅ Back</button>
-<h3>ChatGPT Plus</h3>
+<h3 class="neon">ChatGPT Plus</h3>
 
-<p>1 Month – 6000 MMK (Share)</p>
-<p>1 Month – 6500 MMK (Private)</p>
+<p class="neon">1 Month – 6000 MMK (Share)</p>
+<p class="neon">1 Month – 6500 MMK (Private)</p>
 
-<p>3 Months – 8000 MMK (Share)</p>
-<p>3 Months – 9000 MMK (Private)</p>
+<p class="neon">3 Months – 8000 MMK (Share)</p>
+<p class="neon">3 Months – 9000 MMK (Private)</p>
 
 <a href="https://t.me/angsthtun">
 <button>Buy via Telegram</button>
@@ -128,10 +152,19 @@ text-shadow:
 
 <div id="spotify" class="pricebox">
 <button onclick="location.reload()">⬅ Back</button>
-<h3>Spotify Premium</h3>
 
-<p>1 Month – 8000 MMK</p>
-<p>3 Months – 20000 MMK</p>
+<h3 class="neon">📱 Spotify Premium</h3>
+
+<h4 class="neon">Family Plan (Global)</h4>
+<p class="neon">1 Month 💘 8000 Ks</p>
+<p class="neon">2 Months 💘 12000 Ks</p>
+<p class="neon">3 Months 💘 24000 Ks</p>
+<p class="neon">6 Months 💘 65000 Ks</p>
+
+<h4 class="neon">Individual Plan (Global)</h4>
+<p class="neon">1 Month 💘 13000 Ks</p>
+<p class="neon">2 Months 💘 24000 Ks</p>
+<p class="neon">3 Months 💘 34000 Ks</p>
 
 <a href="https://t.me/angsthtun">
 <button>Buy via Telegram</button>
@@ -144,10 +177,10 @@ text-shadow:
 
 <div id="picsart" class="pricebox">
 <button onclick="location.reload()">⬅ Back</button>
-<h3>PicsArt Gold</h3>
+<h3 class="neon">PicsArt Gold</h3>
 
-<p>1 Month – 5000 MMK</p>
-<p>3 Months – 12000 MMK</p>
+<p class="neon">1 Month – 5000 MMK</p>
+<p class="neon">3 Months – 12000 MMK</p>
 
 <a href="https://t.me/angsthtun">
 <button>Buy via Telegram</button>
@@ -157,25 +190,25 @@ text-shadow:
 
 
 <!-- VPN -->
-<div id="vpn" class="pricebox">
 
+<div id="vpn" class="pricebox">
 <button onclick="location.reload()">⬅ Back</button>
 
-<h3>Express VPN</h3>
+<h3 class="neon">Express VPN</h3>
 
-<h4>✍️ Share Plan</h4>
-<p>⭐ 1 Month – 1,500 Ks (Android ⚙️ & iOS 🍎)</p>
-<p>⭐ 1 Month – 2,500 Ks (Windows PC & Laptop)</p>
-<p>⭐ 1 Month – 2,500 Ks (Linux Devices)</p>
-<p>⭐ 1 Month – 2,500 Ks (MacBook 🍎)</p>
-<p><i>Share plan can only use 1 device</i></p>
+<h4 class="neon">Share Plan</h4>
+<p class="neon">⭐ 1 Month – 1500 Ks (Android & iOS)</p>
+<p class="neon">⭐ 1 Month – 2500 Ks (Windows PC & Laptop)</p>
+<p class="neon">⭐ 1 Month – 2500 Ks (Linux Devices)</p>
+<p class="neon">⭐ 1 Month – 2500 Ks (MacBook)</p>
+<p class="neon"><i>Share plan can only use 1 device</i></p>
 
-<h4>✍️ Private Plan</h4>
-<p>⭐ 1 Month – 8000 Ks (Up to 9 devices)</p>
-<p>⭐ 8 Phones & 1 PC or Laptop</p>
-<p>✅ All devices support</p>
-<p>🔐 Custom Password</p>
-<p>⭐ Own account</p>
+<h4 class="neon">Private Plan</h4>
+<p class="neon">⭐ 1 Month – 8000 Ks (Up to 9 devices)</p>
+<p class="neon">⭐ 8 Phones & 1 PC or Laptop</p>
+<p class="neon">✅ All devices support</p>
+<p class="neon">🔐 Custom Password</p>
+<p class="neon">⭐ Own account</p>
 
 <a href="https://t.me/angsthtun">
 <button>Buy via Telegram</button>
@@ -184,32 +217,35 @@ text-shadow:
 </div>
 
 
-  <div id="telegram" class="pricebox">
+<!-- Telegram -->
 
-<h3>Telegram Premium</h3>
+<div id="telegram" class="pricebox">
+
 <button onclick="location.reload()">⬅ Back</button>
-<p><b>⭐ Login Method</b></p>
-<p>1 Month – 20500 Ks</p>
+<h3 class="neon">Telegram Premium</h3>
 
-<p><b>🎁 Gift Plan</b></p>
-<p>3 Months – 50000 Ks</p>
-<p>6 Months – 67000 Ks</p>
-<p>9 Months – 118000 Ks</p>
+<p class="neon"><b>⭐ Login Method</b></p>
+<p class="neon">1 Month – 20500 Ks</p>
 
-<p><b>🔗 Link Plan</b></p>
-<p>3 Months – 44000 Ks</p>
-<p>6 Months – 65000 Ks</p>
-<p>12 Months – 118000 Ks</p>
+<p class="neon"><b>🎁 Gift Plan</b></p>
+<p class="neon">3 Months – 50000 Ks</p>
+<p class="neon">6 Months – 67000 Ks</p>
+<p class="neon">9 Months – 118000 Ks</p>
+
+<p class="neon"><b>🔗 Link Plan</b></p>
+<p class="neon">3 Months – 44000 Ks</p>
+<p class="neon">6 Months – 65000 Ks</p>
+<p class="neon">12 Months – 118000 Ks</p>
 
 <a href="https://t.me/angsthtun">
 <button>Buy via Telegram</button>
 </a>
 
-  </div>
+</div>
 
-</div>   <!-- vpn pricebox -->
 
 <script>
+
 function toggle(id){
 
 var apps = document.querySelector(".apps");
@@ -224,4 +260,8 @@ apps.style.display = "none";
 box.style.display = "block";
 
 }
+
 </script>
+
+</body>
+</html>
