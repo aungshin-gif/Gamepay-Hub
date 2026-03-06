@@ -713,144 +713,226 @@
       }
     ];
 
+       id: "meitu",
+        name: "Meitu",
+        subtitle: "Tap to see prices",
+        badge: "low",
+        iconType: "emoji",
+        icon: "💄",
+        search: "meitu china global silver vip normal vip",
+        plans: [
+          "China Region – 1 Month – 13000 Ks (Available 1 stock)",
+          "Global Region – 1 Month – 20000 MMK (Share) – 1 Device – Silver VIP",
+          "Global Region – 1 Month – 24000 MMK (Private) – 2 Device – Normal VIP",
+          "Global Region – 1 Month – 40000 MMK (Private) – 4 Device – Silver VIP",
+          "Global Region – 1 Year – 160000 MMK (Private) – 2 Device – Normal VIP",
+          "Global Region – 1 Year – 260000 MMK (Private) – 4 Device – Silver VIP"
+        ]
+      },
+      {
+        id: "wink",
+        name: "Wink",
+        subtitle: "Tap to see prices",
+        badge: "low",
+        iconType: "emoji",
+        icon: "😉",
+        search: "wink china global private share",
+        plans: [
+          "China Region – 1 Month – 4500 Ks",
+          "Global Region – 1 Month – 8000 MMK (Share) – 1 Device",
+          "Global Region – 1 Month – 24000 MMK (Private) – 3 Device",
+          "Global Region – 1 Year – 160000 MMK (Private) – 3 Device"
+        ]
+      }
+    ];
+
     const appsGrid = document.getElementById("appsGrid");
-const modal = document.getElementById("modal");
+    const modal = document.getElementById("productModal");
+    const searchInput = document.getElementById("searchInput");
 
-function createCard(product){
+    function createCard(product){
+      const badgeClass = product.badge === "low" ? "low" : "available";
+      const badgeText = product.badge === "low" ? "Low Stock" : "Available";
 
-const badgeClass = product.badge === "low" ? "low" : "available";
+      const iconHtml = product.iconType === "image"
+        ? `<div class="icon-shell"><img src="${product.icon}" alt="${escapeHtml(product.name)}"></div>`
+        : `<div class="icon-shell"><div class="emoji-icon">${product.icon}</div></div>`;
 
-const iconHtml = product.iconType === "image"
-? `<img src="${product.icon}" alt="${product.name}">`
-: `<div class="emoji-icon">${product.icon}</div>`;
+      return `
+        <div class="card" data-name="${escapeHtml(product.search)}" onclick="openProduct('${escapeJs(product.id)}')">
+          <span class="badge ${badgeClass}">${badgeText}</span>
+          ${iconHtml}
+          <h3>${escapeHtml(product.name)}</h3>
+          <p>${escapeHtml(product.subtitle)}</p>
+        </div>
+      `;
+    }
 
-return `
-<div class="card" data-name="${product.search}" onclick="openProduct('${product.id}')">
-<span class="badge ${badgeClass}">
-${product.badge === "low" ? "Low Stock" : "Available"}
-</span>
+    function renderCards(list){
+      appsGrid.innerHTML = list.map(createCard).join("");
+    }
 
-${iconHtml}
+    function openProduct(id){
+      const product = products.find(p => p.id === id);
+      if(!product) return;
 
-<h3>${product.name}</h3>
-<p>${product.subtitle}</p>
-</div>
-`;
-}
+      const options = product.plans.map(plan =>
+        `<option value="${escapeHtml(plan)}">${escapeHtml(plan)}</option>`
+      ).join("");
 
-function renderCards(list){
-appsGrid.innerHTML = list.map(createCard).join("");
-}
+      modal.innerHTML = `
+        <button class="back-btn" onclick="goBack()">⬅ Back</button>
+        <h3>${escapeHtml(product.name)}</h3>
 
-function openProduct(id){
+        <div class="selector-wrap">
+          <div class="selector-label">Select plan</div>
+          <select id="currentPlanSelect" onchange="updatePreview('${escapeJs(product.name)}')">
+            ${options}
+          </select>
+        </div>
 
-const product = products.find(p => p.id === id);
-if(!product) return;
+        ${product.note ? `<div class="note">${escapeHtml(product.note)}</div>` : ""}
 
-const options = product.plans.map(plan =>
-`<option value="${escapeHtml(plan)}">${escapeHtml(plan)}</option>`
-).join("");
+        <div class="order-preview" id="orderPreviewBox"></div>
 
-modal.innerHTML = `
-<button class="back-btn" onclick="goBack()">⬅ Back</button>
+        <div class="action-row">
+          <button onclick="sendOrder('${escapeJs(product.name)}')">Order via Telegram</button>
+        </div>
+      `;
 
-<h3 class="neon">${escapeHtml(product.name)}</h3>
+      appsGrid.style.display = "none";
+      modal.style.display = "block";
+      updatePreview(product.name);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-<div class="selector-wrap">
-<div class="selector-label">Select plan</div>
+    function goBack(){
+      modal.style.display = "none";
+      appsGrid.style.display = "grid";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-<select id="currentPlanSelect" onchange="updatePreview('${escapeJs(product.name)}')">
-${options}
-</select>
+    function filterApps(){
+      const value = searchInput.value.toLowerCase().trim();
+      const filtered = products.filter(p =>
+        p.name.toLowerCase().includes(value) ||
+        p.search.toLowerCase().includes(value)
+      );
+      renderCards(filtered);
+    }
 
-</div>
+    function updatePreview(productName){
+      const select = document.getElementById("currentPlanSelect");
+      const preview = document.getElementById("orderPreviewBox");
+      if(!select || !preview) return;
 
-${product.note ? `<p class="note">${escapeHtml(product.note)}</p>` : ""}
+      preview.innerHTML =
+        "<strong>Order Preview</strong><br>" +
+        "Product: " + escapeHtml(productName) + "<br>" +
+        "Plan: " + escapeHtml(select.value);
+    }
 
-<div class="order-preview" id="orderPreviewBox"></div>
+    function sendOrder(productName){
+      const select = document.getElementById("currentPlanSelect");
+      if(!select) return;
 
-<div class="action-row">
-<button onclick="sendOrder('${escapeJs(product.name)}')">
-Order via Telegram
-</button>
-</div>
-`;
+      const message =
+        "Hello, I want to order\n" +
+        "Product: " + productName + "\n" +
+        "Plan: " + select.value;
 
-appsGrid.style.display="none";
-modal.style.display="block";
+      const url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
+      window.open(url, "_blank");
+    }
 
-updatePreview(product.name);
-}
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#39;");
+    }
 
-function goBack(){
+    function escapeJs(str){
+      return String(str)
+        .replaceAll("\\","\\\\")
+        .replaceAll("'","\\'");
+    }
 
-modal.style.display="none";
-appsGrid.style.display="grid";
+    renderCards(products);
 
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
-}
+    // particles
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
 
-function updatePreview(product){
+    function resizeCanvas(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
 
-const select = document.getElementById("currentPlanSelect");
-const preview = document.getElementById("orderPreviewBox");
+    function createParticles(){
+      particles = [];
+      const count = Math.min(90, Math.floor(window.innerWidth / 18));
+      for(let i = 0; i < count; i++){
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 2.3 + 0.7,
+          dx: (Math.random() - 0.5) * 0.35,
+          dy: (Math.random() - 0.5) * 0.35,
+          a: Math.random() * 0.55 + 0.18
+        });
+      }
+    }
 
-if(!select) return;
+    function drawParticles(){
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-const plan = select.value;
+      for(let i = 0; i < particles.length; i++){
+        const p = particles[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(220,190,255," + p.a + ")";
+        ctx.shadowBlur = 16;
+        ctx.shadowColor = "#c77dff";
+        ctx.fill();
 
-preview.innerHTML = `
-<strong>Product:</strong> ${product}<br>
-<strong>Plan:</strong> ${plan}
-`;
-}
+        p.x += p.dx;
+        p.y += p.dy;
 
-function sendOrder(product){
+        if(p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if(p.y < 0 || p.y > canvas.height) p.dy *= -1;
+      }
 
-const select = document.getElementById("currentPlanSelect");
-const plan = select.value;
+      for(let i = 0; i < particles.length; i++){
+        for(let j = i + 1; j < particles.length; j++){
+          const a = particles[i];
+          const b = particles[j];
+          const dist = Math.hypot(a.x - b.x, a.y - b.y);
+          if(dist < 120){
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = "rgba(199,125,255," + (0.16 - dist / 900) + ")";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
 
-const text =
-"Order Request%0A"+
-"Product: "+product+"%0A"+
-"Plan: "+plan;
+      requestAnimationFrame(drawParticles);
+    }
 
-window.open("https://t.me/angsthtun?text="+text);
-}
+    resizeCanvas();
+    createParticles();
+    drawParticles();
 
-function filterApps(){
-
-const input =
-document.getElementById("searchInput").value.toLowerCase();
-
-const cards =
-document.querySelectorAll(".card");
-
-cards.forEach(card => {
-
-const name = card.dataset.name;
-
-if(name.includes(input)){
-card.style.display="flex";
-}else{
-card.style.display="none";
-}
-
-});
-}
-
-function escapeHtml(text){
-return text
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;");
-}
-
-function escapeJs(text){
-return text.replace(/'/g,"\\'");
-}
-
-renderCards(products);
+    window.addEventListener("resize", function(){
+      resizeCanvas();
+      createParticles();
+    });
+  </script>
+</body>
+</html>
