@@ -108,7 +108,7 @@ text-shadow:
 
 
 <div id="chatgpt" class="pricebox">
-
+<button onclick="location.reload()">⬅ Back</button>
 <h3>ChatGPT Plus</h3>
 
 <p>1 Month – 6000 MMK (Share)</p>
@@ -127,7 +127,7 @@ text-shadow:
 <!-- Spotify -->
 
 <div id="spotify" class="pricebox">
-
+<button onclick="location.reload()">⬅ Back</button>
 <h3>Spotify Premium</h3>
 
 <p>1 Month – 8000 MMK</p>
@@ -143,7 +143,7 @@ text-shadow:
 <!-- PicsArt -->
 
 <div id="picsart" class="pricebox">
-
+<button onclick="location.reload()">⬅ Back</button>
 <h3>PicsArt Gold</h3>
 
 <p>1 Month – 5000 MMK</p>
@@ -160,10 +160,23 @@ text-shadow:
 
 <div id="vpn" class="pricebox">
 
-<h3>Premium VPN</h3>
+<button onclick="location.reload()">⬅ Back</button>
 
-<p>1 Month – 3000 MMK</p>
-<p>6 Months – 15000 MMK</p>
+<h3>Express VPN</h3>
+
+<h4>✍️ Share Plan</h4>
+<p>⭐ 1 Month – 1,500 Ks (Android ⚙️ & iOS 🍎)</p>
+<p>⭐ 1 Month – 2,500 Ks (Windows PC & Laptop)</p>
+<p>⭐ 1 Month – 2,500 Ks (Linux Devices)</p>
+<p>⭐ 1 Month – 2,500 Ks (MacBook 🍎)</p>
+<p><i>Share plan can only use 1 device</i></p>
+
+<h4>✍️ Private Plan</h4>
+<p>⭐ 1 Month – 8000 Ks (Up to 9 devices)</p>
+<p>⭐ 8 Phones & 1 PC or Laptop</p>
+<p>✅ All devices support</p>
+<p>🔐 Custom Password</p>
+<p>⭐ Own account</p>
 
 <a href="https://t.me/angsthtun">
 <button>Buy via Telegram</button>
@@ -175,7 +188,7 @@ text-shadow:
   <div id="telegram" class="pricebox">
 
 <h3>Telegram Premium</h3>
-
+<button onclick="location.reload()">⬅ Back</button>
 <p><b>⭐ Login Method</b></p>
 <p>1 Month – 20500 Ks</p>
 
@@ -201,16 +214,15 @@ text-shadow:
 function toggle(id){
 
 var apps = document.querySelector(".apps");
+var boxes = document.querySelectorAll(".pricebox");
 var box = document.getElementById(id);
 
-if(box.style.display === "none" || box.style.display === ""){
+boxes.forEach(function(b){
+b.style.display = "none";
+});
+
 apps.style.display = "none";
 box.style.display = "block";
-box.scrollIntoView({behavior:"smooth"});
-}else{
-apps.style.display = "grid";
-box.style.display = "none";
-}
 
 }
 </script>
