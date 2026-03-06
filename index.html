@@ -55,3 +55,37 @@ border-radius:6px;
 <h3>ChatGPT Plus</h3>
 <p>8000 MMK</p>
 <a href="https://t.me/
+
+  <div class="card" onclick="toggleChatGPT()">
+<h3>Chat GPT</h3>
+<p>Tap to see prices</p>
+</div>
+
+<div id="chatgptPrices" style="display:none; background:#2a003d; padding:15px; border-radius:10px; margin:10px;">
+<h4>ChatGPT Plus</h4>
+
+<p>1 Month — 6000 MMK (Share Account)</p>
+<p>1 Month — 6500 MMK (Private Account)</p>
+<p>3 Months — 9000 MMK (Private Account)</p>
+<p>3 Months — 8000 MMK (Share Account)</p>
+
+<h4>ChatGPT Business</h4>
+
+<p>1 Month — 6000 MMK (Share Account)</p>
+<p>12 Months — 13000 MMK (Private Account)</p>
+<p>12 Months — 12000 MMK (Share Account)</p>
+
+<a href="https://t.me/angsthtun">
+<button>Buy via Telegram</button>
+</a>
+</div>
+<script>
+function toggleChatGPT(){
+var x=document.getElementById("chatgptPrices");
+if(x.style.display==="none"){
+x.style.display="block";
+}else{
+x.style.display="none";
+}
+}
+</script>
