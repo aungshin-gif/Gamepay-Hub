@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GamePay Hub</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GamePay Hub Digital Store</title>
 
   <style>
     *{
@@ -13,13 +13,14 @@
     }
 
     :root{
-      --bg-1:#12001f;
-      --bg-2:#240046;
-      --bg-3:#5a189a;
-      --bg-4:#9d4edd;
-      --card:rgba(43, 0, 64, 0.78);
-      --card-border:rgba(199,125,255,0.22);
-      --glow:#c77dff;
+      --bg1:#12001f;
+      --bg2:#240046;
+      --bg3:#5a189a;
+      --bg4:#a64dff;
+      --card:rgba(40, 0, 58, 0.76);
+      --card-border:rgba(210,170,255,0.18);
+      --purple:#c77dff;
+      --purple-2:#9d4edd;
       --yellow:#ffd60a;
       --text:#ffffff;
       --muted:#efe6ff;
@@ -36,18 +37,18 @@
       text-align:center;
       overflow-x:hidden;
       background:
-        radial-gradient(circle at top, #a64dff 0%, #6a1cb8 22%, #3c096c 48%, #240046 72%, #140021 100%);
+        radial-gradient(circle at top, #b366ff 0%, #7b2cbf 18%, #5a189a 36%, #3c096c 56%, #240046 76%, #140021 100%);
       position:relative;
     }
 
-    canvas#particles{
+    #particles{
       position:fixed;
       inset:0;
       width:100%;
       height:100%;
       z-index:0;
       pointer-events:none;
-      opacity:0.9;
+      opacity:.95;
     }
 
     .page{
@@ -63,23 +64,24 @@
       font-size:42px;
       font-weight:800;
       letter-spacing:1px;
+      margin-bottom:6px;
       color:var(--yellow);
       text-shadow:
         0 0 5px var(--yellow),
         0 0 10px var(--yellow),
         0 0 18px #f9c74f,
-        0 0 26px #c77dff,
-        0 0 40px #9d4edd,
-        0 0 54px #7b2cbf;
-      margin-bottom:8px;
+        0 0 20px var(--purple),
+        0 0 32px var(--purple-2),
+        0 0 46px #7b2cbf;
     }
 
     .sublogo{
       font-size:15px;
-      color:#f8eeff;
+      color:#fff;
       text-shadow:
         0 0 4px #fff,
-        0 0 8px #c77dff;
+        0 0 8px var(--purple),
+        0 0 16px var(--purple-2);
       margin-bottom:18px;
     }
 
@@ -107,7 +109,7 @@
 
     .apps{
       width:min(95%, 1200px);
-      margin:8px auto 18px;
+      margin:10px auto 24px;
       display:grid;
       grid-template-columns:repeat(4, 1fr);
       gap:18px;
@@ -122,9 +124,9 @@
       border-radius:20px;
       cursor:pointer;
       box-shadow:
-        0 0 18px rgba(157,78,221,0.45),
+        0 0 18px rgba(157,78,221,0.42),
         inset 0 0 0 1px rgba(255,255,255,0.03);
-      transition:transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
       min-height:210px;
       display:flex;
       flex-direction:column;
@@ -138,8 +140,8 @@
       transform:translateY(-4px) scale(1.03);
       box-shadow:
         0 0 28px rgba(199,125,255,0.80),
-        0 0 50px rgba(157,78,221,0.25);
-      border-color:rgba(199,125,255,0.35);
+        0 0 50px rgba(157,78,221,0.22);
+      border-color:rgba(199,125,255,0.34);
     }
 
     .card::before{
@@ -150,7 +152,7 @@
       height:220px;
       background:linear-gradient(120deg, transparent, rgba(255,255,255,0.08), transparent);
       transform:rotate(20deg);
-      transition:0.4s ease;
+      transition:.45s ease;
       opacity:0;
     }
 
@@ -164,7 +166,7 @@
       height:64px;
       object-fit:contain;
       margin-bottom:12px;
-      filter:drop-shadow(0 0 7px #c77dff);
+      filter:drop-shadow(0 0 7px var(--purple));
     }
 
     .emoji-icon{
@@ -186,8 +188,8 @@
       color:#fff;
       text-shadow:
         0 0 3px #fff,
-        0 0 8px #c77dff,
-        0 0 14px #9d4edd;
+        0 0 8px var(--purple),
+        0 0 14px var(--purple-2);
     }
 
     .card p{
@@ -204,7 +206,7 @@
       padding:5px 10px;
       border-radius:999px;
       font-weight:700;
-      letter-spacing:0.2px;
+      letter-spacing:.2px;
     }
 
     .available{
@@ -223,7 +225,7 @@
 
     .pricebox{
       display:none;
-      width:min(92%, 720px);
+      width:min(92%, 760px);
       margin:20px auto 30px;
       padding:24px 18px 28px;
       border-radius:22px;
@@ -233,26 +235,20 @@
         0 0 28px rgba(157,78,221,0.58),
         inset 0 0 0 1px rgba(255,255,255,0.03);
       backdrop-filter:blur(12px);
-      animation:fade 0.35s ease;
+      animation:fade .35s ease;
     }
 
     @keyframes fade{
-      from{
-        opacity:0;
-        transform:translateY(18px);
-      }
-      to{
-        opacity:1;
-        transform:translateY(0);
-      }
+      from{opacity:0; transform:translateY(18px);}
+      to{opacity:1; transform:translateY(0);}
     }
 
     .neon{
       color:#fff;
       text-shadow:
         0 0 3px #fff,
-        0 0 8px #c77dff,
-        0 0 14px #9d4edd;
+        0 0 8px var(--purple),
+        0 0 14px var(--purple-2);
     }
 
     .pricebox h3{
@@ -260,35 +256,8 @@
       font-size:30px;
     }
 
-    .pricebox h4{
-      margin:18px 0 10px;
-      font-size:20px;
-      color:#fff3b0;
-      text-shadow:
-        0 0 4px #fff3b0,
-        0 0 10px #ffd60a,
-        0 0 18px #9d4edd;
-    }
-
-    .pricebox p{
-      margin:10px 0;
-      line-height:1.65;
-      font-size:16px;
-      color:white;
-      text-shadow:
-        0 0 2px #fff,
-        0 0 7px #c77dff,
-        0 0 10px #9d4edd;
-    }
-
-    .note{
-      color:#f3e7ff;
-      opacity:0.96;
-      font-size:15px;
-    }
-
     .selector-wrap{
-      width:min(100%, 520px);
+      width:min(100%, 560px);
       margin:16px auto 10px;
       text-align:left;
     }
@@ -297,7 +266,7 @@
       font-size:14px;
       margin-bottom:8px;
       color:#efe6ff;
-      text-shadow:0 0 5px #c77dff;
+      text-shadow:0 0 5px var(--purple);
     }
 
     select{
@@ -318,7 +287,7 @@
     }
 
     .order-preview{
-      width:min(100%, 520px);
+      width:min(100%, 560px);
       margin:14px auto 0;
       padding:12px 14px;
       border-radius:14px;
@@ -328,6 +297,7 @@
       font-size:14px;
       color:#f5ecff;
       box-shadow:0 0 10px rgba(157,78,221,0.18);
+      line-height:1.6;
     }
 
     .order-preview strong{
@@ -335,23 +305,23 @@
     }
 
     button{
-      background:#9d4edd;
+      background:var(--purple-2);
       color:white;
       border:none;
       padding:11px 22px;
       border-radius:10px;
       margin-top:12px;
       cursor:pointer;
-      transition:0.25s ease;
-      box-shadow:0 0 12px #9d4edd;
+      transition:.25s ease;
+      box-shadow:0 0 12px var(--purple-2);
       font-size:15px;
       font-weight:700;
     }
 
     button:hover{
-      background:#c77dff;
+      background:var(--purple);
       transform:scale(1.05);
-      box-shadow:0 0 22px #c77dff;
+      box-shadow:0 0 22px var(--purple);
     }
 
     .back-btn{
@@ -366,18 +336,6 @@
       margin-top:12px;
     }
 
-    .buy-link{
-      text-decoration:none;
-    }
-
-    .line{
-      width:78%;
-      height:1px;
-      margin:16px auto;
-      background:linear-gradient(to right, transparent, #c77dff, transparent);
-      opacity:0.8;
-    }
-
     .footer{
       margin:50px auto 24px;
       padding:18px 16px 28px;
@@ -385,7 +343,7 @@
       color:#fff;
       text-shadow:
         0 0 5px #fff,
-        0 0 10px #c77dff;
+        0 0 10px var(--purple);
       position:relative;
       z-index:1;
     }
@@ -409,10 +367,6 @@
 
       .pricebox h3{
         font-size:25px;
-      }
-
-      .pricebox p{
-        font-size:15px;
       }
     }
 
@@ -455,7 +409,6 @@
   </style>
 </head>
 <body>
-
   <canvas id="particles"></canvas>
 
   <div class="page">
@@ -473,238 +426,339 @@
       </div>
     </div>
 
-    <div class="apps" id="appsGrid">
+    <div class="apps" id="appsGrid"></div>
 
-      <div class="card" data-name="chatgpt ai openai" onclick="toggle('chatgpt')">
-        <span class="badge available">Available</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT">
-        <h3>ChatGPT</h3>
-        <p>Tap to see prices</p>
-      </div>
+    <div id="productModal" class="pricebox"></div>
 
-      <div class="card" data-name="spotify music premium" onclick="toggle('spotify')">
-        <span class="badge available">Available</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify">
-        <h3>Spotify</h3>
-        <p>Tap to see prices</p>
-      </div>
-
-      <div class="card" data-name="picsart photo edit" onclick="toggle('picsart')">
-        <span class="badge available">Available</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/PicsArt_Logo.svg" alt="PicsArt">
-        <h3>PicsArt</h3>
-        <p>Tap to see prices</p>
-      </div>
-
-      <div class="card" data-name="express vpn vpn secure" onclick="toggle('vpn')">
-        <span class="badge available">Available</span>
-        <img src="https://cdn-icons-png.flaticon.com/512/565/565547.png" alt="Express VPN">
-        <h3>Express VPN</h3>
-        <p>Tap to see prices</p>
-      </div>
-
-      <div class="card" data-name="telegram premium tg" onclick="toggle('telegram')">
-        <span class="badge available">Available</span>
-        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram Premium">
-        <h3>Telegram Premium</h3>
-        <p>Tap to see prices</p>
-      </div>
-
-      <div class="card" data-name="gemini pro google ai" onclick="toggle('gemini')">
-        <span class="badge available">Available</span>
-        <div class="emoji-icon">✨</div>
-        <h3>Gemini Pro</h3>
-        <p>Tap to see prices</p>
-      </div>
-
-      <div class="card" data-name="itunes gift card apple" onclick="toggle('itunes')">
-        <span class="badge available">Available</span>
-        <div class="emoji-icon"></div>
-        <h3>iTunes Gift Card</h3>
-        <p>Tap to see prices</p>
-      </div>
-
-      <div class="card" data-name="netflix movie show" onclick="toggle('netflix')">
-        <span class="badge available">Available</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_N_logo.svg" alt="Netflix">
-        <h3>Netflix</h3>
-        <p>Tap to see prices</p>
-      </div>
-
-      <div class="card" data-name="capcut pro edit video" onclick="toggle('capcut')">
-        <span class="badge available">Available</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/CapCut_logo.svg" alt="CapCut">
-        <h3>CapCut Pro</h3>
-        <p>Tap to see prices</p>
-      </div>
-
-      <div class="card" data-name="amazon prime video prime" onclick="toggle('prime')">
-        <span class="badge available">Available</span>
-        <div class="emoji-icon">🎬</div>
-        <h3>Prime Video</h3>
-        <p>Tap to see prices</p>
-      </div>
-
-      <div class="card" data-name="outline vpn secure data" onclick="toggle('outline')">
-        <span class="badge available">Available</span>
-        <div class="emoji-icon">🛡️</div>
-        <h3>Outline VPN</h3>
-        <p>Tap to see prices</p>
-      </div>
-
-      <div class="card" data-name="jump jump vpn" onclick="toggle('jumpvpn')">
-        <span class="badge available">Available</span>
-        <div class="emoji-icon">🚀</div>
-        <h3>Jump Jump VPN</h3>
-        <p>Tap to see prices</p>
-      </div>
-
-      <div class="card" data-name="meitu vip beauty edit" onclick="toggle('meitu')">
-        <span class="badge low">Low Stock</span>
-        <div class="emoji-icon">💄</div>
-        <h3>Meitu VIP</h3>
-        <p>Tap to see prices</p>
-      </div>
-
-      <div class="card" data-name="wink edit photo" onclick="toggle('wink')">
-        <span class="badge low">Low Stock</span>
-        <div class="emoji-icon">😉</div>
-        <h3>Wink</h3>
-        <p>Tap to see prices</p>
-      </div>
-
-      <div class="card" data-name="steam wallet game card" onclick="toggle('steam')">
-        <span class="badge available">Available</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg" alt="Steam Wallet">
-        <h3>Steam Wallet</h3>
-        <p>Tap to see prices</p>
-      </div>
-
-      <div class="card" data-name="duolingo language learning" onclick="toggle('duolingo')">
-        <span class="badge available">Available</span>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Duolingo_logo.svg" alt="Duolingo">
-        <h3>Duolingo</h3>
-        <p>Tap to see prices</p>
-      </div>
-
+    <div class="footer">
+      Founder: Diameter Eight
+      <br><br>
+      Mobile Game Topup are available in Telegram Game Channel
     </div>
+  </div>
 
-    <!-- ChatGPT -->
-    <div id="chatgpt" class="pricebox">
-      <button class="back-btn" onclick="goBack()">⬅ Back</button>
-      <h3 class="neon">ChatGPT Plus</h3>
+  <script>
+    const TELEGRAM_USERNAME = "angsthtun";
 
-      <div class="selector-wrap">
-        <div class="selector-label">Select plan</div>
-        <select id="chatgptSelect" onchange="updatePreview('chatgpt','ChatGPT Plus')">
-          <option value="1 Month – 6000 MMK (Share)">1 Month – 6000 MMK (Share)</option>
-          <option value="1 Month – 6500 MMK (Private)">1 Month – 6500 MMK (Private)</option>
-          <option value="3 Months – 8000 MMK (Share)">3 Months – 8000 MMK (Share)</option>
-          <option value="3 Months – 9000 MMK (Private)">3 Months – 9000 MMK (Private)</option>
-        </select>
-      </div>
+    const products = [
+      {
+        id: "chatgpt",
+        name: "ChatGPT",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "image",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
+        search: "chatgpt ai openai",
+        plans: [
+          "1 Month – 6000 MMK (Share)",
+          "1 Month – 6500 MMK (Private)",
+          "3 Months – 8000 MMK (Share)",
+          "3 Months – 9000 MMK (Private)"
+        ]
+      },
+      {
+        id: "spotify",
+        name: "Spotify",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "image",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
+        search: "spotify music premium",
+        plans: [
+          "Family Plan (Global) – 1 Month – 8000 Ks",
+          "Family Plan (Global) – 2 Months – 12000 Ks",
+          "Family Plan (Global) – 3 Months – 24000 Ks",
+          "Family Plan (Global) – 6 Months – 65000 Ks",
+          "Individual Plan (Global) – 1 Month – 13000 Ks",
+          "Individual Plan (Global) – 2 Months – 24000 Ks",
+          "Individual Plan (Global) – 3 Months – 34000 Ks"
+        ]
+      },
+      {
+        id: "picsart",
+        name: "PicsArt",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "image",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/4/4d/PicsArt_Logo.svg",
+        search: "picsart photo edit",
+        plans: [
+          "1 Month – 5000 MMK",
+          "3 Months – 12000 MMK"
+        ]
+      },
+      {
+        id: "vpn",
+        name: "Express VPN",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "image",
+        icon: "https://cdn-icons-png.flaticon.com/512/565/565547.png",
+        search: "express vpn secure",
+        note: "Share plan can only use 1 device",
+        plans: [
+          "Share Plan – 1 Month – 1500 Ks (Android & iOS)",
+          "Share Plan – 1 Month – 2500 Ks (Windows PC & Laptop)",
+          "Share Plan – 1 Month – 2500 Ks (Linux Devices)",
+          "Share Plan – 1 Month – 2500 Ks (MacBook)",
+          "Private Plan – 1 Month – 8000 Ks (Up to 9 devices)"
+        ]
+      },
+      {
+        id: "telegram",
+        name: "Telegram Premium",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "image",
+        icon: "https://cdn-icons-png.flaticon.com/512/2111/2111646.png",
+        search: "telegram premium tg",
+        plans: [
+          "Login Method – 1 Month – 20500 Ks",
+          "Gift Plan – 3 Months – 50000 Ks",
+          "Gift Plan – 6 Months – 67000 Ks",
+          "Gift Plan – 9 Months – 118000 Ks",
+          "Link Plan – 3 Months – 44000 Ks",
+          "Link Plan – 6 Months – 65000 Ks",
+          "Link Plan – 12 Months – 118000 Ks"
+        ]
+      },
+      {
+        id: "gemini",
+        name: "Gemini Pro",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "emoji",
+        icon: "✨",
+        search: "gemini pro google ai",
+        note: "Includes Gmail, Drive, Veo, NotebookLM and premium benefits.",
+        plans: [
+          "1 Month – 7000 Ks",
+          "2 Months – 12500 Ks",
+          "3 Months – 17000 Ks",
+          "6 Months – 30000 Ks",
+          "1 Year – 51000 Ks"
+        ]
+      },
+      {
+        id: "itunes",
+        name: "iTunes Gift Card",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "emoji",
+        icon: "",
+        search: "itunes gift card apple",
+        note: "Other Regions Available: Canada, Germany, Japan, China, Taiwan, Nigeria, etc.",
+        plans: [
+          "5 USD – 21500 Ks",
+          "10 USD – 41500 Ks",
+          "20 USD – 82000 Ks",
+          "50 USD – 204000 Ks",
+          "100 USD – 410000 Ks"
+        ]
+      },
+      {
+        id: "netflix",
+        name: "Netflix",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "image",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_N_logo.svg",
+        search: "netflix movie show",
+        note: "Can activate in Myanmar.",
+        plans: [
+          "Share Account – 1 Month – 6000 Ks",
+          "Share Account – 3 Months – 12000 Ks",
+          "Share Account – 6 Months – 22000 Ks",
+          "Share Account – 1 Year – 35000 Ks",
+          "Personal – 1 Month – 7000 Ks",
+          "Personal – 3 Months – 13000 Ks",
+          "Personal – 6 Months – 24000 Ks",
+          "Personal – 1 Year – 39000 Ks",
+          "Mail Subscription Standard Plan – 35000 Ks",
+          "Mail Subscription Pro Plan – 75500 Ks",
+          "Mail Subscription Premium Plan – 99000 Ks"
+        ]
+      },
+      {
+        id: "capcut",
+        name: "CapCut Pro",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "image",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/a/ab/CapCut_logo.svg",
+        search: "capcut pro edit video",
+        plans: [
+          "Global Account – 1 Month – 6500 Ks",
+          "Global Account – 3 Months – 19500 Ks",
+          "Global Account – 6 Months – 54000 Ks",
+          "Global Account – 1 Year – nearly 75000 Ks",
+          "CapCut Subscription Own Mail Standard Plan – 1 Month – 44000 Ks",
+          "CapCut Subscription Own Mail Pro Plan – 1 Month – 120000 Ks"
+        ]
+      },
+      {
+        id: "prime",
+        name: "Prime Video",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "emoji",
+        icon: "🎬",
+        search: "amazon prime video",
+        note: "Private profiles and full-time warranty available.",
+        plans: [
+          "Dedicated Private Account – 1 Month – 5800 Ks",
+          "Dedicated Private Account – 3 Months – 13800 Ks",
+          "Dedicated Private Account – 6 Months – 22000 Ks",
+          "Full Private – 1 Month – 10000 Ks",
+          "Full Private – 6 Months – 26000 Ks"
+        ]
+      },
+      {
+        id: "outline",
+        name: "Outline VPN",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "emoji",
+        icon: "🛡️",
+        search: "outline vpn secure data",
+        plans: [
+          "50GB – 3000 Ks (1 Month)",
+          "100GB – 5000 Ks (1 Month)",
+          "150GB – 6900 Ks (1 Month)",
+          "200GB – 8500 Ks (2 Months)"
+        ]
+      },
+      {
+        id: "jumpvpn",
+        name: "Jump Jump VPN",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "emoji",
+        icon: "🚀",
+        search: "jump jump vpn",
+        plans: [
+          "1 Device – 3 Days – 2700 Ks",
+          "1 Device – 1 Month – 13000 Ks",
+          "2 Devices – 1 Month – 18000 Ks",
+          "2 Devices – 6 Months – 90000 Ks",
+          "2 Devices – 12 Months – 108000 Ks"
+        ]
+      },
+      {
+        id: "meitu",
+        name: "Meitu VIP",
+        subtitle: "Tap to see prices",
+        badge: "low",
+        iconType: "emoji",
+        icon: "💄",
+        search: "meitu vip beauty edit",
+        plans: [
+          "China Region – 1 Month – 13000 Ks",
+          "Global Region – 1 Month – 20000 MMK (Share) – 1 Device",
+          "Silver VIP – 1 Month – 24000 MMK (Private) – 2 Devices",
+          "Silver VIP – 1 Month – 40000 MMK (Private) – 4 Devices",
+          "Silver VIP – 1 Year – 160000 MMK (Private) – 2 Devices",
+          "Silver VIP – 1 Year – 260000 MMK (Private) – 4 Devices"
+        ]
+      },
+      {
+        id: "wink",
+        name: "Wink",
+        subtitle: "Tap to see prices",
+        badge: "low",
+        iconType: "emoji",
+        icon: "😉",
+        search: "wink edit photo",
+        plans: [
+          "China Region – 1 Month – 4500 Ks",
+          "Global Region – 1 Month – 8000 Ks (Share) – 1 Device",
+          "Global Region – 1 Month – 24000 Ks (Private) – 3 Devices",
+          "Global Region – 1 Year – 160000 Ks (Private) – 3 Devices"
+        ]
+      },
+      {
+        id: "steam",
+        name: "Steam Wallet",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "image",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg",
+        search: "steam wallet game card",
+        plans: [
+          "5 USD - 23200 Ks",
+          "10 USD - 45000 Ks",
+          "20 USD - 90000 Ks",
+          "25 USD - 113000 Ks",
+          "30 USD - 137000 Ks",
+          "35 USD - 157000 Ks",
+          "50 USD - 228000 Ks",
+          "100 USD - 460000 Ks"
+        ]
+      },
+      {
+        id: "duolingo",
+        name: "Duolingo",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "image",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Duolingo_logo.svg",
+        search: "duolingo language learning",
+        plans: [
+          "Personal Account – 2 Months – 7000 Ks",
+          "Personal Account – 6 Months – 13000 Ks",
+          "Family Account – 2 Months – 38000 Ks (High value)",
+          "Family Account – 6 Months – 12000 Ks",
+          "Family Account – 12 Months – 32000 Ks (Low value)"
+        ]
+      }
+    ];
 
-      <div class="order-preview" id="chatgptPreview"></div>
+    const appsGrid = document.getElementById("appsGrid");
+    const modal = document.getElementById("productModal");
+    const searchInput = document.getElementById("searchInput");
 
-      <div class="action-row">
-        <button onclick="sendOrder('ChatGPT Plus','chatgptSelect')">Order via Telegram</button>
-      </div>
-    </div>
+    function createCard(product){
+      const badgeClass = product.badge === "low" ? "low" : "available";
 
-    <!-- Spotify -->
-    <div id="spotify" class="pricebox">
-      <button class="back-btn" onclick="goBack()">⬅ Back</button>
-      <h3 class="neon">Spotify Premium</h3>
+      const iconHtml = product.iconType === "image"
+        ? `<img src="${product.icon}" alt="${product.name}">`
+        : `<div class="emoji-icon">${product.icon}</div>`;
 
-      <div class="selector-wrap">
-        <div class="selector-label">Select plan</div>
-        <select id="spotifySelect" onchange="updatePreview('spotify','Spotify Premium')">
-          <option value="Family Plan (Global) – 1 Month – 8000 Ks">Family Plan (Global) – 1 Month – 8000 Ks</option>
-          <option value="Family Plan (Global) – 2 Months – 12000 Ks">Family Plan (Global) – 2 Months – 12000 Ks</option>
-          <option value="Family Plan (Global) – 3 Months – 24000 Ks">Family Plan (Global) – 3 Months – 24000 Ks</option>
-          <option value="Family Plan (Global) – 6 Months – 65000 Ks">Family Plan (Global) – 6 Months – 65000 Ks</option>
-          <option value="Individual Plan (Global) – 1 Month – 13000 Ks">Individual Plan (Global) – 1 Month – 13000 Ks</option>
-          <option value="Individual Plan (Global) – 2 Months – 24000 Ks">Individual Plan (Global) – 2 Months – 24000 Ks</option>
-          <option value="Individual Plan (Global) – 3 Months – 34000 Ks">Individual Plan (Global) – 3 Months – 34000 Ks</option>
-        </select>
-      </div>
+      return `
+        <div class="card" data-name="${product.search}" onclick="openProduct('${product.id}')">
+          <span class="badge ${badgeClass}">${product.badge === "low" ? "Low Stock" : "Available"}</span>
+          ${iconHtml}
+          <h3>${product.name}</h3>
+          <p>${product.subtitle}</p>
+        </div>
+      `;
+    }
 
-      <div class="order-preview" id="spotifyPreview"></div>
-      <div class="action-row">
-        <button onclick="sendOrder('Spotify Premium','spotifySelect')">Order via Telegram</button>
-      </div>
-    </div>
+    function renderCards(list){
+      appsGrid.innerHTML = list.map(createCard).join("");
+    }
 
-    <!-- PicsArt -->
-    <div id="picsart" class="pricebox">
-      <button class="back-btn" onclick="goBack()">⬅ Back</button>
-      <h3 class="neon">PicsArt Gold</h3>
+    function openProduct(id){
+      const product = products.find(p => p.id === id);
+      if(!product) return;
 
-      <div class="selector-wrap">
-        <div class="selector-label">Select plan</div>
-        <select id="picsartSelect" onchange="updatePreview('picsart','PicsArt Gold')">
-          <option value="1 Month – 5000 MMK">1 Month – 5000 MMK</option>
-          <option value="3 Months – 12000 MMK">3 Months – 12000 MMK</option>
-        </select>
-      </div>
+      const options = product.plans.map(plan => `<option value="${escapeHtml(plan)}">${escapeHtml(plan)}</option>`).join("");
 
-      <div class="order-preview" id="picsartPreview"></div>
-      <div class="action-row">
-        <button onclick="sendOrder('PicsArt Gold','picsartSelect')">Order via Telegram</button>
-      </div>
-    </div>
+      modal.innerHTML = `
+        <button class="back-btn" onclick="goBack()">⬅ Back</button>
+        <h3 class="neon">${escapeHtml(product.name)}</h3>
 
-    <!-- Express VPN -->
-    <div id="vpn" class="pricebox">
-      <button class="back-btn" onclick="goBack()">⬅ Back</button>
-      <h3 class="neon">Express VPN</h3>
+        <div class="selector-wrap">
+          <div class="selector-label">Select plan</div>
+          <select id="currentPlanSelect" onchange="updatePreview('${escapeJs(product.name)}')">
+            ${options}
+          </select>
+        </div>
 
-      <div class="selector-wrap">
-        <div class="selector-label">Select plan</div>
-        <select id="vpnSelect" onchange="updatePreview('vpn','Express VPN')">
-          <option value="Share Plan – 1 Month – 1500 Ks (Android & iOS)">Share Plan – 1 Month – 1500 Ks (Android & iOS)</option>
-          <option value="Share Plan – 1 Month – 2500 Ks (Windows PC & Laptop)">Share Plan – 1 Month – 2500 Ks (Windows PC & Laptop)</option>
-          <option value="Share Plan – 1 Month – 2500 Ks (Linux Devices)">Share Plan – 1 Month – 2500 Ks (Linux Devices)</option>
-          <option value="Share Plan – 1 Month – 2500 Ks (MacBook)">Share Plan – 1 Month – 2500 Ks (MacBook)</option>
-          <option value="Private Plan – 1 Month – 8000 Ks (Up to 9 devices)">Private Plan – 1 Month – 8000 Ks (Up to 9 devices)</option>
-        </select>
-      </div>
+        ${product.note ? `<p class="note">${escapeHtml(product.note)}</p>` : ""}
 
-      <p class="note">Share plan can only use 1 device</p>
-      <div class="order-preview" id="vpnPreview"></div>
-      <div class="action-row">
-        <button onclick="sendOrder('Express VPN','vpnSelect')">Order via Telegram</button>
-      </div>
-    </div>
+        <div class="order-preview" id="orderPreviewBox"></div>
 
-    <!-- Telegram -->
-    <div id="telegram" class="pricebox">
-      <button class="back-btn" onclick="goBack()">⬅ Back</button>
-      <h3 class="neon">Telegram Premium</h3>
-
-      <div class="selector-wrap">
-        <div class="selector-label">Select plan</div>
-        <select id="telegramSelect" onchange="updatePreview('telegram','Telegram Premium')">
-          <option value="Login Method – 1 Month – 20500 Ks">Login Method – 1 Month – 20500 Ks</option>
-          <option value="Gift Plan – 3 Months – 50000 Ks">Gift Plan – 3 Months – 50000 Ks</option>
-          <option value="Gift Plan – 6 Months – 67000 Ks">Gift Plan – 6 Months – 67000 Ks</option>
-          <option value="Gift Plan – 9 Months – 118000 Ks">Gift Plan – 9 Months – 118000 Ks</option>
-          <option value="Link Plan – 3 Months – 44000 Ks">Link Plan – 3 Months – 44000 Ks</option>
-          <option value="Link Plan – 6 Months – 65000 Ks">Link Plan – 6 Months – 65000 Ks</option>
-          <option value="Link Plan – 12 Months – 118000 Ks">Link Plan – 12 Months – 118000 Ks</option>
-        </select>
-      </div>
-
-      <div class="order-preview" id="telegramPreview"></div>
-      <div class="action-row">
-        <button onclick="sendOrder('Telegram Premium','telegramSelect')">Order via Telegram</button>
-      </div>
-    </div>
-
-    <!-- Gemini -->
-    <div id="gemini" class="pricebox">
-      <button class="back-btn" onclick="goBack()">⬅ Back</button>
-      <h3 class="neon">Gemini Pro Private Version</h3>
-
-      <div class="selector-wrap">
-        <div c
+        <div class="action-row">
+          <button onclick="sendOrder('${escapeJs(product.name)}')">Order via Telegram</button>
+        
