@@ -200,12 +200,15 @@ text-shadow:
 <script>
 function toggle(id){
 
+var apps = document.querySelector(".apps");
 var box = document.getElementById(id);
 
 if(box.style.display === "none" || box.style.display === ""){
+apps.style.display = "none";
 box.style.display = "block";
 box.scrollIntoView({behavior:"smooth"});
 }else{
+apps.style.display = "grid";
 box.style.display = "none";
 }
 
