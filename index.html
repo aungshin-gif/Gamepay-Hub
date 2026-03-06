@@ -1,287 +1,467 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>GamePay Hub</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GamePay Hub</title>
 
-<style>
+  <style>
+    *{
+      box-sizing:border-box;
+    }
 
-body{
-background:linear-gradient(135deg,#140021,#2b0040,#0f001a);
-font-family:sans-serif;
-color:white;
-text-align:center;
-margin:0;
-}
+    body{
+      margin:0;
+      font-family:Arial, sans-serif;
+      color:white;
+      text-align:center;
+      background:
+        radial-gradient(circle at top, #5a189a 0%, #240046 35%, #140021 70%, #0d0016 100%);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
 
-h1{
-color:white;
-margin-top:30px;
-}
+    .topbar{
+      padding:28px 16px 10px;
+    }
 
-.apps{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:20px;
-padding:20px;
-}
+    .logo{
+      font-size:38px;
+      font-weight:700;
+      letter-spacing:1px;
+      color:#ffd60a;
+      text-shadow:
+        0 0 5px #ffd60a,
+        0 0 12px #ffd60a,
+        0 0 18px #c77dff,
+        0 0 32px #9d4edd;
+      margin-bottom:18px;
+    }
 
-.card{
-background:#240033;
-padding:20px;
-border-radius:12px;
-cursor:pointer;
-box-shadow:0 0 15px #9d4edd;
-transition:0.3s;
-}
+    .search-wrap{
+      width:min(92%, 520px);
+      margin:0 auto 8px;
+    }
 
-.card:hover{
-transform:scale(1.07);
-box-shadow:0 0 35px #c77dff;
-}
-.pricebox{
-display:none;
-background:#1f0030;
-margin:20px;
-padding:20px;
-border-radius:12px;
-max-width:500px;
-margin-left:auto;
-margin-right:auto;
-animation:fade 0.4s ease;
-}
+    #searchInput{
+      width:100%;
+      padding:13px 16px;
+      border:none;
+      outline:none;
+      border-radius:14px;
+      background:rgba(255,255,255,0.08);
+      color:white;
+      font-size:15px;
+      box-shadow:0 0 12px rgba(199,125,255,0.35);
+      backdrop-filter:blur(6px);
+    }
 
-@keyframes fade{
-from{
-opacity:0;
-transform:translateY(20px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
+    #searchInput::placeholder{
+      color:#ddd;
+    }
 
-button{
-background:#9d4edd;
-color:white;
-border:none;
-padding:10px 20px;
-border-radius:6px;
-margin-top:10px;
-cursor:pointer;
-transition:0.3s;
-box-shadow:0 0 10px #9d4edd;
-}
+    .apps{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:20px;
+      padding:20px;
+      max-width:900px;
+      margin:0 auto 10px;
+    }
 
-button:hover{
-background:#c77dff;
-transform:scale(1.05);
-box-shadow:0 0 20px #c77dff;
-}
+    .card{
+      background:rgba(43, 0, 64, 0.92);
+      padding:24px 16px 20px;
+      border-radius:18px;
+      cursor:pointer;
+      box-shadow:0 0 18px #9d4edd;
+      transition:transform 0.25s ease, box-shadow 0.25s ease;
+      min-height:220px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      position:relative;
+      overflow:hidden;
+    }
 
-.neon{
-color:white;
-text-shadow:
-0 0 3px #fff,
-0 0 6px #c77dff,
-0 0 12px #9d4edd;
-}
-.card{
-transition:0.3s;
-}
+    .card:hover{
+      transform:scale(1.05);
+      box-shadow:0 0 32px #c77dff;
+    }
 
-.card:hover{
-transform:scale(1.05);
-box-shadow:0 0 30px #c77dff;
-}
+    .card img{
+      width:68px;
+      height:68px;
+      object-fit:contain;
+      margin-bottom:12px;
+      filter:drop-shadow(0 0 7px #c77dff);
+    }
 
-.card img{
-filter:drop-shadow(0 0 5px #c77dff);
-}
+    .card h3{
+      margin:8px 0 10px;
+      font-size:19px;
+      color:white;
+      text-shadow:
+        0 0 3px #fff,
+        0 0 8px #c77dff,
+        0 0 14px #9d4edd;
+    }
 
-button{
-transition:0.3s;
-}
+    .card p{
+      margin:0;
+      color:#f1eaff;
+      font-size:15px;
+    }
 
-button:hover{
-background:#c77dff;
-transform:scale(1.05);
-}
-</style>
+    .badge{
+      position:absolute;
+      top:12px;
+      right:12px;
+      font-size:12px;
+      padding:5px 10px;
+      border-radius:999px;
+      background:rgba(0,255,140,0.14);
+      color:#8cffc1;
+      border:1px solid rgba(140,255,193,0.25);
+      box-shadow:0 0 10px rgba(140,255,193,0.18);
+    }
+
+    .pricebox{
+      display:none;
+      width:min(92%, 560px);
+      margin:20px auto 28px;
+      padding:24px 18px 26px;
+      border-radius:18px;
+      background:rgba(37, 0, 58, 0.92);
+      box-shadow:0 0 26px #9d4edd;
+      animation:fade 0.35s ease;
+      backdrop-filter:blur(8px);
+    }
+
+    @keyframes fade{
+      from{
+        opacity:0;
+        transform:translateY(18px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .neon{
+      color:white;
+      text-shadow:
+        0 0 3px #fff,
+        0 0 8px #c77dff,
+        0 0 14px #9d4edd;
+    }
+
+    .pricebox h3{
+      margin:10px 0 16px;
+      font-size:28px;
+    }
+
+    .pricebox h4{
+      margin:18px 0 10px;
+      font-size:20px;
+      color:#fff8d6;
+      text-shadow:
+        0 0 4px #fff1a8,
+        0 0 10px #ffd60a,
+        0 0 18px #9d4edd;
+    }
+
+    .pricebox p{
+      margin:10px 0;
+      line-height:1.6;
+      font-size:17px;
+      color:white;
+      text-shadow:
+        0 0 3px #fff,
+        0 0 8px #c77dff,
+        0 0 12px #9d4edd;
+    }
+
+    button{
+      background:#9d4edd;
+      color:white;
+      border:none;
+      padding:11px 22px;
+      border-radius:10px;
+      margin-top:12px;
+      cursor:pointer;
+      transition:0.25s ease;
+      box-shadow:0 0 12px #9d4edd;
+      font-size:15px;
+      font-weight:600;
+    }
+
+    button:hover{
+      background:#c77dff;
+      transform:scale(1.05);
+      box-shadow:0 0 20px #c77dff;
+    }
+
+    .back-btn{
+      margin-bottom:8px;
+    }
+
+    .buy-link{
+      text-decoration:none;
+    }
+
+    .hidden{
+      display:none !important;
+    }
+
+    @media (max-width: 700px){
+      .apps{
+        grid-template-columns:1fr 1fr;
+        gap:16px;
+        padding:16px;
+      }
+
+      .card{
+        min-height:200px;
+        padding:20px 12px 18px;
+      }
+
+      .card img{
+        width:62px;
+        height:62px;
+      }
+
+      .logo{
+        font-size:32px;
+      }
+
+      .pricebox h3{
+        font-size:24px;
+      }
+
+      .pricebox p{
+        font-size:16px;
+      }
+    }
+
+    @media (max-width: 480px){
+      .apps{
+        grid-template-columns:1fr 1fr;
+        gap:14px;
+        padding:14px;
+      }
+
+      .card{
+        min-height:190px;
+      }
+
+      .card h3{
+        font-size:17px;
+      }
+
+      .card p{
+        font-size:14px;
+      }
+
+      .logo{
+        font-size:29px;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<h1 class="neon">GamePay Hub</h1>
+  <div class="topbar">
+    <div class="logo">GamePay Hub</div>
 
-<div class="apps">
+    <div class="search-wrap">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search apps..."
+        onkeyup="filterApps()"
+      >
+    </div>
+  </div>
 
-<div class="card" onclick="toggle('chatgpt')">
-<img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg">
-<h3>ChatGPT</h3>
-<p>Tap to see prices</p>
-</div>
+  <div class="apps" id="appsGrid">
 
-<div class="card" onclick="toggle('spotify')">
-<img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg">
-<h3>Spotify</h3>
-<p>Tap to see prices</p>
-</div>
+    <div class="card" data-name="chatgpt" onclick="toggle('chatgpt')">
+      <span class="badge">Available</span>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT">
+      <h3>ChatGPT</h3>
+      <p>Tap to see prices</p>
+    </div>
 
-<div class="card" onclick="toggle('picsart')">
-<img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/PicsArt_Logo.svg">
-<h3>PicsArt</h3>
-<p>Tap to see prices</p>
-</div>
+    <div class="card" data-name="spotify" onclick="toggle('spotify')">
+      <span class="badge">Available</span>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify">
+      <h3>Spotify</h3>
+      <p>Tap to see prices</p>
+    </div>
 
-<div class="card" onclick="toggle('vpn')">
-<img src="https://cdn-icons-png.flaticon.com/512/565/565547.png">
-<h3>VPN</h3>
-<p>Tap to see prices</p>
-</div>
+    <div class="card" data-name="picsart" onclick="toggle('picsart')">
+      <span class="badge">Available</span>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/PicsArt_Logo.svg" alt="PicsArt">
+      <h3>PicsArt</h3>
+      <p>Tap to see prices</p>
+    </div>
 
-<div class="card" onclick="toggle('telegram')">
-<img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png">
-<h3>Telegram Premium</h3>
-<p>Tap to see prices</p>
-</div>
+    <div class="card" data-name="vpn" onclick="toggle('vpn')">
+      <span class="badge">Available</span>
+      <img src="https://cdn-icons-png.flaticon.com/512/565/565547.png" alt="VPN">
+      <h3>VPN</h3>
+      <p>Tap to see prices</p>
+    </div>
 
-</div>
+    <div class="card" data-name="telegram premium" onclick="toggle('telegram')">
+      <span class="badge">Available</span>
+      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram Premium">
+      <h3>Telegram Premium</h3>
+      <p>Tap to see prices</p>
+    </div>
 
+  </div>
 
-<!-- ChatGPT -->
+  <!-- ChatGPT -->
+  <div id="chatgpt" class="pricebox">
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <h3 class="neon">ChatGPT Plus</h3>
 
-<div id="chatgpt" class="pricebox">
-<button onclick="location.reload()">⬅ Back</button>
-<h3 class="neon">ChatGPT Plus</h3>
+    <p class="neon">1 Month – 6000 MMK (Share)</p>
+    <p class="neon">1 Month – 6500 MMK (Private)</p>
+    <p class="neon">3 Months – 8000 MMK (Share)</p>
+    <p class="neon">3 Months – 9000 MMK (Private)</p>
 
-<p class="neon">1 Month – 6000 MMK (Share)</p>
-<p class="neon">1 Month – 6500 MMK (Private)</p>
+    <a class="buy-link" href="https://t.me/angsthtun">
+      <button>Buy via Telegram</button>
+    </a>
+  </div>
 
-<p class="neon">3 Months – 8000 MMK (Share)</p>
-<p class="neon">3 Months – 9000 MMK (Private)</p>
+  <!-- Spotify -->
+  <div id="spotify" class="pricebox">
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <h3 class="neon">Spotify Premium</h3>
 
-<a href="https://t.me/angsthtun">
-<button>Buy via Telegram</button>
-</a>
+    <h4>Family Plan (Global)</h4>
+    <p class="neon">1 Month – 8000 Ks</p>
+    <p class="neon">2 Months – 12000 Ks</p>
+    <p class="neon">3 Months – 24000 Ks</p>
+    <p class="neon">6 Months – 65000 Ks</p>
 
-</div>
+    <h4>Individual Plan (Global)</h4>
+    <p class="neon">1 Month – 13000 Ks</p>
+    <p class="neon">2 Months – 24000 Ks</p>
+    <p class="neon">3 Months – 34000 Ks</p>
 
+    <a class="buy-link" href="https://t.me/angsthtun">
+      <button>Buy via Telegram</button>
+    </a>
+  </div>
 
-<!-- Spotify -->
+  <!-- PicsArt -->
+  <div id="picsart" class="pricebox">
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <h3 class="neon">PicsArt Gold</h3>
 
-<div id="spotify" class="pricebox">
-<button onclick="location.reload()">⬅ Back</button>
+    <p class="neon">1 Month – 5000 MMK</p>
+    <p class="neon">3 Months – 12000 MMK</p>
 
-<h3 class="neon">📱 Spotify Premium</h3>
+    <a class="buy-link" href="https://t.me/angsthtun">
+      <button>Buy via Telegram</button>
+    </a>
+  </div>
 
-<h4 class="neon">Family Plan (Global)</h4>
-<p class="neon">1 Month 💘 8000 Ks</p>
-<p class="neon">2 Months 💘 12000 Ks</p>
-<p class="neon">3 Months 💘 24000 Ks</p>
-<p class="neon">6 Months 💘 65000 Ks</p>
+  <!-- VPN -->
+  <div id="vpn" class="pricebox">
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <h3 class="neon">Express VPN</h3>
 
-<h4 class="neon">Individual Plan (Global)</h4>
-<p class="neon">1 Month 💘 13000 Ks</p>
-<p class="neon">2 Months 💘 24000 Ks</p>
-<p class="neon">3 Months 💘 34000 Ks</p>
+    <h4>Share Plan</h4>
+    <p class="neon">⭐ 1 Month – 1500 Ks (Android & iOS)</p>
+    <p class="neon">⭐ 1 Month – 2500 Ks (Windows PC & Laptop)</p>
+    <p class="neon">⭐ 1 Month – 2500 Ks (Linux Devices)</p>
+    <p class="neon">⭐ 1 Month – 2500 Ks (MacBook)</p>
+    <p class="neon"><i>Share plan can only use 1 device</i></p>
 
-<a href="https://t.me/angsthtun">
-<button>Buy via Telegram</button>
-</a>
+    <h4>Private Plan</h4>
+    <p class="neon">⭐ 1 Month – 8000 Ks (Up to 9 devices)</p>
+    <p class="neon">⭐ 8 Phones & 1 PC or Laptop</p>
+    <p class="neon">✅ All devices support</p>
+    <p class="neon">🔐 Custom Password</p>
+    <p class="neon">⭐ Own account</p>
 
-</div>
+    <a class="buy-link" href="https://t.me/angsthtun">
+      <button>Buy via Telegram</button>
+    </a>
+  </div>
 
+  <!-- Telegram -->
+  <div id="telegram" class="pricebox">
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <h3 class="neon">Telegram Premium</h3>
 
-<!-- PicsArt -->
+    <p class="neon"><b>⭐ Login Method</b></p>
+    <p class="neon">1 Month – 20500 Ks</p>
 
-<div id="picsart" class="pricebox">
-<button onclick="location.reload()">⬅ Back</button>
-<h3 class="neon">PicsArt Gold</h3>
+    <p class="neon"><b>🎁 Gift Plan</b></p>
+    <p class="neon">3 Months – 50000 Ks</p>
+    <p class="neon">6 Months – 67000 Ks</p>
+    <p class="neon">9 Months – 118000 Ks</p>
 
-<p class="neon">1 Month – 5000 MMK</p>
-<p class="neon">3 Months – 12000 MMK</p>
+    <p class="neon"><b>🔗 Link Plan</b></p>
+    <p class="neon">3 Months – 44000 Ks</p>
+    <p class="neon">6 Months – 65000 Ks</p>
+    <p class="neon">12 Months – 118000 Ks</p>
 
-<a href="https://t.me/angsthtun">
-<button>Buy via Telegram</button>
-</a>
+    <a class="buy-link" href="https://t.me/angsthtun">
+      <button>Buy via Telegram</button>
+    </a>
+  </div>
 
-</div>
+  <script>
+    function toggle(id){
+      var apps = document.getElementById("appsGrid");
+      var boxes = document.querySelectorAll(".pricebox");
+      var box = document.getElementById(id);
 
+      boxes.forEach(function(b){
+        b.style.display = "none";
+      });
 
-<!-- VPN -->
+      apps.style.display = "none";
+      box.style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-<div id="vpn" class="pricebox">
-<button onclick="location.reload()">⬅ Back</button>
+    function goBack(){
+      var apps = document.getElementById("appsGrid");
+      var boxes = document.querySelectorAll(".pricebox");
 
-<h3 class="neon">Express VPN</h3>
+      boxes.forEach(function(b){
+        b.style.display = "none";
+      });
 
-<h4 class="neon">Share Plan</h4>
-<p class="neon">⭐ 1 Month – 1500 Ks (Android & iOS)</p>
-<p class="neon">⭐ 1 Month – 2500 Ks (Windows PC & Laptop)</p>
-<p class="neon">⭐ 1 Month – 2500 Ks (Linux Devices)</p>
-<p class="neon">⭐ 1 Month – 2500 Ks (MacBook)</p>
-<p class="neon"><i>Share plan can only use 1 device</i></p>
+      apps.style.display = "grid";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-<h4 class="neon">Private Plan</h4>
-<p class="neon">⭐ 1 Month – 8000 Ks (Up to 9 devices)</p>
-<p class="neon">⭐ 8 Phones & 1 PC or Laptop</p>
-<p class="neon">✅ All devices support</p>
-<p class="neon">🔐 Custom Password</p>
-<p class="neon">⭐ Own account</p>
+    function filterApps(){
+      var input = document.getElementById("searchInput").value.toLowerCase();
+      var cards = document.querySelectorAll(".card");
 
-<a href="https://t.me/angsthtun">
-<button>Buy via Telegram</button>
-</a>
-
-</div>
-
-
-<!-- Telegram -->
-
-<div id="telegram" class="pricebox">
-
-<button onclick="location.reload()">⬅ Back</button>
-<h3 class="neon">Telegram Premium</h3>
-
-<p class="neon"><b>⭐ Login Method</b></p>
-<p class="neon">1 Month – 20500 Ks</p>
-
-<p class="neon"><b>🎁 Gift Plan</b></p>
-<p class="neon">3 Months – 50000 Ks</p>
-<p class="neon">6 Months – 67000 Ks</p>
-<p class="neon">9 Months – 118000 Ks</p>
-
-<p class="neon"><b>🔗 Link Plan</b></p>
-<p class="neon">3 Months – 44000 Ks</p>
-<p class="neon">6 Months – 65000 Ks</p>
-<p class="neon">12 Months – 118000 Ks</p>
-
-<a href="https://t.me/angsthtun">
-<button>Buy via Telegram</button>
-</a>
-
-</div>
-
-
-<script>
-
-function toggle(id){
-
-var apps = document.querySelector(".apps");
-var boxes = document.querySelectorAll(".pricebox");
-var box = document.getElementById(id);
-
-boxes.forEach(function(b){
-b.style.display = "none";
-});
-
-apps.style.display = "none";
-box.style.display = "block";
-
-}
-
-</script>
+      cards.forEach(function(card){
+        var name = card.getAttribute("data-name");
+        if(name.indexOf(input) > -1){
+          card.style.display = "flex";
+        }else{
+          card.style.display = "none";
+        }
+      });
+    }
+  </script>
 
 </body>
 </html>
