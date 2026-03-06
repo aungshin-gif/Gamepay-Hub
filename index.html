@@ -271,16 +271,20 @@
 
     select{
   width:100%;
-  padding:14px 14px;
-  border:none;
-  outline:none;
-  border-radius:12px;
-  background:rgba(80,0,120,0.45);
+  padding:14px 16px;
+  border-radius:14px;
+  border:1px solid rgba(199,125,255,0.6);
+  background:rgba(90,0,140,0.45);
   color:white;
   font-size:15px;
-  box-shadow:0 0 12px rgba(157,78,221,0.40);
-  backdrop-filter:blur(10px);
-}
+
+  box-shadow:
+  0 0 10px rgba(199,125,255,0.7),
+  0 0 20px rgba(157,78,221,0.5),
+  inset 0 0 10px rgba(199,125,255,0.2);
+
+  backdrop-filter:blur(12px);
+    }
 
 option{
   background:#2a0045;
