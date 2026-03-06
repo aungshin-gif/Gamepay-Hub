@@ -13,95 +13,110 @@
     body{
       margin:0;
       font-family:Arial, sans-serif;
-      color:white;
-      text-align:center;
+      color:#fff;
       background:
-        radial-gradient(circle at top, #5a189a 0%, #240046 35%, #140021 70%, #0d0016 100%);
+        radial-gradient(circle at top, #7b2cbf 0%, #3c096c 28%, #240046 58%, #140021 82%, #0d0016 100%);
       min-height:100vh;
+      text-align:center;
       overflow-x:hidden;
     }
 
     .topbar{
-      padding:28px 16px 10px;
+      padding:28px 16px 14px;
     }
 
     .logo{
-      font-size:38px;
-      font-weight:700;
+      font-size:40px;
+      font-weight:800;
       letter-spacing:1px;
       color:#ffd60a;
       text-shadow:
         0 0 5px #ffd60a,
-        0 0 12px #ffd60a,
+        0 0 10px #ffd60a,
         0 0 18px #c77dff,
-        0 0 32px #9d4edd;
+        0 0 30px #9d4edd,
+        0 0 45px #7b2cbf;
       margin-bottom:18px;
     }
 
     .search-wrap{
-      width:min(92%, 520px);
-      margin:0 auto 8px;
+      width:min(92%, 560px);
+      margin:0 auto;
     }
 
     #searchInput{
       width:100%;
-      padding:13px 16px;
+      padding:14px 16px;
       border:none;
       outline:none;
       border-radius:14px;
-      background:rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.1);
       color:white;
       font-size:15px;
-      box-shadow:0 0 12px rgba(199,125,255,0.35);
-      backdrop-filter:blur(6px);
+      box-shadow:0 0 15px rgba(199,125,255,0.35);
+      backdrop-filter:blur(8px);
     }
 
     #searchInput::placeholder{
-      color:#ddd;
+      color:#e6dcff;
     }
 
     .apps{
+      width:min(95%, 1200px);
+      margin:8px auto 18px;
       display:grid;
-      grid-template-columns:repeat(2, 1fr);
-      gap:20px;
-      padding:20px;
-      max-width:900px;
-      margin:0 auto 10px;
+      grid-template-columns:repeat(4, 1fr);
+      gap:18px;
+      padding:18px;
     }
 
     .card{
+      position:relative;
       background:rgba(43, 0, 64, 0.92);
-      padding:24px 16px 20px;
+      border:1px solid rgba(199,125,255,0.18);
+      padding:22px 14px 18px;
       border-radius:18px;
       cursor:pointer;
-      box-shadow:0 0 18px #9d4edd;
+      box-shadow:0 0 18px rgba(157,78,221,0.7);
       transition:transform 0.25s ease, box-shadow 0.25s ease;
-      min-height:220px;
+      min-height:200px;
       display:flex;
       flex-direction:column;
       justify-content:center;
       align-items:center;
-      position:relative;
       overflow:hidden;
     }
 
     .card:hover{
-      transform:scale(1.05);
-      box-shadow:0 0 32px #c77dff;
+      transform:translateY(-4px) scale(1.03);
+      box-shadow:0 0 28px rgba(199,125,255,0.95);
     }
 
     .card img{
-      width:68px;
-      height:68px;
+      width:64px;
+      height:64px;
       object-fit:contain;
       margin-bottom:12px;
       filter:drop-shadow(0 0 7px #c77dff);
     }
 
+    .emoji-icon{
+      width:64px;
+      height:64px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:38px;
+      margin-bottom:12px;
+      border-radius:16px;
+      background:rgba(255,255,255,0.06);
+      box-shadow:0 0 10px rgba(199,125,255,0.28);
+    }
+
     .card h3{
-      margin:8px 0 10px;
-      font-size:19px;
-      color:white;
+      margin:6px 0 8px;
+      font-size:18px;
+      color:#fff;
       text-shadow:
         0 0 3px #fff,
         0 0 8px #c77dff,
@@ -110,33 +125,46 @@
 
     .card p{
       margin:0;
-      color:#f1eaff;
-      font-size:15px;
+      color:#efe6ff;
+      font-size:14px;
     }
 
     .badge{
       position:absolute;
       top:12px;
       right:12px;
-      font-size:12px;
+      font-size:11px;
       padding:5px 10px;
       border-radius:999px;
-      background:rgba(0,255,140,0.14);
-      color:#8cffc1;
-      border:1px solid rgba(140,255,193,0.25);
-      box-shadow:0 0 10px rgba(140,255,193,0.18);
+      font-weight:700;
+      letter-spacing:0.2px;
+    }
+
+    .available{
+      background:rgba(0,255,136,0.14);
+      color:#91ffbf;
+      border:1px solid rgba(145,255,191,0.25);
+      box-shadow:0 0 10px rgba(145,255,191,0.16);
+    }
+
+    .low{
+      background:rgba(255,214,10,0.14);
+      color:#ffe773;
+      border:1px solid rgba(255,231,115,0.25);
+      box-shadow:0 0 10px rgba(255,231,115,0.16);
     }
 
     .pricebox{
       display:none;
-      width:min(92%, 560px);
-      margin:20px auto 28px;
-      padding:24px 18px 26px;
-      border-radius:18px;
-      background:rgba(37, 0, 58, 0.92);
-      box-shadow:0 0 26px #9d4edd;
+      width:min(92%, 680px);
+      margin:20px auto 30px;
+      padding:24px 18px 28px;
+      border-radius:20px;
+      background:rgba(37, 0, 58, 0.93);
+      border:1px solid rgba(199,125,255,0.18);
+      box-shadow:0 0 28px rgba(157,78,221,0.78);
+      backdrop-filter:blur(10px);
       animation:fade 0.35s ease;
-      backdrop-filter:blur(8px);
     }
 
     @keyframes fade{
@@ -151,7 +179,7 @@
     }
 
     .neon{
-      color:white;
+      color:#fff;
       text-shadow:
         0 0 3px #fff,
         0 0 8px #c77dff,
@@ -160,28 +188,34 @@
 
     .pricebox h3{
       margin:10px 0 16px;
-      font-size:28px;
+      font-size:30px;
     }
 
     .pricebox h4{
       margin:18px 0 10px;
       font-size:20px;
-      color:#fff8d6;
+      color:#fff3b0;
       text-shadow:
-        0 0 4px #fff1a8,
+        0 0 4px #fff3b0,
         0 0 10px #ffd60a,
         0 0 18px #9d4edd;
     }
 
     .pricebox p{
       margin:10px 0;
-      line-height:1.6;
+      line-height:1.65;
       font-size:17px;
       color:white;
       text-shadow:
-        0 0 3px #fff,
-        0 0 8px #c77dff,
-        0 0 12px #9d4edd;
+        0 0 2px #fff,
+        0 0 7px #c77dff,
+        0 0 10px #9d4edd;
+    }
+
+    .note{
+      color:#f3e7ff;
+      opacity:0.96;
+      font-size:15px;
     }
 
     button{
@@ -195,13 +229,13 @@
       transition:0.25s ease;
       box-shadow:0 0 12px #9d4edd;
       font-size:15px;
-      font-weight:600;
+      font-weight:700;
     }
 
     button:hover{
       background:#c77dff;
       transform:scale(1.05);
-      box-shadow:0 0 20px #c77dff;
+      box-shadow:0 0 22px #c77dff;
     }
 
     .back-btn{
@@ -212,33 +246,31 @@
       text-decoration:none;
     }
 
-    .hidden{
-      display:none !important;
+    .line{
+      width:78%;
+      height:1px;
+      margin:16px auto;
+      background:linear-gradient(to right, transparent, #c77dff, transparent);
+      opacity:0.8;
     }
 
-    @media (max-width: 700px){
+    @media (max-width: 980px){
       .apps{
-        grid-template-columns:1fr 1fr;
-        gap:16px;
-        padding:16px;
+        grid-template-columns:repeat(3, 1fr);
       }
+    }
 
-      .card{
-        min-height:200px;
-        padding:20px 12px 18px;
-      }
-
-      .card img{
-        width:62px;
-        height:62px;
+    @media (max-width: 720px){
+      .apps{
+        grid-template-columns:repeat(2, 1fr);
       }
 
       .logo{
-        font-size:32px;
+        font-size:33px;
       }
 
       .pricebox h3{
-        font-size:24px;
+        font-size:25px;
       }
 
       .pricebox p{
@@ -246,27 +278,28 @@
       }
     }
 
-    @media (max-width: 480px){
-      .apps{
-        grid-template-columns:1fr 1fr;
-        gap:14px;
-        padding:14px;
-      }
-
+    @media (max-width: 430px){
       .card{
         min-height:190px;
+        padding:20px 10px 16px;
       }
 
       .card h3{
-        font-size:17px;
+        font-size:16px;
       }
 
       .card p{
-        font-size:14px;
+        font-size:13px;
       }
 
-      .logo{
-        font-size:29px;
+      .card img,
+      .emoji-icon{
+        width:58px;
+        height:58px;
+      }
+
+      .emoji-icon{
+        font-size:34px;
       }
     }
   </style>
@@ -289,37 +322,100 @@
   <div class="apps" id="appsGrid">
 
     <div class="card" data-name="chatgpt" onclick="toggle('chatgpt')">
-      <span class="badge">Available</span>
+      <span class="badge available">Available</span>
       <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT">
       <h3>ChatGPT</h3>
       <p>Tap to see prices</p>
     </div>
 
     <div class="card" data-name="spotify" onclick="toggle('spotify')">
-      <span class="badge">Available</span>
+      <span class="badge available">Available</span>
       <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify">
       <h3>Spotify</h3>
       <p>Tap to see prices</p>
     </div>
 
     <div class="card" data-name="picsart" onclick="toggle('picsart')">
-      <span class="badge">Available</span>
+      <span class="badge available">Available</span>
       <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/PicsArt_Logo.svg" alt="PicsArt">
       <h3>PicsArt</h3>
       <p>Tap to see prices</p>
     </div>
 
-    <div class="card" data-name="vpn" onclick="toggle('vpn')">
-      <span class="badge">Available</span>
-      <img src="https://cdn-icons-png.flaticon.com/512/565/565547.png" alt="VPN">
-      <h3>VPN</h3>
+    <div class="card" data-name="vpn express" onclick="toggle('vpn')">
+      <span class="badge available">Available</span>
+      <img src="https://cdn-icons-png.flaticon.com/512/565/565547.png" alt="Express VPN">
+      <h3>Express VPN</h3>
       <p>Tap to see prices</p>
     </div>
 
     <div class="card" data-name="telegram premium" onclick="toggle('telegram')">
-      <span class="badge">Available</span>
+      <span class="badge available">Available</span>
       <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram Premium">
       <h3>Telegram Premium</h3>
+      <p>Tap to see prices</p>
+    </div>
+
+    <div class="card" data-name="gemini pro google ai" onclick="toggle('gemini')">
+      <span class="badge available">Available</span>
+      <div class="emoji-icon">✨</div>
+      <h3>Gemini Pro</h3>
+      <p>Tap to see prices</p>
+    </div>
+
+    <div class="card" data-name="itunes gift card apple" onclick="toggle('itunes')">
+      <span class="badge available">Available</span>
+      <div class="emoji-icon"></div>
+      <h3>iTunes Gift Card</h3>
+      <p>Tap to see prices</p>
+    </div>
+
+    <div class="card" data-name="netflix" onclick="toggle('netflix')">
+      <span class="badge available">Available</span>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_N_logo.svg" alt="Netflix">
+      <h3>Netflix</h3>
+      <p>Tap to see prices</p>
+    </div>
+
+    <div class="card" data-name="capcut pro" onclick="toggle('capcut')">
+      <span class="badge available">Available</span>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/CapCut_logo.svg" alt="CapCut">
+      <h3>CapCut Pro</h3>
+      <p>Tap to see prices</p>
+    </div>
+
+    <div class="card" data-name="amazon prime video prime" onclick="toggle('prime')">
+      <span class="badge available">Available</span>
+      <div class="emoji-icon">🎬</div>
+      <h3>Prime Video</h3>
+      <p>Tap to see prices</p>
+    </div>
+
+    <div class="card" data-name="outline vpn" onclick="toggle('outline')">
+      <span class="badge available">Available</span>
+      <div class="emoji-icon">🛡️</div>
+      <h3>Outline VPN</h3>
+      <p>Tap to see prices</p>
+    </div>
+
+    <div class="card" data-name="jump jump vpn" onclick="toggle('jumpvpn')">
+      <span class="badge available">Available</span>
+      <div class="emoji-icon">🚀</div>
+      <h3>Jump Jump VPN</h3>
+      <p>Tap to see prices</p>
+    </div>
+
+    <div class="card" data-name="meitu vip" onclick="toggle('meitu')">
+      <span class="badge low">Low Stock</span>
+      <div class="emoji-icon">💄</div>
+      <h3>Meitu VIP</h3>
+      <p>Tap to see prices</p>
+    </div>
+
+    <div class="card" data-name="wink" onclick="toggle('wink')">
+      <span class="badge low">Low Stock</span>
+      <div class="emoji-icon">😉</div>
+      <h3>Wink</h3>
       <p>Tap to see prices</p>
     </div>
 
@@ -329,15 +425,11 @@
   <div id="chatgpt" class="pricebox">
     <button class="back-btn" onclick="goBack()">⬅ Back</button>
     <h3 class="neon">ChatGPT Plus</h3>
-
     <p class="neon">1 Month – 6000 MMK (Share)</p>
     <p class="neon">1 Month – 6500 MMK (Private)</p>
     <p class="neon">3 Months – 8000 MMK (Share)</p>
     <p class="neon">3 Months – 9000 MMK (Private)</p>
-
-    <a class="buy-link" href="https://t.me/angsthtun">
-      <button>Buy via Telegram</button>
-    </a>
+    <a class="buy-link" href="https://t.me/angsthtun"><button>Buy via Telegram</button></a>
   </div>
 
   <!-- Spotify -->
@@ -351,30 +443,26 @@
     <p class="neon">3 Months – 24000 Ks</p>
     <p class="neon">6 Months – 65000 Ks</p>
 
+    <div class="line"></div>
+
     <h4>Individual Plan (Global)</h4>
     <p class="neon">1 Month – 13000 Ks</p>
     <p class="neon">2 Months – 24000 Ks</p>
     <p class="neon">3 Months – 34000 Ks</p>
 
-    <a class="buy-link" href="https://t.me/angsthtun">
-      <button>Buy via Telegram</button>
-    </a>
+    <a class="buy-link" href="https://t.me/angsthtun"><button>Buy via Telegram</button></a>
   </div>
 
   <!-- PicsArt -->
   <div id="picsart" class="pricebox">
     <button class="back-btn" onclick="goBack()">⬅ Back</button>
     <h3 class="neon">PicsArt Gold</h3>
-
     <p class="neon">1 Month – 5000 MMK</p>
     <p class="neon">3 Months – 12000 MMK</p>
-
-    <a class="buy-link" href="https://t.me/angsthtun">
-      <button>Buy via Telegram</button>
-    </a>
+    <a class="buy-link" href="https://t.me/angsthtun"><button>Buy via Telegram</button></a>
   </div>
 
-  <!-- VPN -->
+  <!-- Express VPN -->
   <div id="vpn" class="pricebox">
     <button class="back-btn" onclick="goBack()">⬅ Back</button>
     <h3 class="neon">Express VPN</h3>
@@ -384,7 +472,9 @@
     <p class="neon">⭐ 1 Month – 2500 Ks (Windows PC & Laptop)</p>
     <p class="neon">⭐ 1 Month – 2500 Ks (Linux Devices)</p>
     <p class="neon">⭐ 1 Month – 2500 Ks (MacBook)</p>
-    <p class="neon"><i>Share plan can only use 1 device</i></p>
+    <p class="note">Share plan can only use 1 device</p>
+
+    <div class="line"></div>
 
     <h4>Private Plan</h4>
     <p class="neon">⭐ 1 Month – 8000 Ks (Up to 9 devices)</p>
@@ -393,9 +483,7 @@
     <p class="neon">🔐 Custom Password</p>
     <p class="neon">⭐ Own account</p>
 
-    <a class="buy-link" href="https://t.me/angsthtun">
-      <button>Buy via Telegram</button>
-    </a>
+    <a class="buy-link" href="https://t.me/angsthtun"><button>Buy via Telegram</button></a>
   </div>
 
   <!-- Telegram -->
@@ -403,22 +491,259 @@
     <button class="back-btn" onclick="goBack()">⬅ Back</button>
     <h3 class="neon">Telegram Premium</h3>
 
-    <p class="neon"><b>⭐ Login Method</b></p>
+    <h4>⭐ Login Method</h4>
     <p class="neon">1 Month – 20500 Ks</p>
 
-    <p class="neon"><b>🎁 Gift Plan</b></p>
+    <div class="line"></div>
+
+    <h4>🎁 Gift Plan</h4>
     <p class="neon">3 Months – 50000 Ks</p>
     <p class="neon">6 Months – 67000 Ks</p>
     <p class="neon">9 Months – 118000 Ks</p>
 
-    <p class="neon"><b>🔗 Link Plan</b></p>
+    <div class="line"></div>
+
+    <h4>🔗 Link Plan</h4>
     <p class="neon">3 Months – 44000 Ks</p>
     <p class="neon">6 Months – 65000 Ks</p>
     <p class="neon">12 Months – 118000 Ks</p>
 
-    <a class="buy-link" href="https://t.me/angsthtun">
-      <button>Buy via Telegram</button>
-    </a>
+    <a class="buy-link" href="https://t.me/angsthtun"><button>Buy via Telegram</button></a>
+  </div>
+
+  <!-- Gemini -->
+  <div id="gemini" class="pricebox">
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <h3 class="neon">Gemini Pro Private Version</h3>
+
+    <p class="neon">1 Month – 7000 Ks</p>
+    <p class="neon">2 Months – 12500 Ks</p>
+    <p class="neon">3 Months – 17000 Ks</p>
+    <p class="neon">6 Months – 30000 Ks</p>
+    <p class="neon">1 Year – 51000 Ks</p>
+
+    <div class="line"></div>
+
+    <p class="neon">✔️ Access on your email</p>
+    <p class="neon">✔️ 2 TB storage for Photos, Drive & Gmail</p>
+    <p class="neon">✔️ Gemini app with 2.5 Pro</p>
+    <p class="neon">✔️ Access to Veo 3</p>
+    <p class="neon">✔️ Flow with access to Veo 3</p>
+    <p class="neon">✔️ Whisk with Veo 2</p>
+    <p class="neon">✔️ 1000 monthly AI credits</p>
+    <p class="neon">✔️ NotebookLM with higher limits</p>
+    <p class="neon">✔️ Gemini in Gmail, Docs, Vids & limits</p>
+    <p class="neon">✔️ All other benefits in the premium plan</p>
+    <p class="neon">✔️ Full-time warranty</p>
+    <p class="neon">✔️ 100% genuine access to Gemini AI</p>
+
+    <a class="buy-link" href="https://t.me/angsthtun"><button>Buy via Telegram</button></a>
+  </div>
+
+  <!-- iTunes -->
+  <div id="itunes" class="pricebox">
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <h3 class="neon">iTunes Gift Card</h3>
+
+    <p class="neon">5 USD – 21500 Ks</p>
+    <p class="neon">10 USD – 41500 Ks</p>
+    <p class="neon">20 USD – 82000 Ks</p>
+    <p class="neon">50 USD – 204000 Ks</p>
+    <p class="neon">100 USD – 410000 Ks</p>
+
+    <div class="line"></div>
+
+    <p class="neon">Other Regions Available</p>
+    <p class="neon">Canada, Germany, Japan, China, Taiwan, Nigeria, etc.</p>
+
+    <a class="buy-link" href="https://t.me/angsthtun"><button>Buy via Telegram</button></a>
+  </div>
+
+  <!-- Netflix -->
+  <div id="netflix" class="pricebox">
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <h3 class="neon">Netflix Accounts</h3>
+
+    <p class="neon">Can activate in Myanmar</p>
+
+    <h4>Share Account</h4>
+    <p class="neon">1 Month – 6000 Ks</p>
+    <p class="neon">3 Months – 12000 Ks</p>
+    <p class="neon">6 Months – 22000 Ks</p>
+    <p class="neon">1 Year – 35000 Ks</p>
+
+    <div class="line"></div>
+
+    <h4>Personal</h4>
+    <p class="neon">1 Month – 7000 Ks</p>
+    <p class="neon">3 Months – 13000 Ks</p>
+    <p class="neon">6 Months – 24000 Ks</p>
+    <p class="neon">1 Year – 39000 Ks</p>
+
+    <div class="line"></div>
+
+    <h4>Mail Subscription - Standard Plan</h4>
+    <p class="neon">35000 Ks</p>
+    <p class="neon">VD and quality – Good</p>
+    <p class="neon">Resolution – 1080 (Full HD)</p>
+    <p class="neon">Supported Devices – TV, Computer, Mobile, Tablet</p>
+    <p class="neon">Device usage at same time – 2</p>
+    <p class="neon">Download Devices – 2</p>
+    <p class="neon">Ads – Less than U think</p>
+
+    <div class="line"></div>
+
+    <h4>Mail Subscription - Pro Plan</h4>
+    <p class="neon">75500 Ks</p>
+    <p class="neon">VD and quality – Good</p>
+    <p class="neon">Resolution – 1080 (Full HD)</p>
+    <p class="neon">Supported Devices – TV, Computer, Mobile, Tablet</p>
+    <p class="neon">Device usage at same time – 2</p>
+    <p class="neon">Download Devices – 2</p>
+    <p class="neon">Ads – No</p>
+
+    <div class="line"></div>
+
+    <h4>Mail Subscription - Premium Plan</h4>
+    <p class="neon">99000 Ks</p>
+    <p class="neon">VD and quality – Best</p>
+    <p class="neon">Resolution – 4K (Ultra HD) + HDR</p>
+    <p class="neon">Supported Devices – TV, Computer, Mobile, Tablet</p>
+    <p class="neon">Device usage at same time – 4</p>
+    <p class="neon">Download Devices – 6</p>
+    <p class="neon">Ads – No</p>
+
+    <a class="buy-link" href="https://t.me/angsthtun"><button>Buy via Telegram</button></a>
+  </div>
+
+  <!-- CapCut -->
+  <div id="capcut" class="pricebox">
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <h3 class="neon">CapCut Pro</h3>
+
+    <h4>Global Account</h4>
+    <p class="neon">1 Month – 6500 Ks</p>
+    <p class="neon">3 Months – 19500 Ks</p>
+    <p class="neon">6 Months – 54000 Ks</p>
+    <p class="neon">1 Year – nearly 75000 Ks</p>
+
+    <div class="line"></div>
+
+    <h4>CapCut Subscription (Own Mail)</h4>
+    <h4>Standard Plan</h4>
+    <p class="neon">1 Month – 44000 Ks</p>
+    <p class="neon">1 Year – High Cost</p>
+
+    <div class="line"></div>
+
+    <h4>Pro Plan</h4>
+    <p class="neon">1 Month – 120000 Ks</p>
+    <p class="neon">1 Year – High Cost</p>
+
+    <a class="buy-link" href="https://t.me/angsthtun"><button>Buy via Telegram</button></a>
+  </div>
+
+  <!-- Prime Video -->
+  <div id="prime" class="pricebox">
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <h3 class="neon">Amazon Prime Video</h3>
+
+    <h4>Dedicated Private Account</h4>
+    <p class="neon">1 Month – 5800 Ks</p>
+    <p class="neon">3 Months – 13800 Ks</p>
+    <p class="neon">6 Months – 22000 Ks</p>
+    <p class="neon">☑️ Dedicated pin locked private profile</p>
+    <p class="neon">☑️ Full-time warranty</p>
+    <p class="neon">☑️ 100% genuine access to Prime Video</p>
+
+    <div class="line"></div>
+
+    <h4>Full Private</h4>
+    <p class="neon">1 Month – 10000 Ks</p>
+    <p class="neon">3 Months – Out of stock</p>
+    <p class="neon">6 Months – 26000 Ks</p>
+    <p class="neon">☑️ 6 Profile Full Account</p>
+    <p class="neon">☑️ Account access on your email</p>
+    <p class="neon">☑️ Full-time warranty</p>
+    <p class="neon">☑️ 100% genuine access to Prime Video</p>
+
+    <a class="buy-link" href="https://t.me/angsthtun"><button>Buy via Telegram</button></a>
+  </div>
+
+  <!-- Outline VPN -->
+  <div id="outline" class="pricebox">
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <h3 class="neon">Outline VPN</h3>
+
+    <p class="neon">🟢 50GB – 3000 Ks (1 Month)</p>
+    <p class="neon">🟢 100GB – 5000 Ks (1 Month)</p>
+    <p class="neon">🟢 150GB – 6900 Ks (1 Month)</p>
+    <p class="neon">🟢 200GB – 8500 Ks (2 Months)</p>
+
+    <a class="buy-link" href="https://t.me/angsthtun"><button>Buy via Telegram</button></a>
+  </div>
+
+  <!-- Jump Jump VPN -->
+  <div id="jumpvpn" class="pricebox">
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <h3 class="neon">Jump Jump VPN</h3>
+
+    <p class="neon">1 Device – 3 Days = 2700 Ks</p>
+    <p class="neon">1 Device – 1 Month = 13000 Ks</p>
+    <p class="neon">2 Devices – 1 Month = 18000 Ks</p>
+    <p class="neon">2 Devices – 6 Months = 90000 Ks</p>
+    <p class="neon">2 Devices – 12 Months = 108000 Ks</p>
+
+    <a class="buy-link" href="https://t.me/angsthtun"><button>Buy via Telegram</button></a>
+  </div>
+
+  <!-- Meitu -->
+  <div id="meitu" class="pricebox">
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <h3 class="neon">Meitu VIP</h3>
+
+    <h4>China Region</h4>
+    <p class="neon">1 Month – 13000 Ks</p>
+    <p class="neon">Available 1 stock</p>
+
+    <div class="line"></div>
+
+    <h4>Global Region</h4>
+    <p class="neon">1 Month – 20000 MMK (Share) – 1 Device</p>
+
+    <div class="line"></div>
+
+    <h4>Silver VIP</h4>
+    <p class="neon">1 Month – 24000 MMK (Private) – 2 Devices</p>
+    <p class="neon">1 Month – 40000 MMK (Private) – 4 Devices</p>
+    <p class="neon">1 Year – 160000 MMK (Private) – 2 Devices</p>
+    <p class="neon">1 Year – 260000 MMK (Private) – 4 Devices</p>
+
+    <div class="line"></div>
+
+    <h4>Normal VIP</h4>
+    <p class="neon">Included in private plans above</p>
+
+    <a class="buy-link" href="https://t.me/angsthtun"><button>Buy via Telegram</button></a>
+  </div>
+
+  <!-- Wink -->
+  <div id="wink" class="pricebox">
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <h3 class="neon">Wink</h3>
+
+    <h4>China Region</h4>
+    <p class="neon">1 Month – 4500 Ks</p>
+    <p class="neon">Available 1 stock</p>
+
+    <div class="line"></div>
+
+    <h4>Global Region</h4>
+    <p class="neon">1 Month – 8000 Ks (Share) – 1 Device</p>
+    <p class="neon">1 Month – 24000 Ks (Private) – 3 Devices</p>
+    <p class="neon">1 Year – 160000 Ks (Private) – 3 Devices</p>
+
+    <a class="buy-link" href="https://t.me/angsthtun"><button>Buy via Telegram</button></a>
   </div>
 
   <script>
@@ -464,4 +789,4 @@
   </script>
 
 </body>
-</html>
+</html> 
