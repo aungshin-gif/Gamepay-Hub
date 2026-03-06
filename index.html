@@ -163,22 +163,19 @@ text-shadow:
 </div>
 
 
-<script>
+</div>   <!-- vpn pricebox -->
 
+<script>
 function toggle(id){
 
 var box = document.getElementById(id);
 
-if(box.style.display === "block"){
-box.style.display = "none";
-}else{
+if(box.style.display === "none" || box.style.display === ""){
 box.style.display = "block";
+box.scrollIntoView({behavior:"smooth"});
+}else{
+box.style.display = "none";
 }
 
 }
-
 </script>
-
-
-</body>
-</html>
