@@ -602,6 +602,36 @@ transition:0.3s;
 .telegram-join-btn:hover{
 transform:scale(1.05);
 box-shadow:0 0 25px #c77dff;
+}.telegram-join-btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 25px #c77dff;
+}
+
+/* ADD HERE (Line 605) */
+
+.qty-control{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:15px;
+margin-top:15px;
+}
+
+.qty-control button{
+width:40px;
+height:40px;
+border-radius:10px;
+border:none;
+background:#9d4edd;
+color:white;
+font-size:20px;
+cursor:pointer;
+}
+
+.qty-control span{
+font-size:18px;
+font-weight:bold;
+color:white;
 }
   </style>
 </head>
@@ -1005,7 +1035,11 @@ plans: [
             ${options}
           </select>
         </div>
-
+<div class="qty-control">
+<button onclick="changeQty(-1)">-</button>
+<span id="qty">1</span>
+<button onclick="changeQty(1)">+</button>
+</div>
         ${product.note ? `<div class="note">${escapeHtml(product.note)}</div>` : ""}
 
         <div class="order-preview" id="orderPreviewBox"></div>
@@ -1052,15 +1086,36 @@ card.style.display="none";
         "Product: " + escapeHtml(productName) + "<br>" +
         "Plan: " + escapeHtml(select.value);
     }
+let quantity = 1;
 
+function changeQty(num){
+quantity += num;
+
+if(quantity < 1){
+quantity = 1;
+}
+
+document.getElementById("qty").innerText = quantity;
+}let qty = 1;
+
+function changeQty(val){
+qty += val;
+
+if(qty < 1){
+qty = 1;
+}
+
+document.getElementById("qty").innerText = qty;
+}
     function sendOrder(productName){
       const select = document.getElementById("currentPlanSelect");
       if(!select) return;
 
       const message =
-        "Hello, I want to order\n" +
-        "Product: " + productName + "\n" +
-        "Plan: " + select.value;
+"Hello, I want to order\n" +
+"Product: " + productName + "\n" +
+"Plan: " + select.value + "\n" +
+"Quantity: " + quantity;
 
       const url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
       window.open(url, "_blank");
