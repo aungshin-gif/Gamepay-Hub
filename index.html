@@ -988,14 +988,14 @@ filterApps();
       modal.innerHTML = `
         <button class="back-btn" onclick="goBack()">⬅ Back</button>
         <h3>${escapeHtml(product.name)}</h3>
+<div class="selector-wrap">
+<div class="selector-label">Select plan</div>
 
-        <div class="selector-wrap">
-  <div class="selector-label">Select plan</div>
+<select id="currentPlanSelect"
+onchange="updatePreview('${escapeJs(product.name)}')">
+${options}
+</select>
 
-  <select id="currentPlanSelect"
-    onchange="updatePreview('${escapeJs(product.name)}')">
-    ${options}
-  </select>
 </div>
 
         ${product.note ? `<div class="note">${escapeHtml(product.note)}</div>` : ""}
@@ -1061,7 +1061,6 @@ let url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(me
 window.open(url,"_blank");
 
 }
-
 
     function escapeHtml(str){
       return String(str)
