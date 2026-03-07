@@ -102,6 +102,7 @@ filter:drop-shadow(0 0 20px #e0aaff)
 drop-shadow(0 0 40px #c77dff)
 drop-shadow(0 0 60px #9d4edd);
 }
+
 }
     .sublogo{
       font-size:15px;
@@ -130,7 +131,21 @@ color:white;
 font-size:18px;
 cursor:pointer;
 }
+<div class="search-wrap">
 
+<div class="search-box">
+
+<span class="search-icon">🔍</span>
+
+<input
+type="text"
+id="searchInput"
+placeholder="Search apps..."
+onkeyup="filterApps()">
+
+<button onclick="clearSearch()" class="clear-btn">✖</button>
+
+</div>
 
 .search-box{
 width:min(95%,720px);
@@ -363,20 +378,6 @@ transform:scale(0.98);
       color:#efe6ff;
       text-shadow:0 0 5px var(--purple);
     }
-    
-    .order-preview{
-      width:min(100%, 560px);
-      margin:14px auto 0;
-      padding:12px 14px;
-      border-radius:14px;
-      background:rgba(255,255,255,0.05);
-      border:1px solid rgba(199,125,255,0.16);
-      text-align:left;
-      font-size:14px;
-      color:#f5ecff;
-      box-shadow:0 0 10px rgba(157,78,221,0.18);
-      line-height:1.6;
-    }
 select{
 width:100%;
 padding:14px 16px;
@@ -413,6 +414,20 @@ select option{
 background:#2b0044 !important;
 color:#ffffff !important;
 }
+    .order-preview{
+      width:min(100%, 560px);
+      margin:14px auto 0;
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(199,125,255,0.16);
+      text-align:left;
+      font-size:14px;
+      color:#f5ecff;
+      box-shadow:0 0 10px rgba(157,78,221,0.18);
+      line-height:1.6;
+    }
+
     .order-preview strong{
       color:#fff;
     }
@@ -595,23 +610,15 @@ box-shadow:0 0 25px #c77dff;
 <img src="file_00000000a91c722f98f4be48b8cbb7c5.png" alt="GamePay Hub Digital">
 </div>
 
-     <div class="search-wrap">
-
-<div class="search-box">
-
-<span class="search-icon">🔍</span>
-
-<input
-type="text"
-id="searchInput"
-placeholder="Search apps..."
-onkeyup="filterApps()">
-
-<button onclick="clearSearch()" class="clear-btn">✖</button>
-
-</div>
-
-     </div> 
+      <div class="search-wrap">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search apps..."
+          onkeyup="filterApps()"
+        >
+      </div>
+    </div>
 
     <div class="apps" id="appsGrid"></div>
 
@@ -963,19 +970,18 @@ plans: [
         : `<div class="icon-shell"><div class="emoji-icon">${product.icon}</div></div>`;
 
       return `
-  <div class="card" data-name="${escapeHtml(product.search)}" onclick="openProduct('${escapeJs(product.id)}')">
-    <span class="badge ${badgeClass}">${badgeText}</span>
-    ${iconHtml}
-    <h3>${escapeHtml(product.name)}</h3>
-    <p>${escapeHtml(product.subtitle)}</p>
-  </div>
-`;
-}   
+        <div class="card" data-name="${escapeHtml(product.search)}" onclick="openProduct('${escapeJs(product.id)}')">
+          <span class="badge ${badgeClass}">${badgeText}</span>
+          ${iconHtml}
+          <h3>${escapeHtml(product.name)}</h3>
+          <p>${escapeHtml(product.subtitle)}</p>
+        </div>
+      `;
+    }
 
-function clearSearch(){
-document.getElementById("searchInput").value="";
-filterApps();
-}
+    function renderCards(list){
+      appsGrid.innerHTML = list.map(createCard).join("");
+    }
 
     function openProduct(id){
       const product = products.find(p => p.id === id);
@@ -988,15 +994,13 @@ filterApps();
       modal.innerHTML = `
         <button class="back-btn" onclick="goBack()">⬅ Back</button>
         <h3>${escapeHtml(product.name)}</h3>
-<div class="selector-wrap">
-<div class="selector-label">Select plan</div>
 
-<select id="currentPlanSelect"
-onchange="updatePreview('${escapeJs(product.name)}')">
-${options}
-</select>
-
-</div>
+        <div class="selector-wrap">
+          <div class="selector-label">Select plan</div>
+          <select id="currentPlanSelect" onchange="updatePreview('${escapeJs(product.name)}')">
+            ${options}
+          </select>
+        </div>
 
         ${product.note ? `<div class="note">${escapeHtml(product.note)}</div>` : ""}
 
@@ -1032,35 +1036,31 @@ card.style.display="flex";
 card.style.display="none";
 }
 });
-  }
-  function updatePreview(productName){
+    }
 
-const select = document.getElementById("currentPlanSelect");
-const preview = document.getElementById("orderPreviewBox");
+    function updatePreview(productName){
+      const select = document.getElementById("currentPlanSelect");
+      const preview = document.getElementById("orderPreviewBox");
+      if(!select || !preview) return;
 
-if(!select || !preview) return;
+      preview.innerHTML =
+        "<strong>Order Preview</strong><br>" +
+        "Product: " + escapeHtml(productName) + "<br>" +
+        "Plan: " + escapeHtml(select.value);
+    }
 
-preview.innerHTML =
-"<strong>Order Preview</strong><br>" +
-"Product: " + escapeHtml(productName) + "<br>" +
-"Plan: " + escapeHtml(select.value);
+    function sendOrder(productName){
+      const select = document.getElementById("currentPlanSelect");
+      if(!select) return;
 
-  }
-function sendOrder(productName){
+      const message =
+        "Hello, I want to order\n" +
+        "Product: " + productName + "\n" +
+        "Plan: " + select.value;
 
-const select = document.getElementById("currentPlanSelect");
-if(!select) return;
-
-let message =
-"I want to order\n" +
-"Product: " + productName + "\n" +
-"Plan: " + select.value;
-
-let url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
-
-window.open(url,"_blank");
-
-}
+      const url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
+      window.open(url, "_blank");
+    }
 
     function escapeHtml(str){
       return String(str)
