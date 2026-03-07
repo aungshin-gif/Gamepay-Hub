@@ -971,22 +971,6 @@ plans: [
           <p>${escapeHtml(product.subtitle)}</p>
         </div>
       `;
-    }
-function filterApps(){
-const input = document.getElementById("searchInput").value.toLowerCase();
-const cards = document.querySelectorAll(".card");
-
-cards.forEach(card=>{
-const name = card.innerText.toLowerCase();
-
-if(name.includes(input)){
-card.style.display="flex";
-}else{
-card.style.display="none";
-}
-});
-}
-
 function clearSearch(){
 document.getElementById("searchInput").value="";
 filterApps();
@@ -1050,12 +1034,6 @@ card.style.display="flex";
 card.style.display="none";
 }
 });
-    }
-<div class="selector-label">Select plan</div>
-          <select id="currentPlanSelect" onchange="updatePreview('${escapeJs(product.name)}')">
-            ${options}
-          </select>
-        </div>
   }
   function updatePreview(productName){
 
