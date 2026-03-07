@@ -384,24 +384,44 @@ transform:scale(0.98);
 </div>
 select{
 width:100%;
-padding:14px 16px;
-border-radius:14px;
-border:1px solid rgba(255,255,255,0.25);
+padding:16px 18px;
+border-radius:16px;
 
-background:rgba(255,255,255,0.08);
+border:1px solid rgba(199,125,255,0.25);
+
+background:rgba(255,255,255,0.05);
 backdrop-filter:blur(12px);
 
 color:white;
 font-size:16px;
 
 box-shadow:
-0 0 10px rgba(199,125,255,0.6),
-0 0 25px rgba(157,78,221,0.5),
-inset 0 0 10px rgba(255,255,255,0.1);
+0 0 12px rgba(199,125,255,0.3),
+0 0 25px rgba(157,78,221,0.25),
+inset 0 0 8px rgba(255,255,255,0.08);
 
 outline:none;
 transition:0.3s;
 }
+
+select:hover{
+box-shadow:
+0 0 18px rgba(199,125,255,0.6),
+0 0 40px rgba(157,78,221,0.4);
+}
+
+select:focus{
+box-shadow:
+0 0 20px #c77dff,
+0 0 40px #9d4edd,
+0 0 70px #7b2cbf;
+}
+
+select option{
+background:#2b0044;
+color:white;
+padding:10px;
+    }
 
 select:focus{
 box-shadow:
