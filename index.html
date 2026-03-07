@@ -1034,11 +1034,23 @@ plans: [
         <h3>${escapeHtml(product.name)}</h3>
 
         <div class="selector-wrap">
-          <div class="selector-label">Select plan</div>
-          <select id="currentPlanSelect" onchange="updatePreview('${escapeJs(product.name)}')">
-            ${options}
-          </select>
-        </div>
+          // ဒါက အဖြူရောင်စာတန်း ပျောက်စေမယ့် Custom Dropdown structure ပါ
+let customSelectHTML = `
+<div class="custom-select-wrapper">
+  <div class="custom-select" onclick="this.classList.toggle('open')">
+    <div class="custom-select__trigger">
+      <span>Plan ရွေးချယ်ပါ</span>
+      <div class="arrow"></div>
+    </div>
+    <div class="custom-options">
+      ${product.plans.map(plan => `
+        <span class="custom-option" data-value="${plan}" onclick="selectPlan(this, '${product.name}')">${plan}</span>
+      `).join('')}
+    </div>
+  </div>
+</div>
+`;
+
 
         ${product.note ? `<div class="note">${escapeHtml(product.note)}</div>` : ""}
 
@@ -1075,21 +1087,54 @@ card.style.display="none";
 }
 });
     }
+function updatePreview(productName) {
+    // Custom Dropdown ကနေ ရွေးထားတဲ့ value ကို ယူတာ
+    const selectedOption = document.querySelector('.custom-option.selected');
+    const preview = document.getElementById("orderPreviewBox");
+    
+    if (!selectedOption || !preview) return;
 
-    function updatePreview(productName){
-      const select = document.getElementById("currentPlanSelect");
-      const preview = document.getElementById("orderPreviewBox");
-      if(!select || !preview) return;
+    const selectedValue = selectedOption.dataset.value;
 
-      preview.innerHTML =
+    preview.innerHTML = 
         "<strong>Order Preview</strong><br>" +
         "Product: " + escapeHtml(productName) + "<br>" +
-        "Plan: " + escapeHtml(select.value);
+        "Plan: " + escapeHtml(selectedValue);
+}
+
+function sendOrder(productName) {
+    // Custom Dropdown ကနေ ရွေးထားတဲ့ value ကို ယူတာ
+    const selectedOption = document.querySelector('.custom-option.selected');
+    
+    if (!selectedOption) {
+        alert("Please select a plan first!");
+        return;
     }
+
+    const selectedValue = selectedOption.dataset.value;
+
+    let message = 
+        "I want to order\n" +
+        "Product: " + productName + "\n" +
+        "Plan: " + selectedValue;
+
+    let url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
+    window.open(url, "_blank");
+}
     
 function sendOrder(productName){
 const select = document.getElementById("currentPlanSelect");
 if(!select) return;
+  function selectPlan(element, productName) {
+    const parent = element.closest('.custom-select');
+    parent.querySelector('.custom-option.selected')?.classList.remove('selected');
+    element.classList.add('selected');
+    parent.querySelector('.custom-select__trigger span').textContent = element.textContent;
+    
+    // Preview ကို update လုပ်မယ်
+    updatePreview(productName);
+  }
+  
 
 let message =
 "I want to order\n" +
