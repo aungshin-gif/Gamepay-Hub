@@ -92,8 +92,9 @@ margin:auto;
     }
 
     .search-wrap{
-      width:min(92%, 560px);
-      margin:0 auto;
+width:min(95%,720px);
+margin:20px auto;
+position:relative;
     }
 
 .clear-btn{
@@ -117,21 +118,38 @@ onkeyup="filterApps()">
 
 <button onclick="clearSearch()" class="clear-btn">✖</button>
 
-</div>
-    #searchInput{
+#searchInput{
 width:100%;
-padding:20px 22px;
+padding:22px 24px;
 border:none;
 outline:none;
-border-radius:18px;
-background:rgba(255,255,255,0.15);
-color:white;
-font-size:18px;
-box-shadow:0 0 20px rgba(199,125,255,0.5);
+border-radius:20px;
+
+background:rgba(255,255,255,0.08);
+color:#ffffff;
+font-size:20px;
+
+border:2px solid #c77dff;
+
+box-shadow:
+0 0 10px #c77dff,
+0 0 20px #9d4edd,
+0 0 30px #7b2cbf;
+
+backdrop-filter:blur(10px);
+
+transition:0.3s;
 }
 
 #searchInput::placeholder{
-color:#e6dcff;
+color:#e0aaff;
+}
+
+#searchInput:focus{
+box-shadow:
+0 0 15px #e0aaff,
+0 0 30px #c77dff,
+0 0 45px #7b2cbf;
 }
 
     #searchInput::placeholder{
