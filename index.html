@@ -386,17 +386,33 @@ select{
 width:100%;
 padding:14px 16px;
 border-radius:14px;
-border:1px solid rgba(210,170,255,0.3);
+border:1px solid rgba(255,255,255,0.25);
 
-background:rgba(40,0,60,0.8);
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(12px);
+
 color:white;
 font-size:16px;
 
 box-shadow:
-0 0 10px rgba(199,125,255,0.4),
-0 0 20px rgba(157,78,221,0.3);
+0 0 10px rgba(199,125,255,0.6),
+0 0 25px rgba(157,78,221,0.5),
+inset 0 0 10px rgba(255,255,255,0.1);
 
 outline:none;
+transition:0.3s;
+}
+
+select:focus{
+box-shadow:
+0 0 15px #e0aaff,
+0 0 35px #c77dff,
+0 0 60px #9d4edd;
+}
+
+select option{
+background:#2b0044;
+color:white;
 }
 
 select option{
