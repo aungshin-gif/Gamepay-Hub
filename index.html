@@ -76,9 +76,33 @@ text-shadow:
 
 /* LOGO IMAGE SIZE */
 .logo img{
-width:160px;
+width:260px;
 display:block;
 margin:auto;
+
+animation:logoGlow 2.5s ease-in-out infinite alternate;
+
+filter:drop-shadow(0 0 10px #c77dff)
+drop-shadow(0 0 20px #9d4edd)
+drop-shadow(0 0 35px #7b2cbf);
+}
+
+@keyframes logoGlow{
+
+0%{
+transform:scale(1);
+filter:drop-shadow(0 0 10px #c77dff)
+drop-shadow(0 0 20px #9d4edd)
+drop-shadow(0 0 35px #7b2cbf);
+}
+
+100%{
+transform:scale(1.05);
+filter:drop-shadow(0 0 20px #e0aaff)
+drop-shadow(0 0 40px #c77dff)
+drop-shadow(0 0 60px #9d4edd);
+}
+
 }
     .sublogo{
       font-size:15px;
