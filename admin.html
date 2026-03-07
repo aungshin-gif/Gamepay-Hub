@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GamePay Hub Admin</title>
+<style>
+body{
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+input{
+padding:10px;
+margin:5px;
+}
+
+button{
+padding:10px;
+background:purple;
+color:white;
+border:none;
+}
+</style>
+</head>
+
+<body>
+
+<h2>GamePay Hub Admin Panel</h2>
+
+<input id="product" placeholder="Product name">
+<input id="price" placeholder="Price">
+
+<button onclick="addProduct()">Add Product</button>
+
+<ul id="list"></ul>
+
+<script>
+
+let products = []
+
+function addProduct(){
+
+let product = document.getElementById("product").value
+let price = document.getElementById("price").value
+
+products.push({product,price})
+
+render()
+
+}
+
+function render(){
+
+let list = document.getElementById("list")
+
+list.innerHTML=""
+
+products.forEach(p=>{
+
+list.innerHTML += `<li>${p.product} - ${p.price}</li>`
+
+})
+
+}
+
+</script>
+
+</body>
+</html>
