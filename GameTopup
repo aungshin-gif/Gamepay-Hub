@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Gamepay Hub</title>
+
+<style>
+
+body{
+font-family:sans-serif;
+background:#061a2f;
+color:white;
+text-align:center;
+}
+
+.header{
+background:#0d2f4f;
+padding:20px;
+font-size:30px;
+color:#7df9ff;
+box-shadow:0 0 20px #00eaff;
+}
+
+.games{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+margin-top:40px;
+gap:20px;
+}
+
+.game{
+background:#0b2545;
+border:2px solid #00eaff;
+padding:20px;
+width:220px;
+border-radius:15px;
+box-shadow:0 0 20px #00eaff;
+cursor:pointer;
+transition:0.3s;
+}
+
+.game:hover{
+transform:scale(1.05);
+}
+
+.price-box{
+background:#081c34;
+border:2px solid #00eaff;
+margin:30px;
+padding:20px;
+border-radius:15px;
+box-shadow:0 0 20px #00eaff;
+}
+
+.telegram{
+margin-top:30px;
+}
+
+.telegram a{
+background:#00eaff;
+padding:15px 30px;
+color:black;
+text-decoration:none;
+font-weight:bold;
+border-radius:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+Gamepay Hub<br>
+Mobile Games Topup
+</div>
+
+
+<div class="games">
+
+<div class="game" onclick="show('mlbb')">
+MLBB
+</div>
+
+<div class="game" onclick="show('genshin')">
+Genshin Impact
+</div>
+
+<div class="game" onclick="show('hsr')">
+Honkai Star Rail
+</div>
+
+<div class="game">
+Zenless Zone Zero
+</div>
+
+</div>
+
+
+<div id="mlbb" class="price-box" style="display:none">
+
+<h2>🤩 Mobile Legends Top up</h2>
+
+2x Diamond
+
+50+50 — 3100ks<br>
+150+150 — 9000ks<br>
+250+250 — 14800ks<br>
+500+500 — 30000ks<br><br>
+
+Twilight Pass — 32300ks<br><br>
+
+Recharge Packages<br>
+
+3wp + 11💎 — 17900ks<br>
+2wp + 86💎 — 16350ks<br>
+1wp + 172💎 — 15400ks<br>
+343💎 — 19150ks<br>
+279💎 — 15700ks
+
+</div>
+
+
+<div id="genshin" class="price-box" style="display:none">
+
+<h2>🤩 GENSHIN IMPACT</h2>
+
+Blessing — 13800ks<br><br>
+
+Genesis Crystal<br>
+
+60 — 2750ks<br>
+300+30 — 13800ks<br>
+980+110 — 42000ks<br>
+1980+260 — 87250ks<br>
+3280+600 — 143000ks<br>
+6480+1600 — 273000ks
+
+</div>
+
+
+<div id="hsr" class="price-box" style="display:none">
+
+<h2>🤩 Honkai Star Rail</h2>
+
+60 — 2800ks<br>
+330 — 14000ks<br>
+1090 — 42500ks<br>
+2240 — 84800ks<br>
+3880 — 144800ks<br>
+8080 — 272800ks<br><br>
+
+Express Supply — 13800ks
+
+</div>
+
+
+<div class="telegram">
+
+<h3>Order via Telegram</h3>
+
+<a href="https://t.me/angsthtun">
+Order Now
+</a>
+
+</div>
+
+
+
+<script>
+
+function show(game){
+
+document.getElementById("mlbb").style.display="none";
+document.getElementById("genshin").style.display="none";
+document.getElementById("hsr").style.display="none";
+
+document.getElementById(game).style.display="block";
+
+}
+
+</script>
+
+</body>
+</html>
