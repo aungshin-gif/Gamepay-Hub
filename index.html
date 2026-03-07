@@ -996,17 +996,13 @@ plans: [
         <h3>${escapeHtml(product.name)}</h3>
 
         <div class="selector-wrap">
-          function updatePreview(productName){
-      const select = document.getElementById("currentPlanSelect");
-      const preview = document.getElementById("orderPreviewBox");
-      if(!select || !preview) return;
+  <div class="selector-label">Select plan</div>
 
-      preview.innerHTML =
-        "<strong>Order Preview</strong><br>" +
-        "Product: " + escapeHtml(productName) + "<br>" +
-        "Plan: " + escapeHtml(select.value);
-    }
-`;
+  <select id="currentPlanSelect"
+    onchange="updatePreview('${escapeJs(product.name)}')">
+    ${options}
+  </select>
+</div>
 
         ${product.note ? `<div class="note">${escapeHtml(product.note)}</div>` : ""}
 
@@ -1049,7 +1045,23 @@ card.style.display="none";
           </select>
         </div>
   }
-  
+  function updatePreview(productName){
+
+const select = document.getElementById("currentPlanSelect");
+const preview = document.getElementById("orderPreviewBox");
+
+if(!select || !preview) return;
+
+preview.innerHTML =
+"<strong>Order Preview</strong><br>" +
+"Product: " + escapeHtml(productName) + "<br>" +
+"Plan: " + escapeHtml(select.value);
+
+  }
+function sendOrder(productName){
+
+const select = document.getElementById("currentPlanSelect");
+if(!select) return;
 
 let message =
 "I want to order\n" +
@@ -1058,9 +1070,10 @@ let message =
 
 let url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
 
-window.open(url, "_blank");
+window.open(url,"_blank");
+
 }
-    
+
 
     function escapeHtml(str){
       return String(str)
