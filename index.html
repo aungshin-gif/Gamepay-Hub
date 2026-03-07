@@ -1121,18 +1121,7 @@ card.style.display="none";
         "<strong>Order Preview</strong><br>" +
         "Product: " + escapeHtml(productName) + "<br>" +
         "Plan: " + escapeHtml(select.value);
-    }
-let quantity = 1;
-
-function changeQty(num){
-quantity += num;
-
-if(quantity < 1){
-quantity = 1;
-}
-
-document.getElementById("qty").innerText = quantity;
-}let qty = 1;
+    }let qty = 1;
 
 function changeQty(val){
 qty += val;
@@ -1143,7 +1132,23 @@ qty = 1;
 
 document.getElementById("qty").innerText = qty;
 }
-    function sendOrder(productName){
+
+function sendOrder(productName){
+
+const select = document.getElementById("currentPlanSelect");
+if(!select) return;
+
+const message =
+"Hello, I want to order\n" +
+"Product: " + productName + "\n" +
+"Plan: " + select.value + "\n" +
+"Quantity: " + qty;
+
+const url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
+
+window.open(url,"_blank");
+}
+function sendOrder(productName){
       const select = document.getElementById("currentPlanSelect");
       if(!select) return;
 
@@ -1151,7 +1156,7 @@ document.getElementById("qty").innerText = qty;
 "Hello, I want to order\n" +
 "Product: " + productName + "\n" +
 "Plan: " + select.value + "\n" +
-"Quantity: " + quantity;
+"Quantity: " + qty
 
       const url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
       window.open(url, "_blank");
