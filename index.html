@@ -96,18 +96,29 @@ margin:auto;
       margin:0 auto;
     }
 
-    #searchInput{
-      width:100%;
-      padding:14px 16px;
-      border:none;
-      outline:none;
-      border-radius:14px;
-      background:rgba(255,255,255,0.10);
-      color:white;
-      font-size:15px;
-      box-shadow:0 0 15px rgba(199,125,255,0.35);
-      backdrop-filter:blur(8px);
-    }
+.clear-btn{
+position:absolute;
+right:20px;
+top:50%;
+transform:translateY(-50%);
+background:none;
+border:none;
+color:white;
+font-size:18px;
+cursor:pointer;
+}
+<div class="search-wrap">
+
+<input
+type="text"
+id="searchInput"
+placeholder="Search apps..."
+onkeyup="filterApps()">
+
+<button onclick="clearSearch()" class="clear-btn">✖</button>
+
+</div>
+    
 
     #searchInput::placeholder{
       color:#e6dcff;
@@ -902,12 +913,18 @@ plans: [
     }
 
     function filterApps(){
-      const value = searchInput.value.toLowerCase().trim();
-      const filtered = products.filter(p =>
-        p.name.toLowerCase().includes(value) ||
-        p.search.toLowerCase().includes(value)
-      );
-      renderCards(filtered);
+const input = document.getElementById("searchInput").value.toLowerCase();
+const cards = document.querySelectorAll(".card");
+
+cards.forEach(card=>{
+const name = card.innerText.toLowerCase();
+
+if(name.includes(input)){
+card.style.display="flex";
+}else{
+card.style.display="none";
+}
+});
     }
 
     function updatePreview(productName){
