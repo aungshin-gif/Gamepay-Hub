@@ -110,6 +110,10 @@ cursor:pointer;
 }
 <div class="search-wrap">
 
+<div class="search-box">
+
+<span class="search-icon">🔍</span>
+
 <input
 type="text"
 id="searchInput"
@@ -118,43 +122,68 @@ onkeyup="filterApps()">
 
 <button onclick="clearSearch()" class="clear-btn">✖</button>
 
+</div>
+
+.search-box{
+width:min(95%,720px);
+margin:25px auto;
+position:relative;
+}
+
 #searchInput{
 width:100%;
-padding:22px 24px;
+padding:20px 55px;
 border:none;
 outline:none;
 border-radius:20px;
 
 background:rgba(255,255,255,0.08);
-color:#ffffff;
-font-size:20px;
+backdrop-filter:blur(10px);
+
+color:white;
+font-size:18px;
 
 border:2px solid #c77dff;
 
 box-shadow:
 0 0 10px #c77dff,
-0 0 20px #9d4edd,
-0 0 30px #7b2cbf;
-
-backdrop-filter:blur(10px);
+0 0 25px #9d4edd,
+0 0 40px #7b2cbf;
 
 transition:0.3s;
+}
+
+#searchInput:focus{
+box-shadow:
+0 0 15px #e0aaff,
+0 0 35px #c77dff,
+0 0 60px #7b2cbf;
 }
 
 #searchInput::placeholder{
 color:#e0aaff;
 }
 
-#searchInput:focus{
-box-shadow:
-0 0 15px #e0aaff,
-0 0 30px #c77dff,
-0 0 45px #7b2cbf;
+.search-icon{
+position:absolute;
+left:18px;
+top:50%;
+transform:translateY(-50%);
+font-size:20px;
+color:#e0aaff;
 }
 
-    #searchInput::placeholder{
-      color:#e6dcff;
-    }
+.clear-btn{
+position:absolute;
+right:18px;
+top:50%;
+transform:translateY(-50%);
+background:none;
+border:none;
+color:white;
+font-size:18px;
+cursor:pointer;
+}
 
     .apps{
       width:min(95%, 1200px);
