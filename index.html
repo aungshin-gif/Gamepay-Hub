@@ -1054,8 +1054,11 @@ plans: [
     }
 
     function openProduct(id){
-      const product = products.find(p => p.id === id);
-      if(!product) return;
+
+qty = 1;   // reset quantity
+
+const product = products.find(p => p.id === id);
+if(!product) return;
 
       const options = product.plans.map(plan =>
         `<option value="${escapeHtml(plan)}">${escapeHtml(plan)}</option>`
@@ -1084,6 +1087,10 @@ plans: [
           <button onclick="sendOrder('${escapeJs(product.name)}')">Order via Telegram</button>
         </div>
       `;
+      setTimeout(()=>{
+const q = document.getElementById("qty");
+if(q) q.innerText = qty;
+},0);
 
       appsGrid.style.display = "none";
       modal.style.display = "block";
