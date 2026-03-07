@@ -237,13 +237,22 @@ cursor:pointer;
       backdrop-filter:blur(10px);
     }
 
-    .card:hover{
-      transform:translateY(-4px) scale(1.03);
-      box-shadow:
-        0 0 28px rgba(199,125,255,0.80),
-        0 0 50px rgba(157,78,221,0.22);
-      border-color:rgba(199,125,255,0.34);
-    }
+    .card{
+transition:all 0.3s ease;
+}
+
+.card:hover{
+transform:translateY(-8px) scale(1.02);
+
+box-shadow:
+0 0 15px rgba(199,125,255,0.6),
+0 0 30px rgba(157,78,221,0.5),
+0 0 50px rgba(123,44,191,0.4);
+}
+
+.card:active{
+transform:scale(0.98);
+}
 
     .card::before{
       content:"";
