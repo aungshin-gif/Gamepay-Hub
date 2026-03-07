@@ -373,24 +373,29 @@ select{
 width:100%;
 padding:14px 16px;
 border-radius:14px;
-border:1px solid rgba(199,125,255,0.6);
-background:rgba(120,0,200,0.35);
+border:1px solid rgba(210,170,255,0.3);
+
+background:rgba(40,0,60,0.8);
 color:white;
-font-size:15px;
+font-size:16px;
+
 box-shadow:
-0 0 12px #b84dff,
-0 0 25px #7a00ff,
-inset 0 0 10px rgba(199,125,255,0.2);
-backdrop-filter:blur(12px);
-}
-option{
-  background:#2a0045;
-  color:white;
+0 0 10px rgba(199,125,255,0.4),
+0 0 20px rgba(157,78,221,0.3);
+
+outline:none;
 }
 
-    option{
-      color:#000;
-    }
+select option{
+background:#2b0044;
+color:white;
+padding:10px;
+}
+select:focus{
+box-shadow:
+0 0 15px #c77dff,
+0 0 30px #9d4edd;
+}
 
     .order-preview{
       width:min(100%, 560px);
