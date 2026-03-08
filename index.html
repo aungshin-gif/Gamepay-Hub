@@ -798,27 +798,7 @@ Digital Products Store
           onkeyup="filterApps()"
         >
       </div>
-    <div class="categories">
-
-<button class="active" onclick="filterCategory('all')">All</button>
-
-<button onclick="filterCategory('ai')">AI</button>
-
-<button onclick="filterCategory('editimg')">Editing</button>
-
-<button onclick="filterCategory('vpn')">VPN</button>
-
-<button onclick="filterCategory('movie')">Movie</button>
-
-<button onclick="filterCategory('music')">Music</button>
-
-<button onclick="filterCategory('social')">Social</button>
-
-<button onclick="filterCategory('services')">Services</button>
-
-<button onclick="filterCategory('gift')">Gift</button>
-
-    </div>
+    
 
     <div class="apps" id="appsGrid"></div>
 
@@ -1354,23 +1334,7 @@ card.style.display="flex";
 card.style.display="none";
 }
 });
-function filterCategory(cat){
-
-document.querySelectorAll(".categories button").forEach(btn=>{
-btn.classList.remove("active");
-});
-
-event.target.classList.add("active");
-
-if(cat === "all"){
-renderCards(products);
-return;
-}
-
-const filtered = products.filter(p => p.category === cat);
-renderCards(filtered);
-
-} 
+ 
 
   let qty = 1;
 
