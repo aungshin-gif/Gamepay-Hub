@@ -1180,35 +1180,26 @@ qty = 1;
 
 document.getElementById("qty").innerText = qty;
 }
-
 function sendOrder(productName){
 
 const select = document.getElementById("currentPlanSelect");
+const payment = document.getElementById("paymentMethod").value;
+
 if(!select) return;
 
 const message =
 "Hello, I want to order\n" +
 "Product: " + productName + "\n" +
 "Plan: " + select.value + "\n" +
-"Quantity: " + qty
+"Quantity: " + qty + "\n" +
 "Payment: " + payment;
+
 const url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
 
-window.open(url,"_blank");
+window.open(url, "_blank");
+
 }
-function sendOrder(productName){
-      const select = document.getElementById("currentPlanSelect");
-      if(!select) return;
 
-      const message =
-"Hello, I want to order\n" +
-"Product: " + productName + "\n" +
-"Plan: " + select.value + "\n" +
-"Quantity: " + qty
-
-      const url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
-      window.open(url, "_blank");
-    }
 
     function escapeHtml(str){
       return String(str)
