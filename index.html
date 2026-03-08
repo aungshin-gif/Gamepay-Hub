@@ -64,14 +64,14 @@ font-size:42px;
 font-weight:800;
 letter-spacing:1px;
 margin-bottom:6px;
-color:var(--yellow);
+color:#ffffff;
 text-shadow:
-0 0 5px var(--yellow),
-0 0 10px var(--yellow),
-0 0 18px #f9c74f,
-0 0 20px var(--purple),
-0 0 32px var(--purple-2),
-0 0 46px #7b2cbf;
+text-shadow:
+0 0 5px #ffffff,
+0 0 10px #ffffff,
+0 0 20px #ffffff,
+0 0 35px #c77dff,
+0 0 60px #9d4edd;
 }
 
 /* LOGO IMAGE SIZE */
@@ -454,7 +454,23 @@ color:white;
       box-shadow:0 0 10px rgba(157,78,221,0.18);
       line-height:1.6;
     }
+.payment-select{
+width:220px;
+padding:10px 14px;
 
+border-radius:16px;
+border:1px solid rgba(255,220,120,0.6);
+
+background:rgba(60,40,0,0.5);
+color:white;
+
+box-shadow:
+0 0 10px rgba(255,210,80,0.6),
+0 0 20px rgba(255,200,50,0.5),
+inset 0 0 10px rgba(255,220,100,0.4);
+
+backdrop-filter:blur(6px);
+}
     .order-preview strong{
       color:#fff;
     }
@@ -695,7 +711,7 @@ Digital Products Store
 Payment Method
 </div>
 
-<select id="paymentMethod">
+<select id="paymentMethod" class="payment-select">
 
 <option value="KBZ Pay">KBZ Pay</option>
 <option value="Wave Pay">Wave Pay</option>
