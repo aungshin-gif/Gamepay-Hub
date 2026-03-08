@@ -1192,3 +1192,204 @@ if(!product) return;
 <div style="margin-top:15px;text-align:left">
 <div style="margin-bottom:8px;font-size:14px;">Payment Method</div>
 <select id="paymentMethod" class="payment-select">
+<option value="KBZ Pay">KBZ Pay</option>
+<option value="Wave Pay">Wave Pay</option>
+<option value="UAB Pay">UAB Pay</option>
+<option value="AYA Pay">AYA Pay</option>
+<option value="Binance Pay">Binance Pay</option>
+
+</select>
+</div>
+        <div class="action-row">
+          <button onclick="sendOrder('${escapeJs(product.name)}')">Order via Telegram</button>
+        </div>
+      `;
+      setTimeout(()=>{
+const q = document.getElementById("qty");
+if(q) q.innerText = qty;
+},0);
+
+      appsGrid.style.display = "none";
+      modal.style.display = "block";
+      updatePreview(product.name);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function goBack(){
+      modal.style.display = "none";
+      appsGrid.style.display = "grid";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function filterApps(){
+const input = document.getElementById("searchInput").value.toLowerCase();
+const cards = document.querySelectorAll(".card");
+
+cards.forEach(card=>{
+const name = card.innerText.toLowerCase();
+
+if(name.includes(input)){
+card.style.display="flex";
+}else{
+card.style.display="none";
+}
+});
+    }
+
+  let qty = 1;
+
+function updatePreview(productName){
+const select = document.getElementById("currentPlanSelect");
+const preview = document.getElementById("orderPreviewBox");
+
+if(!select || !preview) return;
+
+const planText = select.value;
+
+const priceMatch = planText.match(/(\d+)\s*Ks/i);
+let price = priceMatch ? parseInt(priceMatch[1]) : 0;
+
+let total = price * qty;
+
+preview.innerHTML =
+"<strong>Order Preview</strong><br>" +
+"Product: " + escapeHtml(productName) + "<br>" +
+"Plan: " + escapeHtml(planText) + "<br>" +
+"Quantity: " + qty + "<br>" +
+"<strong>Total: " + total + " Ks</strong>";
+}  
+function changeQty(val){
+
+qty += val;
+
+if(qty < 1){
+qty = 1;
+}
+
+document.getElementById("qty").innerText = qty;
+
+const title = document.querySelector(".pricebox h3").innerText;
+updatePreview(title);
+
+}
+
+function sendOrder(productName){
+
+const select = document.getElementById("currentPlanSelect");
+const payment = document.getElementById("paymentMethod").value;
+
+if(!select) return;
+
+const planText = select.value;
+
+const priceMatch = planText.match(/(\d+)/);
+let price = priceMatch ? parseInt(priceMatch[1]) : 0;
+
+let total = price * qty;
+
+const message =
+"Hello, I want to order\n" +
+"Product: " + productName + "\n" +
+"Plan: " + planText + "\n" +
+"Quantity: " + qty + "\n" +
+"Total: " + total + " Ks\n" +
+"Payment: " + payment;
+
+const url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
+
+window.open(url, "_blank");
+
+}
+
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#39;");
+    }
+
+    function escapeJs(str){
+      return String(str)
+        .replaceAll("\\","\\\\")
+        .replaceAll("'","\\'");
+    }
+
+    renderCards(products);
+
+    // particles
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+
+    function resizeCanvas(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function createParticles(){
+      particles = [];
+      const count = Math.min(90, Math.floor(window.innerWidth / 18));
+      for(let i = 0; i < count; i++){
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 2.3 + 0.7,
+          dx: (Math.random() - 0.5) * 0.35,
+          dy: (Math.random() - 0.5) * 0.35,
+          a: Math.random() * 0.55 + 0.18
+        });
+      }
+    }
+
+    function drawParticles(){
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for(let i = 0; i < particles.length; i++){
+        const p = particles[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(220,190,255," + p.a + ")";
+        ctx.shadowBlur = 16;
+        ctx.shadowColor = "#c77dff";
+        ctx.fill();
+
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if(p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if(p.y < 0 || p.y > canvas.height) p.dy *= -1;
+      }
+
+      for(let i = 0; i < particles.length; i++){
+        for(let j = i + 1; j < particles.length; j++){
+          const a = particles[i];
+          const b = particles[j];
+          const dist = Math.hypot(a.x - b.x, a.y - b.y);
+          if(dist < 120){
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = "rgba(199,125,255," + (0.16 - dist / 900) + ")";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(drawParticles);
+    }
+
+    resizeCanvas();
+    createParticles();
+    drawParticles();
+
+    window.addEventListener("resize", function(){
+      resizeCanvas();
+      createParticles();
+    });
+  </script>
+</body>
+</html>
