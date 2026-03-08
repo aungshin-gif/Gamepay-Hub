@@ -1265,7 +1265,8 @@ plans: [
         : `<div class="icon-shell"><div class="emoji-icon">${product.icon}</div></div>`;
 
       return `
-        <div class="card" data-name="${escapeHtml(product.search)}" onclick="openProduct('${escapeJs(product.id)}')">
+        return `
+<div class="card" data-name="${escapeHtml(product.search)}" data-category="${product.category || 'all'}" onclick="openProduct('${escapeJs(product.id)}')">
           <span class="badge ${badgeClass}">${badgeText}</span>
           ${iconHtml}
           <h3>${escapeHtml(product.name)}</h3>
