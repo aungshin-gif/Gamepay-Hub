@@ -709,6 +709,68 @@ font-size:18px;
 font-weight:bold;
 color:white;
 }
+      /* CATEGORY FILTER BAR */
+
+.categories{
+display:flex;
+justify-content:center;
+gap:12px;
+margin:18px 0;
+flex-wrap:wrap;
+}
+
+/* Filter Button */
+
+.categories button{
+
+padding:10px 18px;
+border-radius:14px;
+border:1px solid rgba(199,125,255,0.5);
+
+background:rgba(120,0,200,0.25);
+color:white;
+
+backdrop-filter:blur(12px);
+
+box-shadow:
+0 0 10px rgba(199,125,255,0.6),
+0 0 25px rgba(157,78,221,0.5),
+inset 0 0 10px rgba(199,125,255,0.4);
+
+cursor:pointer;
+font-weight:bold;
+transition:0.3s;
+}
+
+/* Hover */
+
+.categories button:hover{
+
+transform:scale(1.05);
+
+box-shadow:
+0 0 15px #c77dff,
+0 0 35px #9d4edd,
+0 0 60px #7b2cbf;
+
+background:rgba(150,50,255,0.35);
+}
+
+/* ACTIVE BUTTON */
+
+.categories button.active{
+
+background:rgba(180,80,255,0.45);
+
+box-shadow:
+0 0 15px #c77dff,
+0 0 40px #9d4edd,
+0 0 70px #7b2cbf;
+
+border:1px solid #c77dff;
+
+transform:scale(1.05);
+  }
   </style>
 </head>
 <body>
@@ -736,6 +798,26 @@ Digital Products Store
           onkeyup="filterApps()"
         >
       </div>
+    <div class="categories">
+
+<button class="active" onclick="filterCategory('all')">All</button>
+
+<button onclick="filterCategory('ai')">AI</button>
+
+<button onclick="filterCategory('editimg')">Editing</button>
+
+<button onclick="filterCategory('vpn')">VPN</button>
+
+<button onclick="filterCategory('movie')">Movie</button>
+
+<button onclick="filterCategory('music')">Music</button>
+
+<button onclick="filterCategory('social')">Social</button>
+
+<button onclick="filterCategory('services')">Services</button>
+
+<button onclick="filterCategory('gift')">Gift</button>
+
     </div>
 
     <div class="apps" id="appsGrid"></div>
@@ -783,6 +865,7 @@ Join Telegram Game Channel
       {
 id: "chatgpt",
 name: "ChatGPT",
+category: "ai",
 subtitle: "Tap to see prices",
 badge: "available",
 iconType: "image",
@@ -801,6 +884,7 @@ plans: [
       {
         id: "spotify",
         name: "Spotify",
+        category: "music", 
         subtitle: "Tap to see prices",
         badge: "available",
         iconType: "image",
@@ -819,6 +903,7 @@ plans: [
 {
   id: "picsart",
   name: "PicsArt",
+  category: "editimg"
   subtitle: "Tap to see prices",
   badge: "available",
   iconType: "image",
@@ -849,6 +934,7 @@ plans: [
       {
         id: "telegram",
         name: "Telegram Premium",
+        category: "social",
         subtitle: "Tap to see prices",
         badge: "available",
         iconType: "image",
@@ -867,6 +953,7 @@ plans: [
       {
         id: "gemini",
         name: "Gemini Pro",
+        category:"ai
         subtitle: "Tap to see prices",
         badge: "available",
         iconType: "emoji",
@@ -884,6 +971,7 @@ plans: [
   {
 id: "netflix",
 name: "Netflix",
+category: "movie",
 subtitle: "Tap to see prices",
 badge: "available",
 iconType: "image",
@@ -911,6 +999,7 @@ plans: [
       {
         id: "itunes",
         name: "iTunes Gift Card",
+        category: "gift",
         subtitle: "Tap to see prices",
         badge: "available",
         iconType: "emoji",
@@ -929,6 +1018,7 @@ plans: [
       {
         id: "capcut",
         name: "CapCut Pro",
+        category: "editimg"  
         subtitle: "Tap to see prices",
         badge: "available",
         iconType: "image",
@@ -946,6 +1036,7 @@ plans: [
       {
         id: "prime",
         name: "Prime Video",
+        category: "movie", 
         subtitle: "Tap to see prices",
         badge: "available",
         iconType: "emoji",
@@ -963,6 +1054,7 @@ plans: [
       {
         id: "outline",
         name: "Outline VPN",
+        category: "vpn",
         subtitle: "Tap to see prices",
         badge: "available",
         iconType: "emoji",
@@ -978,6 +1070,7 @@ plans: [
       {
         id: "jumpvpn",
         name: "Jump Jump VPN",
+        category: "vpn",
         subtitle: "Tap to see prices",
         badge: "available",
         iconType: "emoji",
@@ -994,6 +1087,7 @@ plans: [
       {
         id: "meitu",
         name: "Meitu VIP",
+        category: "editimg" 
         subtitle: "Tap to see prices",
         badge: "low",
         iconType: "emoji",
@@ -1009,6 +1103,7 @@ plans: [
       {
         id: "steam",
         name: "Steam Wallet",
+        category: "gift",
         subtitle: "Tap to see prices",
         badge: "available",
         iconType: "image",
@@ -1028,6 +1123,7 @@ plans: [
       {
         id: "duolingo",
         name: "Duolingo",
+        category: "ai",
         subtitle: "Tap to see prices",
         badge: "available",
         iconType: "image",
@@ -1044,6 +1140,7 @@ plans: [
    {
  id: "canva",
  name: "Canva Pro",
+ category: "editimg" 
  subtitle: "Tap to see prices",
  badge: "available",
  iconType: "image",
@@ -1076,6 +1173,7 @@ plans: [
       {
   id: "youtube",
   name: "YouTube Premium",
+  category: "movie",
   subtitle: "Tap to see prices",
   badge: "available",
   iconType: "image",
@@ -1094,6 +1192,7 @@ plans: [
 {
   id: "disney",
   name: "Disney+",
+  category: "movie",
   subtitle: "Tap to see prices",
   badge: "available",
   iconType: "image",
@@ -1116,6 +1215,7 @@ plans: [
       {
   id: "perplexity",
   name: "Perplexity AI Pro",
+  category: "ai",
   subtitle: "Tap to see prices",
   badge: "available",
   iconType: "image",
@@ -1132,6 +1232,7 @@ plans: [
 {
   id: "nordvpn",
   name: "Nord VPN",
+  category: "vpn",
   subtitle: "Tap to see prices",
   badge: "available",
   iconType: "image",
@@ -1252,7 +1353,23 @@ card.style.display="flex";
 card.style.display="none";
 }
 });
-    }
+function filterCategory(cat){
+
+document.querySelectorAll(".categories button").forEach(btn=>{
+btn.classList.remove("active");
+});
+
+event.target.classList.add("active");
+
+if(cat === "all"){
+renderCards(products);
+return;
+}
+
+const filtered = products.filter(p => p.category === cat);
+renderCards(filtered);
+
+} 
 
   let qty = 1;
 
