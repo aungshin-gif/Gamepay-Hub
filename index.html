@@ -1259,8 +1259,8 @@ preview.innerHTML =
 "Quantity: " + qty + "<br>" +
 "<strong>Total: " + total + " Ks</strong>";
 }  
-
 function changeQty(val){
+
 qty += val;
 
 if(qty < 1){
@@ -1268,7 +1268,12 @@ qty = 1;
 }
 
 document.getElementById("qty").innerText = qty;
+
+const title = document.querySelector(".pricebox h3").innerText;
+updatePreview(title);
+
 }
+
 function sendOrder(productName){
 
 const select = document.getElementById("currentPlanSelect");
