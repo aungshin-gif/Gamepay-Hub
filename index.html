@@ -1276,11 +1276,19 @@ const payment = document.getElementById("paymentMethod").value;
 
 if(!select) return;
 
+const planText = select.value;
+
+const priceMatch = planText.match(/(\d+)/);
+let price = priceMatch ? parseInt(priceMatch[1]) : 0;
+
+let total = price * qty;
+
 const message =
 "Hello, I want to order\n" +
 "Product: " + productName + "\n" +
-"Plan: " + select.value + "\n" +
+"Plan: " + planText + "\n" +
 "Quantity: " + qty + "\n" +
+"Total: " + total + " Ks\n" +
 "Payment: " + payment;
 
 const url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
