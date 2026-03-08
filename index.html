@@ -1,1391 +1,562 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GamePay Hub Digital Store</title>
 
-  <style>
-    *{
-      box-sizing:border-box;
-      margin:0;
-      padding:0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    :root{
-      --bg1:#12001f;
-      --bg2:#240046;
-      --bg3:#5a189a;
-      --bg4:#a64dff;
-      --card:rgba(40, 0, 58, 0.76);
-      --card-border:rgba(210,170,255,0.18);
-      --purple:#c77dff;
-      --purple-2:#9d4edd;
-      --yellow:#ffd60a;
-      --text:#ffffff;
-      --muted:#efe6ff;
-      --green:#91ffbf;
-      --green-bg:rgba(0,255,136,0.14);
-      --gold:#ffe773;
-      --gold-bg:rgba(255,214,10,0.14);
-    }
+<title>GamePay Hub Digital Store</title>
 
-    body{
-      font-family:Arial, sans-serif;
-      color:var(--text);
-      min-height:100vh;
-      text-align:center;
-      overflow-x:hidden;
-      background:
-        radial-gradient(circle at top, #b366ff 0%, #7b2cbf 18%, #5a189a 36%, #3c096c 56%, #240046 76%, #140021 100%);
-      position:relative;
-    }
+<style>
 
-    #particles{
-      position:fixed;
-      inset:0;
-      width:100%;
-      height:100%;
-      z-index:0;
-      pointer-events:none;
-      opacity:.95;
-    }
-
-    .page{
-      position:relative;
-      z-index:1;
-    }
-
-    .topbar{
-      padding:28px 16px 14px;
-    }
-.logo{
-font-size:42px;
-font-weight:800;
-letter-spacing:1px;
-margin-bottom:6px;
-
-color:#ffffff;
-
-text-shadow:
-0 0 6px #ffffff,
-0 0 12px #ffffff,
-0 0 20px #ffffff,
-0 0 40px #c77dff,
-0 0 70px #9d4edd;
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:Arial,sans-serif;
 }
 
-/* LOGO IMAGE SIZE */
-.logo img{
-width:260px;
-display:block;
-margin:auto;
-
-animation:logoGlow 2.5s ease-in-out infinite alternate;
-
-filter:drop-shadow(0 0 10px #c77dff)
-drop-shadow(0 0 20px #9d4edd)
-drop-shadow(0 0 35px #7b2cbf);
+:root{
+--purple:#c77dff;
+--purple2:#9d4edd;
+--card:rgba(40,0,58,.75);
+--border:rgba(210,170,255,.2);
 }
 
-@keyframes logoGlow{
-
-0%{
-transform:scale(1);
-filter:drop-shadow(0 0 10px #c77dff)
-drop-shadow(0 0 20px #9d4edd)
-drop-shadow(0 0 35px #7b2cbf);
-}
-100%{
-transform:scale(1.05);
-filter:drop-shadow(0 0 20px #e0aaff)
-drop-shadow(0 0 40px #c77dff)
-drop-shadow(0 0 60px #9d4edd);
-}
-
-}
-
-.logo-area{
+body{
+min-height:100vh;
+color:white;
 text-align:center;
-margin-top:20px;
-margin-bottom:10px;
-}
 
+background:
+radial-gradient(circle at top,
+#b366ff 0%,
+#7b2cbf 18%,
+#5a189a 36%,
+#3c096c 56%,
+#240046 76%,
+#140021 100%);
+}
 
 .logo-title{
 font-size:42px;
 font-weight:800;
+margin-top:20px;
+
 color:#ffd60a;
 
 text-shadow:
 0 0 10px #ffd60a,
-0 0 20px #ffb700,
-0 0 40px #c77dff,
+0 0 30px #c77dff,
 0 0 60px #9d4edd;
-
-animation:logoPulse 2.5s infinite alternate;
 }
 
 .logo-sub{
 font-size:16px;
-color:white;
-margin-top:6px;
-
-text-shadow:
-0 0 5px #fff,
-0 0 10px #c77dff,
-0 0 20px #9d4edd;
+margin-bottom:20px;
 }
 
-@keyframes logoPulse{
-0%{transform:scale(1);}
-100%{transform:scale(1.05);}
-}
-
-}
-    .sublogo{
-      font-size:15px;
-      color:#fff;
-      text-shadow:
-        0 0 4px #fff,
-        0 0 8px var(--purple),
-        0 0 16px var(--purple-2);
-      margin-bottom:18px;
-    }
-
-    .search-wrap{
-width:min(95%,720px);
-margin:20px auto;
-position:relative;
-    }
-
-.clear-btn{
-position:absolute;
-right:20px;
-top:50%;
-transform:translateY(-50%);
-background:none;
-border:none;
-color:white;
-font-size:18px;
-cursor:pointer;
-}
-<div class="search-wrap">
-
-<div class="search-box">
-
-<span class="search-icon">🔍</span>
-
-<input
-type="text"
-id="searchInput"
-placeholder="Search apps..."
-onkeyup="filterApps()">
-
-<button onclick="clearSearch()" class="clear-btn">✖</button>
-
-</div>
-
-.search-box{
-width:min(95%,720px);
-margin:25px auto;
-position:relative;
+.search-wrap{
+width:90%;
+max-width:650px;
+margin:auto;
 }
 
 #searchInput{
+
 width:100%;
-padding:20px 55px;
-border:none;
-outline:none;
+padding:18px;
+
 border-radius:20px;
-
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(10px);
-
-color:white;
-font-size:18px;
-
 border:2px solid #c77dff;
+
+background:rgba(255,255,255,.08);
+color:white;
+
+font-size:16px;
 
 box-shadow:
 0 0 10px #c77dff,
-0 0 25px #9d4edd,
-0 0 40px #7b2cbf;
-
-transition:0.3s;
+0 0 25px #9d4edd;
 }
 
-#searchInput:focus{
-box-shadow:
-0 0 15px #e0aaff,
-0 0 35px #c77dff,
-0 0 60px #7b2cbf;
+.categories{
+
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+
+gap:10px;
+margin:25px;
 }
 
-#searchInput::placeholder{
-color:#e0aaff;
-}
+.category-btn{
 
-.search-icon{
-position:absolute;
-left:18px;
-top:50%;
-transform:translateY(-50%);
-font-size:20px;
-color:#e0aaff;
-}
+padding:10px 18px;
 
-.clear-btn{
-position:absolute;
-right:18px;
-top:50%;
-transform:translateY(-50%);
-background:none;
-border:none;
+border-radius:20px;
+border:1px solid #c77dff;
+
+background:rgba(255,255,255,.08);
+
 color:white;
-font-size:18px;
 cursor:pointer;
+
 }
 
-    .apps{
-      width:min(95%, 1200px);
-      margin:10px auto 24px;
-      display:grid;
-      grid-template-columns:repeat(4, 1fr);
-      gap:18px;
-      padding:18px;
-    }
+.category-btn:hover{
+background:#9d4edd;
+transform:scale(1.05);
+}
 
-    .card{
-      position:relative;
-      background:var(--card);
-      border:1px solid var(--card-border);
-      padding:22px 14px 18px;
-      border-radius:20px;
-      cursor:pointer;
-      box-shadow:
-        0 0 18px rgba(157,78,221,0.42),
-        inset 0 0 0 1px rgba(255,255,255,0.03);
-      transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-      min-height:210px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      overflow:hidden;
-      backdrop-filter:blur(10px);
-    }
+.apps{
 
-    .card{
-transition:all 0.3s ease;
+width:95%;
+max-width:1200px;
+
+margin:auto;
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(200px,1fr));
+
+gap:18px;
+
+padding:18px;
+}
+
+.card{
+
+position:relative;
+
+background:var(--card);
+
+border:1px solid var(--border);
+
+border-radius:20px;
+
+padding:22px;
+
+cursor:pointer;
+
+transition:.25s;
+
+backdrop-filter:blur(10px);
 }
 
 .card:hover{
-transform:translateY(-8px) scale(1.02);
+
+transform:translateY(-8px);
 
 box-shadow:
-0 0 15px rgba(199,125,255,0.6),
-0 0 30px rgba(157,78,221,0.5),
-0 0 50px rgba(123,44,191,0.4);
+0 0 20px #c77dff,
+0 0 40px #9d4edd;
 }
 
-.card:active{
-transform:scale(0.98);
+.card img{
+width:64px;
+height:64px;
+margin-bottom:10px;
 }
 
-    .card::before{
-      content:"";
-      position:absolute;
-      inset:-40% auto auto -20%;
-      width:120px;
-      height:220px;
-      background:linear-gradient(120deg, transparent, rgba(255,255,255,0.08), transparent);
-      transform:rotate(20deg);
-      transition:.45s ease;
-      opacity:0;
-    }
-
-    .card:hover::before{
-      left:110%;
-      opacity:1;
-    }
-
-    .card img{
-      width:64px;
-      height:64px;
-      object-fit:contain;
-      margin-bottom:12px;
-      filter:drop-shadow(0 0 7px var(--purple));
-    }
-
-    .emoji-icon{
-      width:64px;
-      height:64px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:38px;
-      margin-bottom:12px;
-      border-radius:16px;
-      background:rgba(255,255,255,0.06);
-      box-shadow:0 0 10px rgba(199,125,255,0.28);
-    }
-
-    .card h3{
-      margin:6px 0 8px;
-      font-size:18px;
-      color:#fff;
-      text-shadow:
-        0 0 3px #fff,
-        0 0 8px var(--purple),
-        0 0 14px var(--purple-2);
-    }
-
-    .card p{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-    }
-
-    .badge{
-      position:absolute;
-      top:12px;
-      right:12px;
-      font-size:11px;
-      padding:5px 10px;
-      border-radius:999px;
-      font-weight:700;
-      letter-spacing:.2px;
-    }
-
-    .available{
-      background:var(--green-bg);
-      color:var(--green);
-      border:1px solid rgba(145,255,191,0.25);
-      box-shadow:0 0 10px rgba(145,255,191,0.16);
-    }
-
-    .low{
-      background:var(--gold-bg);
-      color:var(--gold);
-      border:1px solid rgba(255,231,115,0.25);
-      box-shadow:0 0 10px rgba(255,231,115,0.16);
-    }
-
-    .pricebox{
-      display:none;
-      width:min(92%, 760px);
-      margin:20px auto 30px;
-      padding:24px 18px 28px;
-      border-radius:22px;
-      background:rgba(37, 0, 58, 0.86);
-      border:1px solid rgba(199,125,255,0.20);
-      box-shadow:
-        0 0 28px rgba(157,78,221,0.58),
-        inset 0 0 0 1px rgba(255,255,255,0.03);
-      backdrop-filter:blur(12px);
-      animation:fade .35s ease;
-    }
-
-    @keyframes fade{
-      from{opacity:0; transform:translateY(18px);}
-      to{opacity:1; transform:translateY(0);}
-    }
-.neon{
-color:#ffffff;
-
-text-shadow:
-0 0 5px #ffffff,
-0 0 10px #ffffff,
-0 0 20px #ffffff,
-0 0 35px #c77dff,
-0 0 60px #9d4edd;
+.emoji-icon{
+font-size:40px;
+margin-bottom:10px;
 }
 
-
-    .pricebox h3{
-      margin:10px 0 16px;
-      font-size:30px;
-    }
-.selector-wrap{
-margin-top:20px;
-text-align:left;
+.badge{
+position:absolute;
+top:10px;
+right:10px;
+font-size:11px;
+padding:4px 10px;
+border-radius:999px;
 }
 
-.selector-label{
-font-size:14px;
-margin-bottom:8px;
-color:#efe6ff;
+.available{
+background:#003f1f;
+color:#91ffbf;
 }
 
-#currentPlanSelect{
-width:100%;
-padding:14px 16px;
-border-radius:16px;
-border:1px solid rgba(210,170,255,0.3);
-background:rgba(40,0,60,0.6);
-color:white;
-font-size:15px;
-
-backdrop-filter: blur(10px);
-box-shadow:
-0 0 12px rgba(199,125,255,0.4),
-0 0 25px rgba(157,78,221,0.3);
-
-outline:none;
-transition:0.3s;
-}
-.payment-select{
-width:100%;
-padding:12px 14px;
-
-border-radius:16px;
-border:1px solid rgba(255,220,120,0.6);
-
-background:rgba(60,40,0,0.5);
-color:white;
-
-box-shadow:
-0 0 10px rgba(255,210,80,0.6),
-0 0 20px rgba(255,200,50,0.5),
-inset 0 0 10px rgba(255,220,100,0.4);
-
-backdrop-filter:blur(6px);
-}
-#currentPlanSelect:focus{
-box-shadow:
-0 0 15px #c77dff,
-0 0 30px #9d4edd;
-border:1px solid #c77dff;
+.low{
+background:#3f3000;
+color:#ffe773;
 }
 
-#currentPlanSelect option{
-background:#2b0044;
-color:white;
+.pricebox{
+
+display:none;
+
+width:92%;
+max-width:700px;
+
+margin:30px auto;
+
+background:rgba(37,0,58,.9);
+
+padding:25px;
+
+border-radius:20px;
+
+border:1px solid #9d4edd;
+
+box-shadow:0 0 30px #9d4edd;
 }
-
-    .order-preview{
-      width:min(100%, 560px);
-      margin:14px auto 0;
-      padding:12px 14px;
-      border-radius:14px;
-      background:rgba(255,255,255,0.05);
-      border:1px solid rgba(199,125,255,0.16);
-      text-align:left;
-      font-size:14px;
-      color:#f5ecff;
-      box-shadow:0 0 10px rgba(157,78,221,0.18);
-      line-height:1.6;
-    }
-.payment-select{
-width:220px;
-padding:10px 14px;
-
-border-radius:16px;
-border:1px solid rgba(255,220,120,0.6);
-
-background:rgba(60,40,0,0.5);
-color:white;
-
-box-shadow:
-0 0 10px rgba(255,210,80,0.6),
-0 0 20px rgba(255,200,50,0.5),
-inset 0 0 10px rgba(255,220,100,0.4);
-
-backdrop-filter:blur(6px);
-}
-    .order-preview strong{
-      color:#fff;
-    }
-
-    button{
-      background:var(--purple-2);
-      color:white;
-      border:none;
-      padding:11px 22px;
-      border-radius:10px;
-      margin-top:12px;
-      cursor:pointer;
-      transition:.25s ease;
-      box-shadow:0 0 12px var(--purple-2);
-      font-size:15px;
-      font-weight:700;
-    }
-
-    button:hover{
-      background:var(--purple);
-      transform:scale(1.05);
-      box-shadow:0 0 22px var(--purple);
-    }
-
-    .back-btn{
-      margin-bottom:8px;
-    }
-
-    .action-row{
-      display:flex;
-      justify-content:center;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:12px;
-    }
-
-    .footer{
-      margin:50px auto 24px;
-      padding:18px 16px 28px;
-      font-size:14px;
-      color:#fff;
-      text-shadow:
-        0 0 5px #fff,
-        0 0 10px var(--purple);
-      position:relative;
-      z-index:1;
-    }
-
-    @media (max-width: 980px){
-      .apps{
-        grid-template-columns:repeat(3, 1fr);
-      }
-    }
-
-    @media (max-width: 720px){
-      .apps{
-        grid-template-columns:repeat(2, 1fr);
-        gap:14px;
-        padding:14px;
-      }
-
-      .logo{
-        font-size:33px;
-      }
-
-      .pricebox h3{
-        font-size:25px;
-      }
-    }
-
-    @media (max-width: 430px){
-      .card{
-        min-height:180px;
-        padding:18px 10px 15px;
-      }
-.paymentMethod{
-width:100%;
-padding:12px 14px;
-
-border-radius:16px;
-border:1px solid rgba(255,220,120,0.7);
-
-background:rgba(60,40,0,0.55);
-color:white;
-
-box-shadow:
-0 0 12px rgba(255,210,80,0.7),
-0 0 25px rgba(255,200,50,0.6),
-inset 0 0 10px rgba(255,220,100,0.5);
-}
-      .card h3{
-        font-size:16px;
-      }
-
-      .card p{
-        font-size:13px;
-      }
-
-      .card img,
-      .emoji-icon{
-        width:56px;
-        height:56px;
-      }
-
-      .emoji-icon{
-        font-size:33px;
-      }
-
-      .pricebox{
-        padding:18px 14px 22px;
-      }
-
-      button{
-        width:100%;
-      }
-
-      .action-row{
-  display:block;
-}
-
-.telegram-btn{
-  display:inline-block;
-  margin-top:15px;
-  padding:12px 20px;
-  background:#2AABEE;
-  color:white;
-  border-radius:12px;
-  text-decoration:none;
-  font-weight:bold;
-  box-shadow:0 0 10px #2AABEE;
-}
-    select{
-background: rgba(120,0,200,0.35);
-color:white;
-border:1px solid rgba(255,255,255,0.25);
-border-radius:14px;
-padding:12px;
-backdrop-filter: blur(12px);
-box-shadow:0 0 10px #b84dff, 0 0 20px #7a00ff;
-}
-
-select option{
-background:#2b0040;
-color:white;
-padding:10px;
-}
-select option:hover{
-background:#7a00ff;
-color:white;
-}
-      .floating-telegram{
-position:fixed;
-bottom:20px;
-right:20px;
-background:#2AABEE;
-padding:14px;
-border-radius:50%;
-box-shadow:0 0 15px #2AABEE;
-z-index:999;
-}
-.floating-telegram img{
-width:40px;
-height:40px;
-}
-
-.floating-telegram:hover{
-box-shadow:0 0 25px #2AABEE;
-}
-      .telegram-join-btn{
-display:inline-block;
-margin-top:12px;
-padding:12px 22px;
-background:linear-gradient(45deg,#7a00ff,#c77dff);
-color:white;
-border-radius:14px;
-text-decoration:none;
-font-weight:bold;
-box-shadow:0 0 15px #9d4edd;
-transition:0.3s;
-}
-
-.telegram-join-btn:hover{
-transform:scale(1.05);
-box-shadow:0 0 25px #c77dff;
-}.telegram-join-btn:hover{
-transform:scale(1.05);
-box-shadow:0 0 25px #c77dff;
-}
-
-/* ADD HERE (Line 605) */
 
 .qty-control{
+
 display:flex;
 justify-content:center;
 align-items:center;
+
 gap:15px;
 margin-top:15px;
 }
 
 .qty-control button{
+
 width:40px;
 height:40px;
-border-radius:10px;
-border:none;
-background:#9d4edd;
-color:white;
+
 font-size:20px;
-cursor:pointer;
+border-radius:10px;
 }
 
-.qty-control span{
-font-size:18px;
+button{
+
+padding:12px 22px;
+
+background:#9d4edd;
+
+border:none;
+color:white;
+
+border-radius:12px;
+
+cursor:pointer;
+
 font-weight:bold;
+}
+
+button:hover{
+background:#c77dff;
+transform:scale(1.05);
+}
+
+.payment-select{
+
+width:100%;
+padding:12px;
+margin-top:10px;
+
+border-radius:12px;
+
+background:rgba(60,40,0,0.6);
+border:1px solid #ffd60a;
+
 color:white;
 }
-  </style>
+
+.order-preview{
+margin-top:15px;
+font-size:14px;
+}
+
+</style>
 </head>
+
 <body>
-  <canvas id="particles"></canvas>
 
-  <div class="page">
-<div class="topbar">
-<div class="logo-area">
+<div class="logo-title">🎮 GamePay Hub</div>
+<div class="logo-sub">Digital Products Store</div>
 
-<div class="logo-title">
-🎮 GamePay Hub
+<div class="search-wrap">
+<input type="text" id="searchInput" placeholder="Search apps..." onkeyup="filterApps()">
 </div>
 
-<div class="logo-sub">
-Digital Products Store
-</div>
+<div class="categories">
+
+<button class="category-btn" onclick="filterCategory('all')">All</button>
+<button class="category-btn" onclick="filterCategory('ai')">AI</button>
+<button class="category-btn" onclick="filterCategory('editing')">Editing</button>
+<button class="category-btn" onclick="filterCategory('music')">Music</button>
+<button class="category-btn" onclick="filterCategory('video')">Video</button>
+<button class="category-btn" onclick="filterCategory('social')">Social</button>
+<button class="category-btn" onclick="filterCategory('services')">Services</button>
+<button class="category-btn" onclick="filterCategory('vpn')">VPN</button>
+<button class="category-btn" onclick="filterCategory('gift')">Gift</button>
 
 </div>
 
-      <div class="search-wrap">
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Search apps..."
-          onkeyup="filterApps()"
-        >
-      </div>
-    </div>
+<div id="appsGrid" class="apps"></div>
+<script>
 
-    <div class="apps" id="appsGrid"></div>
+const TELEGRAM_USERNAME="angsthtun"
 
-    <div id="productModal" class="pricebox">
+let qty=1
 
-<div style="margin-top:15px;text-align:left">
+const products=[
 
-<div style="margin-bottom:8px;font-size:14px;">
-Payment Method
+{
+id:"chatgpt",
+category:"ai",
+name:"ChatGPT",
+subtitle:"Tap to see prices",
+badge:"available",
+iconType:"emoji",
+icon:"🤖",
+search:"chatgpt ai openai",
+plans:[
+"ChatGPT Plus - 1 Month - 6000 Ks",
+"ChatGPT Plus - 3 Months - 8000 Ks"
+]
+},
+
+{
+id:"spotify",
+category:"music",
+name:"Spotify",
+subtitle:"Tap to see prices",
+badge:"available",
+iconType:"emoji",
+icon:"🎵",
+search:"spotify music",
+plans:[
+"1 Month - 8000 Ks",
+"3 Months - 24000 Ks"
+]
+},
+
+{
+id:"capcut",
+category:"editing",
+name:"CapCut Pro",
+subtitle:"Tap to see prices",
+badge:"available",
+iconType:"emoji",
+icon:"🎬",
+search:"capcut edit video",
+plans:[
+"1 Month - 6500 Ks",
+"3 Months - 19500 Ks"
+]
+},
+
+{
+id:"expressvpn",
+category:"vpn",
+name:"Express VPN",
+subtitle:"Tap to see prices",
+badge:"available",
+iconType:"emoji",
+icon:"🛡️",
+search:"vpn secure",
+plans:[
+"1 Month - 1500 Ks",
+"Private - 8000 Ks"
+]
+},
+
+{
+id:"itunes",
+category:"gift",
+name:"iTunes Gift Card",
+subtitle:"Tap to see prices",
+badge:"available",
+iconType:"emoji",
+icon:"🍎",
+search:"itunes apple gift",
+plans:[
+"5 USD - 21500 Ks",
+"10 USD - 41500 Ks"
+]
+}
+
+]
+const appsGrid=document.getElementById("appsGrid")
+const modal=document.getElementById("productModal")
+
+function createCard(p){
+
+const icon=p.iconType==="image"
+? `<img src="${p.icon}">`
+: `<div class="emoji-icon">${p.icon}</div>`
+
+const badge=p.badge==="low"
+? `<span class="badge low">Low</span>`
+: `<span class="badge available">Available</span>`
+
+return`
+
+<div class="card" onclick="openProduct('${p.id}')">
+
+${badge}
+
+${icon}
+
+<h3>${p.name}</h3>
+<p>${p.subtitle}</p>
+
 </div>
 
-<select id="paymentMethod" class="payment-select">
+`
 
-<option value="KBZ Pay">KBZ Pay</option>
-<option value="Wave Pay">Wave Pay</option>
-<option value="UAB Pay">UAB Pay</option>
-<option value="AYA Pay">AYA Pay</option>
-<option value="Binance Pay">Binance Pay</option>
+}
+
+function renderCards(list){
+appsGrid.innerHTML=list.map(createCard).join("")
+}
+
+function filterCategory(cat){
+
+if(cat==="all"){
+renderCards(products)
+return
+}
+
+renderCards(products.filter(p=>p.category===cat))
+}
+
+function filterApps(){
+
+const input=document.getElementById("searchInput").value.toLowerCase()
+
+renderCards(products.filter(p=>
+
+p.name.toLowerCase().includes(input)||
+p.search.toLowerCase().includes(input)
+
+))
+}
+
+function openProduct(id){
+
+qty=1
+
+const p=products.find(x=>x.id===id)
+if(!p)return
+
+const options=p.plans.map(x=>`<option>${x}</option>`).join("")
+
+modal.innerHTML=
+
+`
+
+<button onclick="goBack()">⬅ Back</button>
+
+<h3>${p.name}</h3>
+
+<select id="plan" onchange="updatePreview('${p.name}')">
+
+${options}
 
 </select>
 
-</div>
-
-    </div>
-
-    <div class="footer">
-Founder: Diameter Eight
-<br><br>
-Mobile Game Topup are available in Telegram Game Channel
-<br><br>
-<a href="https://t.me/gamepaydyet" target="_blank" class="telegram-join-btn">
-Join Telegram Game Channel
-</a>
-
-    </div>
-<a href="https://t.me/gamepaydyet" class="floating-telegram" target="_blank">
-<img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" width="55">
-</a>
-
-  <script>
-    const TELEGRAM_USERNAME = "angsthtun";
-
-    const products = [
-      {
-id: "chatgpt",
-name: "ChatGPT",
-subtitle: "Tap to see prices",
-badge: "available",
-iconType: "image",
-icon: "ChatGPT_logo.svg.png",
-search: "chatgpt openai ai",
-plans: [
-"ChatGPT Plus - 1 Month - 6000 Ks (Share)",
-"ChatGPT Plus - 1 Month - 6500 Ks (Private)",
-"ChatGPT Plus - 3 Months - 8000 Ks (Share)",
-"ChatGPT Plus - 3 Months - 9000 Ks (Private)",
-"ChatGPT Business - 1 Month - 6000 Ks (Share)",
-"ChatGPT Business - 12 Months - 12000 Ks (Share)",
-"ChatGPT Business - 12 Months - 13000 Ks (Private)"
-]
-},
-      {
-        id: "spotify",
-        name: "Spotify",
-        subtitle: "Tap to see prices",
-        badge: "available",
-        iconType: "image",
-        icon: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
-        search: "spotify music premium",
-        plans: [
-          "Family Plan (Global) – 1 Month – 8000 Ks",
-          "Family Plan (Global) – 2 Months – 12000 Ks",
-          "Family Plan (Global) – 3 Months – 24000 Ks",
-          "Family Plan (Global) – 6 Months – 65000 Ks",
-          "Individual Plan (Global) – 1 Month – 13000 Ks",
-          "Individual Plan (Global) – 2 Months – 24000 Ks",
-          "Individual Plan (Global) – 3 Months – 34000 Ks"
-        ]
-      },
-{
-  id: "picsart",
-  name: "PicsArt",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  iconType: "image",
-  icon: "IMG_20260307_042958_666.jpg",
-  search: "picsart photo edit",
-  plans: [
-    "1 Month – 5000 MMK",
-    "3 Months – 12000 MMK"
-  ]
-},
-{
-  id: "vpn",
-  name: "Express VPN",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  iconType: "image",
-  icon: "https://cdn-icons-png.flaticon.com/512/565/565547.png",
-        search: "express vpn secure",
-        note: "Share plan can only use 1 device",
-        plans: [
-          "Share Plan – 1 Month – 1500 Ks (Android & iOS)",
-          "Share Plan – 1 Month – 2500 Ks (Windows PC & Laptop)",
-          "Share Plan – 1 Month – 2500 Ks (Linux Devices)",
-          "Share Plan – 1 Month – 2500 Ks (MacBook)",
-          "Private Plan – 1 Month – 8000 Ks (Up to 9 devices)"
-        ]
-      },
-      {
-        id: "telegram",
-        name: "Telegram Premium",
-        subtitle: "Tap to see prices",
-        badge: "available",
-        iconType: "image",
-        icon: "https://cdn-icons-png.flaticon.com/512/2111/2111646.png",
-        search: "telegram premium tg",
-        plans: [
-          "Login Method – 1 Month – 20500 Ks",
-          "Gift Plan – 3 Months – 50000 Ks",
-          "Gift Plan – 6 Months – 67000 Ks",
-          "Gift Plan – 9 Months – 118000 Ks",
-          "Link Plan – 3 Months – 44000 Ks",
-          "Link Plan – 6 Months – 65000 Ks",
-          "Link Plan – 12 Months – 118000 Ks"
-        ]
-      },
-      {
-        id: "gemini",
-        name: "Gemini Pro",
-        subtitle: "Tap to see prices",
-        badge: "available",
-        iconType: "emoji",
-        icon: "✨",
-        search: "gemini pro google ai",
-        note: "✔️Access on your email. ✔️2TB storage for photos, drive & gmail. ✔️Gemini app with 2.5 Pro. ✔️Access to Veo 3. ✔️Flow with Veo 3. ✔️Whisk with Veo 2. ✔️1000 monthly AI credits. ✔️NotebookLM higher limits. ✔️Gemini in Gmail, Docs & more. ✔️Full-time warranty. ✔️100% genuine access.",
-        plans: [
-          "1 Month – 7000 Ks",
-          "2 Months – 12500 Ks",
-          "3 Months – 17000 Ks",
-          "6 Months – 30000 Ks",
-          "1 Year – 51000 Ks"
-        ]
-      },
-  {
-id: "netflix",
-name: "Netflix",
-subtitle: "Tap to see prices",
-badge: "available",
-iconType: "image",
-icon: "getthumbnail.webp",
-search: "netflix movie show",
-
-note: "✔ Can activate in Myanmar",
-
-plans: [
-"Share Account - 1 Month - 6000 Ks",
-"Share Account - 3 Months - 12000 Ks",
-"Share Account - 6 Months - 22000 Ks",
-"Share Account - 1 Year - 35000 Ks",
-
-"Personal - 1 Month - 7000 Ks",
-"Personal - 3 Months - 13000 Ks",
-"Personal - 6 Months - 24000 Ks",
-"Personal - 1 Year - 39000 Ks",
-
-"Mail Subscription Standard Plan - 35000 Ks",
-"Mail Subscription Pro Plan - 75500 Ks",
-"Mail Subscription Premium Plan - 99000 Ks"
-]
-},
-      {
-        id: "itunes",
-        name: "iTunes Gift Card",
-        subtitle: "Tap to see prices",
-        badge: "available",
-        iconType: "emoji",
-        icon: "🍎",
-        search: "itunes gift card apple",
-        note: "Other Regions Available: Canada, Germany, Japan, China, Taiwan, Nigeria, etc.",
-        plans: [
-          "5 USD – 21500 Ks",
-          "10 USD – 41500 Ks",
-          "20 USD – 82000 Ks",
-          "50 USD – 204000 Ks",
-          "100 USD – 410000 Ks"
-        ]
-      },
-      
-      {
-        id: "capcut",
-        name: "CapCut Pro",
-        subtitle: "Tap to see prices",
-        badge: "available",
-        iconType: "image",
-        icon: "IMG_20260307_045206_183.jpg",
-        search: "capcut pro edit video",
-        plans: [
-          "Global Account – 1 Month – 6500 Ks",
-          "Global Account – 3 Months – 19500 Ks",
-          "Global Account – 6 Months – 54000 Ks",
-          "Global Account – 1 Year – nearly 75000 Ks",
-          "CapCut Subscription Own Mail Standard Plan – 1 Month – 44000 Ks",
-          "CapCut Subscription Own Mail Pro Plan – 1 Month – 120000 Ks"
-        ]
-      },
-      {
-        id: "prime",
-        name: "Prime Video",
-        subtitle: "Tap to see prices",
-        badge: "available",
-        iconType: "emoji",
-        icon: "🎬",
-        search: "amazon prime video",
-        note: "Private profiles and full-time warranty available.",
-        plans: [
-          "Dedicated Private Account – 1 Month – 5800 Ks",
-          "Dedicated Private Account – 3 Months – 13800 Ks",
-          "Dedicated Private Account – 6 Months – 22000 Ks",
-          "Full Private – 1 Month – 10000 Ks",
-          "Full Private – 6 Months – 26000 Ks"
-        ]
-      },
-      {
-        id: "outline",
-        name: "Outline VPN",
-        subtitle: "Tap to see prices",
-        badge: "available",
-        iconType: "emoji",
-        icon: "🛡️",
-        search: "outline vpn secure data",
-        plans: [
-          "50GB – 3000 Ks (1 Month)",
-          "100GB – 5000 Ks (1 Month)"
-          "150GB – 6900 Ks (1 Month)",
-          "200GB – 8500 Ks (2 Months)"
-        ]
-      },
-      {
-        id: "jumpvpn",
-        name: "Jump Jump VPN",
-        subtitle: "Tap to see prices",
-        badge: "available",
-        iconType: "emoji",
-        icon: "🚀",
-        search: "jump jump vpn",
-        plans: [
-          "1 Device – 3 Days – 2700 Ks",
-          "1 Device – 1 Month – 13000 Ks",
-          "2 Devices – 1 Month – 18000 Ks",
-          "2 Devices – 6 Months – 90000 Ks",
-          "2 Devices – 12 Months – 108000 Ks"
-        ]
-      },
-      {
-        id: "meitu",
-        name: "Meitu VIP",
-        subtitle: "Tap to see prices",
-        badge: "low",
-        iconType: "emoji",
-        icon: "💄",
-        search: "meitu vip beauty edit",
-        plans: [
-          "China Region – 1 Month – 4500 Ks",
-          "Global Region – 1 Month – 8000 Ks (Share) – 1 Device",
-          "Global Region – 1 Month – 24000 Ks (Private) – 3 Devices",
-          "Global Region – 1 Year – 160000 Ks (Private) – 3 Devices"
-        ]
-      },
-      {
-        id: "steam",
-        name: "Steam Wallet",
-        subtitle: "Tap to see prices",
-        badge: "available",
-        iconType: "image",
-        icon: "https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg",
-        search: "steam wallet game card",
-        plans: [
-          "5 USD - 23200 Ks",
-          "10 USD - 45000 Ks",
-          "20 USD - 90000 Ks",
-          "25 USD - 113000 Ks",
-          "30 USD - 137000 Ks",
-          "35 USD - 157000 Ks",
-          "50 USD - 228000 Ks",
-          "100 USD - 460000 Ks"
-        ]
-      },
-      {
-        id: "duolingo",
-        name: "Duolingo",
-        subtitle: "Tap to see prices",
-        badge: "available",
-        iconType: "image",
-        icon: "duolingo-duo-owl-logo-2022.jpg",
-        search: "duolingo language learning",
-        plans: [
-          "Personal Account – 2 Months – 7000 Ks",
-          "Personal Account – 6 Months – 13000 Ks",
-          "Family Account – 2 Months – 38000 Ks (High value)",
-          "Family Account – 6 Months – 12000 Ks",
-          "Family Account – 12 Months – 32000 Ks (Low value)"
-        ]
-      },
-   {
- id: "canva",
- name: "Canva Pro",
- subtitle: "Tap to see prices",
- badge: "available",
- iconType: "image",
- icon: "Untitled-design-2025-01-28T101702.381.png",
- search: "canva design pro",
- plans: [
-  "Share Plan (Invite) – 1 Month – 1500 Ks",
-  "Private Plan – 1 Month – 5000 Ks",
-  "Educational Plan – Lifetime – 5000 Ks",
-  "Private Plan – 1 Year – 5000 Ks"
- ]
-    },
-      {
-id: "payment",
-name: "Payment Methods",
-subtitle: "Tap to see payment options",
-badge: "available",
-iconType: "emoji",
-icon: "💳",
-plans: [
-"✅ KBZ Pay",
-"✅ Wave Pay",
-"✅ AYA Pay",
-"✅ UAB Pay",
-"✅ Binance Pay",
-"✅ WeChat Pay",
-"🔒 PayPal - temporarily unavailable"
-]
-},
-      {
-  id: "youtube",
-  name: "YouTube Premium",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  iconType: "image",
-  icon: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png",
-  search: "youtube premium subscription",
-  plans: [
-    "Share Account - 1 Month - 7000 Ks",
-    "Share Account - 1 Year - 15000 Ks",
-    "Private Account - 1 Month - 8000 Ks",
-    "Private Account - 2 Months - 13000 Ks",
-    "Private Account - 3 Months - 19000 Ks",
-    "Private Account - 6 Months - 35000 Ks",
-    "Private Account - 1 Year - 50000 Ks"
-  ]
-},
-{
-  id: "disney",
-  name: "Disney+",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  iconType: "image",
-  icon: "disney_1xun.3840.webp",
-  search: "disney plus subscription",
-  plans: [
-    "Disney+ Premium - 1 Month - 7000 Ks",
-    "Disney+ Duo - 1 Month - 8000 Ks",
-    "Disney+ Trio - 1 Month - 10000 Ks",
-
-    "Disney+ Premium - 3 Months - 8500 Ks",
-    "Disney+ Duo - 3 Months - 12000 Ks",
-    "Disney+ Trio - 3 Months - 15000 Ks",
-
-    "Disney+ Premium - 12 Months - 20000 Ks",
-    "Disney+ Duo - 12 Months - 22000 Ks",
-    "Disney+ Trio - 12 Months - 30000 Ks"
-  ]
-},
-      {
-  id: "perplexity",
-  name: "Perplexity AI Pro",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  iconType: "image",
-  icon: "what-is-perplexity-6465259389791520_l.jpg",
-  search: "perplexity ai pro",
-  plans: [
-    "Perplexity AI Pro - 1 Month - 8000 Ks (Not Own Mail)",
-    "Perplexity AI Pro - 1 Year - 28000 Ks (Not Own Mail)",
-    "Perplexity AI Pro - 1 Month - 13500 Ks (Private)",
-    "Perplexity AI Pro - 6 Months - 40000 Ks (Private)",
-    "Perplexity AI Pro - 1 Year - 70000 Ks (Private)"
-  ]
-},
-
-    ];
-    
-
-
-    const appsGrid = document.getElementById("appsGrid");
-    const modal = document.getElementById("productModal");
-    const searchInput = document.getElementById("searchInput");
-
-    function createCard(product){
-      const badgeClass = product.badge === "low" ? "low" : "available";
-      const badgeText = product.badge === "low" ? "Low Stock" : "Available";
-
-      const iconHtml = product.iconType === "image"
-        ? `<div class="icon-shell"><img src="${product.icon}" alt="${escapeHtml(product.name)}"></div>`
-        : `<div class="icon-shell"><div class="emoji-icon">${product.icon}</div></div>`;
-
-      return `
-        <div class="card" data-name="${escapeHtml(product.search)}" onclick="openProduct('${escapeJs(product.id)}')">
-          <span class="badge ${badgeClass}">${badgeText}</span>
-          ${iconHtml}
-          <h3>${escapeHtml(product.name)}</h3>
-          <p>${escapeHtml(product.subtitle)}</p>
-        </div>
-      `;
-    }
-
-    function renderCards(list){
-      appsGrid.innerHTML = list.map(createCard).join("");
-    }
-
-    function openProduct(id){
-
-qty = 1;   // reset quantity
-
-const product = products.find(p => p.id === id);
-if(!product) return;
-
-      const options = product.plans.map(plan =>
-        `<option value="${escapeHtml(plan)}">${escapeHtml(plan)}</option>`
-      ).join("");
-
-      modal.innerHTML = `
-        <button class="back-btn" onclick="goBack()">⬅ Back</button>
-        <h3>${escapeHtml(product.name)}</h3>
-
-        <div class="selector-wrap">
-          <div class="selector-label">Select plan</div>
-          <select id="currentPlanSelect" onchange="updatePreview('${escapeJs(product.name)}')">
-            ${options}
-          </select>
-        </div>
 <div class="qty-control">
+
 <button onclick="changeQty(-1)">-</button>
 <span id="qty">1</span>
 <button onclick="changeQty(1)">+</button>
-</div>
-        ${product.note ? `<div class="note">${escapeHtml(product.note)}</div>` : ""}
 
-        <div class="order-preview" id="orderPreviewBox"></div>
+</div>
+
 <div style="margin-top:15px;text-align:left">
-<div style="margin-bottom:8px;font-size:14px;">Payment Method</div>
+
+Payment Method
+
 <select id="paymentMethod" class="payment-select">
 
-<option value="KBZ Pay">KBZ Pay</option>
-<option value="Wave Pay">Wave Pay</option>
-<option value="UAB Pay">UAB Pay</option>
-<option value="AYA Pay">AYA Pay</option>
-<option value="Binance Pay">Binance Pay</option>
+<option>KBZ Pay</option>
+<option>Wave Pay</option>
+<option>AYA Pay</option>
+<option>UAB Pay</option>
+<option>Binance Pay</option>
 
 </select>
+
 </div>
-        <div class="action-row">
-          <button onclick="sendOrder('${escapeJs(product.name)}')">Order via Telegram</button>
-        </div>
-      `;
-      setTimeout(()=>{
-const q = document.getElementById("qty");
-if(q) q.innerText = qty;
-},0);
 
-      appsGrid.style.display = "none";
-      modal.style.display = "block";
-      updatePreview(product.name);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+<div class="order-preview" id="preview"></div>
 
-    function goBack(){
-      modal.style.display = "none";
-      appsGrid.style.display = "grid";
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+<button onclick="sendOrder('${p.name}')">
+Order via Telegram
+</button>
 
-    function filterApps(){
-const input = document.getElementById("searchInput").value.toLowerCase();
-const cards = document.querySelectorAll(".card");
+`
 
-cards.forEach(card=>{
-const name = card.innerText.toLowerCase();
+appsGrid.style.display="none"
+modal.style.display="block"
 
-if(name.includes(input)){
-card.style.display="flex";
-}else{
-card.style.display="none";
-}
-});
-    }
-
-  let qty = 1;
-
-function updatePreview(productName){
-const select = document.getElementById("currentPlanSelect");
-const preview = document.getElementById("orderPreviewBox");
-
-if(!select || !preview) return;
-
-const planText = select.value;
-
-const priceMatch = planText.match(/(\d+)\s*Ks/i);
-let price = priceMatch ? parseInt(priceMatch[1]) : 0;
-
-let total = price * qty;
-
-preview.innerHTML =
-"<strong>Order Preview</strong><br>" +
-"Product: " + escapeHtml(productName) + "<br>" +
-"Plan: " + escapeHtml(planText) + "<br>" +
-"Quantity: " + qty + "<br>" +
-"<strong>Total: " + total + " Ks</strong>";
-}  
-
-function changeQty(val){
-qty += val;
-
-if(qty < 1){
-qty = 1;
-}
-
-document.getElementById("qty").innerText = qty;
-}
-function sendOrder(productName){
-
-const select = document.getElementById("currentPlanSelect");
-const payment = document.getElementById("paymentMethod").value;
-
-if(!select) return;
-
-const planText = select.value;
-
-const priceMatch = planText.match(/(\d+)/);
-let price = priceMatch ? parseInt(priceMatch[1]) : 0;
-
-let total = price * qty;
-
-const message =
-"Hello, I want to order\n" +
-"Product: " + productName + "\n" +
-"Plan: " + planText + "\n" +
-"Quantity: " + qty + "\n" +
-"Total: " + total + " Ks\n" +
-"Payment: " + payment;
-
-const url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
-
-window.open(url, "_blank");
+updatePreview(p.name)
 
 }
 
+function goBack(){
 
-    function escapeHtml(str){
-      return String(str)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#39;");
-    }
+modal.style.display="none"
+appsGrid.style.display="grid"
 
-    function escapeJs(str){
-      return String(str)
-        .replaceAll("\\","\\\\")
-        .replaceAll("'","\\'");
-    }
+}
 
-    renderCards(products);
+function changeQty(v){
 
-    // particles
-    const canvas = document.getElementById("particles");
-    const ctx = canvas.getContext("2d");
-    let particles = [];
+qty+=v
 
-    function resizeCanvas(){
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
+if(qty<1)qty=1
 
-    function createParticles(){
-      particles = [];
-      const count = Math.min(90, Math.floor(window.innerWidth / 18));
-      for(let i = 0; i < count; i++){
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          r: Math.random() * 2.3 + 0.7,
-          dx: (Math.random() - 0.5) * 0.35,
-          dy: (Math.random() - 0.5) * 0.35,
-          a: Math.random() * 0.55 + 0.18
-        });
-      }
-    }
+document.getElementById("qty").innerText=qty
 
-    function drawParticles(){
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+updatePreview()
 
-      for(let i = 0; i < particles.length; i++){
-        const p = particles[i];
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(220,190,255," + p.a + ")";
-        ctx.shadowBlur = 16;
-        ctx.shadowColor = "#c77dff";
-        ctx.fill();
+}
 
-        p.x += p.dx;
-        p.y += p.dy;
+function updatePreview(name){
 
-        if(p.x < 0 || p.x > canvas.width) p.dx *= -1;
-        if(p.y < 0 || p.y > canvas.height) p.dy *= -1;
-      }
+const plan=document.getElementById("plan").value
 
-      for(let i = 0; i < particles.length; i++){
-        for(let j = i + 1; j < particles.length; j++){
-          const a = particles[i];
-          const b = particles[j];
-          const dist = Math.hypot(a.x - b.x, a.y - b.y);
-          if(dist < 120){
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = "rgba(199,125,255," + (0.16 - dist / 900) + ")";
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-      }
+const priceMatch=plan.match(/(\d+)/)
 
-      requestAnimationFrame(drawParticles);
-    }
+let price=priceMatch?parseInt(priceMatch[1]):0
 
-    resizeCanvas();
-    createParticles();
-    drawParticles();
+let total=price*qty
 
-    window.addEventListener("resize", function(){
-      resizeCanvas();
-      createParticles();
-    });
-  </script>
+document.getElementById("preview").innerHTML=
+
+`
+Product: ${name}<br>
+Plan: ${plan}<br>
+Quantity: ${qty}<br>
+Total: ${total} Ks
+`
+
+}
+
+function sendOrder(name){
+
+const plan=document.getElementById("plan").value
+const payment=document.getElementById("paymentMethod").value
+
+const msg=
+
+`Hello, I want to order
+Product: ${name}
+Plan: ${plan}
+Quantity: ${qty}
+Payment: ${payment}`
+
+window.open(
+"https://t.me/"+TELEGRAM_USERNAME+
+"?text="+encodeURIComponent(msg)
+)
+
+}
+
+renderCards(products)
+
+</script>
 </body>
 </html>
+
+
+<div id="productModal" class="pricebox"></div>
