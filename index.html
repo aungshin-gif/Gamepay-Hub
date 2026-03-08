@@ -101,6 +101,41 @@ transform:scale(1.05);
 filter:drop-shadow(0 0 20px #e0aaff)
 drop-shadow(0 0 40px #c77dff)
 drop-shadow(0 0 60px #9d4edd);
+} 
+  .logo-area{
+text-align:center;
+margin-top:20px;
+margin-bottom:10px;
+}
+
+.logo-title{
+font-size:42px;
+font-weight:800;
+color:#ffd60a;
+
+text-shadow:
+0 0 10px #ffd60a,
+0 0 20px #ffb700,
+0 0 40px #c77dff,
+0 0 60px #9d4edd;
+
+animation:logoPulse 2.5s infinite alternate;
+}
+
+.logo-sub{
+font-size:16px;
+color:white;
+margin-top:6px;
+
+text-shadow:
+0 0 5px #fff,
+0 0 10px #c77dff,
+0 0 20px #9d4edd;
+}
+
+@keyframes logoPulse{
+0%{transform:scale(1);}
+100%{transform:scale(1.05);}
 }
 
 }
@@ -628,8 +663,16 @@ color:white;
 
   <div class="page">
 <div class="topbar">
-<div class="logo">
-<img src="file_00000000a91c722f98f4be48b8cbb7c5.png" alt="GamePay Hub Digital">
+<div class="logo-area">
+
+<div class="logo-title">
+🎮 GamePay Hub
+</div>
+
+<div class="logo-sub">
+Digital Products Store
+</div>
+
 </div>
 
       <div class="search-wrap">
