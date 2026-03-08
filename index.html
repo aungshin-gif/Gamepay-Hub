@@ -1190,8 +1190,8 @@ const message =
 "Hello, I want to order\n" +
 "Product: " + productName + "\n" +
 "Plan: " + select.value + "\n" +
-"Quantity: " + qty;
-
+"Quantity: " + qty
+"Payment: " + payment;
 const url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
 
 window.open(url,"_blank");
