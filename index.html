@@ -1,6 +1,989 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GamePay Hub Digital Store</title>
+
+  <style>
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    :root{
+      --bg1:#12001f;
+      --bg2:#240046;
+      --bg3:#5a189a;
+      --bg4:#a64dff;
+      --card:rgba(40, 0, 58, 0.76);
+      --card-border:rgba(210,170,255,0.18);
+      --purple:#c77dff;
+      --purple-2:#9d4edd;
+      --yellow:#ffd60a;
+      --text:#ffffff;
+      --muted:#efe6ff;
+      --green:#91ffbf;
+      --green-bg:rgba(0,255,136,0.14);
+      --gold:#ffe773;
+      --gold-bg:rgba(255,214,10,0.14);
+    }
+
+    body{
+      font-family:Arial, sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      text-align:center;
+      overflow-x:hidden;
+      background:
+        radial-gradient(circle at top, #b366ff 0%, #7b2cbf 18%, #5a189a 36%, #3c096c 56%, #240046 76%, #140021 100%);
+      position:relative;
+    }
+
+    #particles{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:0;
+      pointer-events:none;
+      opacity:.95;
+    }
+
+    .page{
+      position:relative;
+      z-index:1;
+    }
+
+    .topbar{
+      padding:28px 16px 14px;
+    }
+.logo{
+font-size:42px;
+font-weight:800;
+letter-spacing:1px;
+margin-bottom:6px;
+
+color:#ffffff;
+
+text-shadow:
+0 0 6px #ffffff,
+0 0 12px #ffffff,
+0 0 20px #ffffff,
+0 0 40px #c77dff,
+0 0 70px #9d4edd;
+}
+
+/* LOGO IMAGE SIZE */
+.logo img{
+width:260px;
+display:block;
+margin:auto;
+
+animation:logoGlow 2.5s ease-in-out infinite alternate;
+
+filter:drop-shadow(0 0 10px #c77dff)
+drop-shadow(0 0 20px #9d4edd)
+drop-shadow(0 0 35px #7b2cbf);
+}
+
+@keyframes logoGlow{
+
+0%{
+transform:scale(1);
+filter:drop-shadow(0 0 10px #c77dff)
+drop-shadow(0 0 20px #9d4edd)
+drop-shadow(0 0 35px #7b2cbf);
+}
+100%{
+transform:scale(1.05);
+filter:drop-shadow(0 0 20px #e0aaff)
+drop-shadow(0 0 40px #c77dff)
+drop-shadow(0 0 60px #9d4edd);
+}
+
+}
+
+.logo-area{
+text-align:center;
+margin-top:20px;
+margin-bottom:10px;
+}
+
+
+.logo-title{
+font-size:42px;
+font-weight:800;
+color:#ffd60a;
+
+text-shadow:
+0 0 10px #ffd60a,
+0 0 20px #ffb700,
+0 0 40px #c77dff,
+0 0 60px #9d4edd;
+
+animation:logoPulse 2.5s infinite alternate;
+}
+
+.logo-sub{
+font-size:16px;
+color:white;
+margin-top:6px;
+
+text-shadow:
+0 0 5px #fff,
+0 0 10px #c77dff,
+0 0 20px #9d4edd;
+}
+
+@keyframes logoPulse{
+0%{transform:scale(1);}
+100%{transform:scale(1.05);}
+}
+
+}
+    .sublogo{
+      font-size:15px;
+      color:#fff;
+      text-shadow:
+        0 0 4px #fff,
+        0 0 8px var(--purple),
+        0 0 16px var(--purple-2);
+      margin-bottom:18px;
+    }
+
+    .search-wrap{
+width:min(95%,720px);
+margin:20px auto;
+position:relative;
+    }
+
+.clear-btn{
+position:absolute;
+right:20px;
+top:50%;
+transform:translateY(-50%);
+background:none;
+border:none;
+color:white;
+font-size:18px;
+cursor:pointer;
+}
+<div class="search-wrap">
+
+<div class="search-box">
+
+<span class="search-icon">🔍</span>
+
+<input
+type="text"
+id="searchInput"
+placeholder="Search apps..."
+onkeyup="filterApps()">
+
+<button onclick="clearSearch()" class="clear-btn">✖</button>
+
+</div>
+
+.search-box{
+width:min(95%,720px);
+margin:25px auto;
+position:relative;
+}
+
+#searchInput{
+width:100%;
+padding:20px 55px;
+border:none;
+outline:none;
+border-radius:20px;
+
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(10px);
+
+color:white;
+font-size:18px;
+
+border:2px solid #c77dff;
+
+box-shadow:
+0 0 10px #c77dff,
+0 0 25px #9d4edd,
+0 0 40px #7b2cbf;
+
+transition:0.3s;
+}
+
+#searchInput:focus{
+box-shadow:
+0 0 15px #e0aaff,
+0 0 35px #c77dff,
+0 0 60px #7b2cbf;
+}
+
+#searchInput::placeholder{
+color:#e0aaff;
+}
+
+.search-icon{
+position:absolute;
+left:18px;
+top:50%;
+transform:translateY(-50%);
+font-size:20px;
+color:#e0aaff;
+}
+
+.clear-btn{
+position:absolute;
+right:18px;
+top:50%;
+transform:translateY(-50%);
+background:none;
+border:none;
+color:white;
+font-size:18px;
+cursor:pointer;
+}
+
+    .apps{
+      width:min(95%, 1200px);
+      margin:10px auto 24px;
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:18px;
+      padding:18px;
+    }
+
+    .card{
+      position:relative;
+      background:var(--card);
+      border:1px solid var(--card-border);
+      padding:22px 14px 18px;
+      border-radius:20px;
+      cursor:pointer;
+      box-shadow:
+        0 0 18px rgba(157,78,221,0.42),
+        inset 0 0 0 1px rgba(255,255,255,0.03);
+      transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      min-height:210px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      overflow:hidden;
+      backdrop-filter:blur(10px);
+    }
+
+    .card{
+transition:all 0.3s ease;
+}
+
+.card:hover{
+transform:translateY(-8px) scale(1.02);
+
+box-shadow:
+0 0 15px rgba(199,125,255,0.6),
+0 0 30px rgba(157,78,221,0.5),
+0 0 50px rgba(123,44,191,0.4);
+}
+
+.card:active{
+transform:scale(0.98);
+}
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-40% auto auto -20%;
+      width:120px;
+      height:220px;
+      background:linear-gradient(120deg, transparent, rgba(255,255,255,0.08), transparent);
+      transform:rotate(20deg);
+      transition:.45s ease;
+      opacity:0;
+    }
+
+    .card:hover::before{
+      left:110%;
+      opacity:1;
+    }
+
+    .card img{
+      width:64px;
+      height:64px;
+      object-fit:contain;
+      margin-bottom:12px;
+      filter:drop-shadow(0 0 7px var(--purple));
+    }
+
+    .emoji-icon{
+      width:64px;
+      height:64px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:38px;
+      margin-bottom:12px;
+      border-radius:16px;
+      background:rgba(255,255,255,0.06);
+      box-shadow:0 0 10px rgba(199,125,255,0.28);
+    }
+
+    .card h3{
+      margin:6px 0 8px;
+      font-size:18px;
+      color:#fff;
+      text-shadow:
+        0 0 3px #fff,
+        0 0 8px var(--purple),
+        0 0 14px var(--purple-2);
+    }
+
+    .card p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .badge{
+      position:absolute;
+      top:12px;
+      right:12px;
+      font-size:11px;
+      padding:5px 10px;
+      border-radius:999px;
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+
+    .available{
+      background:var(--green-bg);
+      color:var(--green);
+      border:1px solid rgba(145,255,191,0.25);
+      box-shadow:0 0 10px rgba(145,255,191,0.16);
+    }
+
+    .low{
+      background:var(--gold-bg);
+      color:var(--gold);
+      border:1px solid rgba(255,231,115,0.25);
+      box-shadow:0 0 10px rgba(255,231,115,0.16);
+    }
+
+    .pricebox{
+      display:none;
+      width:min(92%, 760px);
+      margin:20px auto 30px;
+      padding:24px 18px 28px;
+      border-radius:22px;
+      background:rgba(37, 0, 58, 0.86);
+      border:1px solid rgba(199,125,255,0.20);
+      box-shadow:
+        0 0 28px rgba(157,78,221,0.58),
+        inset 0 0 0 1px rgba(255,255,255,0.03);
+      backdrop-filter:blur(12px);
+      animation:fade .35s ease;
+    }
+
+    @keyframes fade{
+      from{opacity:0; transform:translateY(18px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+.neon{
+color:#ffffff;
+
+text-shadow:
+0 0 5px #ffffff,
+0 0 10px #ffffff,
+0 0 20px #ffffff,
+0 0 35px #c77dff,
+0 0 60px #9d4edd;
+}
+
+
+    .pricebox h3{
+      margin:10px 0 16px;
+      font-size:30px;
+    }
+.selector-wrap{
+margin-top:20px;
+text-align:left;
+}
+
+.selector-label{
+font-size:14px;
+margin-bottom:8px;
+color:#efe6ff;
+}
+
+#currentPlanSelect{
+width:100%;
+padding:14px 16px;
+border-radius:16px;
+border:1px solid rgba(210,170,255,0.3);
+background:rgba(40,0,60,0.6);
+color:white;
+font-size:15px;
+
+backdrop-filter: blur(10px);
+box-shadow:
+0 0 12px rgba(199,125,255,0.4),
+0 0 25px rgba(157,78,221,0.3);
+
+outline:none;
+transition:0.3s;
+}
+.payment-select{
+width:100%;
+padding:12px 14px;
+
+border-radius:16px;
+border:1px solid rgba(255,220,120,0.6);
+
+background:rgba(60,40,0,0.5);
+color:white;
+
+box-shadow:
+0 0 10px rgba(255,210,80,0.6),
+0 0 20px rgba(255,200,50,0.5),
+inset 0 0 10px rgba(255,220,100,0.4);
+
+backdrop-filter:blur(6px);
+}
+#currentPlanSelect:focus{
+box-shadow:
+0 0 15px #c77dff,
+0 0 30px #9d4edd;
+border:1px solid #c77dff;
+}
+
+#currentPlanSelect option{
+background:#2b0044;
+color:white;
+}
+
+    .order-preview{
+      width:min(100%, 560px);
+      margin:14px auto 0;
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(199,125,255,0.16);
+      text-align:left;
+      font-size:14px;
+      color:#f5ecff;
+      box-shadow:0 0 10px rgba(157,78,221,0.18);
+      line-height:1.6;
+    }
+.payment-select{
+width:220px;
+padding:10px 14px;
+
+border-radius:16px;
+border:1px solid rgba(255,220,120,0.6);
+
+background:rgba(60,40,0,0.5);
+color:white;
+
+box-shadow:
+0 0 10px rgba(255,210,80,0.6),
+0 0 20px rgba(255,200,50,0.5),
+inset 0 0 10px rgba(255,220,100,0.4);
+
+backdrop-filter:blur(6px);
+}
+    .order-preview strong{
+      color:#fff;
+    }
+
+    button{
+      background:var(--purple-2);
+      color:white;
+      border:none;
+      padding:11px 22px;
+      border-radius:10px;
+      margin-top:12px;
+      cursor:pointer;
+      transition:.25s ease;
+      box-shadow:0 0 12px var(--purple-2);
+      font-size:15px;
+      font-weight:700;
+    }
+
+    button:hover{
+      background:var(--purple);
+      transform:scale(1.05);
+      box-shadow:0 0 22px var(--purple);
+    }
+
+    .back-btn{
+      margin-bottom:8px;
+    }
+
+    .action-row{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .footer{
+      margin:50px auto 24px;
+      padding:18px 16px 28px;
+      font-size:14px;
+      color:#fff;
+      text-shadow:
+        0 0 5px #fff,
+        0 0 10px var(--purple);
+      position:relative;
+      z-index:1;
+    }
+
+    @media (max-width: 980px){
+      .apps{
+        grid-template-columns:repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 720px){
+      .apps{
+        grid-template-columns:repeat(2, 1fr);
+        gap:14px;
+        padding:14px;
+      }
+
+      .logo{
+        font-size:33px;
+      }
+
+      .pricebox h3{
+        font-size:25px;
+      }
+    }
+
+    @media (max-width: 430px){
+      .card{
+        min-height:180px;
+        padding:18px 10px 15px;
+      }
+.paymentMethod{
+width:100%;
+padding:12px 14px;
+
+border-radius:16px;
+border:1px solid rgba(255,220,120,0.7);
+
+background:rgba(60,40,0,0.55);
+color:white;
+
+box-shadow:
+0 0 12px rgba(255,210,80,0.7),
+0 0 25px rgba(255,200,50,0.6),
+inset 0 0 10px rgba(255,220,100,0.5);
+}
+      .card h3{
+        font-size:16px;
+      }
+
+      .card p{
+        font-size:13px;
+      }
+
+      .card img,
+      .emoji-icon{
+        width:56px;
+        height:56px;
+      }
+
+      .emoji-icon{
+        font-size:33px;
+      }
+
+      .pricebox{
+        padding:18px 14px 22px;
+      }
+
+      button{
+        width:100%;
+      }
+
+      .action-row{
+  display:block;
+}
+
+.telegram-btn{
+  display:inline-block;
+  margin-top:15px;
+  padding:12px 20px;
+  background:#2AABEE;
+  color:white;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:bold;
+  box-shadow:0 0 10px #2AABEE;
+}
+    select{
+background: rgba(120,0,200,0.35);
+color:white;
+border:1px solid rgba(255,255,255,0.25);
+border-radius:14px;
+padding:12px;
+backdrop-filter: blur(12px);
+box-shadow:0 0 10px #b84dff, 0 0 20px #7a00ff;
+}
+
+select option{
+background:#2b0040;
+color:white;
+padding:10px;
+}
+select option:hover{
+background:#7a00ff;
+color:white;
+}
+      .floating-telegram{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#2AABEE;
+padding:14px;
+border-radius:50%;
+box-shadow:0 0 15px #2AABEE;
+z-index:999;
+}
+.floating-telegram img{
+width:40px;
+height:40px;
+}
+
+.floating-telegram:hover{
+box-shadow:0 0 25px #2AABEE;
+}
+      .telegram-join-btn{
+display:inline-block;
+margin-top:12px;
+padding:12px 22px;
+background:linear-gradient(45deg,#7a00ff,#c77dff);
+color:white;
+border-radius:14px;
+text-decoration:none;
+font-weight:bold;
+box-shadow:0 0 15px #9d4edd;
+transition:0.3s;
+}
+
+.telegram-join-btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 25px #c77dff;
+}.telegram-join-btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 25px #c77dff;
+}
+
+/* ADD HERE (Line 605) */
+
+.qty-control{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:15px;
+margin-top:15px;
+}
+
+.qty-control button{
+width:40px;
+height:40px;
+border-radius:10px;
+border:none;
+background:#9d4edd;
+color:white;
+font-size:20px;
+cursor:pointer;
+}
+
+.qty-control span{
+font-size:18px;
+font-weight:bold;
+color:white;
+}
+  </style>
+</head>
+<body>
+  <canvas id="particles"></canvas>
+
+  <div class="page">
+<div class="topbar">
+<div class="logo-area">
+
+<div class="logo-title">
+🎮 GamePay Hub
+</div>
+
+<div class="logo-sub">
+Digital Products Store
+</div>
+
+</div>
+
+      <div class="search-wrap">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search apps..."
+          onkeyup="filterApps()"
+        >
+      </div>
+    </div>
+
+    <div class="apps" id="appsGrid"></div>
+
+    <div id="productModal" class="pricebox">
+
+<div style="margin-top:15px;text-align:left">
+
+<div style="margin-bottom:8px;font-size:14px;">
+Payment Method
+</div>
+
+<select id="paymentMethod" class="payment-select">
+
+<option value="KBZ Pay">KBZ Pay</option>
+<option value="Wave Pay">Wave Pay</option>
+<option value="UAB Pay">UAB Pay</option>
+<option value="AYA Pay">AYA Pay</option>
+<option value="Binance Pay">Binance Pay</option>
+
+</select>
+
+</div>
+
+    </div>
+
+    <div class="footer">
+Founder: Diameter Eight
+<br><br>
+Mobile Game Topup are available in Telegram Game Channel
+<br><br>
+<a href="https://t.me/gamepaydyet" target="_blank" class="telegram-join-btn">
+Join Telegram Game Channel
+</a>
+
+    </div>
+<a href="https://t.me/gamepaydyet" class="floating-telegram" target="_blank">
+<img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" width="55">
+</a>
+
+  <script>
+    const TELEGRAM_USERNAME = "angsthtun";
+
+    const products = [
+      {
+id: "chatgpt",
+name: "ChatGPT",
+subtitle: "Tap to see prices",
+badge: "available",
+iconType: "image",
+icon: "ChatGPT_logo.svg.png",
+search: "chatgpt openai ai",
+plans: [
+"ChatGPT Plus - 1 Month - 6000 Ks (Share)",
+"ChatGPT Plus - 1 Month - 6500 Ks (Private)",
+"ChatGPT Plus - 3 Months - 8000 Ks (Share)",
+"ChatGPT Plus - 3 Months - 9000 Ks (Private)",
+"ChatGPT Business - 1 Month - 6000 Ks (Share)",
+"ChatGPT Business - 12 Months - 12000 Ks (Share)",
+"ChatGPT Business - 12 Months - 13000 Ks (Private)"
+]
+},
+      {
+        id: "spotify",
+        name: "Spotify",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "image",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
+        search: "spotify music premium",
+        plans: [
+          "Family Plan (Global) – 1 Month – 8000 Ks",
+          "Family Plan (Global) – 2 Months – 12000 Ks",
+          "Family Plan (Global) – 3 Months – 24000 Ks",
+          "Family Plan (Global) – 6 Months – 65000 Ks",
+          "Individual Plan (Global) – 1 Month – 13000 Ks",
+          "Individual Plan (Global) – 2 Months – 24000 Ks",
+          "Individual Plan (Global) – 3 Months – 34000 Ks"
+        ]
+      },
+{
+  id: "picsart",
+  name: "PicsArt",
+  subtitle: "Tap to see prices",
+  badge: "available",
+  iconType: "image",
+  icon: "IMG_20260307_042958_666.jpg",
+  search: "picsart photo edit",
+  plans: [
+    "1 Month – 5000 MMK",
+    "3 Months – 12000 MMK"
+  ]
+},
+{
+  id: "vpn",
+  name: "Express VPN",
+  subtitle: "Tap to see prices",
+  badge: "available",
+  iconType: "image",
+  icon: "https://cdn-icons-png.flaticon.com/512/565/565547.png",
+        search: "express vpn secure",
+        note: "Share plan can only use 1 device",
+        plans: [
+          "Share Plan – 1 Month – 1500 Ks (Android & iOS)",
+          "Share Plan – 1 Month – 2500 Ks (Windows PC & Laptop)",
+          "Share Plan – 1 Month – 2500 Ks (Linux Devices)",
+          "Share Plan – 1 Month – 2500 Ks (MacBook)",
+          "Private Plan – 1 Month – 8000 Ks (Up to 9 devices)"
+        ]
+      },
+      {
+        id: "telegram",
+        name: "Telegram Premium",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "image",
+        icon: "https://cdn-icons-png.flaticon.com/512/2111/2111646.png",
+        search: "telegram premium tg",
+        plans: [
+          "Login Method – 1 Month – 20500 Ks",
+          "Gift Plan – 3 Months – 50000 Ks",
+          "Gift Plan – 6 Months – 67000 Ks",
+          "Gift Plan – 9 Months – 118000 Ks",
+          "Link Plan – 3 Months – 44000 Ks",
+          "Link Plan – 6 Months – 65000 Ks",
+          "Link Plan – 12 Months – 118000 Ks"
+        ]
+      },
+      {
+        id: "gemini",
+        name: "Gemini Pro",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "emoji",
+        icon: "✨",
+        search: "gemini pro google ai",
+        note: "✔️Access on your email. ✔️2TB storage for photos, drive & gmail. ✔️Gemini app with 2.5 Pro. ✔️Access to Veo 3. ✔️Flow with Veo 3. ✔️Whisk with Veo 2. ✔️1000 monthly AI credits. ✔️NotebookLM higher limits. ✔️Gemini in Gmail, Docs & more. ✔️Full-time warranty. ✔️100% genuine access.",
+        plans: [
+          "1 Month – 7000 Ks",
+          "2 Months – 12500 Ks",
+          "3 Months – 17000 Ks",
+          "6 Months – 30000 Ks",
+          "1 Year – 51000 Ks"
+        ]
+      },
+  {
+id: "netflix",
+name: "Netflix",
+subtitle: "Tap to see prices",
+badge: "available",
+iconType: "image",
+icon: "getthumbnail.webp",
+search: "netflix movie show",
+
+note: "✔ Can activate in Myanmar",
+
+plans: [
+"Share Account - 1 Month - 6000 Ks",
+"Share Account - 3 Months - 12000 Ks",
+"Share Account - 6 Months - 22000 Ks",
+"Share Account - 1 Year - 35000 Ks",
+
+"Personal - 1 Month - 7000 Ks",
+"Personal - 3 Months - 13000 Ks",
+"Personal - 6 Months - 24000 Ks",
+"Personal - 1 Year - 39000 Ks",
+
+"Mail Subscription Standard Plan - 35000 Ks",
+"Mail Subscription Pro Plan - 75500 Ks",
+"Mail Subscription Premium Plan - 99000 Ks"
+]
+},
+      {
+        id: "itunes",
+        name: "iTunes Gift Card",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "emoji",
+        icon: "🍎",
+        search: "itunes gift card apple",
+        note: "Other Regions Available: Canada, Germany, Japan, China, Taiwan, Nigeria, etc.",
+        plans: [
+          "5 USD – 21500 Ks",
+          "10 USD – 41500 Ks",
+          "20 USD – 82000 Ks",
+          "50 USD – 204000 Ks",
+          "100 USD – 410000 Ks"
+        ]
+      },
+      
+      {
+        id: "capcut",
+        name: "CapCut Pro",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "image",
+        icon: "IMG_20260307_045206_183.jpg",
+        search: "capcut pro edit video",
+        plans: [
+          "Global Account – 1 Month – 6500 Ks",
+          "Global Account – 3 Months – 19500 Ks",
+          "Global Account – 6 Months – 54000 Ks",
+          "Global Account – 1 Year – nearly 75000 Ks",
+          "CapCut Subscription Own Mail Standard Plan – 1 Month – 44000 Ks",
+          "CapCut Subscription Own Mail Pro Plan – 1 Month – 120000 Ks"
+        ]
+      },
+      {
+        id: "prime",
+        name: "Prime Video",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "emoji",
+        icon: "🎬",
+        search: "amazon prime video",
+        note: "Private profiles and full-time warranty available.",
+        plans: [
+          "Dedicated Private Account – 1 Month – 5800 Ks",
+          "Dedicated Private Account – 3 Months – 13800 Ks",
+          "Dedicated Private Account – 6 Months – 22000 Ks",
+          "Full Private – 1 Month – 10000 Ks",
+          "Full Private – 6 Months – 26000 Ks"
+        ]
+      },
+      {
+        id: "outline",
+        name: "Outline VPN",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "emoji",
+        icon: "🛡️",
+        search: "outline vpn secure data",
+        plans: [
+          "50GB – 3000 Ks (1 Month)",
+          "100GB – 5000 Ks (1 Month)"
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
