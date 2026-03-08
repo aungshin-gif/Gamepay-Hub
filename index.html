@@ -1247,7 +1247,7 @@ if(!select || !preview) return;
 
 const planText = select.value;
 
-const priceMatch = planText.match(/(\d+)/);
+const priceMatch = planText.match(/(\d+)\s*Ks/i);
 let price = priceMatch ? parseInt(priceMatch[1]) : 0;
 
 let total = price * qty;
