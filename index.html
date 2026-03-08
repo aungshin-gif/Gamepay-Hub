@@ -96,18 +96,21 @@ filter:drop-shadow(0 0 10px #c77dff)
 drop-shadow(0 0 20px #9d4edd)
 drop-shadow(0 0 35px #7b2cbf);
 }
-
 100%{
 transform:scale(1.05);
 filter:drop-shadow(0 0 20px #e0aaff)
 drop-shadow(0 0 40px #c77dff)
 drop-shadow(0 0 60px #9d4edd);
-} 
-  .logo-area{
+}
+
+}
+
+.logo-area{
 text-align:center;
 margin-top:20px;
 margin-bottom:10px;
 }
+
 
 .logo-title{
 font-size:42px;
@@ -1234,16 +1237,28 @@ card.style.display="none";
 });
     }
 
-    function updatePreview(productName){
-      const select = document.getElementById("currentPlanSelect");
-      const preview = document.getElementById("orderPreviewBox");
-      if(!select || !preview) return;
+  let qty = 1;
 
-      preview.innerHTML =
-        "<strong>Order Preview</strong><br>" +
-        "Product: " + escapeHtml(productName) + "<br>" +
-        "Plan: " + escapeHtml(select.value);
-    }let qty = 1;
+function updatePreview(productName){
+const select = document.getElementById("currentPlanSelect");
+const preview = document.getElementById("orderPreviewBox");
+
+if(!select || !preview) return;
+
+const planText = select.value;
+
+const priceMatch = planText.match(/(\d+)/);
+let price = priceMatch ? parseInt(priceMatch[1]) : 0;
+
+let total = price * qty;
+
+preview.innerHTML =
+"<strong>Order Preview</strong><br>" +
+"Product: " + escapeHtml(productName) + "<br>" +
+"Plan: " + escapeHtml(planText) + "<br>" +
+"Quantity: " + qty + "<br>" +
+"<strong>Total: " + total + " Ks</strong>";
+}  
 
 function changeQty(val){
 qty += val;
