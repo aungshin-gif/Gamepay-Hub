@@ -1111,7 +1111,19 @@ if(!product) return;
         ${product.note ? `<div class="note">${escapeHtml(product.note)}</div>` : ""}
 
         <div class="order-preview" id="orderPreviewBox"></div>
+<div style="margin-top:15px;text-align:left">
+<div style="margin-bottom:8px;font-size:14px;">Payment Method</div>
 
+<select id="paymentMethod">
+
+<option value="KBZ Pay">KBZ Pay</option>
+<option value="Wave Pay">Wave Pay</option>
+<option value="UAB Pay">UAB Pay</option>
+<option value="AYA Pay">AYA Pay</option>
+<option value="Binance Pay">Binance Pay</option>
+
+</select>
+</div>
         <div class="action-row">
           <button onclick="sendOrder('${escapeJs(product.name)}')">Order via Telegram</button>
         </div>
