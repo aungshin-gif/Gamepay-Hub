@@ -971,575 +971,413 @@ plans: [
         plans: [
           "50GB – 3000 Ks (1 Month)",
           "100GB – 5000 Ks (1 Month)"
-
-
-
-
-
-
-
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>GamePay Hub Digital Store</title>
-
-<style>
-
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-font-family:Arial,sans-serif;
-}
-
-:root{
---purple:#c77dff;
---purple2:#9d4edd;
---card:rgba(40,0,58,.75);
---border:rgba(210,170,255,.2);
-}
-
-body{
-min-height:100vh;
-color:white;
-text-align:center;
-
-background:
-radial-gradient(circle at top,
-#b366ff 0%,
-#7b2cbf 18%,
-#5a189a 36%,
-#3c096c 56%,
-#240046 76%,
-#140021 100%);
-}
-
-.logo-title{
-font-size:42px;
-font-weight:800;
-margin-top:20px;
-
-color:#ffd60a;
-
-text-shadow:
-0 0 10px #ffd60a,
-0 0 30px #c77dff,
-0 0 60px #9d4edd;
-}
-
-.logo-sub{
-font-size:16px;
-margin-bottom:20px;
-}
-
-.search-wrap{
-width:90%;
-max-width:650px;
-margin:auto;
-}
-
-#searchInput{
-
-width:100%;
-padding:18px;
-
-border-radius:20px;
-border:2px solid #c77dff;
-
-background:rgba(255,255,255,.08);
-color:white;
-
-font-size:16px;
-
-box-shadow:
-0 0 10px #c77dff,
-0 0 25px #9d4edd;
-}
-
-.categories{
-
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-
-gap:10px;
-margin:25px;
-}
-
-.category-btn{
-
-padding:10px 18px;
-
-border-radius:20px;
-border:1px solid #c77dff;
-
-background:rgba(255,255,255,.08);
-
-color:white;
-cursor:pointer;
-
-}
-
-.category-btn:hover{
-background:#9d4edd;
-transform:scale(1.05);
-}
-
-.apps{
-
-width:95%;
-max-width:1200px;
-
-margin:auto;
-
-display:grid;
-
-grid-template-columns:
-repeat(auto-fit,minmax(200px,1fr));
-
-gap:18px;
-
-padding:18px;
-}
-
-.card{
-
-position:relative;
-
-background:var(--card);
-
-border:1px solid var(--border);
-
-border-radius:20px;
-
-padding:22px;
-
-cursor:pointer;
-
-transition:.25s;
-
-backdrop-filter:blur(10px);
-}
-
-.card:hover{
-
-transform:translateY(-8px);
-
-box-shadow:
-0 0 20px #c77dff,
-0 0 40px #9d4edd;
-}
-
-.card img{
-width:64px;
-height:64px;
-margin-bottom:10px;
-}
-
-.emoji-icon{
-font-size:40px;
-margin-bottom:10px;
-}
-
-.badge{
-position:absolute;
-top:10px;
-right:10px;
-font-size:11px;
-padding:4px 10px;
-border-radius:999px;
-}
-
-.available{
-background:#003f1f;
-color:#91ffbf;
-}
-
-.low{
-background:#3f3000;
-color:#ffe773;
-}
-
-.pricebox{
-
-display:none;
-
-width:92%;
-max-width:700px;
-
-margin:30px auto;
-
-background:rgba(37,0,58,.9);
-
-padding:25px;
-
-border-radius:20px;
-
-border:1px solid #9d4edd;
-
-box-shadow:0 0 30px #9d4edd;
-}
-
-.qty-control{
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-gap:15px;
-margin-top:15px;
-}
-
-.qty-control button{
-
-width:40px;
-height:40px;
-
-font-size:20px;
-border-radius:10px;
-}
-
-button{
-
-padding:12px 22px;
-
-background:#9d4edd;
-
-border:none;
-color:white;
-
-border-radius:12px;
-
-cursor:pointer;
-
-font-weight:bold;
-}
-
-button:hover{
-background:#c77dff;
-transform:scale(1.05);
-}
-
-.payment-select{
-
-width:100%;
-padding:12px;
-margin-top:10px;
-
-border-radius:12px;
-
-background:rgba(60,40,0,0.6);
-border:1px solid #ffd60a;
-
-color:white;
-}
-
-.order-preview{
-margin-top:15px;
-font-size:14px;
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="logo-title">🎮 GamePay Hub</div>
-<div class="logo-sub">Digital Products Store</div>
-
-<div class="search-wrap">
-<input type="text" id="searchInput" placeholder="Search apps..." onkeyup="filterApps()">
-</div>
-
-<div class="categories">
-
-<button class="category-btn" onclick="filterCategory('all')">All</button>
-<button class="category-btn" onclick="filterCategory('ai')">AI</button>
-<button class="category-btn" onclick="filterCategory('editing')">Editing</button>
-<button class="category-btn" onclick="filterCategory('music')">Music</button>
-<button class="category-btn" onclick="filterCategory('video')">Video</button>
-<button class="category-btn" onclick="filterCategory('social')">Social</button>
-<button class="category-btn" onclick="filterCategory('services')">Services</button>
-<button class="category-btn" onclick="filterCategory('vpn')">VPN</button>
-<button class="category-btn" onclick="filterCategory('gift')">Gift</button>
-
-</div>
-
-<div id="appsGrid" class="apps"></div>
-<script>
-
-const TELEGRAM_USERNAME="angsthtun"
-
-let qty=1
-
-const products=[
-
-{
-id:"chatgpt",
-category:"ai",
-name:"ChatGPT",
-subtitle:"Tap to see prices",
-badge:"available",
-iconType:"emoji",
-icon:"🤖",
-search:"chatgpt ai openai",
-plans:[
-"ChatGPT Plus - 1 Month - 6000 Ks",
-"ChatGPT Plus - 3 Months - 8000 Ks"
+          "150GB – 6900 Ks (1 Month)",
+          "200GB – 8500 Ks (2 Months)"
+        ]
+      },
+      {
+        id: "jumpvpn",
+        name: "Jump Jump VPN",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "emoji",
+        icon: "🚀",
+        search: "jump jump vpn",
+        plans: [
+          "1 Device – 3 Days – 2700 Ks",
+          "1 Device – 1 Month – 13000 Ks",
+          "2 Devices – 1 Month – 18000 Ks",
+          "2 Devices – 6 Months – 90000 Ks",
+          "2 Devices – 12 Months – 108000 Ks"
+        ]
+      },
+      {
+        id: "meitu",
+        name: "Meitu VIP",
+        subtitle: "Tap to see prices",
+        badge: "low",
+        iconType: "emoji",
+        icon: "💄",
+        search: "meitu vip beauty edit",
+        plans: [
+          "China Region – 1 Month – 4500 Ks",
+          "Global Region – 1 Month – 8000 Ks (Share) – 1 Device",
+          "Global Region – 1 Month – 24000 Ks (Private) – 3 Devices",
+          "Global Region – 1 Year – 160000 Ks (Private) – 3 Devices"
+        ]
+      },
+      {
+        id: "steam",
+        name: "Steam Wallet",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "image",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg",
+        search: "steam wallet game card",
+        plans: [
+          "5 USD - 23200 Ks",
+          "10 USD - 45000 Ks",
+          "20 USD - 90000 Ks",
+          "25 USD - 113000 Ks",
+          "30 USD - 137000 Ks",
+          "35 USD - 157000 Ks",
+          "50 USD - 228000 Ks",
+          "100 USD - 460000 Ks"
+        ]
+      },
+      {
+        id: "duolingo",
+        name: "Duolingo",
+        subtitle: "Tap to see prices",
+        badge: "available",
+        iconType: "image",
+        icon: "duolingo-duo-owl-logo-2022.jpg",
+        search: "duolingo language learning",
+        plans: [
+          "Personal Account – 2 Months – 7000 Ks",
+          "Personal Account – 6 Months – 13000 Ks",
+          "Family Account – 2 Months – 38000 Ks (High value)",
+          "Family Account – 6 Months – 12000 Ks",
+          "Family Account – 12 Months – 32000 Ks (Low value)"
+        ]
+      },
+   {
+ id: "canva",
+ name: "Canva Pro",
+ subtitle: "Tap to see prices",
+ badge: "available",
+ iconType: "image",
+ icon: "Untitled-design-2025-01-28T101702.381.png",
+ search: "canva design pro",
+ plans: [
+  "Share Plan (Invite) – 1 Month – 1500 Ks",
+  "Private Plan – 1 Month – 5000 Ks",
+  "Educational Plan – Lifetime – 5000 Ks",
+  "Private Plan – 1 Year – 5000 Ks"
+ ]
+    },
+      {
+id: "payment",
+name: "Payment Methods",
+subtitle: "Tap to see payment options",
+badge: "available",
+iconType: "emoji",
+icon: "💳",
+plans: [
+"✅ KBZ Pay",
+"✅ Wave Pay",
+"✅ AYA Pay",
+"✅ UAB Pay",
+"✅ Binance Pay",
+"✅ WeChat Pay",
+"🔒 PayPal - temporarily unavailable"
 ]
 },
-
+      {
+  id: "youtube",
+  name: "YouTube Premium",
+  subtitle: "Tap to see prices",
+  badge: "available",
+  iconType: "image",
+  icon: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png",
+  search: "youtube premium subscription",
+  plans: [
+    "Share Account - 1 Month - 7000 Ks",
+    "Share Account - 1 Year - 15000 Ks",
+    "Private Account - 1 Month - 8000 Ks",
+    "Private Account - 2 Months - 13000 Ks",
+    "Private Account - 3 Months - 19000 Ks",
+    "Private Account - 6 Months - 35000 Ks",
+    "Private Account - 1 Year - 50000 Ks"
+  ]
+},
 {
-id:"spotify",
-category:"music",
-name:"Spotify",
-subtitle:"Tap to see prices",
-badge:"available",
-iconType:"emoji",
-icon:"🎵",
-search:"spotify music",
-plans:[
-"1 Month - 8000 Ks",
-"3 Months - 24000 Ks"
-]
+  id: "disney",
+  name: "Disney+",
+  subtitle: "Tap to see prices",
+  badge: "available",
+  iconType: "image",
+  icon: "disney_1xun.3840.webp",
+  search: "disney plus subscription",
+  plans: [
+    "Disney+ Premium - 1 Month - 7000 Ks",
+    "Disney+ Duo - 1 Month - 8000 Ks",
+    "Disney+ Trio - 1 Month - 10000 Ks",
+
+    "Disney+ Premium - 3 Months - 8500 Ks",
+    "Disney+ Duo - 3 Months - 12000 Ks",
+    "Disney+ Trio - 3 Months - 15000 Ks",
+
+    "Disney+ Premium - 12 Months - 20000 Ks",
+    "Disney+ Duo - 12 Months - 22000 Ks",
+    "Disney+ Trio - 12 Months - 30000 Ks"
+  ]
+},
+      {
+  id: "perplexity",
+  name: "Perplexity AI Pro",
+  subtitle: "Tap to see prices",
+  badge: "available",
+  iconType: "image",
+  icon: "what-is-perplexity-6465259389791520_l.jpg",
+  search: "perplexity ai pro",
+  plans: [
+    "Perplexity AI Pro - 1 Month - 8000 Ks (Not Own Mail)",
+    "Perplexity AI Pro - 1 Year - 28000 Ks (Not Own Mail)",
+    "Perplexity AI Pro - 1 Month - 13500 Ks (Private)",
+    "Perplexity AI Pro - 6 Months - 40000 Ks (Private)",
+    "Perplexity AI Pro - 1 Year - 70000 Ks (Private)"
+  ]
 },
 
-{
-id:"capcut",
-category:"editing",
-name:"CapCut Pro",
-subtitle:"Tap to see prices",
-badge:"available",
-iconType:"emoji",
-icon:"🎬",
-search:"capcut edit video",
-plans:[
-"1 Month - 6500 Ks",
-"3 Months - 19500 Ks"
-]
-},
+    ];
+    
 
-{
-id:"expressvpn",
-category:"vpn",
-name:"Express VPN",
-subtitle:"Tap to see prices",
-badge:"available",
-iconType:"emoji",
-icon:"🛡️",
-search:"vpn secure",
-plans:[
-"1 Month - 1500 Ks",
-"Private - 8000 Ks"
-]
-},
 
-{
-id:"itunes",
-category:"gift",
-name:"iTunes Gift Card",
-subtitle:"Tap to see prices",
-badge:"available",
-iconType:"emoji",
-icon:"🍎",
-search:"itunes apple gift",
-plans:[
-"5 USD - 21500 Ks",
-"10 USD - 41500 Ks"
-]
-}
+    const appsGrid = document.getElementById("appsGrid");
+    const modal = document.getElementById("productModal");
+    const searchInput = document.getElementById("searchInput");
 
-]
-const appsGrid=document.getElementById("appsGrid")
-const modal=document.getElementById("productModal")
+    function createCard(product){
+      const badgeClass = product.badge === "low" ? "low" : "available";
+      const badgeText = product.badge === "low" ? "Low Stock" : "Available";
 
-function createCard(p){
+      const iconHtml = product.iconType === "image"
+        ? `<div class="icon-shell"><img src="${product.icon}" alt="${escapeHtml(product.name)}"></div>`
+        : `<div class="icon-shell"><div class="emoji-icon">${product.icon}</div></div>`;
 
-const icon=p.iconType==="image"
-? `<img src="${p.icon}">`
-: `<div class="emoji-icon">${p.icon}</div>`
+      return `
+        <div class="card" data-name="${escapeHtml(product.search)}" onclick="openProduct('${escapeJs(product.id)}')">
+          <span class="badge ${badgeClass}">${badgeText}</span>
+          ${iconHtml}
+          <h3>${escapeHtml(product.name)}</h3>
+          <p>${escapeHtml(product.subtitle)}</p>
+        </div>
+      `;
+    }
 
-const badge=p.badge==="low"
-? `<span class="badge low">Low</span>`
-: `<span class="badge available">Available</span>`
+    function renderCards(list){
+      appsGrid.innerHTML = list.map(createCard).join("");
+    }
 
-return`
+    function openProduct(id){
 
-<div class="card" onclick="openProduct('${p.id}')">
+qty = 1;   // reset quantity
 
-${badge}
+const product = products.find(p => p.id === id);
+if(!product) return;
 
-${icon}
+      const options = product.plans.map(plan =>
+        `<option value="${escapeHtml(plan)}">${escapeHtml(plan)}</option>`
+      ).join("");
 
-<h3>${p.name}</h3>
-<p>${p.subtitle}</p>
+      modal.innerHTML = `
+        <button class="back-btn" onclick="goBack()">⬅ Back</button>
+        <h3>${escapeHtml(product.name)}</h3>
 
-</div>
-
-`
-
-}
-
-function renderCards(list){
-appsGrid.innerHTML=list.map(createCard).join("")
-}
-
-function filterCategory(cat){
-
-if(cat==="all"){
-renderCards(products)
-return
-}
-
-renderCards(products.filter(p=>p.category===cat))
-}
-
-function filterApps(){
-
-const input=document.getElementById("searchInput").value.toLowerCase()
-
-renderCards(products.filter(p=>
-
-p.name.toLowerCase().includes(input)||
-p.search.toLowerCase().includes(input)
-
-))
-}
-
-function openProduct(id){
-
-qty=1
-
-const p=products.find(x=>x.id===id)
-if(!p)return
-
-const options=p.plans.map(x=>`<option>${x}</option>`).join("")
-
-modal.innerHTML=
-
-`
-
-<button onclick="goBack()">⬅ Back</button>
-
-<h3>${p.name}</h3>
-
-<select id="plan" onchange="updatePreview('${p.name}')">
-
-${options}
-
-</select>
-
+        <div class="selector-wrap">
+          <div class="selector-label">Select plan</div>
+          <select id="currentPlanSelect" onchange="updatePreview('${escapeJs(product.name)}')">
+            ${options}
+          </select>
+        </div>
 <div class="qty-control">
-
 <button onclick="changeQty(-1)">-</button>
 <span id="qty">1</span>
 <button onclick="changeQty(1)">+</button>
-
 </div>
+        ${product.note ? `<div class="note">${escapeHtml(product.note)}</div>` : ""}
 
+        <div class="order-preview" id="orderPreviewBox"></div>
 <div style="margin-top:15px;text-align:left">
-
-Payment Method
-
+<div style="margin-bottom:8px;font-size:14px;">Payment Method</div>
 <select id="paymentMethod" class="payment-select">
 
-<option>KBZ Pay</option>
-<option>Wave Pay</option>
-<option>AYA Pay</option>
-<option>UAB Pay</option>
-<option>Binance Pay</option>
+<option value="KBZ Pay">KBZ Pay</option>
+<option value="Wave Pay">Wave Pay</option>
+<option value="UAB Pay">UAB Pay</option>
+<option value="AYA Pay">AYA Pay</option>
+<option value="Binance Pay">Binance Pay</option>
 
 </select>
-
 </div>
+        <div class="action-row">
+          <button onclick="sendOrder('${escapeJs(product.name)}')">Order via Telegram</button>
+        </div>
+      `;
+      setTimeout(()=>{
+const q = document.getElementById("qty");
+if(q) q.innerText = qty;
+},0);
 
-<div class="order-preview" id="preview"></div>
+      appsGrid.style.display = "none";
+      modal.style.display = "block";
+      updatePreview(product.name);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-<button onclick="sendOrder('${p.name}')">
-Order via Telegram
-</button>
+    function goBack(){
+      modal.style.display = "none";
+      appsGrid.style.display = "grid";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-`
+    function filterApps(){
+const input = document.getElementById("searchInput").value.toLowerCase();
+const cards = document.querySelectorAll(".card");
 
-appsGrid.style.display="none"
-modal.style.display="block"
+cards.forEach(card=>{
+const name = card.innerText.toLowerCase();
 
-updatePreview(p.name)
+if(name.includes(input)){
+card.style.display="flex";
+}else{
+card.style.display="none";
+}
+});
+    }
+
+  let qty = 1;
+
+function updatePreview(productName){
+const select = document.getElementById("currentPlanSelect");
+const preview = document.getElementById("orderPreviewBox");
+
+if(!select || !preview) return;
+
+const planText = select.value;
+
+const priceMatch = planText.match(/(\d+)/);
+let price = priceMatch ? parseInt(priceMatch[1]) : 0;
+
+let total = price * qty;
+
+preview.innerHTML =
+"<strong>Order Preview</strong><br>" +
+"Product: " + escapeHtml(productName) + "<br>" +
+"Plan: " + escapeHtml(planText) + "<br>" +
+"Quantity: " + qty + "<br>" +
+"<strong>Total: " + total + " Ks</strong>";
+}  
+
+function changeQty(val){
+qty += val;
+
+if(qty < 1){
+qty = 1;
+}
+
+document.getElementById("qty").innerText = qty;
+}
+function sendOrder(productName){
+
+const select = document.getElementById("currentPlanSelect");
+const payment = document.getElementById("paymentMethod").value;
+
+if(!select) return;
+
+const message =
+"Hello, I want to order\n" +
+"Product: " + productName + "\n" +
+"Plan: " + select.value + "\n" +
+"Quantity: " + qty + "\n" +
+"Payment: " + payment;
+
+const url = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
+
+window.open(url, "_blank");
 
 }
 
-function goBack(){
 
-modal.style.display="none"
-appsGrid.style.display="grid"
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#39;");
+    }
 
-}
+    function escapeJs(str){
+      return String(str)
+        .replaceAll("\\","\\\\")
+        .replaceAll("'","\\'");
+    }
 
-function changeQty(v){
+    renderCards(products);
 
-qty+=v
+    // particles
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
 
-if(qty<1)qty=1
+    function resizeCanvas(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
 
-document.getElementById("qty").innerText=qty
+    function createParticles(){
+      particles = [];
+      const count = Math.min(90, Math.floor(window.innerWidth / 18));
+      for(let i = 0; i < count; i++){
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 2.3 + 0.7,
+          dx: (Math.random() - 0.5) * 0.35,
+          dy: (Math.random() - 0.5) * 0.35,
+          a: Math.random() * 0.55 + 0.18
+        });
+      }
+    }
 
-updatePreview()
+    function drawParticles(){
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-}
+      for(let i = 0; i < particles.length; i++){
+        const p = particles[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(220,190,255," + p.a + ")";
+        ctx.shadowBlur = 16;
+        ctx.shadowColor = "#c77dff";
+        ctx.fill();
 
-function updatePreview(name){
+        p.x += p.dx;
+        p.y += p.dy;
 
-const plan=document.getElementById("plan").value
+        if(p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if(p.y < 0 || p.y > canvas.height) p.dy *= -1;
+      }
 
-const priceMatch=plan.match(/(\d+)/)
+      for(let i = 0; i < particles.length; i++){
+        for(let j = i + 1; j < particles.length; j++){
+          const a = particles[i];
+          const b = particles[j];
+          const dist = Math.hypot(a.x - b.x, a.y - b.y);
+          if(dist < 120){
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = "rgba(199,125,255," + (0.16 - dist / 900) + ")";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
 
-let price=priceMatch?parseInt(priceMatch[1]):0
+      requestAnimationFrame(drawParticles);
+    }
 
-let total=price*qty
+    resizeCanvas();
+    createParticles();
+    drawParticles();
 
-document.getElementById("preview").innerHTML=
-
-`
-Product: ${name}<br>
-Plan: ${plan}<br>
-Quantity: ${qty}<br>
-Total: ${total} Ks
-`
-
-}
-
-function sendOrder(name){
-
-const plan=document.getElementById("plan").value
-const payment=document.getElementById("paymentMethod").value
-
-const msg=
-
-`Hello, I want to order
-Product: ${name}
-Plan: ${plan}
-Quantity: ${qty}
-Payment: ${payment}`
-
-window.open(
-"https://t.me/"+TELEGRAM_USERNAME+
-"?text="+encodeURIComponent(msg)
-)
-
-}
-
-renderCards(products)
-
-</script>
+    window.addEventListener("resize", function(){
+      resizeCanvas();
+      createParticles();
+    });
+  </script>
 </body>
 </html>
-
-
-<div id="productModal" class="pricebox"></div>
