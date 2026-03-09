@@ -37,8 +37,12 @@
       text-align:center;
       overflow-x:hidden;
       background:
-        radial-gradient(circle at top, #b366ff 0%, #7b2cbf 18%, #5a189a 36%, #3c096c 56%, #240046 76%, #140021 100%);
-      position:relative;
+radial-gradient(circle at 20% 20%, rgba(255,255,255,0.10) 0%, transparent 18%),
+radial-gradient(circle at 80% 30%, rgba(199,125,255,0.18) 0%, transparent 20%),
+radial-gradient(circle at 50% 80%, rgba(0,224,255,0.12) 0%, transparent 22%),
+linear-gradient(135deg,#2a0350 0%,#4a0d7a 25%,#6e1bb8 55%,#8f35da 78%,#b366ff 100%);
+background-size:200% 200%;
+animation:bgMove 18s linear infinite;
     }
 
     #particles{
@@ -141,8 +145,13 @@ text-shadow:
 0%{transform:scale(1);}
 100%{transform:scale(1.05);}
 }
-
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
 }
+
+
     .sublogo{
       font-size:15px;
       color:#fff;
@@ -274,6 +283,13 @@ cursor:pointer;
       align-items:center;
       overflow:hidden;
       backdrop-filter:blur(10px);
+    }.card:hover{
+transform:translateY(-8px) scale(1.03);
+box-shadow:
+0 20px 60px rgba(0,0,0,0.45),
+0 0 30px rgba(199,125,255,0.35),
+inset 0 0 25px rgba(255,255,255,0.15);
+border-color:#c77dff;
     }
 .card img{
   width:80px;
@@ -1392,8 +1408,8 @@ window.open(url, "_blank");
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(220,190,255," + p.a + ")";
-        ctx.shadowBlur = 16;
-        ctx.shadowColor = "#c77dff";
+        ctx.shadowBlur = 28;
+        ctx.shadowColor = "#b366ff";
         ctx.fill();
 
         p.x += p.dx;
