@@ -1416,8 +1416,8 @@ window.open(url, "_blank");
         const p = particles[i];
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(220,190,255," + p.a + ")";
-        ctx.shadowBlur = 28;
+        ctx.fillStyle = "rgba(255,210,255," + p.a + ")";
+        ctx.shadowBlur = 40;
         ctx.shadowColor = "#b366ff";
         ctx.fill();
 
@@ -1437,7 +1437,7 @@ window.open(url, "_blank");
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = "rgba(199,125,255," + (0.16 - dist / 900) + ")";
+            ctx.strokeStyle = "rgba(220,180,255," + (0.25 - dist / 900) + ")";
             ctx.lineWidth = 1;
             ctx.stroke();
           }
