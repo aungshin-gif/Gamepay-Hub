@@ -2,19 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
   <title>Gamepay Hub - Digital Products Store</title>
 
   <style>
     :root{
-      --bg1:#12001f;
-      --bg2:#250040;
-      --bg3:#4a0d7a;
-      --bg4:#8f35da;
-      --bg5:#d86cff;
+      --bg1:#13001f;
+      --bg2:#25003f;
+      --bg3:#4b0a80;
+      --bg4:#8c33db;
+      --bg5:#d76dff;
 
       --text:#ffffff;
       --muted:rgba(255,255,255,.72);
+
       --glass:rgba(255,255,255,.08);
       --glass2:rgba(255,255,255,.05);
       --border:rgba(255,255,255,.14);
@@ -22,11 +26,15 @@
       --neon:#c77dff;
       --neon2:#9d4edd;
       --neon3:#f15cff;
-      --cyan:#79f2ff;
+      --cyan:#7df9ff;
       --good:#a6ffcb;
       --danger:#ff9fc9;
 
-      --shadow:0 16px 40px rgba(0,0,0,.36);
+      --shadow:0 18px 44px rgba(0,0,0,.36);
+      --radius-xl:28px;
+      --radius-lg:22px;
+      --radius-md:16px;
+      --radius-sm:12px;
     }
 
     *{
@@ -52,7 +60,7 @@
         radial-gradient(circle at 18% 18%, rgba(255,255,255,.10) 0%, transparent 18%),
         radial-gradient(circle at 82% 24%, rgba(199,125,255,.18) 0%, transparent 22%),
         radial-gradient(circle at 50% 82%, rgba(121,242,255,.10) 0%, transparent 22%),
-        linear-gradient(135deg,#140022 0%,#25003f 24%,#4a0d7a 55%,#8f35da 82%,#d86cff 100%);
+        linear-gradient(135deg,#140022 0%,#25003f 24%,#4b0a80 55%,#8c33db 82%,#d76dff 100%);
       background-size:200% 200%;
       animation:bgMove 40s linear infinite;
       transform:translateZ(0);
@@ -72,8 +80,7 @@
       height:100%;
       z-index:0;
       pointer-events:none;
-      opacity:.92;
-      transform:translateZ(0);
+      opacity:.9;
     }
 
     .page{
@@ -81,12 +88,12 @@
       z-index:1;
       width:min(1220px,94%);
       margin:0 auto;
-      padding:18px 0 60px;
+      padding:18px 0 50px;
     }
 
     .hero{
       text-align:center;
-      padding:12px 0 18px;
+      padding:10px 0 18px;
     }
 
     .brand-wrap{
@@ -109,7 +116,6 @@
         0 0 28px rgba(199,125,255,.48),
         0 0 54px rgba(123,44,191,.35);
       animation:orbPulse 2.8s ease-in-out infinite alternate;
-      flex-shrink:0;
     }
 
     @keyframes orbPulse{
@@ -190,7 +196,7 @@
       flex-wrap:wrap;
       gap:10px;
       justify-content:center;
-      margin-bottom:20px;
+      margin-bottom:22px;
       padding:0 6px;
     }
 
@@ -214,21 +220,25 @@
       box-shadow:0 0 18px rgba(199,125,255,.22);
     }
 
-    .layout{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) 390px;
-      gap:20px;
-      align-items:start;
+    .hidden{
+      display:none !important;
+    }
+
+    .catalog-view{
+      width:100%;
     }
 
     .products{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-gap:20px;
-align-items:start;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:20px;
+      justify-items:center;
+      align-items:start;
     }
 
     .card{
+      width:100%;
+      max-width:220px;
       position:relative;
       border-radius:22px;
       padding:18px 14px 16px;
@@ -242,7 +252,6 @@ align-items:start;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
-      transform:translateZ(0);
     }
 
     .card::before{
@@ -255,7 +264,7 @@ align-items:start;
 
     .card:hover{
       transform:translateY(-8px) scale(1.02);
-      border-color:rgba(199,125,255,.40);
+      border-color:rgba(199,125,255,.42);
       box-shadow:
         0 16px 42px rgba(0,0,0,.42),
         0 0 30px rgba(199,125,255,.25);
@@ -273,6 +282,8 @@ align-items:start;
       background:rgba(255,255,255,.08);
       border:1px solid rgba(255,255,255,.12);
       box-shadow:0 0 18px rgba(199,125,255,.18);
+      overflow:hidden;
+      font-size:34px;
     }
 
     .card img{
@@ -325,14 +336,13 @@ align-items:start;
       font-size:12px;
       color:rgba(255,255,255,.68);
     }
-
-    .side{
-      position:sticky;
-      top:18px;
+    .order-view{
+      width:min(760px,100%);
+      margin:0 auto;
     }
 
     .panel{
-      background:rgba(28,0,43,.84);
+      background:rgba(28,0,43,.86);
       border:1px solid rgba(255,255,255,.10);
       border-radius:26px;
       padding:18px;
@@ -340,11 +350,30 @@ align-items:start;
       text-align:left;
     }
 
+    .top-actions{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:10px;
+    }
+
+    .back-btn{
+      border:none;
+      border-radius:14px;
+      padding:10px 14px;
+      color:#fff;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      cursor:pointer;
+      font-weight:700;
+    }
+
     .panel-title{
       text-align:center;
-      font-size:20px;
-      font-weight:800;
-      margin-bottom:8px;
+      font-size:22px;
+      font-weight:900;
+      margin-bottom:6px;
     }
 
     .panel-sub{
@@ -352,174 +381,6 @@ align-items:start;
       font-size:12px;
       color:var(--muted);
       margin-bottom:14px;
-    }
-
-    .desc-box{
-      border-radius:18px;
-      padding:14px 15px;
-      min-height:92px;
-      background:linear-gradient(135deg, rgba(199,125,255,.14), rgba(255,255,255,.05));
-      border:1px solid rgba(199,125,255,.28);
-      color:#f3eaff;
-      font-size:13px;
-      line-height:1.65;
-      box-shadow:
-        0 0 18px rgba(199,125,255,.16),
-        inset 0 0 14px rgba(255,255,255,.04);
-      margin-bottom:14px;
-    }
-
-    .cart-empty{
-      text-align:center;
-      padding:26px 10px;
-      border-radius:16px;
-      background:rgba(255,255,255,.04);
-      border:1px dashed rgba(255,255,255,.12);
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .cart-list{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-
-    .cart-item{
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:12px;
-    }
-
-    .cart-head{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:flex-start;
-    }
-
-    .cart-name{
-      font-size:14px;
-      font-weight:800;
-      line-height:1.25;
-    }
-
-    .cart-plan-current{
-      margin-top:4px;
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.4;
-    }
-
-    .remove-btn{
-      flex-shrink:0;
-      border:none;
-      border-radius:10px;
-      padding:6px 10px;
-      font-size:12px;
-      color:#fff;
-      background:rgba(255,159,201,.14);
-      border:1px solid rgba(255,159,201,.24);
-      cursor:pointer;
-    }
-
-    .plan-toggle{
-      width:100%;
-      margin-top:10px;
-      border:none;
-      border-radius:12px;
-      padding:10px;
-      background:rgba(255,255,255,.06);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.10);
-      font-size:12px;
-      font-weight:700;
-      cursor:pointer;
-    }
-
-    .plan-list{
-      display:grid;
-      gap:8px;
-      margin-top:10px;
-    }
-
-    .plan-option{
-      padding:10px 10px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
-      cursor:pointer;
-      font-size:12px;
-      line-height:1.45;
-      transition:.2s ease;
-    }
-
-    .plan-option.active{
-      background:rgba(199,125,255,.15);
-      border-color:rgba(199,125,255,.42);
-      box-shadow:0 0 18px rgba(199,125,255,.18);
-    }
-.qty-row{
-      margin-top:12px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .qty-box{
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-
-    .qty-btn{
-      width:28px;
-      height:28px;
-      border:none;
-      border-radius:50%;
-      cursor:pointer;
-      color:#fff;
-      font-size:16px;
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.12);
-    }
-
-    .qty-num{
-      min-width:26px;
-      text-align:center;
-      font-size:14px;
-      font-weight:800;
-    }
-
-    .amount{
-      font-size:13px;
-      font-weight:800;
-    }
-
-    .summary{
-      margin-top:16px;
-      padding-top:14px;
-      border-top:1px solid rgba(255,255,255,.10);
-      display:grid;
-      gap:10px;
-    }
-
-    .line{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      font-size:14px;
-    }
-
-    .line-total{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      font-size:18px;
-      font-weight:800;
     }
 
     .field{
@@ -564,14 +425,159 @@ align-items:start;
     }
 
     .note-box{
-      min-height:92px;
-      resize:vertical;
+      min-height:96px;
+      resize:none;
       line-height:1.55;
+    }
+
+    .desc-box{
+      min-height:96px;
+      resize:none;
+      line-height:1.55;
+    }
+
+    .cart-item{
+      margin-top:14px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:12px;
+    }
+
+    .cart-head{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+    }
+
+    .cart-name{
+      font-size:16px;
+      font-weight:800;
+      line-height:1.25;
+    }
+
+    .cart-plan-current{
+      margin-top:4px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.4;
+    }
+
+    .remove-btn{
+      flex-shrink:0;
+      border:none;
+      border-radius:10px;
+      padding:6px 10px;
+      font-size:12px;
+      color:#fff;
+      background:rgba(255,159,201,.14);
+      border:1px solid rgba(255,159,201,.24);
+      cursor:pointer;
+    }
+
+    .plan-toggle{
+      width:100%;
+      margin-top:10px;
+      border:none;
+      border-radius:12px;
+      padding:10px;
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.10);
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .plan-list{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .plan-option{
+      padding:10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      cursor:pointer;
+      font-size:12px;
+      line-height:1.45;
+      transition:.2s ease;
+    }
+
+    .plan-option.active{
+      background:rgba(199,125,255,.15);
+      border-color:rgba(199,125,255,.42);
+      box-shadow:0 0 18px rgba(199,125,255,.18);
+    }
+
+    .qty-row{
+      margin-top:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .qty-box{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .qty-btn{
+      width:30px;
+      height:30px;
+      border:none;
+      border-radius:50%;
+      cursor:pointer;
+      color:#fff;
+      font-size:16px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .qty-num{
+      min-width:26px;
+      text-align:center;
+      font-size:14px;
+      font-weight:800;
+    }
+
+    .amount{
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .summary{
+      margin-top:16px;
+      padding-top:14px;
+      border-top:1px solid rgba(255,255,255,.10);
+      display:grid;
+      gap:10px;
+    }
+
+    .line{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      font-size:14px;
+    }
+
+    .line-total{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      font-size:18px;
+      font-weight:900;
     }
 
     .pay-grid{
       display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
+      grid-template-columns:repeat(2,minmax(0,1fr));
       gap:10px;
     }
 
@@ -605,7 +611,7 @@ align-items:start;
       font-weight:800;
       cursor:pointer;
       overflow:hidden;
-      background:linear-gradient(90deg, #7b2cff, #c24dff, #7b2cff);
+      background:linear-gradient(90deg,#7b2cff,#c24dff,#7b2cff);
       background-size:200% 100%;
       animation:btnFlow 3s linear infinite;
       box-shadow:
@@ -664,17 +670,6 @@ align-items:start;
       text-align:left;
     }
 
-    .note-tip{
-      margin-top:8px;
-      font-size:11px;
-      color:rgba(255,255,255,.54);
-      line-height:1.5;
-    }
-
-    .hidden{
-      display:none !important;
-    }
-
     .site-footer{
       margin-top:42px;
       text-align:center;
@@ -688,32 +683,22 @@ align-items:start;
         0 0 20px rgba(157,78,221,.35);
     }
 
-    @media (max-width: 980px){
-      .layout{
-        grid-template-columns:1fr;
-      }
-      .side{
-        position:static;
-      }
-    }
-
-    @media (max-width: 640px){
+    @media (max-width:640px){
       .page{
-        width:min(96%, 96%);
+        width:min(96%,96%);
       }
       .products{
-  display:grid;
-  grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
-  gap:20px;
-  align-items:start;
+        grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+        gap:16px;
       }
       .card{
+        max-width:100%;
         min-height:210px;
-        padding:16px 10px 14px;
       }
       .icon-wrap{
         width:68px;
         height:68px;
+        font-size:30px;
       }
     }
   </style>
@@ -730,63 +715,79 @@ align-items:start;
       <div class="hero-sub">Digital Products Store</div>
     </div>
 
-    <div class="search-wrap">
-      <span class="search-icon">🔎</span>
-      <input id="searchInput" type="text" placeholder="Search products..." />
-    </div>
-
-    <div class="categories" id="categories"></div>
-
-    <div class="layout">
-      <div>
-        <div class="products" id="products"></div>
+    <div id="catalogView" class="catalog-view">
+      <div class="search-wrap">
+        <span class="search-icon">🔎</span>
+        <input id="searchInput" type="text" placeholder="Search products..." />
       </div>
 
-      <div class="side">
-        <div class="panel hidden" id="orderPanel">
-          <div class="panel-title">Order Cart</div>
-          <div class="panel-sub">Best neon glow order system</div>
+      <div class="categories" id="categories"></div>
+      <div class="products" id="products"></div>
+    </div>
 
-          <div class="field">
-            <div class="field-title">Description</div>
-            <textarea id="appDescription" placeholder="Write description here..." readonly></textarea>
+    <div id="orderView" class="order-view hidden">
+      <div class="panel">
+        <div class="top-actions">
+          <button id="backBtn" class="back-btn">← Back to Apps</button>
+          <div></div>
+        </div>
+
+        <div class="panel-title">Order Cart</div>
+        <div class="panel-sub">Best neon glow order system</div>
+
+        <div class="field">
+          <div class="field-title">Description</div>
+          <textarea id="appDescription" class="note-box desc-box" readonly placeholder="Description will appear here..."></textarea>
+        </div>
+
+        <div id="cartItem" class="cart-item hidden">
+          <div class="cart-head">
+            <div style="min-width:0">
+              <div id="cartName" class="cart-name">-</div>
+              <div id="cartPlanCurrent" class="cart-plan-current">-</div>
+            </div>
+            <button id="removeBtn" class="remove-btn">Remove</button>
           </div>
 
-          <div id="cartEmpty" class="cart-empty">
-            No items selected yet.
+          <button id="togglePlansBtn" class="plan-toggle">Hide Plan Selection</button>
+          <div id="planList" class="plan-list"></div>
+
+          <div class="qty-row">
+            <div class="qty-box">
+              <button id="minusBtn" class="qty-btn">−</button>
+              <div id="qtyNum" class="qty-num">1</div>
+              <button id="plusBtn" class="qty-btn">+</button>
+            </div>
+            <div id="itemAmount" class="amount">0 Ks</div>
           </div>
+        </div>
 
-          <div id="cartList" class="cart-list hidden"></div>
+        <div class="summary">
+          <div class="line"><span>Selected Items</span><span id="sumItems">0</span></div>
+          <div class="line"><span>Quantity</span><span id="sumQty">0</span></div>
+          <div class="line"><span>Amount</span><span id="sumAmount">0 Ks</span></div>
+          <div class="line-total"><span>Total</span><span id="sumTotal">0 Ks</span></div>
+        </div>
+        <div class="field">
+          <div class="field-title">Account / Email / Username</div>
+          <input id="accountInput" class="input" type="text" placeholder="Enter account..." />
+        </div>
 
-          <div id="summaryBlock" class="summary hidden">
-            <div class="line"><span>Selected Items</span><span id="sumItems">0</span></div>
-            <div class="line"><span>Quantity</span><span id="sumQty">0</span></div>
-            <div class="line"><span>Amount</span><span id="sumAmount">0 Ks</span></div>
-            <div class="line-total"><span>Total</span><span id="sumTotal">0 Ks</span></div>
-          </div>
+        <div class="field">
+          <div class="field-title">Payment Method</div>
+          <div class="pay-grid" id="payGrid"></div>
+        </div>
 
-          <div class="field">
-            <div class="field-title">Account / Email / Username</div>
-            <input id="accountInput" class="input" type="text" placeholder="Enter account..." />
-          </div>
+        <div class="field">
+          <div class="field-title">Note</div>
+          <textarea id="noteInput" class="note-box" placeholder="Write note here..."></textarea>
+        </div>
 
-          <div class="field">
-            <div class="field-title">Payment Method</div>
-            <div class="pay-grid" id="payGrid"></div>
-          </div>
+        <button id="orderBtn" class="telegram-btn" disabled>Order via Telegram</button>
 
-          <div class="field">
-            <div class="field-title">Note</div>
-            <textarea id="noteInput" class="note-box" placeholder="Write note here..."></textarea>
-            <div class="note-tip">Example: login details, request, custom note</div>
-          </div>
-
-          <button id="orderBtn" class="telegram-btn" disabled>Order via Telegram</button>
-
-          <div class="preview">
-            <div class="preview-title">Order Preview</div>
-            <div id="previewBox" class="preview-box">No order preview yet.</div>
-          </div>
+        <div class="preview">
+          <div class="preview-title">Order Preview</div>
+          <div id="previewBox" class="preview-box">No order preview yet.</div>
         </div>
       </div>
     </div>
@@ -795,371 +796,228 @@ align-items:start;
       Founder: Diameter Eight
     </footer>
   </div>
-<script>
+
+  <script>
     const TELEGRAM_USERNAME = "angsthtun";
 
-    // Category ထပ်ထည့်ချင်ရင် ဒီ array ထဲ add လုပ်
-    const categories = ["All", "AI", "Editing", "VPN", "Gift", "Music", "Video", "Social", "Services"];
+    const categories = ["All","AI","Editing","VPN","Gift","Music","Video","Social","Services"];
 
-    // Product ထပ်ထည့်ချင်ရင် ဒီ products array ထဲ category + description + plans နဲ့ add လုပ်
     const products = [
       {
-        id: "chatgpt",
-        name: "ChatGPT",
-        subtitle: "Tap to see prices",
-        badge: "available",
-        category: "AI",
-        icon: "ChatGPT_logo.svg.png",
-        search: "chatgpt openai ai",
-        description: "",
-        plans: [
-          { name: "ChatGPT Plus - 1 Month - 6000 Ks (Share)", price: 6000 },
-          { name: "ChatGPT Plus - 1 Month - 6500 Ks (Private)", price: 6500 },
-          { name: "ChatGPT Plus - 3 Months - 10000 Ks (Share)", price: 10000 },
-          { name: "ChatGPT Plus - 3 Months - 12000 Ks (Private)", price: 12000 },
-          { name: "ChatGPT Business - 1 Month - 6000 Ks (Share)", price: 6000 },
-          { name: "ChatGPT Business - 12 Months - 22000 Ks (Share)", price: 22000 },
-          { name: "ChatGPT Business - 12 Months - 23000 Ks (Private)", price: 23000 }
+        id:"chatgpt",
+        name:"ChatGPT",
+        subtitle:"Tap to see prices",
+        badge:"available",
+        category:"AI",
+        iconType:"image",
+        icon:"ChatGPT_logo.svg.png",
+        search:"chatgpt openai ai",
+        description:"ChatGPT subscription options for AI chat, writing, coding and productivity.",
+        plans:[
+          { name:"ChatGPT Plus - 1 Month - 6000 Ks (Share)", price:6000 },
+          { name:"ChatGPT Plus - 1 Month - 6500 Ks (Private)", price:6500 },
+          { name:"ChatGPT Plus - 3 Months - 10000 Ks (Share)", price:10000 },
+          { name:"ChatGPT Plus - 3 Months - 12000 Ks (Private)", price:12000 }
         ]
       },
       {
-        id: "spotify",
-        name: "Spotify",
-        subtitle: "Tap to see prices",
-        badge: "available",
-        category: "Music",
-        icon: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
-        search: "spotify music premium",
-        description: "",
-        plans: [
-          { name: "Family Plan (Global) - 1 Month - 8000 Ks", price: 8000 },
-          { name: "Family Plan (Global) - 2 Months - 12000 Ks", price: 12000 },
-          { name: "Family Plan (Global) - 3 Months - 24000 Ks", price: 24000 },
-          { name: "Family Plan (Global) - 6 Months - 65000 Ks", price: 65000 },
-          { name: "Individual Plan (Global) - 1 Month - 13000 Ks", price: 13000 },
-          { name: "Individual Plan (Global) - 2 Months - 24000 Ks", price: 24000 },
-          { name: "Individual Plan (Global) - 3 Months - 34000 Ks", price: 34000 }
+        id:"spotify",
+        name:"Spotify",
+        subtitle:"Tap to see prices",
+        badge:"available",
+        category:"Music",
+        iconType:"image",
+        icon:"https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
+        search:"spotify music premium",
+        description:"Spotify Premium plans for ad-free music and better streaming quality.",
+        plans:[
+          { name:"Family Plan (Global) - 1 Month - 8000 Ks", price:8000 },
+          { name:"Family Plan (Global) - 2 Months - 12000 Ks", price:12000 },
+          { name:"Family Plan (Global) - 3 Months - 24000 Ks", price:24000 },
+          { name:"Individual Plan (Global) - 1 Month - 13000 Ks", price:13000 }
         ]
       },
-    
-{
-  id: "picsart",
-  name: "PicsArt",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "Editing",
-  iconType: "image",
-  icon: "IMG_20260307_042958_666.jpg",
-  search: "picsart photo edit",
-  description: "",
-  plans: [
-    { name: "1 Month – 5000 Ks", price: 5000 },
-    { name: "3 Months – 12000 Ks", price: 12000 }
-  ]
-},  
- {
-  id: "vpn",
-  name: "Express VPN",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "VPN",
-  iconType: "image",
-  icon: "https://cdn-icons-png.flaticon.com/512/565/565547.png",
-  search: "express vpn secure",
-  description: "Share plan can only use 1 device",
-  plans: [
-    { name: "Share Plan – 1 Month – 1500 Ks (Android & iOS)", price: 1500 },
-    { name: "Share Plan – 1 Month – 2500 Ks (Windows PC & Laptop)", price: 2500 },
-    { name: "Share Plan – 1 Month – 2500 Ks (Linux Devices)", price: 2500 },
-    { name: "Share Plan – 1 Month – 2500 Ks (MacBook)", price: 2500 },
-    { name: "Private Plan – 1 Month – 8000 Ks (Up to 9 devices)", price: 8000 }
-  ]
-}, 
-{
-  id: "telegram",
-  name: "Telegram Premium",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "Social",
-  iconType: "image",
-  icon: "https://cdn-icons-png.flaticon.com/512/2111/2111646.png",
-  search: "telegram premium tg",
-  description: "",
-  plans: [
-    { name: "Login Method – 1 Month – 20500 Ks", price: 20500 },
-    { name: "Gift Plan – 3 Months – 50000 Ks", price: 50000 },
-    { name: "Gift Plan – 6 Months – 67000 Ks", price: 67000 },
-    { name: "Gift Plan – 9 Months – 118000 Ks", price: 118000 },
-    { name: "Link Plan – 3 Months – 44000 Ks", price: 44000 },
-    { name: "Link Plan – 6 Months – 65000 Ks", price: 65000 },
-    { name: "Link Plan – 12 Months – 118000 Ks", price: 118000 }
-  ]
-},
-{
-  id: "gemini",
-  name: "Gemini Pro",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "AI",
-  iconType: "emoji",
-  icon: "✨",
-  search: "gemini pro google ai",
-  description: "✔️Access on your email. ✔️2TB storage for photos, drive & gmail. ✔️Gemini app with 2.5 Pro. ✔️Access to Veo 3. ✔️Flow with Veo 3. ✔️Whisk with Veo 2. ✔️1000 monthly AI credits. ✔️NotebookLM higher limits. ✔️Gemini in Gmail, Docs & more. ✔️Full-time warranty. ✔️100% genuine access.",
-  plans: [
-    { name: "1 Month – 7000 Ks", price: 7000 },
-    { name: "2 Months – 12500 Ks", price: 12500 },
-    { name: "3 Months – 17000 Ks", price: 17000 },
-    { name: "6 Months – 30000 Ks", price: 30000 },
-    { name: "1 Year – 51000 Ks", price: 51000 }
-  ]
-},
-{
-  id: "netflix",
-  name: "Netflix",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "Video",
-  iconType: "image",
-  icon: "getthumbnail.webp",
-  search: "netflix movie show",
-  description: "✔ Can activate in Myanmar",
-  plans: [
-    { name: "Share Account - 1 Month - 6000 Ks", price: 6000 },
-    { name: "Share Account - 3 Months - 12000 Ks", price: 12000 },
-    { name: "Share Account - 6 Months - 22000 Ks", price: 22000 },
-    { name: "Share Account - 1 Year - 35000 Ks", price: 35000 },
-
-    { name: "Personal - 1 Month - 7000 Ks", price: 7000 },
-    { name: "Personal - 3 Months - 13000 Ks", price: 13000 },
-    { name: "Personal - 6 Months - 24000 Ks", price: 24000 },
-    { name: "Personal - 1 Year - 39000 Ks", price: 39000 },
-
-    { name: "Mail Subscription Standard Plan - 35000 Ks", price: 35000 },
-    { name: "Mail Subscription Pro Plan - 75500 Ks", price: 75500 },
-    { name: "Mail Subscription Premium Plan - 99000 Ks", price: 99000 }
-  ]
-},
-{
-  id: "itunes",
-  name: "iTunes Gift Card",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "Gift",
-  iconType: "emoji",
-  icon: "🍎",
-  search: "itunes gift card apple",
-  description: "Other Regions Available: Canada, Germany, Japan, China, Taiwan, Nigeria, etc.",
-  plans: [
-    { name: "5 USD – 21500 Ks", price: 21500 },
-    { name: "10 USD – 41500 Ks", price: 41500 },
-    { name: "20 USD – 82000 Ks", price: 82000 },
-    { name: "50 USD – 204000 Ks", price: 204000 },
-    { name: "100 USD – 410000 Ks", price: 410000 }
-  ]
-},
-     {
-  id: "capcut",
-  name: "CapCut Pro",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "Editing",
-  iconType: "image",
-  icon: "IMG_20260307_045206_183.jpg",
-  search: "capcut pro edit video",
-  description: "After 1 Month purchase Own mail can't be got with this low price",
-  plans: [
-    { name: "Own Mail Standard account - 1 Month - 9000 Ks", price: 9000 },
-    { name: "Own Mail Pro account - 1 Month - 13000 Ks", price: 13000 },
-    { name: "Global Account – 1 Month – 6500 Ks", price: 6500 },
-    { name: "Global Account – 3 Months – 19500 Ks", price: 19500 },
-    { name: "Global Account – 6 Months – 54000 Ks", price: 54000 },
-    { name: "Global Account – 1 Year – nearly 75000 Ks", price: 75000 },
-    { name: "CapCut Subscription Own Mail Standard Plan – 1 Month – 44000 Ks", price: 44000 },
-    { name: "CapCut Subscription Own Mail Pro Plan – 1 Month – 120000 Ks", price: 120000 }
-  ]
-},
-{
-  id: "prime",
-  name: "Prime Video",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "Movie",
-  iconType: "emoji",
-  icon: "🎬",
-  search: "amazon prime video",
-  description: "Private profiles and full-time warranty available.",
-  plans: [
-    { name: "Dedicated Private Account – 1 Month – 5800 Ks", price: 5800 },
-    { name: "Dedicated Private Account – 3 Months – 13800 Ks", price: 13800 },
-    { name: "Dedicated Private Account – 6 Months – 22000 Ks", price: 22000 },
-    { name: "Full Private – 1 Month – 10000 Ks", price: 10000 },
-    { name: "Full Private – 6 Months – 26000 Ks", price: 26000 }
-  ]
-},
-{
-  id: "outline",
-  name: "Outline VPN",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "VPN",
-  iconType: "emoji",
-  icon: "🛡️",
-  search: "outline vpn secure data",
-  description: "",
-  plans: [
-    { name: "50GB – 3000 Ks (1 Month)", price: 3000 },
-    { name: "100GB – 5000 Ks (1 Month)", price: 5000 },
-    { name: "150GB – 6900 Ks (1 Month)", price: 6900 },
-    { name: "200GB – 8500 Ks (2 Months)", price: 8500 }
-  ]
-},
-{
-  id: "jumpvpn",
-  name: "Jump Jump VPN",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "VPN",
-  iconType: "emoji",
-  icon: "🚀",
-  search: "jump jump vpn",
-  description: "",
-  plans: [
-    { name: "1 Device – 3 Days – 2700 Ks", price: 2700 },
-    { name: "1 Device – 1 Month – 13000 Ks", price: 13000 },
-    { name: "2 Devices – 1 Month – 18000 Ks", price: 18000 },
-    { name: "2 Devices – 6 Months – 90000 Ks", price: 90000 },
-    { name: "2 Devices – 12 Months – 108000 Ks", price: 108000 }
-  ]
-}, 
-     {
-  id: "wink",
-  name: "Wink VIP",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "Editing",
-  iconType: "image",
-  icon: "41054661-1713936918042-110deb4aa0105.jpg",
-  search: "wink video editor vip",
-  description: "have only 1 stock for china region",
-  plans: [
-    { name: "China Region – 1 Month – 4500 Ks", price: 4500 },
-    { name: "Global Region – 1 Month – 8000 Ks (Share) – 1 Device", price: 8000 },
-    { name: "Global Region – 1 Month – 24000 Ks (Private) – 3 Devices", price: 24000 },
-    { name: "Global Region – 1 Year – 160000 Ks (Private) – 3 Devices", price: 160000 }
-  ]
-},
-{
-  id: "meitu",
-  name: "Meitu VIP",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "Editing",
-  iconType: "emoji",
-  icon: "💄",
-  search: "meitu vip beauty edit",
-  description: "",
-  plans: [
-    { name: "China Region - 1 Month - 13000 Ks", price: 13000 },
-    { name: "Global Region - 1 Month - 20000 Ks (Share) - 1 Device", price: 20000 },
-    { name: "Silver VIP - 1 Month - 24000 Ks (Private) - 2 Devices", price: 24000 },
-    { name: "Normal VIP - 1 Month - 40000 Ks (Private) - 4 Devices", price: 40000 },
-    { name: "Silver VIP - 1 Year - 160000 Ks (Private) - 2 Devices", price: 160000 },
-    { name: "Normal VIP - 1 Year - 260000 Ks (Private) - 4 Devices", price: 260000 }
-  ]
-},
-{
-  id: "steam",
-  name: "Steam Wallet",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "Gift",
-  iconType: "image",
-  icon: "https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg",
-  search: "steam wallet game card",
-  description: "",
-  plans: [
-    { name: "5 USD - 23200 Ks", price: 23200 },
-    { name: "10 USD - 45000 Ks", price: 45000 },
-    { name: "20 USD - 90000 Ks", price: 90000 },
-    { name: "25 USD - 113000 Ks", price: 113000 },
-    { name: "30 USD - 137000 Ks", price: 137000 },
-    { name: "35 USD - 157000 Ks", price: 157000 },
-    { name: "50 USD - 228000 Ks", price: 228000 },
-    { name: "100 USD - 460000 Ks", price: 460000 }
-  ]
-},
-{
-  id: "duolingo",
-  name: "Duolingo",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "Services",
-  iconType: "image",
-  icon: "duolingo-duo-owl-logo-2022.jpg",
-  search: "duolingo language learning",
-  description: "",
-  plans: [
-    { name: "Personal Account – 2 Months – 7000 Ks", price: 7000 },
-    { name: "Personal Account – 6 Months – 13000 Ks", price: 13000 },
-    { name: "Family Account – 2 Months – 38000 Ks (High value)", price: 38000 },
-    { name: "Family Account – 6 Months – 12000 Ks", price: 12000 },
-    { name: "Family Account – 12 Months – 32000 Ks (Low value)", price: 32000 }
-  ]
-},       
-   {
- id: "canva",
- name: "Canva Pro",
- subtitle: "Tap to see prices",
- badge: "available",
- category:"Editing",     
- iconType: "image",
- icon: "Untitled-design-2025-01-28T101702.381.png",
- search: "canva design pro",
- description: "",  
- plans: [
-  "Share Plan (Invite) – 1 Month – 1500 Ks",
-  "Private Plan – 1 Month – 5000 Ks",
-  "Educational Plan – Lifetime – 5000 Ks",
-  "Private Plan – 1 Year – 5000 Ks"
- ]
-    }  
+      {
+        id:"telegram",
+        name:"Telegram Premium",
+        subtitle:"Tap to see prices",
+        badge:"available",
+        category:"Social",
+        iconType:"image",
+        icon:"https://cdn-icons-png.flaticon.com/512/2111/2111646.png",
+        search:"telegram premium",
+        description:"Telegram Premium subscription plans.",
+        plans:[
+          { name:"Login Method - 1 Month - 20500 Ks", price:20500 },
+          { name:"Gift Plan - 3 Months - 50000 Ks", price:50000 },
+          { name:"Gift Plan - 6 Months - 67000 Ks", price:67000 }
+        ]
+      },
+      {
+        id:"vpn",
+        name:"Express VPN",
+        subtitle:"Tap to see prices",
+        badge:"available",
+        category:"VPN",
+        iconType:"image",
+        icon:"https://cdn-icons-png.flaticon.com/512/565/565547.png",
+        search:"express vpn secure",
+        description:"Share plan can only use 1 device.",
+        plans:[
+          { name:"Share Plan - 1 Month - 1500 Ks (Android & iOS)", price:1500 },
+          { name:"Share Plan - 1 Month - 2500 Ks (Windows PC & Laptop)", price:2500 },
+          { name:"Private Plan - 1 Month - 8000 Ks (Up to 9 devices)", price:8000 }
+        ]
+      },
+      {
+        id:"gemini",
+        name:"Gemini Pro",
+        subtitle:"Tap to see prices",
+        badge:"available",
+        category:"AI",
+        iconType:"emoji",
+        icon:"✨",
+        search:"gemini google ai",
+        description:"Gemini Pro access with advanced AI tools and premium features.",
+        plans:[
+          { name:"1 Month - 7000 Ks", price:7000 },
+          { name:"2 Months - 12500 Ks", price:12500 },
+          { name:"3 Months - 17000 Ks", price:17000 },
+          { name:"6 Months - 30000 Ks", price:30000 },
+          { name:"1 Year - 51000 Ks", price:51000 }
+        ]
+      },
+      {
+        id:"netflix",
+        name:"Netflix",
+        subtitle:"Tap to see prices",
+        badge:"available",
+        category:"Video",
+        iconType:"image",
+        icon:"getthumbnail.webp",
+        search:"netflix movie show",
+        description:"Can activate in Myanmar.",
+        plans:[
+          { name:"Share Account - 1 Month - 6000 Ks", price:6000 },
+          { name:"Share Account - 3 Months - 12000 Ks", price:12000 },
+          { name:"Personal - 1 Month - 7000 Ks", price:7000 },
+          { name:"Personal - 1 Year - 39000 Ks", price:39000 }
+        ]
+      },
+      {
+        id:"itunes",
+        name:"iTunes Gift Card",
+        subtitle:"Tap to see prices",
+        badge:"available",
+        category:"Gift",
+        iconType:"emoji",
+        icon:"🍎",
+        search:"itunes gift card",
+        description:"Other regions available: Canada, Germany, Japan, China, Taiwan and more.",
+        plans:[
+          { name:"5 USD - 21500 Ks", price:21500 },
+          { name:"10 USD - 41500 Ks", price:41500 },
+          { name:"20 USD - 82000 Ks", price:82000 }
+        ]
+      },
+      {
+        id:"capcut",
+        name:"CapCut Pro",
+        subtitle:"Tap to see prices",
+        badge:"available",
+        category:"Editing",
+        iconType:"image",
+        icon:"IMG_20260307_045206_183.jpg",
+        search:"capcut pro edit video",
+        description:"CapCut Pro plans for editing and premium export features.",
+        plans:[
+          { name:"Global Account - 1 Month - 6500 Ks", price:6500 },
+          { name:"Own Mail Standard account - 1 Month - 9000 Ks", price:9000 },
+          { name:"Own Mail Pro account - 1 Month - 13000 Ks", price:13000 }
+        ]
+      },
+      {
+        id:"canva",
+        name:"Canva Pro",
+        subtitle:"Tap to see prices",
+        badge:"available",
+        category:"Services",
+        iconType:"image",
+        icon:"Untitled-design-2025-01-28T101702.381.png",
+        search:"canva design pro",
+        description:"Canva Pro plans for design, templates and premium assets.",
+        plans:[
+          { name:"Share Plan (Invite) - 1 Month - 1500 Ks", price:1500 },
+          { name:"Private Plan - 1 Month - 5000 Ks", price:5000 },
+          { name:"Private Plan - 1 Year - 5000 Ks", price:5000 }
+        ]
+      },
+      {
+        id:"duolingo",
+        name:"Duolingo",
+        subtitle:"Tap to see prices",
+        badge:"available",
+        category:"Services",
+        iconType:"image",
+        icon:"duolingo-duo-owl-logo-2022.jpg",
+        search:"duolingo language learning",
+        description:"Duolingo subscription plans for language learning.",
+        plans:[
+          { name:"Personal Account - 2 Months - 7000 Ks", price:7000 },
+          { name:"Personal Account - 6 Months - 13000 Ks", price:13000 },
+          { name:"Family Account - 12 Months - 32000 Ks", price:32000 }
+        ]
+      }
     ];
 
-    // UAB duplicate မထားတော့ဘူး
-    const paymentMethods = ["KPay", "Wave", "UAB", "AYA", "Binance", "WeChatPay"];
+    const paymentMethods = ["KPay","Wave","UAB","AYA","Binance","WeChatPay"];
 
-    const cart = [];
     let activeCategory = "All";
     let activePayment = "";
-    let activeDescriptionProductId = "";
+    let currentProduct = null;
+    let currentPlanIndex = 0;
+    let currentQty = 1;
+    let plansOpen = true;
 
-    const orderPanel = document.getElementById("orderPanel");
+    const catalogView = document.getElementById("catalogView");
+    const orderView = document.getElementById("orderView");
     const productsEl = document.getElementById("products");
     const categoriesEl = document.getElementById("categories");
     const searchInput = document.getElementById("searchInput");
-    const cartEmpty = document.getElementById("cartEmpty");
-    const cartList = document.getElementById("cartList");
-    const summaryBlock = document.getElementById("summaryBlock");
+
+    const backBtn = document.getElementById("backBtn");
+    const removeBtn = document.getElementById("removeBtn");
+    const cartItem = document.getElementById("cartItem");
+    const cartName = document.getElementById("cartName");
+    const cartPlanCurrent = document.getElementById("cartPlanCurrent");
+    const togglePlansBtn = document.getElementById("togglePlansBtn");
+    const planList = document.getElementById("planList");
+    const minusBtn = document.getElementById("minusBtn");
+    const plusBtn = document.getElementById("plusBtn");
+    const qtyNum = document.getElementById("qtyNum");
+    const itemAmount = document.getElementById("itemAmount");
+
+    const appDescription = document.getElementById("appDescription");
+    const accountInput = document.getElementById("accountInput");
+    const payGrid = document.getElementById("payGrid");
+    const noteInput = document.getElementById("noteInput");
+    const orderBtn = document.getElementById("orderBtn");
+    const previewBox = document.getElementById("previewBox");
+
     const sumItems = document.getElementById("sumItems");
     const sumQty = document.getElementById("sumQty");
     const sumAmount = document.getElementById("sumAmount");
     const sumTotal = document.getElementById("sumTotal");
-    const accountInput = document.getElementById("accountInput");
-    const noteInput = document.getElementById("noteInput");
-    const payGrid = document.getElementById("payGrid");
-    const orderBtn = document.getElementById("orderBtn");
-    const previewBox = document.getElementById("previewBox");
-    const appDescription = document.getElementById("appDescription");
 
     function formatKs(n){
       return `${Number(n).toLocaleString()} Ks`;
     }
 
     function getCheapestPrice(product){
-      return Math.min(...product.plans.map(p => p.price));
+      return Math.min(...product.plans.map(p => Number(p.price || 0)));
     }
 
-    function buildCategories(){
+    function renderCategories(){
       categoriesEl.innerHTML = "";
       categories.forEach(cat => {
         const el = document.createElement("div");
@@ -1167,7 +1025,7 @@ align-items:start;
         el.textContent = cat;
         el.onclick = () => {
           activeCategory = cat;
-          buildCategories();
+          renderCategories();
           renderProducts();
         };
         categoriesEl.appendChild(el);
@@ -1176,26 +1034,28 @@ align-items:start;
 
     function getFilteredProducts(){
       const q = (searchInput.value || "").trim().toLowerCase();
-      return products.filter(p => {
-        const categoryOK = activeCategory === "All" || p.category === activeCategory;
-        const searchOK = !q || `${p.name} ${p.subtitle} ${p.search} ${p.category}`.toLowerCase().includes(q);
-        return categoryOK && searchOK;
+      return products.filter(product => {
+        const byCategory = activeCategory === "All" || product.category === activeCategory;
+        const bySearch = !q || `${product.name} ${product.search} ${product.category}`.toLowerCase().includes(q);
+        return byCategory && bySearch;
       });
+    }
+
+    function renderIcon(product){
+      if(product.iconType === "emoji"){
+        return product.icon;
+      }
+      return `<img src="${product.icon}" alt="${product.name}">`;
     }
 
     function renderProducts(){
       productsEl.innerHTML = "";
-      const list = getFilteredProducts();
-
-      list.forEach(product => {
+      getFilteredProducts().forEach(product => {
         const card = document.createElement("div");
         card.className = "card";
-
         card.innerHTML = `
           <div>
-            <div class="icon-wrap">
-              <img src="${product.icon}" alt="${product.name}">
-            </div>
+            <div class="icon-wrap">${renderIcon(product)}</div>
             <div class="card-name">${product.name}</div>
             <div class="card-sub">${product.subtitle}</div>
           </div>
@@ -1204,158 +1064,12 @@ align-items:start;
             <div class="price-from">From ${formatKs(getCheapestPrice(product))}</div>
           </div>
         `;
-
-        card.onclick = () => addProductToCart(product);
+        card.onclick = () => openOrder(product);
         productsEl.appendChild(card);
       });
     }
 
-    function addProductToCart(product){
-      orderPanel.classList.remove("hidden");
-
-      const exists = cart.find(item => item.productId === product.id);
-
-      // product ပြောင်းရင် description box အလွတ်ပြန်ဖြစ်မယ်
-      if(activeDescriptionProductId !== product.id){
-  appDescription.value = product.description || "";
-  activeDescriptionProductId = product.id;
-      }
-
-      if(exists){
-        exists.open = true;
-        renderCart();
-        return;
-      }
-
-      cart.push({
-        productId: product.id,
-        productName: product.name,
-        plans: product.plans,
-        selectedPlanIndex: 0,
-        qty: 1,
-        open: true
-      });
-
-      renderCart();
-    }
-
-    function removeItem(productId){
-      const index = cart.findIndex(item => item.productId === productId);
-      if(index > -1) cart.splice(index, 1);
-
-      if(cart.length === 0){
-        orderPanel.classList.add("hidden");
-        appDescription.value = "";
-        activeDescriptionProductId = "";
-      }
-
-      renderCart();
-    }
-
-    function togglePlans(productId){
-      const item = cart.find(i => i.productId === productId);
-      if(!item) return;
-      item.open = !item.open;
-      renderCart();
-    }
-
-    function selectPlan(productId, planIndex){
-      const item = cart.find(i => i.productId === productId);
-      if(!item) return;
-      item.selectedPlanIndex = planIndex;
-      renderCart();
-    }
-
-    function changeQty(productId, delta){
-      const item = cart.find(i => i.productId === productId);
-      if(!item) return;
-      item.qty = Math.max(1, item.qty + delta);
-      renderCart();
-    }
-
-    function getTotals(){
-      let items = cart.length;
-      let qty = 0;
-      let total = 0;
-
-      cart.forEach(item => {
-        const plan = item.plans[item.selectedPlanIndex];
-        qty += item.qty;
-        total += plan.price * item.qty;
-      });
-
-      return { items, qty, total };
-    }
-
-    function renderCart(){
-      if(cart.length === 0){
-        cartEmpty.classList.remove("hidden");
-        cartList.classList.add("hidden");
-        summaryBlock.classList.add("hidden");
-        cartList.innerHTML = "";
-        updatePreview();
-        return;
-      }
-
-      cartEmpty.classList.add("hidden");
-      cartList.classList.remove("hidden");
-      summaryBlock.classList.remove("hidden");
-      cartList.innerHTML = "";
-
-      cart.forEach(item => {
-        const currentPlan = item.plans[item.selectedPlanIndex];
-        const amount = currentPlan.price * item.qty;
-
-        const wrap = document.createElement("div");
-        wrap.className = "cart-item";
-
-        wrap.innerHTML = `
-          <div class="cart-head">
-            <div style="min-width:0">
-              <div class="cart-name">${item.productName}</div>
-              <div class="cart-plan-current">${currentPlan.name}</div>
-            </div>
-            <button class="remove-btn" onclick="removeItem('${item.productId}')">Remove</button>
-          </div>
-
-          <button class="plan-toggle" onclick="togglePlans('${item.productId}')">
-            ${item.open ? "Hide Plan Selection" : "Choose Plan"}
-          </button>
-
-          ${item.open ? `
-            <div class="plan-list">
-              ${item.plans.map((plan, idx) => `
-                <div class="plan-option ${idx === item.selectedPlanIndex ? "active" : ""}"
-                     onclick="selectPlan('${item.productId}', ${idx})">
-                  ${plan.name}
-                </div>
-              `).join("")}
-            </div>
-          ` : ""}
-
-          <div class="qty-row">
-            <div class="qty-box">
-              <button class="qty-btn" onclick="changeQty('${item.productId}', -1)">−</button>
-              <div class="qty-num">${item.qty}</div>
-              <button class="qty-btn" onclick="changeQty('${item.productId}', 1)">+</button>
-            </div>
-            <div class="amount">${formatKs(amount)}</div>
-          </div>
-        `;
-
-        cartList.appendChild(wrap);
-      });
-
-      const totals = getTotals();
-      sumItems.textContent = totals.items;
-      sumQty.textContent = totals.qty;
-      sumAmount.textContent = formatKs(totals.total);
-      sumTotal.textContent = formatKs(totals.total);
-
-      updatePreview();
-    }
-
-    function buildPayments(){
+    function renderPayments(){
       payGrid.innerHTML = "";
       paymentMethods.forEach(method => {
         const el = document.createElement("div");
@@ -1363,75 +1077,141 @@ align-items:start;
         el.textContent = method;
         el.onclick = () => {
           activePayment = method;
-          buildPayments();
+          renderPayments();
           updatePreview();
         };
         payGrid.appendChild(el);
       });
     }
 
-    function buildTelegramMessage(){
-      if(cart.length === 0) return "";
+    function openOrder(product){
+      currentProduct = product;
+      currentPlanIndex = 0;
+      currentQty = 1;
+      plansOpen = true;
+      activePayment = "";
+      accountInput.value = "";
+      noteInput.value = "";
+      appDescription.value = product.description || "";
 
-      const totals = getTotals();
-      const productNames = cart.map(item => item.productName).join(", ");
-      const planNames = cart.map(item => {
-        const plan = item.plans[item.selectedPlanIndex];
-        return `${plan.name} x${item.qty}`;
-      }).join("\n");
-      const note = noteInput.value.trim() || "-";
-      const description = appDescription.value.trim() || "-";
+      catalogView.classList.add("hidden");
+      orderView.classList.remove("hidden");
+
+      renderOrder();
+      renderPayments();
+      updatePreview();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function closeOrder(){
+      currentProduct = null;
+      catalogView.classList.remove("hidden");
+      orderView.classList.add("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderOrder(){
+      if(!currentProduct){
+        cartItem.classList.add("hidden");
+        return;
+      }
+
+      const selectedPlan = currentProduct.plans[currentPlanIndex];
+      const amount = Number(selectedPlan.price) * currentQty;
+
+      cartItem.classList.remove("hidden");
+      cartName.textContent = currentProduct.name;
+      cartPlanCurrent.textContent = selectedPlan.name;
+      qtyNum.textContent = currentQty;
+      itemAmount.textContent = formatKs(amount);
+
+      togglePlansBtn.textContent = plansOpen ? "Hide Plan Selection" : "Choose Plan";
+      planList.innerHTML = "";
+
+      if(plansOpen){
+        currentProduct.plans.forEach((plan, index) => {
+          const el = document.createElement("div");
+          el.className = "plan-option" + (index === currentPlanIndex ? " active" : "");
+          el.textContent = plan.name;
+          el.onclick = () => {
+            currentPlanIndex = index;
+            renderOrder();
+            updatePreview();
+          };
+          planList.appendChild(el);
+        });
+      }
+
+      sumItems.textContent = "1";
+      sumQty.textContent = currentQty;
+      sumAmount.textContent = formatKs(amount);
+      sumTotal.textContent = formatKs(amount);
+    }
+
+    function buildTelegramMessage(){
+      if(!currentProduct) return "";
+
+      const selectedPlan = currentProduct.plans[currentPlanIndex];
+      const total = Number(selectedPlan.price) * currentQty;
 
       let msg = "Gamepay Hub\n";
       msg += "Digital order\n\n";
-      msg += `💌Product name: ${productNames}\n`;
-      msg += `📄Plan:\n${planNames}\n`;
+      msg += `💌Product name: ${currentProduct.name}\n`;
+      msg += `📄Plan: ${selectedPlan.name}\n`;
       msg += `💳Payment method: ${activePayment || "Not selected"}\n`;
-      msg += `🧾Total: ${formatKs(totals.total)}\n`;
-      msg += `📝Note: ${note}\n`;
-      msg += `📦Description: ${description}`;
+      msg += `🧾Total: ${formatKs(total)}\n`;
 
-      return msg;
+      const note = noteInput.value.trim();
+      if(note){
+        msg += `📝Note: ${note}\n`;
+      }
+
+      const account = accountInput.value.trim();
+      if(account){
+        msg += `👤Account: ${account}\n`;
+      }
+
+      return msg.trim();
     }
 
     function updatePreview(){
       const preview = buildTelegramMessage();
       previewBox.textContent = preview || "No order preview yet.";
-
-      const canOrder = cart.length > 0 && activePayment;
-      orderBtn.disabled = !canOrder;
+      orderBtn.disabled = !(currentProduct && activePayment);
     }
 
-    function orderViaTelegram(){
-      if(cart.length === 0){
-        alert("Please select at least one product.");
-        return;
-      }
-
-      if(!activePayment){
-        alert("Please select a payment method.");
-        return;
-      }
-
+    function openTelegramOrder(){
+      if(!currentProduct || !activePayment) return;
       const message = buildTelegramMessage();
       const telegramURL = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
-
-      // direct telegram open, no copy popup
       window.location.href = telegramURL;
     }
 
     searchInput.addEventListener("input", renderProducts);
-    noteInput.addEventListener("input", updatePreview);
+    backBtn.addEventListener("click", closeOrder);
+    removeBtn.addEventListener("click", closeOrder);
+    togglePlansBtn.addEventListener("click", () => {
+      plansOpen = !plansOpen;
+      renderOrder();
+    });
+    minusBtn.addEventListener("click", () => {
+      currentQty = Math.max(1, currentQty - 1);
+      renderOrder();
+      updatePreview();
+    });
+    plusBtn.addEventListener("click", () => {
+      currentQty += 1;
+      renderOrder();
+      updatePreview();
+    });
     accountInput.addEventListener("input", updatePreview);
-    appDescription.addEventListener("input", updatePreview);
-    orderBtn.addEventListener("click", orderViaTelegram);
+    noteInput.addEventListener("input", updatePreview);
+    orderBtn.addEventListener("click", openTelegramOrder);
 
-    buildCategories();
-    buildPayments();
+    renderCategories();
     renderProducts();
-    renderCart();
+    renderPayments();
 
-    // Moving particles
     const canvas = document.getElementById("particles");
     const ctx = canvas.getContext("2d");
     let particles = [];
@@ -1446,14 +1226,14 @@ align-items:start;
     function initParticles(){
       particles = [];
       const count = Math.min(110, Math.max(60, Math.floor(window.innerWidth / 15)));
-      for(let i=0;i<count;i++){
+      for(let i = 0; i < count; i++){
         particles.push({
-          x:Math.random() * canvas.width,
-          y:Math.random() * canvas.height,
-          size:Math.random() * 1.8 + .9,
-          vx:(Math.random() - .5) * .35,
-          vy:(Math.random() - .5) * .35,
-          a:Math.random() * .45 + .18
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 1.8 + .9,
+          vx: (Math.random() - .5) * .35,
+          vy: (Math.random() - .5) * .35,
+          a: Math.random() * .45 + .18
         });
       }
     }
@@ -1473,11 +1253,10 @@ align-items:start;
     }, { passive:true });
 
     function animateParticles(){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      for(let i=0;i<particles.length;i++){
+      for(let i = 0; i < particles.length; i++){
         const p = particles[i];
-
         p.x += p.vx;
         p.y += p.vy;
 
@@ -1487,7 +1266,7 @@ align-items:start;
         if(mouse.x !== null && mouse.y !== null){
           const dx = p.x - mouse.x;
           const dy = p.y - mouse.y;
-          const dist = Math.sqrt(dx*dx + dy*dy);
+          const dist = Math.sqrt(dx * dx + dy * dy);
           if(dist < mouse.radius){
             p.x += dx / 45;
             p.y += dy / 45;
@@ -1502,11 +1281,11 @@ align-items:start;
         ctx.fill();
       }
 
-      for(let a=0;a<particles.length;a++){
-        for(let b=a+1;b<particles.length;b++){
+      for(let a = 0; a < particles.length; a++){
+        for(let b = a + 1; b < particles.length; b++){
           const dx = particles[a].x - particles[b].x;
           const dy = particles[a].y - particles[b].y;
-          const dist = Math.sqrt(dx*dx + dy*dy);
+          const dist = Math.sqrt(dx * dx + dy * dy);
           if(dist < 105){
             ctx.beginPath();
             ctx.strokeStyle = "rgba(220,180,255," + (0.22 - dist / 900) + ")";
