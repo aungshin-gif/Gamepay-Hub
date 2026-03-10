@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -283,9 +284,9 @@ cursor:pointer;
 
     .card{
       position:relative;
-      background:var(--card);
-      border:1px solid var(--card-border);
-      padding:22px 14px 18px;
+      background: rgba(37,0,58,0.85);
+      border:1px solid rgba(199,125,255,0.2);    
+      padding:22px 14px px;
       border-radius:20px;
       cursor:pointer;
       transform: translateZ(0);
@@ -300,7 +301,7 @@ cursor:pointer;
       justify-content:center;
       align-items:center;
       overflow:hidden;
-      backdrop-filter:blur(10px);
+      backdrop-filter: none;
       
     }.card:hover{
 transform:translateY(-8px) scale(1.03);
