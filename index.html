@@ -2,37 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Gamepay Hub - Digital Products Store</title>
 
   <style>
     :root{
       --bg1:#12001f;
       --bg2:#250040;
-      --bg3:#4b008f;
-      --bg4:#8b2cff;
-      --bg5:#d05cff;
+      --bg3:#4a0d7a;
+      --bg4:#8f35da;
+      --bg5:#d86cff;
 
       --text:#ffffff;
       --muted:rgba(255,255,255,.72);
-
       --glass:rgba(255,255,255,.08);
-      --glass-2:rgba(255,255,255,.05);
+      --glass2:rgba(255,255,255,.05);
       --border:rgba(255,255,255,.14);
 
       --neon:#c77dff;
-      --neon-2:#9d4edd;
-      --neon-3:#f15cff;
-      --cyan:#7df9ff;
-      --good:#9bffc2;
+      --neon2:#9d4edd;
+      --neon3:#f15cff;
+      --cyan:#79f2ff;
+      --good:#a6ffcb;
+      --danger:#ff9fc9;
 
-      --radius-xl:28px;
-      --radius-lg:22px;
-      --radius-md:16px;
-      --radius-sm:12px;
-
-      --shadow:0 16px 40px rgba(0,0,0,.35);
-      --shadow-neon:0 0 26px rgba(199,125,255,.28);
+      --shadow:0 16px 40px rgba(0,0,0,.36);
     }
 
     *{
@@ -55,12 +49,12 @@
       color:var(--text);
       overflow-x:hidden;
       background:
-        radial-gradient(circle at 18% 20%, rgba(255,255,255,.10) 0%, transparent 18%),
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,.10) 0%, transparent 18%),
         radial-gradient(circle at 82% 24%, rgba(199,125,255,.18) 0%, transparent 22%),
-        radial-gradient(circle at 50% 82%, rgba(125,249,255,.10) 0%, transparent 22%),
-        linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 25%, var(--bg3) 55%, var(--bg4) 82%, var(--bg5) 100%);
+        radial-gradient(circle at 50% 82%, rgba(121,242,255,.10) 0%, transparent 22%),
+        linear-gradient(135deg,#140022 0%,#25003f 24%,#4a0d7a 55%,#8f35da 82%,#d86cff 100%);
       background-size:200% 200%;
-      animation:bgMove 38s linear infinite;
+      animation:bgMove 40s linear infinite;
       transform:translateZ(0);
       will-change:transform;
     }
@@ -78,22 +72,21 @@
       height:100%;
       z-index:0;
       pointer-events:none;
-      opacity:.9;
+      opacity:.92;
       transform:translateZ(0);
     }
 
     .page{
       position:relative;
       z-index:1;
-      width:min(1220px, 94%);
+      width:min(1220px,94%);
       margin:0 auto;
-      padding:20px 0 50px;
-      transform:translateZ(0);
+      padding:18px 0 60px;
     }
 
     .hero{
       text-align:center;
-      padding:8px 0 18px;
+      padding:12px 0 18px;
     }
 
     .brand-wrap{
@@ -101,20 +94,21 @@
       align-items:center;
       justify-content:center;
       gap:14px;
+      flex-wrap:wrap;
       margin-bottom:8px;
     }
 
     .brand-orb{
-      width:56px;
-      height:56px;
+      width:58px;
+      height:58px;
       border-radius:50%;
       background:
-        radial-gradient(circle at 30% 30%, #fff 0%, #ffe083 12%, #d58bff 38%, #8b2cff 70%, #3a0064 100%);
+        radial-gradient(circle at 30% 30%, #fff8c4 0%, #ffd166 12%, #f3c1ff 28%, #c77dff 48%, #7b2cbf 76%, #2d0847 100%);
       box-shadow:
         0 0 18px rgba(255,255,255,.28),
-        0 0 30px rgba(199,125,255,.45),
-        0 0 55px rgba(139,44,191,.35);
-      animation:orbPulse 2.6s ease-in-out infinite alternate;
+        0 0 28px rgba(199,125,255,.48),
+        0 0 54px rgba(123,44,191,.35);
+      animation:orbPulse 2.8s ease-in-out infinite alternate;
       flex-shrink:0;
     }
 
@@ -124,17 +118,18 @@
     }
 
     .hero-title{
-      font-size:clamp(30px, 5vw, 52px);
+      font-size:clamp(32px,5vw,54px);
       font-weight:900;
       letter-spacing:.5px;
-      background:linear-gradient(90deg,#fff4a8 0%, #ffffff 28%, #f6d2ff 60%, #c77dff 100%);
+      background:linear-gradient(90deg,#fff3b0 0%,#ffd166 20%,#ffffff 46%,#f1c8ff 66%,#c77dff 100%);
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
       text-shadow:
         0 0 12px rgba(255,255,255,.14),
-        0 0 24px rgba(199,125,255,.26),
-        0 0 50px rgba(157,78,221,.20);
+        0 0 24px rgba(199,125,255,.34),
+        0 0 52px rgba(157,78,221,.24);
+      line-height:1.1;
     }
 
     .hero-sub{
@@ -145,17 +140,17 @@
     }
 
     .search-wrap{
-      width:min(760px, 100%);
-      margin:18px auto 12px;
+      width:min(760px,100%);
+      margin:18px auto 14px;
       position:relative;
     }
 
     .search-wrap input{
       width:100%;
-      padding:16px 18px 16px 48px;
       border:none;
       outline:none;
       border-radius:18px;
+      padding:16px 18px 16px 48px;
       color:#fff;
       font-size:15px;
       background:rgba(255,255,255,.09);
@@ -165,19 +160,19 @@
         inset 0 0 12px rgba(255,255,255,.08);
       backdrop-filter:blur(14px);
       -webkit-backdrop-filter:blur(14px);
-      transition:.22s ease;
+      transition:.25s ease;
     }
 
     .search-wrap input:focus{
-      border-color:rgba(199,125,255,.45);
+      border-color:rgba(199,125,255,.42);
       box-shadow:
         0 0 22px rgba(199,125,255,.28),
-        0 0 48px rgba(157,78,221,.14),
-        inset 0 0 10px rgba(255,255,255,.10);
+        0 0 50px rgba(157,78,221,.16),
+        inset 0 0 12px rgba(255,255,255,.10);
     }
 
     .search-wrap input::placeholder{
-      color:rgba(255,255,255,.58);
+      color:rgba(255,255,255,.56);
     }
 
     .search-icon{
@@ -186,8 +181,8 @@
       top:50%;
       transform:translateY(-50%);
       pointer-events:none;
-      opacity:.8;
-      font-size:17px;
+      opacity:.82;
+      font-size:18px;
     }
 
     .categories{
@@ -196,6 +191,7 @@
       gap:10px;
       justify-content:center;
       margin-bottom:20px;
+      padding:0 6px;
     }
 
     .cat{
@@ -203,11 +199,11 @@
       border-radius:999px;
       background:rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.12);
-      font-size:13px;
       cursor:pointer;
       user-select:none;
+      font-size:13px;
       transition:.22s ease;
-      box-shadow:0 0 10px rgba(199,125,255,.06);
+      box-shadow:0 0 10px rgba(199,125,255,.08);
     }
 
     .cat:hover,
@@ -227,21 +223,21 @@
 
     .products{
       display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(185px,1fr));
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
       gap:18px;
     }
 
     .card{
       position:relative;
-      border-radius:24px;
+      border-radius:22px;
       padding:18px 14px 16px;
-      background:rgba(37,0,58,.86);
+      cursor:pointer;
+      background:rgba(37,0,58,.88);
       border:1px solid rgba(199,125,255,.18);
       box-shadow:var(--shadow), inset 0 0 0 1px rgba(255,255,255,.02);
-      cursor:pointer;
       transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease;
       overflow:hidden;
-      min-height:225px;
+      min-height:230px;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
@@ -252,16 +248,16 @@
       content:"";
       position:absolute;
       inset:0;
-      background:linear-gradient(135deg, rgba(255,255,255,.08), transparent 42%, transparent 60%, rgba(199,125,255,.10));
+      background:linear-gradient(135deg, rgba(255,255,255,.08), transparent 40%, transparent 60%, rgba(199,125,255,.10));
       pointer-events:none;
     }
 
     .card:hover{
       transform:translateY(-8px) scale(1.02);
-      border-color:rgba(199,125,255,.42);
+      border-color:rgba(199,125,255,.40);
       box-shadow:
-        0 18px 45px rgba(0,0,0,.42),
-        0 0 30px rgba(199,125,255,.24);
+        0 16px 42px rgba(0,0,0,.42),
+        0 0 30px rgba(199,125,255,.25);
     }
 
     .icon-wrap{
@@ -281,8 +277,8 @@
     .card img{
       width:100%;
       height:100%;
-      object-fit:contain;
       border-radius:50%;
+      object-fit:contain;
       transition:transform .28s ease, filter .28s ease;
     }
 
@@ -299,32 +295,34 @@
     }
 
     .card-sub{
-      margin-top:6px;
       font-size:12px;
       color:var(--muted);
+      margin-top:6px;
+      text-align:center;
+    }
+
+    .card-bottom{
+      margin-top:14px;
       text-align:center;
     }
 
     .badge{
-      position:absolute;
-      top:12px;
-      right:12px;
       display:inline-flex;
       align-items:center;
       gap:6px;
-      padding:6px 10px;
+      padding:7px 12px;
       border-radius:999px;
-      font-size:11px;
-      background:rgba(155,255,194,.10);
-      border:1px solid rgba(155,255,194,.22);
-      color:#effff4;
+      font-size:12px;
+      background:rgba(166,255,203,.10);
+      border:1px solid rgba(166,255,203,.20);
+      color:#effff5;
+      box-shadow:0 0 12px rgba(166,255,203,.08);
     }
 
     .price-from{
-      margin-top:12px;
+      margin-top:10px;
       font-size:12px;
       color:rgba(255,255,255,.68);
-      text-align:center;
     }
 
     .side{
@@ -343,16 +341,30 @@
 
     .panel-title{
       text-align:center;
-      font-size:22px;
-      font-weight:900;
+      font-size:20px;
+      font-weight:800;
       margin-bottom:8px;
-      text-shadow:0 0 16px rgba(199,125,255,.18);
     }
 
     .panel-sub{
       text-align:center;
       font-size:12px;
       color:var(--muted);
+      margin-bottom:14px;
+    }
+
+    .desc-box{
+      border-radius:18px;
+      padding:14px 15px;
+      min-height:92px;
+      background:linear-gradient(135deg, rgba(199,125,255,.14), rgba(255,255,255,.05));
+      border:1px solid rgba(199,125,255,.28);
+      color:#f3eaff;
+      font-size:13px;
+      line-height:1.65;
+      box-shadow:
+        0 0 18px rgba(199,125,255,.16),
+        inset 0 0 14px rgba(255,255,255,.04);
       margin-bottom:14px;
     }
 
@@ -364,7 +376,6 @@
       border:1px dashed rgba(255,255,255,.12);
       color:var(--muted);
       font-size:13px;
-      line-height:1.55;
     }
 
     .cart-list{
@@ -393,7 +404,7 @@
       line-height:1.25;
     }
 
-    .cart-plan{
+    .cart-plan-current{
       margin-top:4px;
       font-size:12px;
       color:var(--muted);
@@ -406,15 +417,15 @@
       border-radius:10px;
       padding:6px 10px;
       font-size:12px;
-      background:rgba(255,158,184,.14);
       color:#fff;
-      border:1px solid rgba(255,158,184,.24);
+      background:rgba(255,159,201,.14);
+      border:1px solid rgba(255,159,201,.24);
       cursor:pointer;
     }
 
-    .toggle-btn{
-      margin-top:10px;
+    .plan-toggle{
       width:100%;
+      margin-top:10px;
       border:none;
       border-radius:12px;
       padding:10px;
@@ -433,13 +444,13 @@
     }
 
     .plan-option{
-      padding:10px;
+      padding:10px 10px;
       border-radius:12px;
-      background:rgba(255,255,255,.04);
       border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      cursor:pointer;
       font-size:12px;
       line-height:1.45;
-      cursor:pointer;
       transition:.2s ease;
     }
 
@@ -448,8 +459,7 @@
       border-color:rgba(199,125,255,.42);
       box-shadow:0 0 18px rgba(199,125,255,.18);
     }
-
-    .qty-row{
+.qty-row{
       margin-top:12px;
       display:flex;
       justify-content:space-between;
@@ -469,12 +479,11 @@
       height:28px;
       border:none;
       border-radius:50%;
+      cursor:pointer;
+      color:#fff;
+      font-size:16px;
       background:rgba(255,255,255,.10);
       border:1px solid rgba(255,255,255,.12);
-      color:#fff;
-      cursor:pointer;
-      font-size:16px;
-      line-height:1;
     }
 
     .qty-num{
@@ -510,7 +519,6 @@
       gap:12px;
       font-size:18px;
       font-weight:800;
-      text-shadow:0 0 16px rgba(199,125,255,.18);
     }
 
     .field{
@@ -528,7 +536,7 @@
       width:100%;
       border:none;
       outline:none;
-      border-radius:18px;
+      border-radius:16px;
       padding:13px 14px;
       color:#fff;
       font-size:14px;
@@ -544,8 +552,8 @@
     .note-box:focus{
       border-color:rgba(199,125,255,.42);
       box-shadow:
-        0 0 22px rgba(199,125,255,.22),
-        0 0 46px rgba(157,78,221,.10),
+        0 0 22px rgba(199,125,255,.20),
+        0 0 44px rgba(157,78,221,.10),
         inset 0 0 10px rgba(255,255,255,.08);
     }
 
@@ -567,8 +575,8 @@
     }
 
     .pay-option{
-      padding:12px 10px;
       border-radius:14px;
+      padding:12px 10px;
       text-align:center;
       cursor:pointer;
       font-size:13px;
@@ -655,21 +663,28 @@
       text-align:left;
     }
 
-    .footer{
-      margin-top:34px;
-      text-align:center;
-      padding:22px 10px 10px;
-      font-size:14px;
-      font-weight:700;
-      color:#efd6ff;
-      border-top:1px solid rgba(199,125,255,.20);
-      text-shadow:
-        0 0 10px rgba(199,125,255,.55),
-        0 0 20px rgba(157,78,221,.35);
+    .note-tip{
+      margin-top:8px;
+      font-size:11px;
+      color:rgba(255,255,255,.54);
+      line-height:1.5;
     }
 
     .hidden{
       display:none !important;
+    }
+
+    .site-footer{
+      margin-top:42px;
+      text-align:center;
+      padding:22px 10px 28px;
+      font-size:14px;
+      font-weight:700;
+      color:#efd6ff;
+      border-top:1px solid rgba(199,125,255,.22);
+      text-shadow:
+        0 0 10px rgba(199,125,255,.55),
+        0 0 20px rgba(157,78,221,.35);
     }
 
     @media (max-width: 980px){
@@ -705,7 +720,10 @@
 
   <div class="page">
     <div class="hero">
-      <div class="hero-title">Gamepay Hub</div>
+      <div class="brand-wrap">
+        <div class="brand-orb"></div>
+        <div class="hero-title">Gamepay Hub</div>
+      </div>
       <div class="hero-sub">Digital Products Store</div>
     </div>
 
@@ -722,9 +740,14 @@
       </div>
 
       <div class="side">
-        <div class="panel">
+        <div class="panel hidden" id="orderPanel">
           <div class="panel-title">Order Cart</div>
-          <div class="panel-sub">Neon glow order system</div>
+          <div class="panel-sub">Best neon glow order system</div>
+
+          <div class="field">
+            <div class="field-title">Description</div>
+            <textarea id="appDescription" class="note-box" placeholder="Write description here..."></textarea>
+          </div>
 
           <div id="cartEmpty" class="cart-empty">
             No items selected yet.
@@ -740,13 +763,6 @@
           </div>
 
           <div class="field">
-            <div class="field-title">Description</div>
-            <div id="descriptionBox" class="preview-box" style="border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(199,125,255,.22);padding:14px;box-shadow:0 0 18px rgba(199,125,255,.12), inset 0 0 10px rgba(255,255,255,.04);min-height:86px;">
-              Select a product to see description.
-            </div>
-          </div>
-
-          <div class="field">
             <div class="field-title">Account / Email / Username</div>
             <input id="accountInput" class="input" type="text" placeholder="Enter account..." />
           </div>
@@ -759,6 +775,7 @@
           <div class="field">
             <div class="field-title">Note</div>
             <textarea id="noteInput" class="note-box" placeholder="Write note here..."></textarea>
+            <div class="note-tip">Example: login details, request, custom note</div>
           </div>
 
           <button id="orderBtn" class="telegram-btn" disabled>Order via Telegram</button>
@@ -771,16 +788,17 @@
       </div>
     </div>
 
-    <div class="footer">
+    <footer class="site-footer">
       Founder: Diameter Eight
-    </div>
+    </footer>
   </div>
-
-  <script>
+<script>
     const TELEGRAM_USERNAME = "angsthtun";
 
+    // Category ထပ်ထည့်ချင်ရင် ဒီ array ထဲ add လုပ်
     const categories = ["All", "AI", "Editing", "VPN", "Gift", "Music", "Video", "Social", "Services"];
 
+    // Product ထပ်ထည့်ချင်ရင် ဒီ products array ထဲ category + description + plans နဲ့ add လုပ်
     const products = [
       {
         id: "chatgpt",
@@ -790,7 +808,7 @@
         category: "AI",
         icon: "ChatGPT_logo.svg.png",
         search: "chatgpt openai ai",
-        description: "Get ChatGPT plans for AI chat, writing, coding, daily work and fast productivity support.",
+        description: "",
         plans: [
           { name: "ChatGPT Plus - 1 Month - 6000 Ks (Share)", price: 6000 },
           { name: "ChatGPT Plus - 1 Month - 6500 Ks (Private)", price: 6500 },
@@ -809,25 +827,28 @@
         category: "Music",
         icon: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
         search: "spotify music premium",
-        description: "Enjoy premium music streaming with no ads, better quality and smoother listening experience.",
+        description: "",
         plans: [
           { name: "Family Plan (Global) - 1 Month - 8000 Ks", price: 8000 },
           { name: "Family Plan (Global) - 2 Months - 12000 Ks", price: 12000 },
           { name: "Family Plan (Global) - 3 Months - 24000 Ks", price: 24000 },
           { name: "Family Plan (Global) - 6 Months - 65000 Ks", price: 65000 },
-           { name: "Individual Plan (Global) - 1 Month - 13000 Ks", price: 13000 },
+          { name: "Individual Plan (Global) - 1 Month - 13000 Ks", price: 13000 },
           { name: "Individual Plan (Global) - 2 Months - 24000 Ks", price: 24000 },
           { name: "Individual Plan (Global) - 3 Months - 34000 Ks", price: 34000 }
         ]
       }
     ];
 
-    const paymentMethods = ["KPay", "Wave", "UAB", "AYA", "Binance", "UAB"];
+    // UAB duplicate မထားတော့ဘူး
+    const paymentMethods = ["KPay", "Wave", "UAB", "AYA", "Binance", "WeChatPay"];
 
     const cart = [];
     let activeCategory = "All";
     let activePayment = "";
+    let activeDescriptionProductId = "";
 
+    const orderPanel = document.getElementById("orderPanel");
     const productsEl = document.getElementById("products");
     const categoriesEl = document.getElementById("categories");
     const searchInput = document.getElementById("searchInput");
@@ -843,7 +864,7 @@
     const payGrid = document.getElementById("payGrid");
     const orderBtn = document.getElementById("orderBtn");
     const previewBox = document.getElementById("previewBox");
-    const descriptionBox = document.getElementById("descriptionBox");
+    const appDescription = document.getElementById("appDescription");
 
     function formatKs(n){
       return `${Number(n).toLocaleString()} Ks`;
@@ -886,7 +907,6 @@
         card.className = "card";
 
         card.innerHTML = `
-          <div class="badge">${product.badge}</div>
           <div>
             <div class="icon-wrap">
               <img src="${product.icon}" alt="${product.name}">
@@ -894,7 +914,10 @@
             <div class="card-name">${product.name}</div>
             <div class="card-sub">${product.subtitle}</div>
           </div>
-          <div class="price-from">From ${formatKs(getCheapestPrice(product))}</div>
+          <div class="card-bottom">
+            <div class="badge">${product.badge}</div>
+            <div class="price-from">From ${formatKs(getCheapestPrice(product))}</div>
+          </div>
         `;
 
         card.onclick = () => addProductToCart(product);
@@ -903,9 +926,16 @@
     }
 
     function addProductToCart(product){
-      descriptionBox.textContent = product.description || "No description available.";
+      orderPanel.classList.remove("hidden");
 
       const exists = cart.find(item => item.productId === product.id);
+
+      // product ပြောင်းရင် description box အလွတ်ပြန်ဖြစ်မယ်
+      if(activeDescriptionProductId !== product.id){
+        appDescription.value = "";
+        activeDescriptionProductId = product.id;
+      }
+
       if(exists){
         exists.open = true;
         renderCart();
@@ -915,7 +945,6 @@
       cart.push({
         productId: product.id,
         productName: product.name,
-        productDescription: product.description || "",
         plans: product.plans,
         selectedPlanIndex: 0,
         qty: 1,
@@ -928,6 +957,13 @@
     function removeItem(productId){
       const index = cart.findIndex(item => item.productId === productId);
       if(index > -1) cart.splice(index, 1);
+
+      if(cart.length === 0){
+        orderPanel.classList.add("hidden");
+        appDescription.value = "";
+        activeDescriptionProductId = "";
+      }
+
       renderCart();
     }
 
@@ -992,12 +1028,12 @@
           <div class="cart-head">
             <div style="min-width:0">
               <div class="cart-name">${item.productName}</div>
-              <div class="cart-plan">${currentPlan.name}</div>
+              <div class="cart-plan-current">${currentPlan.name}</div>
             </div>
             <button class="remove-btn" onclick="removeItem('${item.productId}')">Remove</button>
           </div>
 
-          <button class="toggle-btn" onclick="togglePlans('${item.productId}')">
+          <button class="plan-toggle" onclick="togglePlans('${item.productId}')">
             ${item.open ? "Hide Plan Selection" : "Choose Plan"}
           </button>
 
@@ -1059,6 +1095,7 @@
         return `${plan.name} x${item.qty}`;
       }).join("\n");
       const note = noteInput.value.trim() || "-";
+      const description = appDescription.value.trim() || "-";
 
       let msg = "Gamepay Hub\n";
       msg += "Digital order\n\n";
@@ -1066,7 +1103,8 @@
       msg += `📄Plan:\n${planNames}\n`;
       msg += `💳Payment method: ${activePayment || "Not selected"}\n`;
       msg += `🧾Total: ${formatKs(totals.total)}\n`;
-      msg += `📝Note: ${note}`;
+      msg += `📝Note: ${note}\n`;
+      msg += `📦Description: ${description}`;
 
       return msg;
     }
@@ -1093,12 +1131,14 @@
       const message = buildTelegramMessage();
       const telegramURL = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
 
+      // direct telegram open, no copy popup
       window.location.href = telegramURL;
     }
 
     searchInput.addEventListener("input", renderProducts);
     noteInput.addEventListener("input", updatePreview);
     accountInput.addEventListener("input", updatePreview);
+    appDescription.addEventListener("input", updatePreview);
     orderBtn.addEventListener("click", orderViaTelegram);
 
     buildCategories();
@@ -1106,6 +1146,7 @@
     renderProducts();
     renderCart();
 
+    // Moving particles
     const canvas = document.getElementById("particles");
     const ctx = canvas.getContext("2d");
     let particles = [];
