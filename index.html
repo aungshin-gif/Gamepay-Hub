@@ -1214,8 +1214,8 @@
 
       // product ပြောင်းရင် description box အလွတ်ပြန်ဖြစ်မယ်
       if(activeDescriptionProductId !== product.id){
-        appDescription.value = "";
-        activeDescriptionProductId = product.id;
+  appDescription.value = product.description || "";
+  activeDescriptionProductId = product.id;
       }
 
       if(exists){
