@@ -803,72 +803,85 @@
     const categories = ["All","AI","Editing","VPN","Gift","Music","Video","Social","Services"];
 
     const products = [
-      {
-        id:"chatgpt",
-        name:"ChatGPT",
-        subtitle:"Tap to see prices",
-        badge:"available",
-        category:"AI",
-        iconType:"image",
-        icon:"ChatGPT_logo.svg.png",
-        search:"chatgpt openai ai",
-        description:"ChatGPT subscription options for AI chat, writing, coding and productivity.",
-        plans:[
-          { name:"ChatGPT Plus - 1 Month - 6000 Ks (Share)", price:6000 },
-          { name:"ChatGPT Plus - 1 Month - 6500 Ks (Private)", price:6500 },
-          { name:"ChatGPT Plus - 3 Months - 10000 Ks (Share)", price:10000 },
-          { name:"ChatGPT Plus - 3 Months - 12000 Ks (Private)", price:12000 }
-        ]
-      },
-      {
-        id:"spotify",
-        name:"Spotify",
-        subtitle:"Tap to see prices",
-        badge:"available",
-        category:"Music",
-        iconType:"image",
-        icon:"https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
-        search:"spotify music premium",
-        description:"Spotify Premium plans for ad-free music and better streaming quality.",
-        plans:[
-          { name:"Family Plan (Global) - 1 Month - 8000 Ks", price:8000 },
-          { name:"Family Plan (Global) - 2 Months - 12000 Ks", price:12000 },
-          { name:"Family Plan (Global) - 3 Months - 24000 Ks", price:24000 },
-          { name:"Individual Plan (Global) - 1 Month - 13000 Ks", price:13000 }
-        ]
-      },
-      {
-        id:"telegram",
-        name:"Telegram Premium",
-        subtitle:"Tap to see prices",
-        badge:"available",
-        category:"Social",
-        iconType:"image",
-        icon:"https://cdn-icons-png.flaticon.com/512/2111/2111646.png",
-        search:"telegram premium",
-        description:"Telegram Premium subscription plans.",
-        plans:[
-          { name:"Login Method - 1 Month - 20500 Ks", price:20500 },
-          { name:"Gift Plan - 3 Months - 50000 Ks", price:50000 },
-          { name:"Gift Plan - 6 Months - 67000 Ks", price:67000 }
-        ]
-      },
-      {
-        id:"vpn",
-        name:"Express VPN",
-        subtitle:"Tap to see prices",
-        badge:"available",
-        category:"VPN",
-        iconType:"image",
-        icon:"https://cdn-icons-png.flaticon.com/512/565/565547.png",
-        search:"express vpn secure",
-        description:"Share plan can only use 1 device.",
-        plans:[
-          { name:"Share Plan - 1 Month - 1500 Ks (Android & iOS)", price:1500 },
-          { name:"Share Plan - 1 Month - 2500 Ks (Windows PC & Laptop)", price:2500 },
-          { name:"Private Plan - 1 Month - 8000 Ks (Up to 9 devices)", price:8000 }
-        ]
-      },
+      const products = [
+
+{
+id: "chatgpt",
+name: "ChatGPT",
+subtitle: "Tap to see prices",
+badge: "available",
+category: "AI",
+iconType:"image",
+icon: "ChatGPT_logo.svg.png",
+search: "chatgpt openai ai",
+description: "",
+plans: [
+{ name:"ChatGPT Plus - 1 Month - 6000 Ks (Share)", price:6000 },
+{ name:"ChatGPT Plus - 1 Month - 6500 Ks (Private)", price:6500 },
+{ name:"ChatGPT Plus - 3 Months - 10000 Ks (Share)", price:10000 },
+{ name:"ChatGPT Plus - 3 Months - 12000 Ks (Private)", price:12000 },
+{ name:"ChatGPT Business - 1 Month - 6000 Ks (Share)", price:6000 },
+{ name:"ChatGPT Business - 12 Months - 22000 Ks (Share)", price:22000 },
+{ name:"ChatGPT Business - 12 Months - 23000 Ks (Private)", price:23000 }
+]
+},
+
+{
+id: "spotify",
+name: "Spotify",
+subtitle: "Tap to see prices",
+badge: "available",
+category: "Music",
+iconType:"image",
+icon: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
+search: "spotify music premium",
+description: "",
+plans: [
+{ name:"Family Plan (Global) - 1 Month - 8000 Ks", price:8000 },
+{ name:"Family Plan (Global) - 2 Months - 12000 Ks", price:12000 },
+{ name:"Family Plan (Global) - 3 Months - 24000 Ks", price:24000 },
+{ name:"Family Plan (Global) - 6 Months - 65000 Ks", price:65000 },
+{ name:"Individual Plan (Global) - 1 Month - 13000 Ks", price:13000 },
+{ name:"Individual Plan (Global) - 2 Months - 24000 Ks", price:24000 },
+{ name:"Individual Plan (Global) - 3 Months - 34000 Ks", price:34000 }
+]
+},
+
+{
+id: "picsart",
+name: "PicsArt",
+subtitle: "Tap to see prices",
+badge: "available",
+category:"Editing",
+iconType: "image",
+icon: "IMG_20260307_042958_666.jpg",
+search: "picsart photo edit",
+description: "",
+plans: [
+{ name:"1 Month – 5000 Ks", price:5000 },
+{ name:"3 Months – 12000 Ks", price:12000 }
+]
+},
+
+{
+id: "vpn",
+name: "Express VPN",
+subtitle: "Tap to see prices",
+badge: "available",
+category:"VPN",
+iconType: "image",
+icon: "https://cdn-icons-png.flaticon.com/512/565/565547.png",
+search: "express vpn secure",
+description:"Share plan can only use 1 device",
+plans: [
+{ name:"Share Plan – 1 Month – 1500 Ks (Android & iOS)", price:1500 },
+{ name:"Share Plan – 1 Month – 2500 Ks (Windows PC & Laptop)", price:2500 },
+{ name:"Share Plan – 1 Month – 2500 Ks (Linux Devices)", price:2500 },
+{ name:"Share Plan – 1 Month – 2500 Ks (MacBook)", price:2500 },
+{ name:"Private Plan – 1 Month – 8000 Ks (Up to 9 devices)", price:8000 }
+]
+ },
+
       {
         id:"gemini",
         name:"Gemini Pro",
