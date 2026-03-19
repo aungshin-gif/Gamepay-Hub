@@ -701,11 +701,14 @@
         font-size:30px;
       }
     }/* FIX Xiaomi Pad Chrome sticky bug */
-.search-wrap,
-.categories {
+.search-wrap {
   transform: translateZ(0);
   backface-visibility: hidden;
   will-change: transform;
+}
+
+.categories {
+  position: relative;   /* instead of transform */
 }
   </style>
 </head>
