@@ -1384,6 +1384,24 @@ plans: [
     ];
 
     const paymentMethods = ["KPay","Wave","UAB","AYA","Binance","WeChatPay"];
+    const paymentAccounts = {
+  KPay: {
+    phone: "09795687480",
+    name: "Aung Shin Thant Htun"
+  },
+  Wave: {
+    phone: "09795687480",
+    name: "Aung Shin Thant Htun"
+  },
+  UAB: {
+    phone: "09795687480",
+    name: "Aung Shin Thant Htun"
+  },
+  AYA: {
+    phone: "09795687480",
+    name: "Aung Shin Thant Htun"
+  }
+};
 
     let activeCategory = "All";
     let activePayment = "";
@@ -1562,29 +1580,36 @@ plans: [
     }
 
     function buildTelegramMessage(){
-      if(!currentProduct) return "";
+  if(!currentProduct) return "";
 
-      const selectedPlan = currentProduct.plans[currentPlanIndex];
-      const total = Number(selectedPlan.price) * currentQty;
+  const selectedPlan = currentProduct.plans[currentPlanIndex];
+  const total = Number(selectedPlan.price) * currentQty;
+  const payInfo = paymentAccounts[activePayment];
 
-      let msg = "Gamepay Hub\n";
-      msg += "Digital order\n\n";
-      msg += `💌Product name: ${currentProduct.name}\n`;
-      msg += `📄Plan: ${selectedPlan.name}\n`;
-      msg += `💳Payment method: ${activePayment || "Not selected"}\n`;
-      msg += `🧾Total: ${formatKs(total)}\n`;
+  let msg = "Gamepay Hub\n";
+  msg += "Digital order\n\n";
+  msg += `💌Product name: ${currentProduct.name}\n`;
+  msg += `📄Plan: ${selectedPlan.name}\n`;
+  msg += `💳Payment method: ${activePayment || "Not selected"}\n`;
 
-      const note = noteInput.value.trim();
-      if(note){
-        msg += `📝Note: ${note}\n`;
-      }
+  if(payInfo){
+    msg += `📱Payment Phone: ${payInfo.phone}\n`;
+    msg += `👤Payment Name: ${payInfo.name}\n`;
+  }
 
-      const account = accountInput.value.trim();
-      if(account){
-        msg += `👤Account: ${account}\n`;
-      }
+  msg += `🧾Total: ${formatKs(total)}\n`;
 
-      return msg.trim();
+  const note = noteInput.value.trim();
+  if(note){
+    msg += `📝Note: ${note}\n`;
+  }
+
+  const account = accountInput.value.trim();
+  if(account){
+    msg += `👤Account: ${account}\n`;
+  }
+
+  return msg.trim();
     }
 
     function updatePreview(){
