@@ -235,7 +235,25 @@
       justify-items:center;
       align-items:start;
     }
-
+.top-product-badge{
+  position:absolute;
+  top:10px;
+  right:10px;
+  z-index:3;
+  padding:6px 10px;
+  font-size:11px;
+  font-weight:800;
+  border-radius:999px;
+  color:#fff;
+  letter-spacing:.3px;
+  background:linear-gradient(135deg,#ffb347,#ff6b6b);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:
+    0 6px 16px rgba(255,107,107,.25),
+    0 0 12px rgba(255,179,71,.22);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+}
     .card{
       width:100%;
       max-width:220px;
@@ -854,6 +872,7 @@
 {
 id: "chatgpt",
 name: "ChatGPT",
+top: true,
 subtitle: "Tap to see prices",
 badge: "available",
 category: "AI",
@@ -890,6 +909,7 @@ plans: [
 {
 id: "spotify",
 name: "Spotify",
+top: true,
 subtitle: "Tap to see prices",
 badge: "available",
 category: "Music",
@@ -1565,16 +1585,18 @@ plans: [
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
-          <div>
-            <div class="icon-wrap">${renderIcon(product)}</div>
-            <div class="card-name">${product.name}</div>
-            <div class="card-sub">${product.subtitle}</div>
-          </div>
-          <div class="card-bottom">
-            <div class="badge">${product.badge}</div>
-            <div class="price-from">From ${formatKs(getCheapestPrice(product))}</div>
-          </div>
-        `;
+  ${product.top ? '<div class="top-product-badge">🔥 Top</div>' : ''}
+
+  <div>
+    <div class="icon-wrap">${renderIcon(product)}</div>
+    <div class="card-name">${product.name}</div>
+    <div class="card-sub">${product.subtitle}</div>
+  </div>
+  <div class="card-bottom">
+    <div class="badge">${product.badge}</div>
+    <div class="price-from">From ${formatKs(getCheapestPrice(product))}</div>
+  </div>
+`;
         card.onclick = () => openOrder(product);
         productsEl.appendChild(card);
       });
