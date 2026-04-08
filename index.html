@@ -496,22 +496,61 @@
       margin-top:10px;
     }
 
-    .plan-option{
-      padding:10px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
-      cursor:pointer;
-      font-size:12px;
-      line-height:1.45;
-      transition:.2s ease;
-    }
+   .plan-option{
+  position: relative;
+  padding: 14px 10px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.04);
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.45;
+  transition: .2s ease;
+  overflow: visible;
+}
 
-    .plan-option.active{
-      background:rgba(199,125,255,.15);
-      border-color:rgba(199,125,255,.42);
-      box-shadow:0 0 18px rgba(199,125,255,.18);
-    }
+.plan-option.active{
+  background: rgba(199,125,255,.15);
+  border-color: rgba(199,125,255,.42);
+  box-shadow: 0 0 18px rgba(199,125,255,.18);
+}
+
+.plan-option.best-seller{
+  border-color: rgba(255, 196, 87, .38);
+  box-shadow:
+    0 0 18px rgba(255, 196, 87, .10),
+    inset 0 0 0 1px rgba(255,255,255,.03);
+}
+
+.best-seller-badge{
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  color: #fff;
+  background: linear-gradient(135deg, #ffb347, #ff6b6b);
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow:
+    0 8px 18px rgba(255, 107, 107, .22),
+    0 0 16px rgba(255, 179, 71, .18);
+  white-space: nowrap;
+}
+
+.plan-option.active.best-seller{
+  background: linear-gradient(180deg, rgba(199,125,255,.16), rgba(255,179,71,.10));
+  border-color: rgba(255, 196, 87, .55);
+  box-shadow:
+    0 0 18px rgba(199,125,255,.18),
+    0 0 20px rgba(255,179,71,.16);
+} 
 
     .qty-row{
       margin-top:12px;
@@ -823,7 +862,7 @@ icon: "ChatGPT_logo.svg.png",
 search: "chatgpt openai ai",
 description: " လောဆယ် Plus/Pro များသာရပါမည်။",
 plans: [
-{name:"ChatGPT Plus - 1 Month - 7500 Ks (Share)", price:7500 },
+{name:"ChatGPT Plus - 1 Month - 7500 Ks (Share)", price:7500,bestSeller:true },
 {name:"ChatGPT Plus - 1 Month - 9000 Ks (Private)", price:9000 },
 {name:"ChatGPT Plus - 3 Months - 10000 Ks (Share)", price:10000 },
 {name:"ChatGPT Plus - 3 Months - 12000 Ks (Private)", price:12000 },
@@ -1601,17 +1640,26 @@ plans: [
       planList.innerHTML = "";
 
       if(plansOpen){
-        currentProduct.plans.forEach((plan, index) => {
-          const el = document.createElement("div");
-          el.className = "plan-option" + (index === currentPlanIndex ? " active" : "");
-          el.textContent = plan.name;
-          el.onclick = () => {
-            currentPlanIndex = index;
-            renderOrder();
-            updatePreview();
-          };
-          planList.appendChild(el);
-        });
+  currentProduct.plans.forEach((plan, index) => {
+    const el = document.createElement("div");
+    el.className =
+      "plan-option" +
+      (index === currentPlanIndex ? " active" : "") +
+      (plan.bestSeller ? " best-seller" : "");
+
+    el.innerHTML = `
+      ${plan.bestSeller ? '<span class="best-seller-badge">🔥 Best Seller</span>' : ''}
+      <div>${plan.name}</div>
+    `;
+
+    el.onclick = () => {
+      currentPlanIndex = index;
+      renderOrder();
+      updatePreview();
+    };
+
+    planList.appendChild(el);
+  });
       }
 
       sumItems.textContent = "1";
