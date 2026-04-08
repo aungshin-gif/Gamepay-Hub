@@ -767,6 +767,60 @@
 .categories {
   position: relative;   /* instead of transform */
 }
+    /* FAQ START */
+.faq-wrap{
+  width:100%;
+  max-width:760px;
+  margin:30px auto 10px;
+  padding:0 6px;
+}
+
+.faq-item{
+  border-radius:16px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  overflow:hidden;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+.faq-item summary{
+  cursor:pointer;
+  padding:14px 16px;
+  font-size:14px;
+  font-weight:800;
+  list-style:none;
+  position:relative;
+}
+
+.faq-item summary::-webkit-details-marker{
+  display:none;
+}
+
+.faq-item summary::after{
+  content:"+";
+  position:absolute;
+  right:16px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:18px;
+}
+
+.faq-item[open] summary::after{
+  content:"−";
+}
+
+.faq-answer{
+  padding:0 16px 14px;
+  font-size:13px;
+  line-height:1.6;
+  color:rgba(255,255,255,.8);
+}
+
+.faq-item:hover{
+  box-shadow:0 0 20px rgba(199,125,255,.25);
+}
+/* FAQ END */
   </style>
 </head>
 <body>
@@ -856,6 +910,36 @@
           <div id="previewBox" class="preview-box">No order preview yet.</div>
         </div>
       </div>
+    </div>
+<div class="faq-wrap">
+      <details class="faq-item">
+        <summary>📌 FAQ (Tap to view)</summary>
+
+        <div class="faq-answer">
+          Share ဆိုတယ့်သဘောတရားက သူများနဲ့အတူ Share သုံးတာကိုဆိုလိုတာပါ။
+          ဆိုလိုတာက အကောင့်၁ခုကို Device ၁ခုထက်ပိုပြီး ဝင်ထားတာဖြစ်ပါတယ်။
+
+          <br><br>
+
+          🔒 Private ဆိုတာက တစ်ဉီးတယောက်တည်းသီးသန့်သုံးရတာပါ။
+          ဆိုလိုတာက account တစ်ခုကို device တစ်ခုတည်းပဲ login ဝင်ထားတာပါ။
+
+          <br><br>
+
+          ❗ Private ဆိုပြီး ကိုယ်ပိုင် Email နဲ့မဟုတ်ပါ။
+          Admin ဘက်က account ပေးပြီး buyer တစ်ယောက်တည်းအတွက်သာသုံးနိုင်ပါတယ်။
+
+          <br><br>
+
+          ✉️ Own Mail ဆိုတာက customer ပေးတဲ့ email နဲ့ subscription ထည့်ပေးတာပါ။
+          Admin ဘက်က account မပေးတော့ပါဘူး။
+
+          <br><br>
+
+          ⏳ Setup အချိန်ယူနိုင်ပြီး
+          💰 ဈေးပိုမြင့်တတ်ပါတယ်။
+        </div>
+      </details>
     </div>
 
     <footer class="site-footer">
