@@ -270,7 +270,8 @@
       display:flex;
       flex-direction:column;
       justify-content:space-between;
-     animation:cardFloat 3.2s ease-in-out infinite;     
+  animation:cardFloat 3.2s ease-in-out infinite;     
+      gap:10px;
     }
 
     .card::before{
@@ -318,10 +319,13 @@
       transition:transform .28s ease, filter .28s ease;
     }
 
-    .card:hover img{
-      transform:scale(1.07);
-      filter:drop-shadow(0 0 18px rgba(199,125,255,.55));
-    }
+   .card:hover{
+  transform:translateY(-6px) scale(1.01);
+  border-color:rgba(199,125,255,.42);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.35),
+    0 0 18px rgba(199,125,255,.18);
+   } 
 
     .card-name{
       font-size:16px;
@@ -526,12 +530,15 @@
       font-weight:700;
       cursor:pointer;
     }
+.plan-list{
+  display:grid;
+  gap:8px;
+  margin-top:10px;
+  max-height:240px;
+  overflow-y:auto;
+  padding-right:4px;
+}
 
-    .plan-list{
-      display:grid;
-      gap:8px;
-      margin-top:10px;
-    }
 
    .plan-option{
   position: relative;
@@ -550,6 +557,7 @@
   background: rgba(199,125,255,.15);
   border-color: rgba(199,125,255,.42);
   box-shadow: 0 0 18px rgba(199,125,255,.18);
+  outline:2px solid rgba(199,125,255,.6);
 }
 
 .plan-option.best-seller{
@@ -767,6 +775,9 @@
       cursor:not-allowed;
       box-shadow:none;
       animation:none;
+    }
+    .telegram-btn:active{
+  transform:scale(.97);
     }
 
     @keyframes btnFlow{
