@@ -366,13 +366,22 @@
   padding:18px;
   box-shadow:var(--shadow), 0 0 30px rgba(199,125,255,.12);
   text-align:left;
-  transition:transform .25s ease, box-shadow .25s ease;
+  animation:panelFloat 3s ease-in-out infinite;
 }
-
-.panel:hover{
-  transform:translateY(-2px);
-  box-shadow:var(--shadow), 0 0 36px rgba(199,125,255,.18);
-}
+    @keyframes panelFloat{
+  0%{
+    transform:translateY(0px);
+    box-shadow:var(--shadow), 0 0 30px rgba(199,125,255,.12);
+  }
+  50%{
+    transform:translateY(-4px);
+    box-shadow:var(--shadow), 0 0 38px rgba(199,125,255,.18);
+  }
+  100%{
+    transform:translateY(0px);
+    box-shadow:var(--shadow), 0 0 30px rgba(199,125,255,.12);
+  }
+    }
 
     .top-actions{
       display:flex;
