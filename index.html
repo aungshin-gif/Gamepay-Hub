@@ -1033,6 +1033,22 @@
     const categories = ["All","AI","Editing","VPN","Gift","Music","Video","Social","Services"];
 
     const products = [
+      {
+  id: "guide",
+  name: "အသုံးပြုပုံ",
+  top: true,
+  subtitle: "Tap to view guide",
+  badge: "guide",
+  category: "Services",
+  iconType: "emoji",
+  icon: "📘",
+  search: "guide help tutorial အသုံးပြုပုံ",
+  description: "ဒီနေရာမှာ အသုံးပြုပုံ၊ ဝယ်ယူနည်း၊ plan ရွေးနည်းတွေ ကြည့်နိုင်ပါတယ်။",
+  isGuide: true,
+  plans: [
+    { name: "Guide Page", price: 0 }
+  ]
+},
 {
 id: "chatgpt",
 name: "ChatGPT",
@@ -1698,6 +1714,8 @@ plans: [
 
     const catalogView = document.getElementById("catalogView");
     const orderView = document.getElementById("orderView");
+    const guideView = document.getElementById("guideView");
+const guideBackBtn = document.getElementById("guideBackBtn");
     const productsEl = document.getElementById("products");
     const categoriesEl = document.getElementById("categories");
     const searchInput = document.getElementById("searchInput");
@@ -1804,6 +1822,13 @@ plans: [
     }
 
     function openOrder(product){
+      if(product.isGuide){
+    catalogView.classList.add("hidden");
+    orderView.classList.add("hidden");
+    guideView.classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+      }
       currentProduct = product;
       currentPlanIndex = 0;
       currentQty = 1;
@@ -1947,6 +1972,11 @@ if(plan.outOfStock){
 
     searchInput.addEventListener("input", renderProducts);
     backBtn.addEventListener("click", closeOrder);
+    guideBackBtn.addEventListener("click", () => {
+  guideView.classList.add("hidden");
+  catalogView.classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
     removeBtn.addEventListener("click", closeOrder);
     togglePlansBtn.addEventListener("click", () => {
       plansOpen = !plansOpen;
