@@ -359,14 +359,20 @@
       margin:0 auto;
     }
 
-    .panel{
-      background:rgba(28,0,43,.86);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:26px;
-      padding:18px;
-      box-shadow:var(--shadow), 0 0 30px rgba(199,125,255,.12);
-      text-align:left;
-    }
+.panel{
+  background:rgba(28,0,43,.86);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:26px;
+  padding:18px;
+  box-shadow:var(--shadow), 0 0 30px rgba(199,125,255,.12);
+  text-align:left;
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+
+.panel:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow), 0 0 36px rgba(199,125,255,.18);
+}
 
     .top-actions{
       display:flex;
@@ -986,7 +992,7 @@
 
     <div class="preview">
       <div class="preview-title">၂။ Own Mail ဟုတ်/မဟုတ် စစ်ပါ</div>
-      <div class="preview-box">Own Mail plan ဆိုရင် ကိုယ့် mail ထည့်ပါ။ မဟုတ်ရင် account / username ထည့်ပါ။</div>
+      <div class="preview-box">Own Mail plan ဆိုရင် ကိုယ့် mail ထည့်ပါ။ မဟုတ်ရင် ဘာမှမထည့်ပါနဲ့။</div>
     </div>
 
     <div class="preview">
