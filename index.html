@@ -569,7 +569,34 @@
     0 0 18px rgba(199,125,255,.18),
     0 0 20px rgba(255,179,71,.16);
 } 
+.discount-badge{
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  color: #fff;
+  background: linear-gradient(135deg, #00d4ff, #0099ff);
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow:
+    0 8px 18px rgba(0, 153, 255, .22),
+    0 0 16px rgba(0, 212, 255, .18);
+  white-space: nowrap;
+}
 
+.plan-option.discount{
+  border-color: rgba(0, 212, 255, .45);
+  box-shadow:
+    0 0 18px rgba(0, 212, 255, .12),
+    inset 0 0 0 1px rgba(255,255,255,.03);
+}
     .qty-row{
       margin-top:12px;
       display:flex;
@@ -1201,10 +1228,10 @@ plans: [
     { name: "Private Plan / Person Plan - 1 Year - 100000 Ks", price: 100000 },
 { name: "Private Plan / Person Plan - 1 Month - 20000 Ks", price: 20000 },
 // Discount (Multi profiles)
-{ name: "Private Plan - 1 Month (2 Profiles) - 17000 Ks / profile", price: 17000 },
-{ name: "Private Plan - 1 Month (3 Profiles) - 15000 Ks / profile", price: 15000,bestSeller:true },
-{ name: "Private Plan - 1 Month (4 Profiles) - 12000 Ks / profile", price: 12000 },
-{ name: "Private Plan - 1 Month (5 Profiles) - 10000 Ks / profile", price: 10000 },
+{ name: "Private Plan - 1 Month (2 Profiles) - 17000 Ks / profile", price: 17000,discount:true },
+{ name: "Private Plan - 1 Month (3 Profiles) - 15000 Ks / profile", price: 15000,discount:true },
+{ name: "Private Plan - 1 Month (4 Profiles) - 12000 Ks / profile", price: 12000,discount:true},
+{ name: "Private Plan - 1 Month (5 Profiles) - 10000 Ks / profile", price: 10000,discount:true },
     { name: "Own Mail - 1 Month - 50000 Ks", price: 50000 }
   ]
 },
@@ -1776,15 +1803,17 @@ plans: [
       if(plansOpen){
   currentProduct.plans.forEach((plan, index) => {
     const el = document.createElement("div");
-    el.className =
-      "plan-option" +
-      (index === currentPlanIndex ? " active" : "") +
-      (plan.bestSeller ? " best-seller" : "");
+   el.className =
+  "plan-option" +
+  (index === currentPlanIndex ? " active" : "") +
+  (plan.bestSeller ? " best-seller" : "") +
+  (plan.discount ? " discount" : ""); 
 
     el.innerHTML = `
-      ${plan.bestSeller ? '<span class="best-seller-badge">🔥 Best Seller</span>' : ''}
-      <div>${plan.name}</div>
-    `;
+  ${plan.discount ? '<span class="discount-badge">💸 Discount</span>' : ''}
+  ${plan.bestSeller ? '<span class="best-seller-badge">🔥 Best Seller</span>' : ''}
+  <div>${plan.name}</div>
+`;
 
     el.onclick = () => {
       currentPlanIndex = index;
