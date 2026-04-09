@@ -360,10 +360,22 @@
       font-size:12px;
       color:rgba(255,255,255,.68);
     }
-    .order-view{
-      width:min(760px,100%);
-      margin:0 auto;
-    }
+   .order-view{
+  width:min(760px,100%);
+  margin:0 auto;
+  animation:fadeInUp .3s ease;
+}
+
+@keyframes fadeInUp{
+  from{
+    opacity:0;
+    transform:translateY(12px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+} 
 
 .panel{
   background:rgba(28,0,43,.86);
@@ -1876,37 +1888,48 @@ const guideBackBtn = document.getElementById("guideBackBtn");
     }
 
     function openOrder(product){
-      if(product.isGuide){
+  if(product.isGuide){
+    window.scrollTo(0, 0);
+
     catalogView.classList.add("hidden");
     orderView.classList.add("hidden");
     guideView.classList.remove("hidden");
-    window.scrollTo({ top: 0, behavior: "smooth" });
     return;
-      }
-      currentProduct = product;
-      currentPlanIndex = 0;
-      currentQty = 1;
-      plansOpen = true;
-      activePayment = "";
-      accountInput.value = "";
-      noteInput.value = "";
-      appDescription.value = "";
+  }
 
-      catalogView.classList.add("hidden");
-      orderView.classList.remove("hidden");
+  currentProduct = product;
+  currentPlanIndex = 0;
+  currentQty = 1;
+  plansOpen = true;
+  activePayment = "";
+  accountInput.value = "";
+  noteInput.value = "";
+  appDescription.value = "";
 
-      renderOrder();
-      renderPayments();
-      updatePreview();
+  // 👉 FIRST scroll instantly
+  window.scrollTo(0, 0);
+
+  // 👉 THEN show view
+  catalogView.classList.add("hidden");
+  guideView.classList.add("hidden");
+  orderView.classList.remove("hidden");
+
+  renderOrder();
+  renderPayments();
+  updatePreview();
+    }
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
+function closeOrder(){
+  currentProduct = null;
 
-    function closeOrder(){
-      currentProduct = null;
-      catalogView.classList.remove("hidden");
-      orderView.classList.add("hidden");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+  window.scrollTo(0, 0);
+
+  orderView.classList.add("hidden");
+  guideView.classList.add("hidden");
+  catalogView.classList.remove("hidden");
+}
+    
 
     function renderOrder(){
       if(!currentProduct){
@@ -2027,6 +2050,7 @@ if(plan.outOfStock){
     searchInput.addEventListener("input", renderProducts);
     backBtn.addEventListener("click", closeOrder);
     guideBackBtn.addEventListener("click", () => {
+      window.scrollTo(0, 0);
   guideView.classList.add("hidden");
   catalogView.classList.remove("hidden");
   window.scrollTo({ top: 0, behavior: "smooth" });
