@@ -270,7 +270,7 @@
       display:flex;
       flex-direction:column;
       justify-content:space-between;
-        
+     animation:cardFloat 3.2s ease-in-out infinite;     
     }
 
     .card::before{
@@ -288,7 +288,11 @@
         0 16px 42px rgba(0,0,0,.42),
         0 0 30px rgba(199,125,255,.25);
     }
-    
+    @keyframes cardFloat{
+  0%{ transform:translateY(0); }
+  50%{ transform:translateY(-4px); }
+  100%{ transform:translateY(0); }
+    }
 
     .icon-wrap{
       width:78px;
