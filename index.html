@@ -270,7 +270,7 @@
       display:flex;
       flex-direction:column;
       justify-content:space-between;
-        animation:cardFloat 3s ease-in-out infinite;
+        
     }
 
     .card::before{
@@ -288,11 +288,7 @@
         0 16px 42px rgba(0,0,0,.42),
         0 0 30px rgba(199,125,255,.25);
     }
-    @keyframes cardFloat{
-  0%{ transform:translateY(0px); }
-  50%{ transform:translateY(-6px); }
-  100%{ transform:translateY(0px); }
-    }
+    
 
     .icon-wrap{
       width:78px;
@@ -384,21 +380,7 @@
   padding:18px;
   box-shadow:var(--shadow), 0 0 30px rgba(199,125,255,.12);
   text-align:left;
-  animation:panelFloat 3s ease-in-out infinite;
-}
-    @keyframes panelFloat{
-  0%{
-    transform:translateY(0px);
-    box-shadow:var(--shadow), 0 0 30px rgba(199,125,255,.12);
-  }
-  50%{
-    transform:translateY(-4px);
-    box-shadow:var(--shadow), 0 0 38px rgba(199,125,255,.18);
-  }
-  100%{
-    transform:translateY(0px);
-    box-shadow:var(--shadow), 0 0 30px rgba(199,125,255,.12);
-  }
+
     }
 
     .top-actions{
@@ -1978,12 +1960,7 @@ appDescription.value = descText;
 if(plan.outOfStock){
   el.onclick = null;
 } else {
-  el.onclick = () => {
-    currentPlanIndex = index;
-    renderOrder();
-    updatePreview();
-  };
-}
+
     el.onclick = () => {
       currentPlanIndex = index;
       renderOrder();
@@ -2052,8 +2029,7 @@ if(plan.outOfStock){
       window.scrollTo(0, 0);
   guideView.classList.add("hidden");
   catalogView.classList.remove("hidden");
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
+  
     removeBtn.addEventListener("click", closeOrder);
     togglePlansBtn.addEventListener("click", () => {
       plansOpen = !plansOpen;
