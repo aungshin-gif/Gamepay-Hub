@@ -1215,7 +1215,7 @@ plans: [
   iconType: "image",
   icon: "netflix-icon.png",
   search: "netflix premium 4k ultra hd hdr",
- description: "✅ 4K Ultra HD + HDR\n✅ Can activate in Myanmar\n✏️ Private Plan = Only 1 profile per account\n💙 Own Mail = Head account, Profile 5 users",
+ description: "Select plan to see details 👇",
  descriptionNormal: `⚠️ Limited Login Account
 
 ❗️တခါ Login ဝင်ပြီးတာနဲ့ Logout မလုပ်သင့်ပါ။
@@ -1779,7 +1779,7 @@ plans: [
       activePayment = "";
       accountInput.value = "";
       noteInput.value = "";
-      appDescription.value = product.description || "";
+      appDescription.value = "";
 
       catalogView.classList.add("hidden");
       orderView.classList.remove("hidden");
@@ -1805,7 +1805,10 @@ plans: [
 
       const selectedPlan = currentProduct.plans[currentPlanIndex];
       const amount = Number(selectedPlan.price) * currentQty;
-let descText = currentProduct.description || "";
+let descText =
+  currentProduct.descriptionNormal ||
+  currentProduct.description ||
+  "";
 
 if (selectedPlan.discount && currentProduct.descriptionDiscount) {
   descText = currentProduct.descriptionDiscount;
