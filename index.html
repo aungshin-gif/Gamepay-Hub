@@ -1215,7 +1215,22 @@ plans: [
   iconType: "image",
   icon: "netflix-icon.png",
   search: "netflix premium 4k ultra hd hdr",
-  description: "✅ 4K Ultra HD + HDR\n✅ Can activate in Myanmar\n✏️ Private Plan = Only 1 profile per account\n💙 Own Mail = Head account, Profile 5 users",
+ description: "✅ 4K Ultra HD + HDR\n✅ Can activate in Myanmar\n✏️ Private Plan = Only 1 profile per account\n💙 Own Mail = Head account, Profile 5 users",
+ descriptionNormal: `⚠️ Limited Login Account
+
+❗️တခါ Login ဝင်ပြီးတာနဲ့ Logout မလုပ်သင့်ပါ။
+‼️ခနခန Logout လုပ်ပါက Access ပြန်မရနိုင်ပါ‼️
+
+🔧 ပြဿနာဖြစ်ပါက supplier ကိုမေးပေးပါမယ်
+🌐 Reset / Password အသစ်ရဖို့ စောင့်ရနိုင်ပါတယ်`,
+descriptionDiscount: `🔥 Flexible Plan
+
+✅ Logout / Login အဆင်ပြေ
+✅ လစဉ် Renewal လုပ်လို့ရ
+✅ Group / Family အသုံးပြုနိုင်
+
+👥 Duo / Trio / Family အတွက် အကောင်းဆုံး
+💯 Stable & Error မရှိ အာမခံ`,
   plans: [
     { name: "Share Plan - 1 Month - 8000 Ks", price: 8000 },
     { name: "Share Plan - 3 Months - 15000 Ks", price: 15000 },
@@ -1790,7 +1805,15 @@ plans: [
 
       const selectedPlan = currentProduct.plans[currentPlanIndex];
       const amount = Number(selectedPlan.price) * currentQty;
+let descText = currentProduct.description || "";
 
+if (selectedPlan.discount && currentProduct.descriptionDiscount) {
+  descText = currentProduct.descriptionDiscount;
+} else if (!selectedPlan.discount && currentProduct.descriptionNormal) {
+  descText = currentProduct.descriptionNormal;
+}
+
+appDescription.value = descText;
       cartItem.classList.remove("hidden");
       cartName.textContent = currentProduct.name;
       cartPlanCurrent.textContent = selectedPlan.name;
