@@ -1955,7 +1955,7 @@ appDescription.value = descText;
 
       togglePlansBtn.textContent = plansOpen ? "Hide Plan Selection" : "Choose Plan";
       planList.innerHTML = "";
-
+planList.style.display = plansOpen ? "grid" : "none";
       if(plansOpen){
   currentProduct.plans.forEach((plan, index) => {
     const el = document.createElement("div");
