@@ -166,7 +166,7 @@
         inset 0 0 12px rgba(255,255,255,.08);
       backdrop-filter:blur(14px);
       -webkit-backdrop-filter:blur(14px);
-      transition:.25s ease;
+      transition:.3s ease;
     }
 
     .search-wrap input:focus{
@@ -198,6 +198,7 @@
       justify-content:center;
       margin-bottom:22px;
       padding:0 6px;
+      gap:12px;
     }
 
     .cat{
@@ -326,7 +327,9 @@
     0 10px 30px rgba(0,0,0,.35),
     0 0 18px rgba(199,125,255,.18);
    } 
-
+.card:active{
+  transform:scale(.97);
+}
     .card-name{
       font-size:16px;
       font-weight:800;
@@ -359,11 +362,12 @@
       box-shadow:0 0 12px rgba(166,255,203,.08);
     }
 
-    .price-from{
-      margin-top:10px;
-      font-size:12px;
-      color:rgba(255,255,255,.68);
-    }
+   .price-from{
+  margin-top:10px;
+  font-size:13px;
+  font-weight:800;
+  color:#fff;
+   } 
    .order-view{
   width:min(760px,100%);
   margin:0 auto;
