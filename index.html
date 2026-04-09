@@ -597,6 +597,36 @@
     0 0 18px rgba(0, 212, 255, .12),
     inset 0 0 0 1px rgba(255,255,255,.03);
 }
+    .out-stock-badge{
+  position:absolute;
+  top:-10px;
+  left:10px;
+  z-index:2;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.2px;
+  color:#fff;
+  background:linear-gradient(135deg,#ff4d6d,#c9184a);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:
+    0 8px 18px rgba(255,77,109,.22),
+    0 0 16px rgba(201,24,74,.18);
+  white-space:nowrap;
+}
+
+.plan-option.out-stock{
+  opacity:.55;
+  border-color:rgba(255,77,109,.45);
+  box-shadow:
+    0 0 18px rgba(255,77,109,.10),
+    inset 0 0 0 1px rgba(255,255,255,.03);
+  pointer-events:none;
+}
     .qty-row{
       margin-top:12px;
       display:flex;
@@ -1829,18 +1859,28 @@ appDescription.value = descText;
       if(plansOpen){
   currentProduct.plans.forEach((plan, index) => {
     const el = document.createElement("div");
-   el.className =
+  el.className =
   "plan-option" +
   (index === currentPlanIndex ? " active" : "") +
   (plan.bestSeller ? " best-seller" : "") +
-  (plan.discount ? " discount" : ""); 
+  (plan.discount ? " discount" : "") +
+  (plan.outOfStock ? " out-stock" : "");  
 
-    el.innerHTML = `
+   el.innerHTML = `
+  ${plan.outOfStock ? '<span class="out-stock-badge">⛔ Out of Stock</span>' : ''}
   ${plan.discount ? '<span class="discount-badge">💸 Discount</span>' : ''}
   ${plan.bestSeller ? '<span class="best-seller-badge">🔥 Best Seller</span>' : ''}
   <div>${plan.name}</div>
-`;
-
+`; 
+if(plan.outOfStock){
+  el.onclick = null;
+} else {
+  el.onclick = () => {
+    currentPlanIndex = index;
+    renderOrder();
+    updatePreview();
+  };
+}
     el.onclick = () => {
       currentPlanIndex = index;
       renderOrder();
