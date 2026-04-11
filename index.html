@@ -50,23 +50,21 @@
       overflow-x:hidden;
       scroll-behavior:smooth;
     }
-
-    body{
-      min-height:100vh;
-      font-family:Arial,Helvetica,sans-serif;
-      color:var(--text);
-      overflow-x:hidden;
-      background:
-        radial-gradient(circle at 18% 18%, rgba(255,255,255,.10) 0%, transparent 18%),
-        radial-gradient(circle at 82% 24%, rgba(199,125,255,.18) 0%, transparent 22%),
-        radial-gradient(circle at 50% 82%, rgba(121,242,255,.10) 0%, transparent 22%),
-        linear-gradient(135deg,#140022 0%,#25003f 24%,#4b0a80 55%,#8c33db 82%,#d76dff 100%);
-      background-size:200% 200%;
-      animation:none;
-      transform:translateZ(0);
-      will-change:transform;
-    }
-
+body{
+  min-height:100vh;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--text);
+  overflow-x:hidden;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255,255,255,.13) 0%, transparent 18%),
+    radial-gradient(circle at 82% 18%, rgba(213,140,255,.20) 0%, transparent 22%),
+    radial-gradient(circle at 50% 78%, rgba(243,184,255,.12) 0%, transparent 20%),
+    linear-gradient(135deg,#14001f 0%,#2a083f 28%,#4c1480 58%,#7a35c7 82%,#c78cff 100%);
+  background-size:200% 200%;
+  animation:none;
+  transform:translateZ(0);
+  will-change:transform;
+}
     @keyframes bgMove{
       0%{background-position:0% 50%;}
       50%{background-position:100% 50%;}
