@@ -2068,13 +2068,23 @@ if(plan.outOfStock){
       previewBox.textContent = preview || "No order preview yet.";
       orderBtn.disabled = !(currentProduct && activePayment);
     }
+async function openTelegramOrder(){
+  if(!currentProduct || !activePayment) return;
 
-    function openTelegramOrder(){
-      if(!currentProduct || !activePayment) return;
-      const message = buildTelegramMessage();
-      const telegramURL = "https://t.me/" + TELEGRAM_USERNAME + "?text=" + encodeURIComponent(message);
-      window.location.href = telegramURL;
+  const message = buildTelegramMessage();
+  const username = TELEGRAM_USERNAME.replace("@", "");
+  const telegramURL = "https://t.me/" + username + "?text=" + encodeURIComponent(message);
+
+  try{
+    await navigator.clipboard.writeText(message);
+    alert("Order text copied. Telegram မှာ auto မပါရင် paste လုပ်လိုက်ပါ။");
+  }catch(e){
+    console.log("Copy failed:", e);
+  }
+
+  window.location.href = telegramURL;
     }
+    
 
     searchInput.addEventListener("input", renderProducts);
     backBtn.addEventListener("click", closeOrder);
@@ -2215,6 +2225,7 @@ window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 animateParticles();
 </script>
+  
   const canvas = document.getElementById("particles");
   const ctx = canvas.getContext("2d");
 
