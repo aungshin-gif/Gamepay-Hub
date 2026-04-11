@@ -62,18 +62,16 @@ body{
   color:var(--text);
   overflow-x:hidden;
   background:
-    radial-gradient(circle at 15% 20%, rgba(255,255,255,.13) 0%, transparent 18%),
-    radial-gradient(circle at 82% 18%, rgba(213,140,255,.20) 0%, transparent 22%),
-    radial-gradient(circle at 50% 78%, rgba(243,184,255,.12) 0%, transparent 20%),
-  linear-gradient(135deg,
-  #12001d 0%,
-  #200033 28%,
-  #3a0066 58%,
-  #5a1a99 82%,
-  #6e2bb8 100%);
-  background-size:200% 200%;
-  animation:none;
-  
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.18) 0%, transparent 16%),
+    radial-gradient(circle at 80% 20%, rgba(220,160,255,.18) 0%, transparent 20%),
+    radial-gradient(circle at 50% 78%, rgba(190,140,255,.14) 0%, transparent 24%),
+    linear-gradient(135deg,
+      #1a0028 0%,
+      #34104f 28%,
+      #5a1a86 58%,
+      #7a35c7 82%,
+      #b57cff 100%);
+  background-attachment:fixed;
 }
     @keyframes bgMove{
       0%{background-position:0% 50%;}
@@ -87,8 +85,7 @@ body{
   height:100%;
   z-index:0;
   pointer-events:none;
-  opacity:.92;
-  filter:blur(0);
+  opacity:.95;
 }
    
 
@@ -2108,7 +2105,116 @@ if(plan.outOfStock){
     renderCategories();
     renderProducts();
     renderPayments();
-    
+  
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+let particles = [];
+let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+function resizeCanvas() {
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  canvas.width = Math.floor(window.innerWidth * dpr);
+  canvas.height = Math.floor(window.innerHeight * dpr);
+
+  canvas.style.width = window.innerWidth + "px";
+  canvas.style.height = window.innerHeight + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  initParticles();
+}
+
+function initParticles() {
+  particles = [];
+
+  const isMobile = window.innerWidth < 768;
+  const count = isMobile ? 55 : 95;
+
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      size: Math.random() * 1.8 + 0.5,
+      speedY: Math.random() * 0.22 + 0.05,
+      speedX: (Math.random() - 0.5) * 0.12,
+      alpha: Math.random() * 0.5 + 0.2,
+      twinkle: Math.random() * 0.03 + 0.01,
+      glow: Math.random() * 10 + 6,
+      type: Math.random() > 0.82 ? "star" : "dot"
+    });
+  }
+}
+
+function drawDot(p) {
+  ctx.beginPath();
+  ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
+  ctx.shadowBlur = p.glow;
+  ctx.shadowColor = "rgba(220,160,255,.9)";
+  ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawStar(p) {
+  ctx.save();
+  ctx.translate(p.x, p.y);
+
+  ctx.strokeStyle = `rgba(255,245,255,${p.alpha})`;
+  ctx.lineWidth = 1;
+  ctx.shadowBlur = p.glow + 4;
+  ctx.shadowColor = "rgba(230,170,255,.95)";
+
+  ctx.beginPath();
+  ctx.moveTo(-p.size * 2, 0);
+  ctx.lineTo(p.size * 2, 0);
+  ctx.moveTo(0, -p.size * 2);
+  ctx.lineTo(0, p.size * 2);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function updateParticle(p) {
+  p.y += p.speedY;
+  p.x += p.speedX;
+
+  p.alpha += p.twinkle;
+  if (p.alpha >= 0.9 || p.alpha <= 0.18) {
+    p.twinkle *= -1;
+  }
+
+  if (p.y > window.innerHeight + 10) {
+    p.y = -10;
+    p.x = Math.random() * window.innerWidth;
+  }
+
+  if (p.x < -10) p.x = window.innerWidth + 10;
+  if (p.x > window.innerWidth + 10) p.x = -10;
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    updateParticle(p);
+
+    if (p.type === "star") {
+      drawStar(p);
+    } else {
+      drawDot(p);
+    }
+  }
+
+  requestAnimationFrame(animateParticles);
+}
+
+window.addEventListener("resize", resizeCanvas);
+
+resizeCanvas();
+animateParticles();
+</script>
   const canvas = document.getElementById("particles");
   const ctx = canvas.getContext("2d");
 
@@ -2183,100 +2289,6 @@ const brightCount = isMobile ? 15 : 26;
       ctx.shadowColor = "rgba(157,78,221,.65)";
     }
 
-    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  function connectParticles() {
-    for (let a = 0; a < particles.length; a++) {
-      for (let b = a + 1; b < particles.length; b++) {
-        const p1 = particles[a];
-        const p2 = particles[b];
-
-        const dx = p1.x - p2.x;
-        const dy = p1.y - p2.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        const maxDist = p1.layer === "bright" || p2.layer === "bright" ? 120 : 90;
-
-        if (dist < maxDist) {
-          const opacity = (1 - dist / maxDist) * (p1.layer === "bright" || p2.layer === "bright" ? 0.45 : 0.22);
-
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(255, 100, 255, ${opacity})`;
-          ctx.lineWidth = p1.layer === "bright" || p2.layer === "bright" ? 1.4 : 1.9;
-          ctx.shadowBlur = 8 ;
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.stroke();
-        }
-      }
-    }
-  }
-
-  function updateParticle(p) {
-    p.x += p.vx;
-    p.y += p.vy;
-
-    // soft wall bounce
-    if (p.x <= 0 || p.x >= window.innerWidth) p.vx *= -1;
-    if (p.y <= 0 || p.y >= window.innerHeight) p.vy *= -1;
-
-    // smooth mouse repulsion
-    if (mouse.x !== null && mouse.y !== null) {
-      const dx = p.x - mouse.x;
-      const dy = p.y - mouse.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (dist < mouse.radius && dist > 0.001) {
-        const force = (mouse.radius - dist) / mouse.radius;
-        const angleX = dx / dist;
-        const angleY = dy / dist;
-
-        p.x += angleX * force * 0.9;
-        p.y += angleY * force * 0.9;
-      }
-    }
-  }
-
-  function animateParticles() {
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-    for (let i = 0; i < particles.length; i++) {
-      updateParticle(particles[i]);
-      drawParticle(particles[i]);
-    }
-
-    connectParticles();
-    requestAnimationFrame(animateParticles);
-  }
-
-  window.addEventListener("resize", resizeCanvas);
-
-  window.addEventListener("mousemove", e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
-
-  window.addEventListener("touchmove", e => {
-    if (e.touches.length) {
-      mouse.x = e.touches[0].clientX;
-      mouse.y = e.touches[0].clientY;
-    }
-  }, { passive: true });
-
-  window.addEventListener("touchend", () => {
-    mouse.x = null;
-    mouse.y = null;
-  });
-
-  window.addEventListener("mouseleave", () => {
-    mouse.x = null;
-    mouse.y = null;
-  });
-
-  resizeCanvas();
-  animateParticles();
 </script>
     
 </body>
