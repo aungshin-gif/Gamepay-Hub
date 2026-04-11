@@ -2170,12 +2170,12 @@ if(plan.outOfStock){
         const maxDist = p1.layer === "bright" || p2.layer === "bright" ? 165 : 125;
 
         if (dist < maxDist) {
-          const opacity = (1 - dist / maxDist) * (p1.layer === "bright" || p2.layer === "bright" ? 0.30 : 0.16);
+          const opacity = (1 - dist / maxDist) * (p1.layer === "bright" || p2.layer === "bright" ? 0.45 : 0.22);
 
           ctx.beginPath();
-          ctx.strokeStyle = `rgba(210, 150, 255, ${opacity})`;
-          ctx.lineWidth = p1.layer === "bright" || p2.layer === "bright" ? 1.1 : 0.7;
-          ctx.shadowBlur = 0;
+          ctx.strokeStyle = `rgba(255, 100, 255, ${opacity})`;
+          ctx.lineWidth = p1.layer === "bright" || p2.layer === "bright" ? 1.4 : 1.9;
+          ctx.shadowBlur = 22 ;
           ctx.moveTo(p1.x, p1.y);
           ctx.lineTo(p2.x, p2.y);
           ctx.stroke();
