@@ -2075,13 +2075,16 @@ function openTelegramOrder(){
   const username = TELEGRAM_USERNAME.replace("@", "");
   const telegramURL = "https://t.me/" + username + "?text=" + encodeURIComponent(message);
 
-  const ok = confirm(
-    "Telegram app ပွင့်ပြီး admin chat ထဲ order message အလိုအလျောက်ထည့်ပေးပါမယ်.\n\nContinue?"
-  );
+  // copy message first
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(message).catch(() => {});
+  }
 
-  if(!ok) return;
+  // open Telegram in new tab / external
+  window.open(telegramURL, "_blank");
 
-  window.location.href = telegramURL;
+  // optional notice
+  alert("Telegram chat opened.\nIf message does not appear, paste the copied order manually.");
 }
     
 
