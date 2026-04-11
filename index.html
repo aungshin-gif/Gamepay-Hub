@@ -199,27 +199,35 @@ body{
       padding:0 6px;
       gap:12px;
     }
-
 .cat{
   padding:10px 16px;
   border-radius:999px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(199,125,255,.14);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03)),
+    rgba(76,20,128,.28);
+  border:1px solid rgba(224,180,255,.18);
   cursor:pointer;
   user-select:none;
   font-size:13px;
   transition:.22s ease;
-  box-shadow:0 0 10px rgba(199,125,255,.06);
-  color:rgba(255,255,255,.84);
+  box-shadow:
+    0 0 10px rgba(199,125,255,.06),
+    inset 0 1px 0 rgba(255,255,255,.06);
+  color:rgba(255,255,255,.88);
 }
 
 .cat:hover,
 .cat.active{
   transform:translateY(-2px);
-  background:linear-gradient(180deg, rgba(140,51,219,.28), rgba(75,10,128,.26));
-  border-color:rgba(255,120,255,.36);
-  box-shadow:0 0 18px rgba(199,125,255,.16);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.04)),
+    linear-gradient(180deg, rgba(154,82,235,.42), rgba(88,25,150,.34));
+  border-color:rgba(245,195,255,.34);
+  box-shadow:
+    0 0 18px rgba(213,140,255,.16),
+    inset 0 1px 0 rgba(255,255,255,.08);
 }
+
 
     .hidden{
       display:none !important;
