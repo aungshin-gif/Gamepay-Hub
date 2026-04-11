@@ -43,19 +43,21 @@
       box-sizing:border-box;
       -webkit-tap-highlight-color:transparent;
     }
-html,body{
+html,
+body{
   width:100%;
   max-width:100%;
+  margin:0;
+  padding:0;
   overflow-x:hidden;
+  overflow-y:auto;
   scroll-behavior:auto;
   background:#12001d;
-  overscroll-behavior:none;
+  -webkit-overflow-scrolling:touch;
 }
     
 body{
   min-height:100vh;
-position:relative;
-isolation:isolate;
   font-family:Arial,Helvetica,sans-serif;
   color:var(--text);
   overflow-x:hidden;
