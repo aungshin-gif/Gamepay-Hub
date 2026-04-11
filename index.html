@@ -2075,16 +2075,26 @@ function openTelegramOrder(){
   const username = TELEGRAM_USERNAME.replace("@", "");
   const telegramURL = "https://t.me/" + username + "?text=" + encodeURIComponent(message);
 
-  // copy message first
+  const fallbackCopy = () => {
+    const ta = document.createElement("textarea");
+    ta.value = message;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+  };
+
   if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(message).catch(() => {});
+    navigator.clipboard.writeText(message).catch(fallbackCopy);
+  } else {
+    fallbackCopy();
   }
 
-  // open Telegram in new tab / external
   window.open(telegramURL, "_blank");
 
-  // optional notice
-  alert("Telegram chat opened.\nIf message does not appear, paste the copied order manually.");
+  setTimeout(() => {
+    alert("Order message copied.\nTelegram မှာ auto မပေါ်ရင် paste လုပ်ပေးပါ။");
+  }, 300);
 }
     
 
