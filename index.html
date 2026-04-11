@@ -255,21 +255,25 @@ body{
   backdrop-filter:blur(6px);
   -webkit-backdrop-filter:blur(6px);
 }
-    .card{
+.card{
   width:100%;
   max-width:220px;
   position:relative;
   border-radius:22px;
   padding:18px 14px 16px;
   cursor:pointer;
+
   background:
-    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05)),
-    linear-gradient(180deg, rgba(84,20,128,.72), rgba(35,8,60,.84));
-  border:1px solid rgba(224,180,255,.18);
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+    linear-gradient(180deg, rgba(70,18,110,.72), rgba(30,6,50,.88));
+
+  border:1px solid rgba(200,140,255,.16);
+
   box-shadow:
-    0 14px 34px rgba(20,0,35,.22),
-    0 0 18px rgba(199,125,255,.10),
-    inset 0 1px 0 rgba(255,255,255,.08);
+    0 12px 28px rgba(15,0,25,.28),
+    0 0 12px rgba(199,125,255,.06),
+    inset 0 1px 0 rgba(255,255,255,.04);
+
   transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease;
   overflow:hidden;
   min-height:230px;
@@ -278,24 +282,25 @@ body{
   justify-content:space-between;
   animation:none;
   gap:10px;
-    }
+}
 .card::before{
   content:"";
   position:absolute;
   inset:0;
   background:
-    radial-gradient(circle at top left, rgba(255,255,255,.14), transparent 28%),
-    linear-gradient(135deg, rgba(255,255,255,.04), transparent 45%, rgba(213,140,255,.08));
+    radial-gradient(circle at top left, rgba(255,255,255,.08), transparent 32%),
+    linear-gradient(135deg, rgba(255,255,255,.02), transparent 50%, rgba(213,140,255,.05));
   pointer-events:none;
 }
 
 .card:hover{
-  transform:translateY(-6px) scale(1.01);
-  border-color:rgba(240,190,255,.34);
+  transform:translateY(-5px) scale(1.01);
+  border-color:rgba(220,160,255,.28);
+
   box-shadow:
-    0 14px 34px rgba(20,0,35,.28),
-    0 0 24px rgba(213,140,255,.16),
-    inset 0 1px 0 rgba(255,255,255,.08);
+    0 14px 32px rgba(15,0,25,.34),
+    0 0 18px rgba(199,125,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.06);
 }
     
     @keyframes cardFloat{
