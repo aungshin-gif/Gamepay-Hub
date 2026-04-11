@@ -2104,7 +2104,7 @@ if(plan.outOfStock){
     particles = [];
 
     const isMobile = window.innerWidth < 768;
-    const baseCount = isMobile ? 52 : 88;
+    const baseCount = isMobile ? 28 : 60;
     const brightCount = isMobile ? 18 : 28;
 
     // soft background particles
@@ -2167,7 +2167,7 @@ if(plan.outOfStock){
         const dy = p1.y - p2.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        const maxDist = p1.layer === "bright" || p2.layer === "bright" ? 165 : 125;
+        const maxDist = p1.layer === "bright" || p2.layer === "bright" ? 120 : 90;
 
         if (dist < maxDist) {
           const opacity = (1 - dist / maxDist) * (p1.layer === "bright" || p2.layer === "bright" ? 0.45 : 0.22);
@@ -2175,7 +2175,7 @@ if(plan.outOfStock){
           ctx.beginPath();
           ctx.strokeStyle = `rgba(255, 100, 255, ${opacity})`;
           ctx.lineWidth = p1.layer === "bright" || p2.layer === "bright" ? 1.4 : 1.9;
-          ctx.shadowBlur = 22 ;
+          ctx.shadowBlur = 8 ;
           ctx.moveTo(p1.x, p1.y);
           ctx.lineTo(p2.x, p2.y);
           ctx.stroke();
