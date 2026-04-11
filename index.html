@@ -2068,22 +2068,21 @@ if(plan.outOfStock){
       previewBox.textContent = preview || "No order preview yet.";
       orderBtn.disabled = !(currentProduct && activePayment);
     }
-async function openTelegramOrder(){
+function openTelegramOrder(){
   if(!currentProduct || !activePayment) return;
 
   const message = buildTelegramMessage();
   const username = TELEGRAM_USERNAME.replace("@", "");
   const telegramURL = "https://t.me/" + username + "?text=" + encodeURIComponent(message);
 
-  try{
-    await navigator.clipboard.writeText(message);
-    alert("Order text copied. Telegram မှာ auto မပါရင် paste လုပ်လိုက်ပါ။");
-  }catch(e){
-    console.log("Copy failed:", e);
-  }
+  const ok = confirm(
+    "Telegram app ပွင့်ပြီး admin chat ထဲ order message အလိုအလျောက်ထည့်ပေးပါမယ်.\n\nContinue?"
+  );
+
+  if(!ok) return;
 
   window.location.href = telegramURL;
-    }
+}
     
 
     searchInput.addEventListener("input", renderProducts);
