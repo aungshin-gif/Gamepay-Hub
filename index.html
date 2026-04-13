@@ -1148,44 +1148,35 @@ body{
     { name: "Guide Page", price: 0 }
   ]
 },
-{
-id: "chatgpt",
-name: "ChatGPT",
-top: true,
-subtitle: "Tap to see prices",
-badge: "available",
-category: "AI",
-iconType:"image",
-icon: "chatgpt-icon.png",
-search: "chatgpt openai ai",
-description: `
-⚠️ Unstable ChatGPT Plus
+      {
+  id: "chatgpt",
+  name: "ChatGPT",
+  top: true,
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "AI",
+  iconType: "image",
+  icon: "chatgpt-icon.png",
+  search: "chatgpt openai ai",
+  description: "⚠️ ဒီ Plan က Unstable ဖြစ်နိုင်ပါတယ်။\n✔️ ဈေးသက်သာပါတယ်\n✔️ 20 ရက် Warranty ပါ\n❗️ တစ်ခါတစ်လေ Plus ပြုတ်နိုင်ပါတယ်\n🔄 ပြုတ်သွားပါက ပြန်လဲပေးပါမယ်\n\n🔥 Stable Plan\n✔️ 1 လလုံး အာမခံပါတယ်\n✔️ History မပျောက်ပါ\n✔️ Data မပျောက်ပါ\n✔️ Renew လုပ်နိုင်ပါတယ်\n✔️ ပိုပြီး Smooth ဖြစ်ပါတယ်\n\n💥 ChatGPT GO\n✔️ 1 Year Plan (Share / Private) ရရှိနိုင်ပါတယ်",
+  plans: [
 
-⚠️ Plus ပြုတ်နိုင်ပါတယ်
-💬 အတိကျမပြောနိုင်ပါ
-🛍 ပြုတ်ရင်ပြန်လဲပေးပါတယ်
+    // 🔸 Unstable Plans
+    { name: "Plus Share (Unstable) - 10000 Ks", price: 10000 },
+    { name: "Plus Private (Unstable) - 12500 Ks", price: 12500,bestSeller:true },
+    { name: "Plus Own Mail (Unstable) - 14000 Ks", price: 14000 },
 
-🔥 Stable ChatGPT Plus
+    // 🔸 Stable Plans
+    { name: "Plus Private (Stable) - 25000 Ks", price: 25000, bestSeller: true },
+    { name: "Plus Own Mail (Stable) - 26000 Ks", price: 26000 },
+    { name: "Plus Renew 1 Month (Stable) - 28000 Ks", price: 28000 },
 
-✔️ 1 လ အာမခံ
-✔️ History မပျောက်
-✔️ Data မပျောက်
-✔️ Renew ရ
-`,
-plans: [
-  { name:"Plus Share (Unstable) - 10000 Ks", price:7500 },
-  { name:"Plus Private (Unstable) - 9000 Ks", price:9000 },
-  { name:"Plus Own Mail (Unstable) - 11000 Ks", price:11000 },
+    // 🔸 ChatGPT GO
+    { name: "GO Share - 1 Year - 28000 Ks", price: 28000 },
+    { name: "GO Private - 1 Year - 35000 Ks", price: 35000 }
 
-  { name:"Plus Share (Stable) - 21000 Ks", price:21000, bestSeller:true },
-  { name:"Plus Private (Stable) - 24000 Ks", price:24000 },
-  { name:"Plus Own Mail (Stable) - 25000 Ks", price:25000 },
-
-  { name:"Pro Share - 16000 Ks", price:16000 },
-  { name:"Pro Private - 23000 Ks", price:23000 }
-]
-
-},
+  ]
+      },
 
 {
 id: "spotify",
