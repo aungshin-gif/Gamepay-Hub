@@ -1631,6 +1631,7 @@ plans: [
   iconType: "image",
   icon: "1000_F_1535651940_vg2Yd6yUBMgpL49j6H9FTK7Y111hHCmk.jpg",
   search: "tiktok coins promote",
+  minAmount: 100 // 👉 Minimum",
   description: "🪙Coin မဝယ်သူများအတွက် Video Link ပေးရုံဖြင့် 1$ မှစ၍ Promote လုပ်နိုင်ပါသည်🔥",
   plans: [
     // TikTok Coins
@@ -2022,7 +2023,9 @@ appDescription.value = descText;
       if(selectedPlan.custom){
   customBox.classList.add("show");
   customAmountInput.placeholder = `Enter ${selectedPlan.unit || "amount"}...`;
-  customHint.textContent = `Rate: ${formatKs(selectedPlan.price)} / ${selectedPlan.baseAmount} ${selectedPlan.unit || ""}`;
+customHint.textContent =
+  `Min: ${selectedPlan.minAmount || selectedPlan.baseAmount} ${selectedPlan.unit || ""}
+Rate: ${formatKs(selectedPlan.price)} / ${selectedPlan.baseAmount} ${selectedPlan.unit || ""}`;  
 } else {
   customBox.classList.remove("show");
   customAmountInput.value = "";
@@ -2074,10 +2077,25 @@ if(plan.outOfStock){
 
   const selectedPlan = currentProduct.plans[currentPlanIndex];
       let customAmount = Number(customAmountInput.value || 0);
-let total = Number(selectedPlan.price) * currentQty;
+
+// ✅ Minimum
+if(selectedPlan.custom){
+const min =
+  selectedPlan.minAmount ||
+  currentProduct.minAmount ||   // 👈 ဒီ line ထည့်
+  selectedPlan.baseAmount ||
+  1;
+
+  if(customAmount < min){
+    customAmount = min;
+    customAmountInput.value = min;
+  }
+}
+
+let amount = Number(selectedPlan.price) * currentQty;
 
 if(selectedPlan.custom && customAmount > 0){
-  total = Math.ceil((customAmount / Number(selectedPlan.baseAmount)) * Number(selectedPlan.price));
+  amount = Math.ceil((customAmount / Number(selectedPlan.baseAmount)) * Number(selectedPlan.price));
 }
   const payInfo = paymentAccounts[activePayment];
 
