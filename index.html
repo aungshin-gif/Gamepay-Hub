@@ -2023,9 +2023,19 @@ appDescription.value = descText;
       if(selectedPlan.custom){
   customBox.classList.add("show");
   customAmountInput.placeholder = `Enter ${selectedPlan.unit || "amount"}...`;
+let min = selectedPlan.minAmount || currentProduct.minAmount || selectedPlan.baseAmount || 1;
+
+if(selectedPlan.unit === "USD Promote"){
+  min = 1;
+}
+
+if(selectedPlan.unit === "Coins"){
+  min = 100;
+}
+
 customHint.textContent =
-  `Min: ${selectedPlan.minAmount || selectedPlan.baseAmount} ${selectedPlan.unit || ""}
-Rate: ${formatKs(selectedPlan.price)} / ${selectedPlan.baseAmount} ${selectedPlan.unit || ""}`;  
+  `Min: ${min} ${selectedPlan.unit || ""}
+Rate: ${formatKs(selectedPlan.price)} / ${selectedPlan.baseAmount} ${selectedPlan.unit || ""}`;
 } else {
   customBox.classList.remove("show");
   customAmountInput.value = "";
@@ -2080,11 +2090,15 @@ if(plan.outOfStock){
 
 // ✅ Minimum
 if(selectedPlan.custom){
-const min =
-  selectedPlan.minAmount ||
-  currentProduct.minAmount ||   // 👈 ဒီ line ထည့်
-  selectedPlan.baseAmount ||
-  1;
+let min = selectedPlan.minAmount || currentProduct.minAmount || selectedPlan.baseAmount || 1;
+
+if(selectedPlan.unit === "USD Promote"){
+  min = 1;
+}
+
+if(selectedPlan.unit === "Coins"){
+  min = 100;
+}
 
   if(customAmount < min){
     customAmount = min;
