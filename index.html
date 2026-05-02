@@ -898,6 +898,10 @@ body{
   font-size:12px;
   color:rgba(255,255,255,.68);
 }
+    .custom-hint.error{
+  color:#ff6b6b;
+  font-weight:800;
+    }
     /* FAQ START */
 .faq-wrap{
   width:100%;
@@ -2023,19 +2027,14 @@ appDescription.value = descText;
       if(selectedPlan.custom){
   customBox.classList.add("show");
   customAmountInput.placeholder = `Enter ${selectedPlan.unit || "amount"}...`;
-let min = selectedPlan.minAmount || currentProduct.minAmount || selectedPlan.baseAmount || 1;
+let min = selectedPlan.unit === "USD Promote" ? 1 : 100;
+let isInvalid = customAmount > 0 && customAmount < min;
 
-if(selectedPlan.unit === "USD Promote"){
-  min = 1;
-}
+customHint.classList.toggle("error", isInvalid);
 
-if(selectedPlan.unit === "Coins"){
-  min = 100;
-}
-
-customHint.textContent =
-  `Min: ${min} ${selectedPlan.unit || ""}
-Rate: ${formatKs(selectedPlan.price)} / ${selectedPlan.baseAmount} ${selectedPlan.unit || ""}`;
+customHint.textContent = isInvalid
+  ? `❌ Minimum: ${min} ${selectedPlan.unit || ""}`
+  : `Min: ${min} ${selectedPlan.unit || ""} Rate: ${formatKs(selectedPlan.price)} / ${selectedPlan.baseAmount} ${selectedPlan.unit || ""}`;
 } else {
   customBox.classList.remove("show");
   customAmountInput.value = "";
@@ -2100,10 +2099,7 @@ if(selectedPlan.unit === "Coins"){
   min = 100;
 }
 
-  if(customAmount < min){
-    customAmount = min;
-    customAmountInput.value = min;
-  }
+
 }
 
 let amount = Number(selectedPlan.price) * currentQty;
@@ -2142,12 +2138,17 @@ if(selectedPlan.custom && customAmount > 0){
 
   return msg.trim();
     }
+function updatePreview(){
+  const selectedPlan = currentProduct?.plans[currentPlanIndex];
+  const customAmount = Number(customAmountInput.value || 0);
+  const min = selectedPlan?.unit === "USD Promote" ? 1 : 100;
+  const invalidCustom = selectedPlan?.custom && customAmount > 0 && customAmount < min;
 
-    function updatePreview(){
-      const preview = buildTelegramMessage();
-      previewBox.textContent = preview || "No order preview yet.";
-      orderBtn.disabled = !(currentProduct && activePayment);
-    }
+  const preview = buildTelegramMessage();
+  previewBox.textContent = preview || "No order preview yet.";
+  orderBtn.disabled = !(currentProduct && activePayment) || invalidCustom;
+}
+    
 function openTelegramOrder(){
   if(!currentProduct || !activePayment) return;
 
