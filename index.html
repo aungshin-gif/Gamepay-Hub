@@ -2169,13 +2169,18 @@ function openTelegramOrder(){
       updatePreview();
     });
     accountInput.addEventListener("input", updatePreview);
-    noteInput.addEventListener("input", updatePreview);
-    customAmountInput.addEventListener("input", () => {
-    orderBtn.addEventListener("click", openTelegramOrder);
+noteInput.addEventListener("input", updatePreview);
 
-    renderCategories();
-    renderProducts();
-    renderPayments();
+customAmountInput.addEventListener("input", () => {
+  renderOrder();
+  updatePreview();
+});
+
+orderBtn.addEventListener("click", openTelegramOrder);
+
+renderCategories();
+renderProducts();
+renderPayments();
   
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
