@@ -569,26 +569,55 @@ body{
   margin-top:10px;
 }
 
-
-   .plan-option{
+.plan-option{
   position: relative;
-  padding: 14px 10px 10px;
+  padding: 14px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.08);
-  background: rgba(255,255,255,.04);
+
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.05);
+
   cursor: pointer;
-  font-size: 12px;
-  line-height: 1.45;
+
+  font-size: 14.5px;     /* 🔥 bigger */
+  font-weight: 700;      /* 🔥 bold */
+  line-height: 1.5;
+
+  color: rgba(255,255,255,0.95);  /* 🔥 brighter white */
+
+  text-shadow:
+    0 0 6px rgba(255,255,255,.3),
+    0 0 12px rgba(199,125,255,.25); /* 🔥 neon glow */
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
   transition: .2s ease;
   overflow: visible;
 }
-
 .plan-option.active{
-  background: rgba(199,125,255,.15);
-  border-color: rgba(199,125,255,.42);
-  box-shadow: 0 0 18px rgba(199,125,255,.18);
-  outline:2px solid rgba(199,125,255,.6);
+  background: linear-gradient(
+    180deg,
+    rgba(199,125,255,.18),
+    rgba(255,255,255,.05)
+  );
+
+  border-color: rgba(220,160,255,.55);
+
+  box-shadow:
+    0 0 16px rgba(199,125,255,.25),
+    0 0 30px rgba(199,125,255,.18);
+
+  outline: 2px solid rgba(199,125,255,.6);
+
+  color: #ffffff;
+
+  text-shadow:
+    0 0 10px rgba(255,255,255,.6),
+    0 0 20px rgba(199,125,255,.6); /* 🔥 strong glow */
 }
+
+
 
 .plan-option.best-seller{
   border-color: rgba(255, 196, 87, .38);
