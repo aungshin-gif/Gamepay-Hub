@@ -2167,9 +2167,9 @@ planList.style.display = plansOpen ? "grid" : "none";
   (plan.outOfStock ? " out-stock" : "");  
 
    // plan.name ထဲက (Stable|Unstable|⚡Instant|🕰️Waiting Time) ကိုခွဲထုတ်
-// ✅ Extract Stable / Unstable / Instant / Waiting / Share / Private / Own Mail
-let nameText = plan.name.replace(/\((Stable|Unstable|⚡Instant|🕰️Waiting Time|👥Share|🔐Private|✉️Own Mail)\)/g,'').trim();
-let subLabelMatch = plan.name.match(/\((Stable|Unstable|⚡Instant|🕰️Waiting Time|👥Share|🔐Private|✉️Own Mail)\)/);
+// 🔹 လျှော့ပြီး Stable/Unstable/Instant/Waiting Time အရသာ extract
+let nameText = plan.name.replace(/\((Stable|Unstable|⚡Instant|🕰️Waiting Time)\)/g,'').trim();
+let subLabelMatch = plan.name.match(/\((Stable|Unstable|⚡Instant|🕰️Waiting Time)\)/);
 let subLabel = subLabelMatch ? subLabelMatch[1] : '';
 el.innerHTML = `
   ${plan.outOfStock ? '<span class="out-stock-badge">⛔ Out of Stock</span>' : ''}
