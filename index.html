@@ -884,6 +884,20 @@ body{
 .categories {
   position: relative;   /* instead of transform */
 }
+    .custom-box{
+  margin-top:12px;
+  display:none;
+}
+
+.custom-box.show{
+  display:block;
+}
+
+.custom-hint{
+  margin-top:6px;
+  font-size:12px;
+  color:rgba(255,255,255,.68);
+}
     /* FAQ START */
 .faq-wrap{
   width:100%;
@@ -987,6 +1001,12 @@ body{
 
           <button id="togglePlansBtn" class="plan-toggle">Hide Plan Selection</button>
           <div id="planList" class="plan-list"></div>
+          
+          <div id="customBox" class="custom-box">
+  <div class="field-title">Custom Amount</div>
+  <input id="customAmountInput" class="input" type="number" min="1" placeholder="Enter amount..." />
+  <div id="customHint" class="custom-hint"></div>
+          </div>
 
           <div class="qty-row">
             <div class="qty-box">
@@ -1614,20 +1634,11 @@ plans: [
   description: "🪙Coin မဝယ်သူများအတွက် Video Link ပေးရုံဖြင့် 1$ မှစ၍ Promote လုပ်နိုင်ပါသည်🔥",
   plans: [
     // TikTok Coins
-    { name: "🪙 Coin 100 - 5200 Ks", price: 5200 },
-    { name: "🪙 Coin 200 - 10400 Ks", price: 10400 },
-    { name: "🪙 Coin 500 - 26000 Ks", price: 26000 },
-    { name: "🪙 Coin 1000 - 52000 Ks", price: 52000 },
-    { name: "🪙 Coin 2000 - 104000 Ks", price: 104000 },
-    { name: "🪙 Coin 3000 - 157000 Ks", price: 157000 },
-    { name: "🪙 Coin 4000 - 210000 Ks", price: 210000 },
+    { name: "🪙 Coin 100 - 5200 Ks", price: 5200, custom: true, baseAmount: 100, unit: "Coins" },
 
     // TikTok Promote
-    { name: "🔥📈 TikTok Promote - 1$ - 6000 Ks", price: 6000 },
-    { name: "🔥📈 TikTok Promote - 2$ - 12000 Ks", price: 12000 },
-    { name: "🔥📈 TikTok Promote - 3$ - 17000 Ks", price: 17000 },
-    { name: "🔥📈 TikTok Promote - 4$ - 23000 Ks", price: 23000 },
-    { name: "🔥📈 TikTok Promote - 5$ - 28000 Ks", price: 28000 }
+    { name: "🔥📈 TikTok Promote - 1$ - 6000 Ks", price: 6000, custom: true, baseAmount: 1, unit: "USD Promote" },
+    
   ]
       },
       
@@ -1854,6 +1865,9 @@ const guideBackBtn = document.getElementById("guideBackBtn");
     const sumQty = document.getElementById("sumQty");
     const sumAmount = document.getElementById("sumAmount");
     const sumTotal = document.getElementById("sumTotal");
+    const customBox = document.getElementById("customBox");
+const customAmountInput = document.getElementById("customAmountInput");
+const customHint = document.getElementById("customHint");
 
     function formatKs(n){
       return `${Number(n).toLocaleString()} Ks`;
@@ -1982,7 +1996,13 @@ function closeOrder(){
       }
 
       const selectedPlan = currentProduct.plans[currentPlanIndex];
-      const amount = Number(selectedPlan.price) * currentQty;
+      let customAmount = Number(customAmountInput.value || 0);
+
+let amount = Number(selectedPlan.price) * currentQty;
+
+if(selectedPlan.custom && customAmount > 0){
+  amount = Math.ceil((customAmount / Number(selectedPlan.baseAmount)) * Number(selectedPlan.price));
+}
 let descText =
   currentProduct.descriptionNormal ||
   currentProduct.description ||
@@ -1999,6 +2019,15 @@ appDescription.value = descText;
       cartName.textContent = currentProduct.name;
       cartPlanCurrent.textContent = selectedPlan.name;
       qtyNum.textContent = currentQty;
+      if(selectedPlan.custom){
+  customBox.classList.add("show");
+  customAmountInput.placeholder = `Enter ${selectedPlan.unit || "amount"}...`;
+  customHint.textContent = `Rate: ${formatKs(selectedPlan.price)} / ${selectedPlan.baseAmount} ${selectedPlan.unit || ""}`;
+} else {
+  customBox.classList.remove("show");
+  customAmountInput.value = "";
+  customHint.textContent = "";
+      }
       itemAmount.textContent = formatKs(amount);
 
       togglePlansBtn.textContent = plansOpen ? "Hide Plan Selection" : "Choose Plan";
@@ -2044,13 +2073,22 @@ if(plan.outOfStock){
   if(!currentProduct) return "";
 
   const selectedPlan = currentProduct.plans[currentPlanIndex];
-  const total = Number(selectedPlan.price) * currentQty;
+      let customAmount = Number(customAmountInput.value || 0);
+let total = Number(selectedPlan.price) * currentQty;
+
+if(selectedPlan.custom && customAmount > 0){
+  total = Math.ceil((customAmount / Number(selectedPlan.baseAmount)) * Number(selectedPlan.price));
+}
   const payInfo = paymentAccounts[activePayment];
 
   let msg = "Gamepay Hub\n";
   msg += "Digital order\n\n";
   msg += `💌Product name: ${currentProduct.name}\n`;
   msg += `📄Plan: ${selectedPlan.name}\n`;
+
+if(selectedPlan.custom && customAmount > 0){
+  msg += `🔢Custom Amount: ${customAmount} ${selectedPlan.unit || ""}\n`;
+}
   msg += `💳Payment method: ${activePayment || "Not selected"}\n`;
 
   if(payInfo){
@@ -2132,6 +2170,7 @@ function openTelegramOrder(){
     });
     accountInput.addEventListener("input", updatePreview);
     noteInput.addEventListener("input", updatePreview);
+    customAmountInput.addEventListener("input", () => {
     orderBtn.addEventListener("click", openTelegramOrder);
 
     renderCategories();
