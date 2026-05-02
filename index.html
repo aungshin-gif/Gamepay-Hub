@@ -1597,11 +1597,14 @@ plans: [
   plans: [
 
         // Followers (No Refill)
-    { name: "👥Followers - 500 (No Refill) - 1500 Ks", price: 1500 },
-    { name: "👥Followers - 1000 (No Refill) - 3000 Ks", price: 3000 },
-    { name: "👥Followers - 5000 (No Refill) - 14000 Ks", price: 14000 },
-    { name: "👥Followers - 10000 (No Refill) - 27000 Ks", price: 27000 },
-
+    {
+  name: "👥Followers - Custom",
+  price: 3000,
+  custom: true,
+  baseAmount: 1000,
+  unit: "Followers"
+    },
+    
     // Followers (Refill / High Quality)
     { name: "👥Followers - 500 (Refill / High Quality) - 2000 Ks", price: 2000 },
     { name: "👥Followers - 1000 (Refill / High Quality) - 4000 Ks", price: 4000 },
@@ -2193,11 +2196,15 @@ function openTelegramOrder(){
     });
     minusBtn.addEventListener("click", () => {
   const selectedPlan = currentProduct?.plans[currentPlanIndex];
+if(selectedPlan?.custom){
+  const min = selectedPlan.unit === "USD Promote" ? 1 :
+              selectedPlan.unit === "Followers" ? 1000 : 100;
 
-  if(selectedPlan?.custom){
-    const step = Number(selectedPlan.baseAmount || 1);
-    const now = Number(customAmountInput.value || step);
-    customAmountInput.value = Math.max(step, now - step);
+  const step = Number(selectedPlan.baseAmount || 1);
+  const now = Number(customAmountInput.value || 0);
+
+  customAmountInput.value = Math.max(min, now - step);
+  
   } else {
     currentQty = Math.max(1, currentQty - 1);
   }
