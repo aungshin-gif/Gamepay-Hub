@@ -2159,15 +2159,34 @@ function openTelegramOrder(){
       renderOrder();
     });
     minusBtn.addEventListener("click", () => {
-      currentQty = Math.max(1, currentQty - 1);
-      renderOrder();
-      updatePreview();
-    });
-    plusBtn.addEventListener("click", () => {
-      currentQty += 1;
-      renderOrder();
-      updatePreview();
-    });
+  const selectedPlan = currentProduct?.plans[currentPlanIndex];
+
+  if(selectedPlan?.custom){
+    const step = Number(selectedPlan.baseAmount || 1);
+    const now = Number(customAmountInput.value || step);
+    customAmountInput.value = Math.max(step, now - step);
+  } else {
+    currentQty = Math.max(1, currentQty - 1);
+  }
+
+  renderOrder();
+  updatePreview();
+});
+
+plusBtn.addEventListener("click", () => {
+  const selectedPlan = currentProduct?.plans[currentPlanIndex];
+
+  if(selectedPlan?.custom){
+    const step = Number(selectedPlan.baseAmount || 1);
+    const now = Number(customAmountInput.value || 0);
+    customAmountInput.value = now + step;
+  } else {
+    currentQty += 1;
+  }
+
+  renderOrder();
+  updatePreview();
+});
     accountInput.addEventListener("input", updatePreview);
 noteInput.addEventListener("input", updatePreview);
 
