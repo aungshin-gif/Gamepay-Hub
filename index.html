@@ -595,6 +595,14 @@ body{
   transition: .2s ease;
   overflow: visible;
 }
+    .plan-sub-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #ffd;
+  margin-top: 2px;
+  text-align: center;
+}
+    
     .plan-option div {
   white-space: normal !important;
   word-break: break-word !important;
@@ -2158,12 +2166,18 @@ planList.style.display = plansOpen ? "grid" : "none";
   (plan.discount ? " discount" : "") +
   (plan.outOfStock ? " out-stock" : "");  
 
-   el.innerHTML = `
+   // plan.name ထဲက (Stable|Unstable|⚡Instant|🕰️Waiting Time) ကိုခွဲထုတ်
+let nameText = plan.name.replace(/\((Stable|Unstable|⚡Instant|🕰️Waiting Time)\)/g,'').trim();
+let subLabelMatch = plan.name.match(/\((Stable|Unstable|⚡Instant|🕰️Waiting Time)\)/);
+let subLabel = subLabelMatch ? subLabelMatch[1] : '';
+
+el.innerHTML = `
   ${plan.outOfStock ? '<span class="out-stock-badge">⛔ Out of Stock</span>' : ''}
   ${plan.discount ? '<span class="discount-badge">💸 Discount</span>' : ''}
   ${plan.bestSeller ? '<span class="best-seller-badge">🔥 Best Seller</span>' : ''}
-  <div>${plan.name}</div>
-`; 
+  <div>${nameText}</div>
+  ${subLabel ? `<div class="plan-sub-label">${subLabel}</div>` : ''}
+`;
 if(plan.outOfStock){
   el.onclick = null;
 } else {
