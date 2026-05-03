@@ -900,22 +900,55 @@ body{
     }
 
     @media (max-width:640px){
-      .page{
-        width:min(96%,96%);
-      }
-      .products{
-        grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-        gap:16px;
-      }
-      .card{
-        max-width:100%;
-        min-height:210px;
-      }
-      .icon-wrap{
-        width:68px;
-        height:68px;
-        font-size:30px;
-      }
+  .page{
+    width:96%;
+  }
+
+  .products{
+    grid-template-columns:repeat(3, 1fr);
+    gap:10px;
+  }
+
+  .card{
+    max-width:100%;
+    min-height:170px;
+    padding:12px 8px;
+    border-radius:16px;
+  }
+
+  .icon-wrap{
+    width:48px;
+    height:48px;
+    font-size:24px;
+    border-radius:14px;
+    margin-bottom:8px;
+  }
+
+  .card-name{
+    font-size:12px;
+    line-height:1.2;
+  }
+
+  .card-sub{
+    font-size:10px;
+  }
+
+  .badge{
+    font-size:10px;
+    padding:5px 8px;
+  }
+
+  .price-from{
+    font-size:10px;
+  }
+
+  .top-product-badge{
+    font-size:9px;
+    padding:4px 7px;
+    top:6px;
+    right:6px;
+  }
+    }
     }/* FIX Xiaomi Pad Chrome sticky bug */
 .search-wrap {
   transform: translateZ(0);
