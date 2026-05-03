@@ -602,12 +602,12 @@ body{
   margin-top: 2px;
   text-align: center;
 }
-    
-    .plan-option div {
-  white-space: normal !important;
+ .plan-option div {
+  white-space: pre-line !important;
   word-break: break-word !important;
   overflow-wrap: anywhere !important;
-    }
+ }   
+
 .plan-option.active{
   background: linear-gradient(
     180deg,
@@ -2202,9 +2202,8 @@ planList.style.display = plansOpen ? "grid" : "none";
 
    // plan.name ထဲက (Stable|Unstable|⚡Instant|🕰️Waiting Time) ကိုခွဲထုတ်
 // 🔹 လျှော့ပြီး Stable/Unstable/Instant/Waiting Time အရသာ extract
-let nameText = plan.name.replace(/\((Stable|Unstable|⚡Instant|🕰️Waiting Time)\)/g,'').trim();
-let subLabelMatch = plan.name.match(/\((Stable|Unstable|⚡Instant|🕰️Waiting Time)\)/);
-let subLabel = subLabelMatch ? subLabelMatch[1] : '';
+let nameText = plan.name;
+let subLabel = "";
 el.innerHTML = `
   ${plan.outOfStock ? '<span class="out-stock-badge">⛔ Out of Stock</span>' : ''}
   ${plan.discount ? '<span class="discount-badge">💸 Discount</span>' : ''}
