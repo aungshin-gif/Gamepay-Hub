@@ -595,12 +595,18 @@ body{
   transition: .2s ease;
   overflow: visible;
 }
-    .plan-sub-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: #ffd;
-  margin-top: 2px;
-  text-align: center;
+.plan-sub-label{
+  font-size:12px;
+  font-weight:800;
+  color:#ffe66d;
+  margin-top:5px;
+  text-align:center;
+  white-space:pre-line;
+
+  text-shadow:
+    0 0 6px rgba(255,230,109,.75),
+    0 0 14px rgba(255,210,60,.55),
+    0 0 24px rgba(255,180,0,.35);
 }
  .plan-option div {
   white-space: pre-line !important;
@@ -2207,8 +2213,10 @@ planList.style.display = plansOpen ? "grid" : "none";
 
    // plan.name ထဲက (Stable|Unstable|⚡Instant|🕰️Waiting Time) ကိုခွဲထုတ်
 // 🔹 လျှော့ပြီး Stable/Unstable/Instant/Waiting Time အရသာ extract
-let nameText = plan.name;
-let subLabel = "";
+let parts = plan.name.split("\n");
+let nameText = parts[0];
+let subLabel = parts.slice(1).join("\n");
+
 el.innerHTML = `
   ${plan.outOfStock ? '<span class="out-stock-badge">⛔ Out of Stock</span>' : ''}
   ${plan.discount ? '<span class="discount-badge">💸 Discount</span>' : ''}
