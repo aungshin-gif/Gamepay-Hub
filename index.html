@@ -1097,6 +1097,35 @@ body{
     0 0 30px rgba(199,125,255,.18),
     inset 0 1px 0 rgba(255,255,255,.08);
     }
+    .section-title{
+  margin-top:20px;
+  margin-bottom:10px;
+
+  font-size:17px;
+  font-weight:900;
+
+  color:#fff;
+
+  text-shadow:
+    0 0 10px rgba(199,125,255,.35);
+}
+
+.section-title::after{
+  content:"";
+  display:block;
+
+  width:100%;
+  height:1px;
+
+  margin-top:8px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(199,125,255,.55),
+      transparent
+    );
+}
 /* FAQ END */
   </style>
 </head>
@@ -1146,6 +1175,7 @@ body{
         </div>
         
         <div id="cartItem" class="cart-item hidden">
+          <div class="section-title">Product Setup</div>
           <div class="cart-head">
             <div style="min-width:0">
               <div id="cartName" class="cart-name">-</div>
