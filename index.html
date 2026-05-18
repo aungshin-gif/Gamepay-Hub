@@ -2316,6 +2316,12 @@ const checkoutSection = document.getElementById("checkoutSection");
     return;
   }
 
+  checkoutSection.classList.add("hidden");
+cartItem.classList.remove("hidden");
+appDescription.parentElement.classList.remove("hidden");
+descNav.classList.remove("hidden");
+
+currentProduct = product;
   currentProduct = product;
   currentPlanIndex = 0;
   currentQty = 1;
