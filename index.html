@@ -1036,6 +1036,29 @@ body{
 .faq-item:hover{
   box-shadow:0 0 20px rgba(199,125,255,.25);
 }
+    .desc-nav{
+  margin-top:10px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.desc-tab{
+  border:none;
+  border-radius:999px;
+  padding:8px 12px;
+  color:#fff;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+}
+
+.desc-tab.active{
+  background:rgba(199,125,255,.25);
+  border-color:rgba(199,125,255,.55);
+}
 /* FAQ END */
   </style>
 </head>
@@ -1075,6 +1098,8 @@ body{
           <textarea id="appDescription" class="note-box desc-box" readonly placeholder="Description will appear here..."></textarea>
         </div>
 
+        <div id="descNav" class="desc-nav"></div>
+        
         <div id="cartItem" class="cart-item hidden">
           <div class="cart-head">
             <div style="min-width:0">
@@ -1233,6 +1258,9 @@ body{
 
   <script>
     const TELEGRAM_USERNAME = "angsthtun";
+
+    let currentDescIndex = 0;
+    const descNav = document.getElementById("descNav");
 
     const categories = ["All","AI","Editing","VPN","Gift","Music","Video","Social","Services"];
 
@@ -1911,7 +1939,53 @@ plans: [
   iconType: "image",
   icon: "FB_IMG_1774857673765.jpg",
   search: "meitu vip svip beauty edit",
-  description: "",
+  descriptionPages: [
+  {
+    title: "VIP အကြောင်း",
+    text:
+`🌈 Meitu VIP
+
+✔ Basic Premium Features
+✔ HD Export
+✔ Beauty Tools
+✔ Daily Edit အတွက်အဆင်ပြေ
+✔ Light User တွေအတွက်သင့်တော်
+
+👥 Share = တခြားသူနဲ့တွဲသုံး
+🔐 Private = ကိုယ်တယောက်တည်းသုံး
+✉️ Own Mail = ကိုယ့် mail ထဲထည့်ပေး`
+  },
+
+  {
+    title: "SVIP အကြောင်း",
+    text:
+`👑 Meitu SVIP
+
+💎 VIP ထက် Feature ပိုစုံ
+💎 AI Enhance Tools
+💎 Premium Filters All Unlock
+💎 Advanced Retouch Tools
+💎 Heavy Editor တွေအတွက်အကောင်းဆုံး
+
+🔐 Private Plan တွေက
+ပိုတည်ငြိမ်ပြီး Full Warranty ပါ`
+  },
+
+  {
+    title: "Share / Private",
+    text:
+`👥 Share Plan
+• ဈေးသက်သာ
+• Multiple users တွဲသုံး
+
+🔐 Private Plan
+• ကိုယ်တယောက်တည်းသုံး
+• History / Projects ပို secure
+
+✉️ Own Mail
+• ကိုယ့် account ထဲ premium ထည့်ပေး`
+  }
+],
   plans: [
     { name: "👥VIP Plan (Share account) - 1 Month - 8000 Ks", price: 8000 },
     { name: "🔐VIP Plan (Private account) - 1 Month - 12000 Ks", price: 12000 },
@@ -2145,6 +2219,7 @@ const customHint = document.getElementById("customHint");
   currentPlanIndex = 0;
   currentQty = 1;
   plansOpen = true;
+  currentDescIndex = 0;
   activePayment = "";
   accountInput.value = "";
   noteInput.value = "";
@@ -2188,18 +2263,29 @@ let amount = Number(selectedPlan.price) * currentQty;
 if(selectedPlan.custom && customAmount > 0){
   amount = Math.ceil((customAmount / Number(selectedPlan.baseAmount)) * Number(selectedPlan.price));
 }
-let descText =
-  currentProduct.descriptionNormal ||
-  currentProduct.description ||
-  "";
+const descPages = currentProduct.descriptionPages || [
+  {
+    title: "Info",
+    text: currentProduct.description || ""
+  }
+];
 
-if (selectedPlan.discount && currentProduct.descriptionDiscount) {
-  descText = currentProduct.descriptionDiscount;
-} else if (!selectedPlan.discount && currentProduct.descriptionNormal) {
-  descText = currentProduct.descriptionNormal;
-}
+appDescription.value = descPages[currentDescIndex]?.text || "";
 
-appDescription.value = descText;
+descNav.innerHTML = "";
+
+descPages.forEach((page, index) => {
+  const btn = document.createElement("button");
+  btn.className = "desc-tab" + (index === currentDescIndex ? " active" : "");
+  btn.textContent = page.title;
+
+  btn.onclick = () => {
+    currentDescIndex = index;
+    renderOrder();
+  };
+
+  descNav.appendChild(btn);
+});
       cartItem.classList.remove("hidden");
       cartName.textContent = currentProduct.name;
       cartPlanCurrent.textContent = selectedPlan.name;
