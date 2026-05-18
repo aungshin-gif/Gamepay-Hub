@@ -2514,22 +2514,35 @@ if(selectedPlan.custom && customAmount > 0){
 }
   const payInfo = paymentAccounts[activePayment];
 
-  let msg = "Gamepay Hub\n";
-  msg += "Digital order\n\n";
-  msg += `💌Product name: ${currentProduct.name}\n`;
-  msg += `📄Plan: ${selectedPlan.name}\n`;
+  let msg = "╭── 💜GAMEPAY HUB 👾 ──╮\n\n";
+msg += "      ✨ DIGITAL ORDER ✨\n\n";
+
+msg += "💌 Product\n";
+msg += `➥ ${currentProduct.name}\n\n`;
+
+msg += "📄 Plan\n";
+msg += `➥ ${selectedPlan.name}\n\n`;
 
 if(selectedPlan.custom && customAmount > 0){
-  msg += `🔢Custom Amount: ${customAmount} ${selectedPlan.unit || ""}\n`;
+  msg += "🔢 Custom Amount\n";
+  msg += `➥ ${customAmount} ${selectedPlan.unit || ""}\n\n`;
 }
-  msg += `💳Payment method: ${activePayment || "Not selected"}\n`;
 
-  if(payInfo){
-    msg += `📱Payment Phone: ${payInfo.phone}\n`;
-    msg += `👤Payment Name: ${payInfo.name}\n`;
-  }
+msg += "💳 Payment\n";
+msg += `➥ ${activePayment || "Not selected"}\n\n`;
 
-  msg += `🧾Total: ${formatKs(amount)}\n`;
+if(payInfo){
+  msg += "📱 Payment Phone\n";
+  msg += `➥ ${payInfo.phone}\n\n`;
+
+  msg += "👤 Payment Name\n";
+  msg += `➥ ${payInfo.name}\n\n`;
+}
+
+msg += "💰 Total Amount\n";
+msg += `➥ ${formatKs(amount)}\n\n`;
+
+msg += "╰────────────────────╯\n";
 
   const note = noteInput.value.trim();
   if(note){
