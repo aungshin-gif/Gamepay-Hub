@@ -1059,6 +1059,43 @@ body{
   background:rgba(199,125,255,.25);
   border-color:rgba(199,125,255,.55);
 }
+    .info-card{
+  width:100%;
+  border-radius:20px;
+  padding:16px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.08),
+      rgba(255,255,255,.04)
+    );
+
+  border:1px solid rgba(255,255,255,.10);
+
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+
+  box-shadow:
+    0 0 24px rgba(199,125,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.06);
+
+  min-height:120px;
+}
+
+.info-content{
+  white-space:pre-line;
+  line-height:1.7;
+  font-size:14px;
+  color:rgba(255,255,255,.92);
+}
+    .info-card:hover{
+  border-color:rgba(199,125,255,.35);
+
+  box-shadow:
+    0 0 30px rgba(199,125,255,.18),
+    inset 0 1px 0 rgba(255,255,255,.08);
+    }
 /* FAQ END */
   </style>
 </head>
@@ -1095,7 +1132,10 @@ body{
 
         <div class="field">
           <div class="field-title">Description</div>
-          <textarea id="appDescription" class="note-box desc-box" readonly placeholder="Description will appear here..."></textarea>
+          <div id="appDescription" class="info-card">
+       <div class="info-content">Description will appear here...</div>
+          </div>
+          
         </div>
 
         <div id="descNav" class="desc-nav"></div>
@@ -2270,7 +2310,10 @@ const descPages = currentProduct.descriptionPages || [
   }
 ];
 
-appDescription.value = descPages[currentDescIndex]?.text || "";
+appDescription.innerHTML =
+  `<div class="info-content">
+    ${descPages[currentDescIndex]?.text || ""}
+  </div>`;    
 
 descNav.innerHTML = "";
 
