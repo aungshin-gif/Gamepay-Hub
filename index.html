@@ -1126,6 +1126,9 @@ body{
       transparent
     );
 }
+    #continueBtn{
+  margin-top:14px;
+    }
 /* FAQ END */
   </style>
 </head>
@@ -1200,9 +1203,17 @@ body{
               <button id="plusBtn" class="qty-btn">+</button>
             </div>
             <div id="itemAmount" class="amount">0 Ks</div>
-          </div>
-        </div>
+</div>
 
+<button id="continueBtn" class="telegram-btn">
+  Continue Checkout
+</button>
+
+</div>
+
+<div id="checkoutSection" class="hidden">
+  <div class="section-title">Checkout</div>
+          
         <div class="summary">
           <div class="line"><span>Selected Items</span><span id="sumItems">0</span></div>
           <div class="line"><span>Quantity</span><span id="sumQty">0</span></div>
@@ -2202,6 +2213,21 @@ const guideBackBtn = document.getElementById("guideBackBtn");
     const customBox = document.getElementById("customBox");
 const customAmountInput = document.getElementById("customAmountInput");
 const customHint = document.getElementById("customHint");
+const continueBtn = document.getElementById("continueBtn");
+const checkoutSection = document.getElementById("checkoutSection");
+
+    continueBtn.onclick = () => {
+
+  checkoutSection.classList.remove("hidden");
+
+  continueBtn.style.display = "none";
+
+  checkoutSection.scrollIntoView({
+    behavior: "smooth"
+  });
+
+};
+    
 
     function formatKs(n){
       return `${Number(n).toLocaleString()} Ks`;
