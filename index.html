@@ -2217,17 +2217,17 @@ const continueBtn = document.getElementById("continueBtn");
 const checkoutSection = document.getElementById("checkoutSection");
 
     continueBtn.onclick = () => {
+  cartItem.classList.add("hidden");
+  appDescription.parentElement.classList.add("hidden");
+  descNav.classList.add("hidden");
 
   checkoutSection.classList.remove("hidden");
 
-  continueBtn.style.display = "none";
-
-  checkoutSection.scrollIntoView({
+  window.scrollTo({
+    top: 0,
     behavior: "smooth"
   });
-
 };
-    
 
     function formatKs(n){
       return `${Number(n).toLocaleString()} Ks`;
