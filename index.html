@@ -2761,6 +2761,8 @@ function updatePreview(){
 }
     
 function openTelegramOrder(){
+  paymentModal.classList.remove("hidden");
+return;
   if(!currentProduct || !activePayment) return;
 
   const message = buildTelegramMessage();
