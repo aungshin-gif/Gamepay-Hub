@@ -1099,6 +1099,8 @@ body{
     top:6px;
     right:6px;
   }
+  }
+
     /* FIX Xiaomi Pad Chrome sticky bug */
 .search-wrap {
   transform: translateZ(0);
@@ -1494,7 +1496,33 @@ body{
       Founder: Diameter Eight
     </footer>
   </div>
+<div id="paymentModal" class="payment-modal hidden">
 
+  <div class="payment-card">
+
+    <button id="closePayment" class="close-modal">
+      ✕
+    </button>
+
+    <div class="payment-title">
+      Payment Checkout
+    </div>
+
+    <div class="payment-sub">
+      Copy payment number
+    </div>
+
+    <div id="paymentNumber"></div>
+
+    <div class="payment-copy-wrap">
+      <button id="copyPayBtn">
+        Copy Number
+      </button>
+    </div>
+
+  </div>
+
+  </div>    
   <script>
     const TELEGRAM_USERNAME = "angsthtun";
 
@@ -2928,33 +2956,7 @@ window.addEventListener("resize", resizeCanvas);
 
 resizeCanvas();
 animateParticles();
-  <div id="paymentModal" class="payment-modal hidden">
-
-  <div class="payment-card">
-
-    <button id="closePayment" class="close-modal">
-      ✕
-    </button>
-
-    <div class="payment-title">
-      Payment Checkout
-    </div>
-
-    <div class="payment-sub">
-      Copy payment number
-    </div>
-
-    <div id="paymentNumber"></div>
-
-    <div class="payment-copy-wrap">
-      <button id="copyPayBtn">
-        Copy Number
-      </button>
-    </div>
-
-  </div>
-
-  </div>    
+  
 </script>
 
 </body>
