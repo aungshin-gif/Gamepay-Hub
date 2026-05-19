@@ -2390,35 +2390,19 @@ const customAmountInput = document.getElementById("customAmountInput");
 const customHint = document.getElementById("customHint");
 const continueBtn = document.getElementById("continueBtn");
 const checkoutSection = document.getElementById("checkoutSection");
-const paymentModal =
-document.getElementById("paymentModal");
-
-const closePayment =
-document.getElementById("closePayment");
-
-const paymentNumber =
-document.getElementById("paymentNumber");
-
-const copyPayBtn =
-document.getElementById("copyPayBtn");
-    
-    continueBtn.onclick = () => {
-  cartItem.classList.add("hidden");
-  appDescription.parentElement.classList.add("hidden");
-  descNav.classList.add("hidden");
+  
+continueBtn.onclick = () => {
 
   checkoutSection.classList.remove("hidden");
-  
-  window.scrollTo({
-    top: 0,
+
+  continueBtn.style.display = "none";
+
+  checkoutSection.scrollIntoView({
     behavior: "smooth"
   });
-};
-closePayment.onclick = () => {
-  paymentModal.classList.add("hidden");
+
 };
 
-copyPayBtn.onclick = async () => {
 
   const phone =
   document.querySelector(".pay-phone").innerText;
@@ -2509,30 +2493,8 @@ copyPayBtn.onclick = async () => {
       renderPayments();
 
       updatePreview();
-
-      const payInfo =
-      paymentAccounts[activePayment];
-
-      paymentNumber.innerHTML = `
-        <div class="pay-method">
-          💳 ${activePayment}
-        </div>
-
-        <div class="pay-name">
-          👤 ${payInfo.name}
-        </div>
-
-        <div class="pay-phone">
-          📱 ${payInfo.phone}
-        </div>
-      `;
-
-      copyPayBtn.innerText = "Copy Number";
-
-      paymentModal.classList.remove("hidden");
-
-    };
-
+   };   
+    
     payGrid.appendChild(el);
 
   });
@@ -2784,21 +2746,6 @@ function openTelegramOrder(){
   const message = buildTelegramMessage();
   const username = TELEGRAM_USERNAME.replace("@", "");
   const telegramURL = "https://t.me/" + username + "?text=" + encodeURIComponent(message);
-
-  const fallbackCopy = () => {
-    const ta = document.createElement("textarea");
-    ta.value = message;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    ta.remove();
-  };
-
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(message).catch(fallbackCopy);
-  } else {
-    fallbackCopy();
-  }
 
   window.open(telegramURL, "_blank");
 
