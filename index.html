@@ -2408,23 +2408,7 @@ document.getElementById("copyPayBtn");
   descNav.classList.add("hidden");
 
   checkoutSection.classList.remove("hidden");
-  const payInfo =
-paymentAccounts[activePayment];
-paymentNumber.innerHTML = `
-  <div class="pay-method">
-    💳 ${activePayment}
-  </div>
-
-  <div class="pay-name">
-    👤 ${payInfo.name}
-  </div>
-
-  <div class="pay-phone">
-    📱 ${payInfo.phone}
-  </div>
-`;
-
-paymentModal.classList.remove("hidden");
+  
   window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -2506,18 +2490,53 @@ copyPayBtn.onclick = async () => {
     }
 
     function renderPayments(){
-      payGrid.innerHTML = "";
-      paymentMethods.forEach(method => {
-        const el = document.createElement("div");
-        el.className = "pay-option" + (activePayment === method ? " active" : "");
-        el.textContent = method;
-        el.onclick = () => {
-          activePayment = method;
-          renderPayments();
-          updatePreview();
-        };
-        payGrid.appendChild(el);
-      });
+  payGrid.innerHTML = "";
+
+  paymentMethods.forEach(method => {
+
+    const el = document.createElement("div");
+
+    el.className =
+      "pay-option" +
+      (activePayment === method ? " active" : "");
+
+    el.textContent = method;
+
+    el.onclick = () => {
+
+      activePayment = method;
+
+      renderPayments();
+
+      updatePreview();
+
+      const payInfo =
+      paymentAccounts[activePayment];
+
+      paymentNumber.innerHTML = `
+        <div class="pay-method">
+          💳 ${activePayment}
+        </div>
+
+        <div class="pay-name">
+          👤 ${payInfo.name}
+        </div>
+
+        <div class="pay-phone">
+          📱 ${payInfo.phone}
+        </div>
+      `;
+
+      copyPayBtn.innerText = "Copy Number";
+
+      paymentModal.classList.remove("hidden");
+
+    };
+
+    payGrid.appendChild(el);
+
+  });
+
     }
 
     function openOrder(product){
