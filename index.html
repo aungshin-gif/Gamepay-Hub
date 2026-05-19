@@ -2382,11 +2382,10 @@ document.getElementById("copyPayBtn");
 
   checkoutSection.classList.remove("hidden");
   const payInfo =
-PAYMENTS[activePayment];
-
+paymentAccounts[activePayment];
 paymentNumber.innerHTML = `
   <div class="pay-method">
-    💳 ${payInfo.label}
+    💳 ${activePayment}
   </div>
 
   <div class="pay-name">
