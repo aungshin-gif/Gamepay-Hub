@@ -1496,33 +1496,6 @@ body{
       Founder: Diameter Eight
     </footer>
   </div>
-<div id="paymentModal" class="payment-modal hidden">
-
-  <div class="payment-card">
-
-    <button id="closePayment" class="close-modal">
-      ✕
-    </button>
-
-    <div class="payment-title">
-      Payment Checkout
-    </div>
-
-    <div class="payment-sub">
-      Copy payment number
-    </div>
-
-    <div id="paymentNumber"></div>
-
-    <div class="payment-copy-wrap">
-      <button id="copyPayBtn">
-        Copy Number
-      </button>
-    </div>
-
-  </div>
-
-  </div>    
   <script>
     const TELEGRAM_USERNAME = "angsthtun";
 
@@ -1759,7 +1732,7 @@ plans: [
   iconType: "image",
   icon: "Adobe_Creative_Cloud_rainbow_icon.svg.png",
   search: "adobe photoshop premiere creative cloud",
-  description: "💫100% Private Account (My Mail)/n🔥 4000 Adobe credits/n💥 Renewed monthly method /n💥 Supports Mobile/PC/Mac",
+  description: "💫100% Private Account (My Mail)\n🔥 4000 Adobe credits\n💥 Renewed monthly method \n💥 Supports Mobile/PC/Mac",
   plans: [
     { name: "1 Month - 15000 Ks", price: 15000, bestSeller: true },
     { name: "2 Months - 25000 Ks", price: 25000 },
@@ -2401,16 +2374,8 @@ continueBtn.onclick = () => {
     behavior: "smooth"
   });
 
-};
-
-
-  const phone =
-  document.querySelector(".pay-phone").innerText;
-
-  await navigator.clipboard.writeText(phone);
-
-  copyPayBtn.innerText = "Copied";
-};
+}
+  
     function formatKs(n){
       return `${Number(n).toLocaleString()} Ks`;
     }
