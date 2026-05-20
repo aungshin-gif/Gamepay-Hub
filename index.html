@@ -2513,14 +2513,14 @@ const continueBtn = document.getElementById("continueBtn");
 const checkoutSection = document.getElementById("checkoutSection");
   
 continueBtn.onclick = () => {
+  cartItem.classList.add("hidden");
+  appDescription.parentElement.classList.add("hidden");
+  descNav.classList.add("hidden");
 
   checkoutSection.classList.remove("hidden");
 
-  continueBtn.style.display = "none";
-
-  checkoutSection.scrollIntoView({
-    behavior: "smooth"
-  });
+  window.scrollTo(0, 0);
+};
 
 }
   
@@ -2625,6 +2625,8 @@ continueBtn.onclick = () => {
   }
 
   checkoutSection.classList.add("hidden");
+continueBtn.style.display = "block";
+
 cartItem.classList.remove("hidden");
 appDescription.parentElement.classList.remove("hidden");
 descNav.classList.remove("hidden");
@@ -2655,6 +2657,10 @@ currentProduct = product;
     }
 function closeOrder(){
   currentProduct = null;
+
+  checkoutSection.classList.add("hidden");
+  continueBtn.style.display = "block";
+  cartItem.classList.add("hidden");
 
   window.scrollTo(0, 0);
 
