@@ -1,3 +1,6 @@
+
+
+
 <!-- Gamepay Hub international UI revision: plans as rounded-square cards; notes are tap-to-view; guide hidden. -->
 <!DOCTYPE html>
 <html lang="en">
@@ -1351,10 +1354,19 @@ html,body{background:var(--cin-bg);color:var(--cin-white);color-scheme:dark}body
 @media (max-width:760px){.hero{min-height:350px;padding:34px 24px;border-radius:22px}.hero-title{letter-spacing:-1.2px}.hero-stats{gap:16px}.hero-stats div{padding-right:14px}.store-heading{align-items:flex-start;flex-direction:column;margin-top:40px}.section-note{text-align:left}.products{gap:10px}.card{animation-delay:0s!important}}
 @media (prefers-reduced-motion:reduce){.hero::before,.hero::after,.brand-orb,.card,.order-view{animation:none!important}.card{opacity:1}}
 
+
+/* Lightweight one-time intro + Lumeva-style smooth reveal */
+.intro-splash{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;align-content:center;gap:9px;background:#05060d;overflow:hidden;animation:introOut .72s cubic-bezier(.77,0,.175,1) 1.08s forwards;pointer-events:none}.intro-splash::before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(54,231,255,.18),rgba(106,82,255,.10) 34%,transparent 70%);filter:blur(10px);animation:introPulse 1.2s ease-out both}.intro-orbit{position:absolute;width:130px;height:130px;border:1px solid rgba(54,231,255,.44);border-radius:50%;box-shadow:0 0 28px rgba(54,231,255,.16);animation:orbitIn .85s cubic-bezier(.23,1,.32,1) both}.intro-orbit::after{content:"";position:absolute;top:-4px;left:50%;width:7px;height:7px;border-radius:50%;background:#54efff;box-shadow:0 0 15px #54efff;transform:translateX(-50%)}.intro-mark{position:relative;width:58px;height:58px;display:grid;place-items:center;border-radius:18px;color:#071021;font-size:32px;font-weight:950;background:linear-gradient(145deg,#f4ffff,#41eaff 45%,#7d68ff);box-shadow:0 0 24px rgba(54,231,255,.48),0 0 50px rgba(106,82,255,.25);animation:introMark .7s cubic-bezier(.23,1,.32,1) both}.intro-name{position:relative;color:#f5f9ff;font-size:17px;font-weight:950;letter-spacing:3px;animation:introText .65s ease-out .12s both}.intro-name span{color:#54efff}.intro-caption{position:relative;color:#71809e;font-size:8px;letter-spacing:2.4px;animation:introText .65s ease-out .22s both}@keyframes introMark{from{opacity:0;transform:scale(.72) rotate(-12deg)}to{opacity:1;transform:scale(1) rotate(0)}}@keyframes introText{from{opacity:0;transform:translateY(10px);letter-spacing:6px}to{opacity:1;transform:translateY(0);letter-spacing:3px}}@keyframes introPulse{from{opacity:0;transform:scale(.7)}45%{opacity:1}to{opacity:.6;transform:scale(1.18)}}@keyframes orbitIn{from{opacity:0;transform:scale(.5) rotate(-100deg)}to{opacity:1;transform:scale(1) rotate(0)}}@keyframes introOut{to{opacity:0;visibility:hidden}}
+.search-wrap{position:relative;isolation:isolate}.search-wrap::before{content:"";position:absolute;inset:-4px;border-radius:19px;background:linear-gradient(90deg,transparent,rgba(54,231,255,.24),rgba(123,105,255,.22),transparent);filter:blur(10px);opacity:.48;z-index:-1;animation:searchBreath 3.8s ease-in-out infinite}.search-wrap input{position:relative;border-color:rgba(54,231,255,.28);box-shadow:0 0 0 1px rgba(54,231,255,.05),0 0 24px rgba(54,231,255,.10),inset 0 1px rgba(255,255,255,.10);transition:border-color .22s ease,box-shadow .22s ease,transform .22s var(--market-ease)}.search-wrap input:focus{transform:translateY(-2px);border-color:rgba(73,243,255,.82);box-shadow:0 0 0 4px rgba(54,231,255,.12),0 0 30px rgba(54,231,255,.26),0 0 58px rgba(104,92,255,.14),inset 0 1px rgba(255,255,255,.17)}.search-icon{transition:transform .22s var(--market-ease),filter .22s ease}.search-wrap:focus-within .search-icon{transform:translateY(-50%) scale(1.15);filter:drop-shadow(0 0 7px #54efff)}@keyframes searchBreath{0%,100%{opacity:.28;transform:scale(.985)}50%{opacity:.72;transform:scale(1.012)}}
+.hero-kicker,.hero-copy,.hero-stats{animation:heroReveal .8s cubic-bezier(.23,1,.32,1) both}.hero-kicker{animation-delay:.10s}.hero-copy{animation-delay:.18s}.hero-stats{animation-delay:.28s}@keyframes heroReveal{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){.intro-splash,.intro-splash::before,.intro-orbit,.intro-mark,.intro-name,.intro-caption,.search-wrap::before,.hero-kicker,.hero-copy,.hero-stats{animation:none!important}.intro-splash{display:none}.search-wrap input:focus{transform:none}}
+
 </style>
 </head>
 <body>
   <canvas id="particles"></canvas>
+
+  <div id="introSplash" class="intro-splash" aria-hidden="true"><div class="intro-orbit"></div><div class="intro-mark">G</div><div class="intro-name">GAMEPAY <span>HUB</span></div><div class="intro-caption">PREMIUM DIGITAL MARKETPLACE</div></div>
 
   <div class="market-strip"><div><strong>GAMEPAY HUB</strong><span>Digital products marketplace</span></div><div class="market-trust"><span>⚡ Fast delivery</span><span>🔒 Secure checkout</span><span>💬 Telegram support</span></div></div>
 
@@ -3021,7 +3033,16 @@ animateParticles();
   
 </script>
 
+<script>
+(() => {
+  const introSplash = document.getElementById("introSplash");
+  if (!introSplash) return;
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) { introSplash.remove(); return; }
+  window.setTimeout(() => {
+    introSplash.remove();
+  }, 1900);
+})();
+</script>
 </body>
 </html>
-
-
