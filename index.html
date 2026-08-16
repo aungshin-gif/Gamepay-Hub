@@ -1,3 +1,4 @@
+
 <!-- Gamepay Hub international UI revision: plans as rounded-square cards; notes are tap-to-view; guide hidden. -->
 <!DOCTYPE html>
 <html lang="en">
@@ -1392,6 +1393,129 @@ body{background-color:#050812!important;background-image:radial-gradient(circle 
 @media(max-width:760px){.pay-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important}.pay-option{min-height:57px!important;padding:5px 1px!important;border-radius:13px!important}.pay-logo{width:28px!important;height:28px!important}.pay-option span:last-child{font-size:7px!important}.payment-quick-pop{width:min(235px,calc(100vw - 38px))!important}.support-avatar{width:48px!important;height:48px!important}}
 @media(prefers-reduced-motion:reduce){.intro-splash,.intro-splash::before,.intro-logo,.intro-title,.intro-label{animation:none!important}.intro-splash{display:none!important}.pay-option,.pay-logo,.payment-quick-pop{transition:none!important}}
 
+
+/* Vivid dark-neon polish: brighter accents without turning the UI light */
+:root{--v-cyan:#5ff7ff;--v-blue:#3288ff;--v-purple:#9d6bff;--v-pink:#e67cff;--v-text:#f4fdff;--v-muted:#93a9c2}
+html,body{background:#030610!important;color:var(--v-text)!important}body{background-image:radial-gradient(ellipse at 12% 8%,rgba(42,128,255,.30),transparent 31%),radial-gradient(ellipse at 88% 14%,rgba(65,244,255,.23),transparent 27%),radial-gradient(ellipse at 55% 94%,rgba(142,77,255,.19),transparent 34%),linear-gradient(135deg,#02040b 0%,#07152d 48%,#050817 100%)!important;background-size:150% 150%;animation:vBg 18s ease-in-out infinite alternate}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(115deg,transparent 35%,rgba(95,247,255,.035) 50%,transparent 65%);animation:vSweep 11s linear infinite}.page{z-index:1}
+.market-strip{background:rgba(2,7,19,.78)!important;border-bottom-color:rgba(95,247,255,.28)!important;box-shadow:0 0 20px rgba(50,136,255,.10)}.market-trust span{color:#b4fbff!important}.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(13,35,75,.82),rgba(7,10,25,.92))!important;border-color:rgba(95,247,255,.34)!important;box-shadow:0 28px 75px rgba(0,0,0,.45),0 0 60px rgba(50,136,255,.18),inset 0 1px rgba(255,255,255,.12)!important;animation:heroBreath 6s ease-in-out infinite alternate}.hero::after{content:"";position:absolute;inset:-35%;pointer-events:none;background:conic-gradient(from 180deg,transparent,rgba(95,247,255,.10),transparent 28%,rgba(157,107,255,.10),transparent 60%);filter:blur(20px);animation:heroSpin 16s linear infinite}.hero-title{color:#fff!important;background:linear-gradient(100deg,#ffffff 0%,#c9ffff 32%,#5ff7ff 60%,#a477ff 92%)!important;-webkit-background-clip:text!important;background-clip:text!important;text-shadow:0 0 18px rgba(95,247,255,.42),0 0 42px rgba(50,136,255,.24)!important}.hero-sub,.section-note{color:var(--v-muted)!important}.brand-orb{box-shadow:0 0 26px rgba(95,247,255,.92),0 0 70px rgba(50,136,255,.55),0 0 110px rgba(157,107,255,.20)!important;animation:vOrb 2.6s ease-in-out infinite alternate!important}
+.search-wrap input{background:rgba(4,16,36,.86)!important;border-color:rgba(95,247,255,.42)!important;box-shadow:0 0 0 1px rgba(95,247,255,.06),0 0 28px rgba(50,136,255,.20),inset 0 1px rgba(255,255,255,.13)!important}.search-wrap input:focus{border-color:var(--v-cyan)!important;box-shadow:0 0 0 4px rgba(95,247,255,.14),0 0 42px rgba(95,247,255,.40),inset 0 1px rgba(255,255,255,.18)!important}.search-icon{color:var(--v-cyan)!important;text-shadow:0 0 14px rgba(95,247,255,.8)}.cat{background:rgba(12,25,52,.76)!important;border-color:rgba(126,166,231,.27)!important;color:#b9cce0!important}.cat:hover,.cat.active{color:#eaffff!important;background:linear-gradient(135deg,rgba(95,247,255,.18),rgba(50,136,255,.16))!important;border-color:var(--v-cyan)!important;box-shadow:0 0 24px rgba(95,247,255,.30)!important}
+.card{background:linear-gradient(145deg,rgba(26,50,95,.84),rgba(8,14,31,.94))!important;border-color:rgba(118,174,237,.30)!important;box-shadow:0 17px 34px rgba(0,0,0,.38),0 0 16px rgba(50,136,255,.10),inset 0 1px rgba(255,255,255,.11)!important;animation:vCardIn .62s cubic-bezier(.23,1,.32,1) both!important}.card:nth-child(2){animation-delay:.04s!important}.card:nth-child(3){animation-delay:.08s!important}.card:nth-child(4){animation-delay:.12s!important}.card:nth-child(5){animation-delay:.16s!important}.card:nth-child(6){animation-delay:.20s!important}.card:hover{background:linear-gradient(145deg,rgba(37,75,133,.92),rgba(10,18,40,.96))!important;border-color:rgba(95,247,255,.78)!important;box-shadow:0 24px 46px rgba(0,0,0,.44),0 0 34px rgba(95,247,255,.25),inset 0 1px rgba(255,255,255,.16)!important}.card::after{content:"";position:absolute;inset:-80% 25% auto -45%;height:120%;transform:rotate(23deg) translateX(-120%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);pointer-events:none;transition:transform .7s ease}.card:hover::after{transform:rotate(23deg) translateX(160%)}.icon-wrap{background:rgba(8,21,45,.86)!important;border-color:rgba(95,247,255,.32)!important;box-shadow:0 0 22px rgba(50,136,255,.22),inset 0 1px rgba(255,255,255,.11)!important}.card-name{color:#f7ffff!important}.card-sub{color:#9bb0c8!important}.price-from{color:#70f8ff!important}.badge{background:rgba(95,247,255,.12)!important;border-color:rgba(95,247,255,.38)!important;color:#bdffff!important}.top-product-badge{box-shadow:0 0 25px rgba(255,117,42,.34)!important;animation:hotPulse 1.35s ease-in-out infinite alternate}
+.panel{background:linear-gradient(145deg,rgba(18,35,70,.94),rgba(5,10,24,.97))!important;border-color:rgba(95,247,255,.36)!important;box-shadow:0 30px 70px rgba(0,0,0,.50),0 0 38px rgba(50,136,255,.16),inset 0 1px rgba(255,255,255,.11)!important}.panel-title{color:#f7ffff!important;text-shadow:0 0 16px rgba(95,247,255,.25)}.field-title,.section-title,.preview-title{color:#73f9ff!important;text-shadow:0 0 13px rgba(95,247,255,.35)}.input,.note-box,.cart-item,.preview{background:rgba(9,20,43,.78)!important;border-color:rgba(118,174,237,.30)!important;color:#f2ffff!important}.input:focus,.note-box:focus{border-color:var(--v-cyan)!important;box-shadow:0 0 0 3px rgba(95,247,255,.12),0 0 24px rgba(95,247,255,.22)!important}.plan-option{background:linear-gradient(145deg,rgba(36,70,126,.72),rgba(10,20,43,.92))!important;border-color:rgba(118,174,237,.34)!important;color:#f2ffff!important;box-shadow:0 13px 28px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.11)!important}.plan-option:hover{border-color:var(--v-cyan)!important;box-shadow:0 0 30px rgba(95,247,255,.25)!important}.plan-option.active{background:linear-gradient(145deg,rgba(95,247,255,.30),rgba(69,63,201,.37))!important;border-color:#d7ffff!important;box-shadow:0 0 0 3px rgba(95,247,255,.16),0 0 38px rgba(95,247,255,.46)!important;animation:selectedPlan .35s cubic-bezier(.23,1,.32,1) both}.telegram-btn{background:linear-gradient(100deg,#226bff,#29d9e9,#9564ff)!important;box-shadow:0 0 30px rgba(95,247,255,.34),0 14px 28px rgba(0,0,0,.28)!important;animation:buttonGlow 2.3s ease-in-out infinite alternate}.telegram-btn:hover{filter:brightness(1.16);transform:translateY(-3px) scale(1.01)!important}.pay-option{background:linear-gradient(145deg,rgba(28,63,112,.82),rgba(7,15,32,.95))!important;border-color:rgba(95,247,255,.36)!important}.pay-option.active{box-shadow:0 0 0 3px rgba(95,247,255,.17),0 0 34px rgba(95,247,255,.58)!important}.support-avatar{box-shadow:0 0 25px rgba(95,247,255,.72)!important}
+@keyframes vBg{from{background-position:0% 20%}to{background-position:100% 80%}}@keyframes vSweep{from{transform:translateX(-45%)}to{transform:translateX(45%)}}@keyframes heroBreath{from{box-shadow:0 28px 75px rgba(0,0,0,.45),0 0 42px rgba(50,136,255,.12),inset 0 1px rgba(255,255,255,.10)}to{box-shadow:0 28px 75px rgba(0,0,0,.45),0 0 72px rgba(95,247,255,.22),inset 0 1px rgba(255,255,255,.14)}}@keyframes heroSpin{to{transform:rotate(360deg)}}@keyframes vOrb{from{transform:scale(.98);filter:brightness(1)}to{transform:scale(1.09);filter:brightness(1.22)}}@keyframes vCardIn{from{opacity:0;transform:translateY(19px) scale(.97)}to{opacity:1;transform:none}}@keyframes hotPulse{from{filter:saturate(1);transform:scale(1)}to{filter:saturate(1.3) brightness(1.13);transform:scale(1.04)}}@keyframes selectedPlan{from{transform:scale(.96)}to{transform:scale(1)}}@keyframes buttonGlow{from{box-shadow:0 0 20px rgba(95,247,255,.22),0 14px 28px rgba(0,0,0,.26)}to{box-shadow:0 0 42px rgba(95,247,255,.46),0 14px 28px rgba(0,0,0,.30)}}
+@media(prefers-reduced-motion:reduce){body,.hero,.hero::after,.brand-orb,.card,.top-product-badge,.telegram-btn{animation:none!important}.card{opacity:1!important}.plan-option.active{animation:none!important}}
+
+
+/* Product-card Buy Now micro-interaction */
+.buy-now-btn{align-self:center;width:calc(100% - 10px);margin-top:5px;padding:8px 12px;border:1px solid rgba(95,247,255,.55);border-radius:999px;color:#eaffff;background:linear-gradient(100deg,rgba(35,120,255,.65),rgba(86,243,255,.30),rgba(139,92,255,.62));box-shadow:0 0 15px rgba(86,243,255,.18),inset 0 1px rgba(255,255,255,.16);font-size:11px;font-weight:950;letter-spacing:.25px;cursor:pointer;transition:transform .24s cubic-bezier(.23,1,.32,1),box-shadow .24s ease,filter .24s ease}.buy-now-btn span{display:inline-block;margin-left:4px;transition:transform .24s ease}.buy-now-btn:hover{transform:translateY(-2px) scale(1.03);filter:brightness(1.16);box-shadow:0 0 25px rgba(86,243,255,.42),0 8px 18px rgba(0,0,0,.22)}.buy-now-btn:hover span{transform:translate(2px,-2px)}.buy-now-btn:active{transform:scale(.96)}.card:hover .buy-now-btn{animation:buyShimmer 1.4s ease-in-out infinite alternate}@keyframes buyShimmer{from{box-shadow:0 0 14px rgba(86,243,255,.22),inset 0 1px rgba(255,255,255,.14)}to{box-shadow:0 0 27px rgba(86,243,255,.50),inset 0 1px rgba(255,255,255,.22)}}
+@media(max-width:760px){.buy-now-btn{padding:7px 9px;font-size:10px;width:calc(100% - 4px)}}@media(prefers-reduced-motion:reduce){.buy-now-btn,.buy-now-btn span{animation:none!important;transition:none!important}}
+
+</style>
+<style>
+/* UNIFIED TEXT ALIGNMENT v2 */
+.card{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+}
+.card .icon-wrap,
+.card .top-product-badge{
+  align-self:center;
+}
+.card-name{
+  min-height:2.5em!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  line-height:1.28!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+}
+.card-sub{
+  min-height:1.35em!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  line-height:1.3!important;
+}
+.price-from{
+  min-height:1.35em!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  line-height:1.3!important;
+}
+.buy-now-btn{margin-top:auto!important}
+.plan-list{
+  align-items:stretch!important;
+  grid-auto-rows:1fr!important;
+}
+.plan-option{
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-height:142px!important;
+  height:100%!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+  padding:24px 14px 18px!important;
+  text-align:center!important;
+  font-size:clamp(11px,1.5vw,13px)!important;
+  font-weight:900!important;
+  line-height:1.42!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+}
+.plan-option>div:not([class]){
+  min-height:2.84em!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  white-space:pre-line!important;
+  overflow-wrap:anywhere!important;
+}
+.plan-sub-label{
+  min-height:1.4em!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  line-height:1.4!important;
+  white-space:pre-line!important;
+}
+.info-content{
+  white-space:pre-line!important;
+  overflow-wrap:anywhere!important;
+  line-height:1.72!important;
+  text-align:left!important;
+}
+@media(max-width:760px){
+  .card-name{font-size:12px!important;min-height:2.56em!important}
+  .plan-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .plan-option{min-height:126px!important;padding:22px 10px 16px!important;font-size:11px!important}
+}
+@media(max-width:430px){
+  .plan-option{min-height:122px!important;padding-left:8px!important;padding-right:8px!important;font-size:10.5px!important}
+}
+</style>
+<style id="literal-newline-guard">
+.info-content{white-space:normal!important;line-height:1.72!important}
+.info-content br{display:block;content:"";margin-bottom:.28em}
+</style>
+<style id="support-logo-polish">
+.support-actions{align-items:center}
+.support-btn{min-width:132px;justify-content:center!important;padding:8px 12px!important}
+.support-logo{width:27px;height:27px;flex:0 0 27px;object-fit:contain;border-radius:8px;background:#fff;padding:2px;box-shadow:0 0 14px rgba(95,247,255,.32)}
+.whatsapp-logo{border-radius:50%;background:#25d366}
+.telegram-logo{background:#fff}
+.support-btn>span{font-size:11px!important;line-height:1.18;text-align:left}
+.support-btn>span small{font-size:9px;color:#9fc1d6}
+@media(max-width:480px){.support-actions{gap:7px}.support-btn{min-width:126px;padding:8px 9px!important}.support-logo{width:25px;height:25px;flex-basis:25px}.support-btn>span{font-size:10px!important}}
 </style>
 </head>
 <body>
@@ -1511,10 +1635,10 @@ body{background-color:#050812!important;background-image:radial-gradient(circle 
     </div>
     <footer class="site-footer">
       <div class="support-label">Need help? Contact support</div>
-      <div class="support-profile"><img class="support-avatar" src="IMG_20260816_233345_459.jpg" alt="Telegram profile"><div><strong>Diameter X</strong><small>@angsthtun · Support available</small></div></div>
+      <div class="support-profile"><img class="support-avatar" src="telegram-logo-telegram-logo-transparent-telegram-icon-transparent-free-free-png.png" alt="Telegram logo"><div><strong>Diameter X</strong><small>@angsthtun · Support available</small></div></div>
       <div class="support-actions">
-        <a class="support-btn whatsapp-support" href="https://wa.me/qr/PMHPHBAS33UHB1" target="_blank" rel="noopener">🟢 WhatsApp <span>Chat with us</span></a>
-        <a class="support-btn telegram-support" href="https://t.me/angsthtun" target="_blank" rel="noopener">✈️ Telegram <span>@angsthtun</span></a>
+        <a class="support-btn whatsapp-support" href="https://wa.me/qr/PMHPHBAS33UHB1" target="_blank" rel="noopener"><img class="support-logo whatsapp-logo" src="images (2).jpeg" alt="WhatsApp logo"><span>WhatsApp<br><small>Chat with us</small></span></a>
+        <a class="support-btn telegram-support" href="https://t.me/angsthtun" target="_blank" rel="noopener"><img class="support-logo telegram-logo" src="telegram-logo-telegram-logo-transparent-telegram-icon-transparent-free-free-png.png" alt="Telegram logo"><span>Telegram<br><small>@angsthtun</small></span></a>
       </div>
       <div class="founder-line">Founder: Diameter Eight</div>
     </footer>
@@ -1538,51 +1662,14 @@ body{background-color:#050812!important;background-image:radial-gradient(circle 
   iconType: "image",
   icon: "chatgpt-icon.png",
   search: "chatgpt openai ai",
-  description: "⚠️ Unstable Plan\n✔️ ဈေးသက်သာပါတယ်\n✔️ 25 ရက် Warranty ပါ\n❗️ တစ်ခါတစ်လေ Plus ပြုတ်နိုင်ပါတယ်\n🔄 ပြုတ်သွားပါက ပြန်လဲပေးပါမယ်\n\n 🌈 CGPT Go Plans\n Best For Daily\n ⚡ Cheap Price\n 2.5 months Warranty\n\n🔥 CGPT Official Plan\n✔️ 1 လလုံး အာမခံပါတယ်\n✔️ History မပျောက်ပါ\n✔️ Data မပျောက်ပါ\n✔️ Renew လုပ်နိုင်ပါတယ်\n✔️ ပိုပြီး Smooth ဖြစ်ပါတယ်\n",
+  description: "✅ Official access options are available.\n✔️ Own Mail option includes Full Warranty.\n✔️ History remains available with the official option.\n🔄 Renewal is available for eligible official access.\n❗️ CGPT GO stock can change; preorder may be required when unavailable.",
   plans: [
-
-    // 🔸 Unstable Plans
-    { name: "👥Plus Share - 1 Month - 28000 Ks\n(Unstable)", price: 28000,bestSeller: true },
-    { name: "🔐Plus Private - 1 Month - 30500 Ks\n(Unstable)", price: 30500,bestSeller: true  },
-    { name: "🔐Plus Own Mail-Invite - 1 Month - 11000 Ks\n(Unstable)", price: 11000,outOfStock:true },
-
-    // 🔸 CGPT Go Plans
-    { name: "🔐 CGPT Private - 3 Months - 19000 Ks\n(CGPT Go)", price: 16000, bestSeller: true },
-    { name: "🔐 CGPT Own Mail - 3 Months - 18000 Ks\n(CGPT GO)", price: 17000 },
-  
-
-    // 🔸 CGPT Official Plans
-    { name: "💥🔐Plus Private - 1 Month - 85000 Ks\n(Official)", price: 80500, bestSeller: true },
-    { name: "💥🔐Plus Own Mail - 1 Month - 90000 Ks\n(Official)", price: 90000 }
+      { name: "👐 CGPT GO Official – 8$ Plan – 1 Month – 27000 Ks", price: 27000 },
+      { name: "🌌 CHATGPT PLUS Official – 80$ Plan – 1 Month – 90000 Ks", price: 90000, bestSeller: true },
+      { name: "✴️ CHATGPT PLUS – Private – 1 Month – 35000 Ks", price: 35000 },
+      { name: "☄️ CGPT GO – 3 Months – Preorder", price: 27000, outOfStock: true },
   ]
-      },
-      {
-  id: "spotify",
-  name: "Spotify",
-  top: true,
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "Music",
-  iconType: "image",
-  icon: "quality_restoration_20260510232104714.png",
-  search: "spotify music premium",
-  description: "🕜🕰️ Individual Planလအများနဲ့ Family Planလအများတွေသည် waiting timeရှိပါတယ်။\n⚡ Family Plan 1 Month ကတော့ Instant ရပါတယ်။\n📩 Own-mail လိုချင်ပါက DM ကိုဆက်သွယ်ပေးပါ။",
-  plans: [
-
-    // Family Plan
-    { name: "Family Plan - 1 Month - 8500 Ks\n(⚡Instant)", price: 8500, bestSeller: true },
-    { name: "Family Plan - 3 Months - 17000 Ks\n(🕰️Waiting Time)", price: 17000 },
-    { name: "Family Plan - 6 Months - 32000 Ks\n (🕰️Waiting Time)", price: 32000 },
-    { name: "Family Plan - 1 Year - 68000 Ks\n(🕰️Waiting Time)", price: 68000 },
-
-    // Individual Plan
-    { name: "Individual Plan - 1 Month - 13000 Ks\n(🕰️Waiting Time)", price: 13000 },
-    { name: "Individual Plan - 2 Months - 15000 Ks\n(🕰️Waiting Time)", price: 15000 },
-    { name: "Individual Plan - 3 Months - 20000 Ks\n(🕰️Waiting Time)", price: 20000 }
-
-  ]
-      },
-
+},
       {
   id: "canva",
   name: "Canva Pro",
@@ -1606,28 +1693,41 @@ body{background-color:#050812!important;background-image:radial-gradient(circle 
     { name: "🔐(Private) - 1 Month  - 9000 Ks\nPremium Pro", price: 9000 }
   ]
       },
-{
-id: "capcut",
-name: "CapCut Pro",
-top: true,
-subtitle: "Tap to see prices",
-badge: "available",
-category:"Editing",
-iconType: "image",
-icon: "IMG_20260307_045206_183.jpg",
-search: "capcut pro edit video",
-description:"Team Planပါ။",
-plans: [
-{ name:"Global Account – 1 Month – 4000 Ks\n(👥Share)", price:4000,bestSeller:true },
-
-{ name:"Global Account 3 Month – 9000 Ks\n(👥Share)", price:9000,outOfStock:true },
-{ name:"Global Account – 1 Month – 8000 Ks\n(🔐Private/3 Devices)", price:19000 },
-{ name:"Global Account – 3 Months – 25000 Ks\n(🔐Private)", price:25000,outOfStock:true },
-{ name:"Global Account – 6 Months – 45000 Ks\n(🔐Private)", price:45000,outOfStock:true }, 
-{ name:"Own Mail  - 7 Days - 2000 Ks", price:2000,outOfStock:true  },
-]
+      {
+  id: "capcut",
+  name: "CapCut Pro",
+  top: true,
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "Editing",
+  iconType: "image",
+  icon: "IMG_20260307_045206_183.jpg",
+  search: "capcut pro edit video",
+  description: "✔️ Full Warranty is included.\n🚫 Renewal is not available.\n🔐 Private and Share access are available as separate options.\n🛍 Select the account type you need before purchase.",
+  plans: [
+      { name: "🔐 Private Plan – 7 Days – 1800 Ks", price: 1800 },
+      { name: "🔐 Private Plan – 1 Month – 8500 Ks", price: 8500, bestSeller: true },
+      { name: "👥 Share Plan – 1 Month – 5000 Ks", price: 5000 },
+  ]
 },
-            {
+      {
+  id: "zoom",
+  name: "Zoom Pro",
+  
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "Services",
+  iconType: "image",
+  icon: "zoom.png",
+  search: "zoom pro meeting video",
+  description: "🔐 Private access is provided.\n🛍 Select the required duration before purchase.\n❗️Availability may change based on stock.",
+  plans: [
+      { name: "🔐 Private – 14 Days – 5000 Ks", price: 5000 },
+      { name: "🔐 Private – 1 Month – 8000 Ks", price: 8000, bestSeller: true },
+      { name: "🔐 Private – 2 Months – 15000 Ks", price: 15000 },
+  ]
+},
+      {
   id: "hbomax",
   name: "HBO Max",
   top: true,             
@@ -1649,57 +1749,25 @@ plans: [
       {
   id: "gemini",
   name: "Gemini AI Pro",
-  top: true,  
+  top: true,
   subtitle: "Tap to see prices",
   badge: "available",
   category: "AI",
   iconType: "image",
   icon: "file_00000000168071fa8d5d17512a7591b5.png",
   search: "gemini ai pro google ai",
-  descriptionPages: [
-
-{
-  title: "✉️ Own Mail Invite",
-  text:
-`✔️ Customers Mail ကို Invite
-လုပ်ပေးတာပါ။
-
-✔️ Monthly Renew လို့ရပါတယ် 🔗
-
-✔️10000% Secure 🔒
-
-📩 Invite Accept လုပ်ရုံနဲ့
-အသုံးပြုနိုင်ပါတယ် 😎`
-},
-
-{
-  title: "🆒 For Family",
-  text:
-`🔒3 Months ကို
-🔥Full Warranty ပေးပါတယ်။
-
-🔒12 Months ကိုတော့
-🔥9 Months Warranty ပဲပေးပါတယ်။
-
-✔️ Family Plan ကိုလည်း
-✉️ Own Mail နဲ့ရပါတယ် 😎`
-}
-
-],     
+  description: "✉️ Own Mail Invite includes Full Warranty and monthly renewal.\n👑 Family Manager access includes the warranty stated for the selected duration.\n🔗 Link access has No Warranty.\n🛍 Choose Own Mail, Family, or Link carefully before purchase.",
   plans: [
-
-    { name:"👑1 Month 4500 Ks\n✉️Own Mail Invite", price:4500, bestSeller:true },
-    { name:"👑2 Months 7000 Ks\n✉️Own Mail Invite", price:7000 },
-    { name:"👑3 Months 10000 Ks\n✉️Own Mail Invite", price:10000, bestSeller:true },
-    { name:"👑6 Months 13000 Ks\n✉️Own Mail Invite", price:13000 },
-    { name:"👑12 Months 15000 Ks\n✉️Own Mail Invite", price:15000, discount:true },
-    { name:"🆒For Family 🔒3 Months 13500 Ks\n🔥 Family ", price:13500 },
-    { name:"🆒For Family 🔒12 Months 25000 Ks\n🔥 Family", price:25000, bestSeller:true }
-
+      { name: "✉️ Own Mail Invite – 1 Month – 4000 Ks", price: 4000, bestSeller: true },
+      { name: "✉️ Own Mail Invite – 2 Months – 7000 Ks", price: 7000 },
+      { name: "✉️ Own Mail Invite – 3 Months – 12000 Ks", price: 12000 },
+      { name: "👑 Family Manager – 3 Months – 10000 Ks", price: 10000 },
+      { name: "👑 Family Manager – 12 Months – 18000 Ks", price: 18000 },
+      { name: "❄️ Gemini Link – 18 Months – 8000 Ks", price: 8000 },
+      { name: "❄️ Gemini Link – 3 Months – 13000 Ks", price: 13000 },
   ]
-},      
-  
-{
+},
+      {
 id: "picsart",
 name: "PicsArt Pro",
 subtitle: "Tap to see prices",
@@ -1717,162 +1785,42 @@ plans: [
 { name:"Own Mail - 1 Month – 24000 Ks", price:24000,outOfStock:true }
 ]
 },
-      
-{
+      {
   id: "hma_vpn",
   name: "HMA VPN",
-  top: true,
+  
   subtitle: "Tap to see prices",
   badge: "available",
   category: "VPN",
   iconType: "image",
   icon: "file_00000000fc3c71fab87726fc991b3be0.png",
-  search: "hma vpn secure fast proxy",
-
-  descriptionPages: [
-
-    {
-      title: "Share(30-26 Days)",
-      text:
-`👥 Share Plan
-
-📱 HMA Private Plan 1ခုမှာ
-devices 8ခုအထိ အသုံးပြုနိုင်ပါတယ်။
-
-🔄 Share Plan ဆိုတာက
-Private Account တကောင့်တည်းကို
-share အသုံးပြုတာဖြစ်ပါတယ် 👍
-
-✨ Android / iOS
-💻 Windows PC / Laptop
-🖥 MacBook
-
-တွေမှာ အသုံးပြုနိုင်ပါတယ်။
-
-📌 Why is it (30-26 Days) ❓
-
-Share ဝယ်တဲ့သူတွေရှိပြီးသား
-account တွေကိုပဲ အသုံးပြုရတာမို့
-ရက်အပြည့်မဖြစ်နိုင်တဲ့အချိန်တွေ
-ရှိနိုင်ပါတယ်။
-
-🔥 ရက်အပြည့်လိုချင်တယ်ဆိုရင်တော့
-နောက်ပိုင်း account အသစ်တွေ
-ဖွင့်တဲ့နေ့မှာ Channel ထဲ 🔔 Alarm
-ပေးထားပါမယ်။`
-    },
-
-    {
-      title: "Private Plan (1 Month)",
-      text:
-`🔐 Private Plan
-
-👑 Private Account သီးသန့်
-အသုံးပြုချင်သူတွေအတွက်
-သင့်တော်တဲ့ plan ပါ။
-
-✅ Up to 8 Devices
-✅ Full 1 Month Usage
-✅ All Devices Support
-✅ Stable & Secure Connection
-✅ Personal Private Access
-
-📱 Mobile
-💻 PC / Laptop
-🖥 MacBook
-
-အကုန်အသုံးပြုနိုင်ပါတယ် 😎`
-    }
-
-  ],
-
+  search: "hma vpn android mac pc",
+  description: "✅ Android / Mac / PC အသုံးပြုနိုင်သည်။\n❌ iOS မရပါ။\n⚠️ Share plan တွင် device 1 ခုသာ အသုံးပြုနိုင်သည်။\n📊 Private plan တွင် devices 8–9 ခု အသုံးပြုနိုင်သည်.",
   plans: [
-    {   name: "👥Share Plan – 2000 Ks\n(Android & iOS • 1 Device)",  price: 2000,  bestSeller: true  },
-    { name: "👥Share Plan – 2500 Ks\n(Windows PC & Laptop • 1 Device)", price: 2500 },
-    { name:"👥Share Plan – 2500 Ks\n(MacBook • 1 Device)", price: 2500 },
-    { name: "👥Share Plan – 3000 Ks\n(PC/Mobile • 2 Devices)", price: 3000,bestSeller: true },
-    { name:"🔐Private Plan – 1 Month – 7000 Ks\n(All Devices Support)", price: 7000, bestSeller: true}
-
+      { name: "👥 1 Month – Share – 1400 Ks", price: 1400 },
+      { name: "🔐 1 Month – Private – 5000 Ks", price: 5000, bestSeller: true },
+      { name: "✉️ 1 Month – Own Mail – 6000 Ks", price: 6000 },
   ]
 },
-{
-id: "vpn",
-name: "Express VPN",
-top: true, 
-subtitle: "Tap to see prices",
-badge: "available",
-category:"VPN",
-iconType: "image",
-icon: "ExpressVPN-logo.png",
-search: "express vpn secure",
-descriptionPages: [
-
-    {
-      title: "Share(30-26 Days)",
-      text:
-`👥 Share Plan
-
-📱 Express Private Plan 1ခုမှာ
-devices 8ခုအထိ အသုံးပြုနိုင်ပါတယ်။
-
-🔄 Share Plan ဆိုတာက
-Private Account တကောင့်တည်းကို
-share အသုံးပြုတာဖြစ်ပါတယ် 👍
-
-✨ Android / iOS
-💻 Windows PC / Laptop
-🖥 MacBook
-
-တွေမှာ အသုံးပြုနိုင်ပါတယ်။
-
-📌 Why is it (30-26 Days) ❓
-
-Share ဝယ်တဲ့သူတွေရှိပြီးသား
-account တွေကိုပဲ အသုံးပြုရတာမို့
-ရက်အပြည့်မဖြစ်နိုင်တဲ့အချိန်တွေ
-ရှိနိုင်ပါတယ်။
-
-🔥 ရက်အပြည့်လိုချင်တယ်ဆိုရင်တော့
-နောက်ပိုင်း account အသစ်တွေ
-ဖွင့်တဲ့နေ့မှာ Channel ထဲ 🔔 Alarm
-ပေးထားပါမယ်။`
-    },
-
-    {
-      title: "Private Plan (1 Month)",
-      text:
-`🔐 Private Plan
-
-👑 Private Account သီးသန့်
-အသုံးပြုချင်သူတွေအတွက်
-သင့်တော်တဲ့ plan ပါ။
-
-✅ Up to 8 Devices
-✅ Full 1 Month Usage
-✅ All Devices Support
-✅ Stable & Secure Connection
-✅ Personal Private Access
-
-📱 Mobile
-💻 PC / Laptop
-🖥 MacBook
-
-အကုန်အသုံးပြုနိုင်ပါတယ် 😎`
-    }
-
-  ],  
-plans: [
-{ name:"👥Share Plan – 1500 Ks\n(Android & iOS)", price:1700,bestSeller:true },
-{ name:"👥Share Plan – 2300 Ks\n (Windows PC & Laptop)", price:2500 },
-{ name:"👥Share Plan – 2300 Ks\n (Linux Devices)", price:2500 },
-{ name:"👥Share Plan – 2300 Ks\n (MacBook)", price:2500 },
-{ name:"👥Share Plan – 3 Month – 9500 Ks\n (All Devices Support)", price:9500,outOfStock:true },
-{ name:"👥Share Plan – 6 Month – 12500 Ks\n (All Devices Support)", price:12500,bestSeller:true },
-{ name:"🔐Private Plan – 1 Month – 7000 Ks\n (Up to 9 devices)", price:7000,bestSeller:true },
-{ name:"✉️Own Mail Plan– 1 Month – 8000 Ks\n (Up to 9 devices)", price:8000 }
-]
- },
-{
+      {
+  id: "vpn",
+  name: "Express VPN",
+  
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "VPN",
+  iconType: "image",
+  icon: "ExpressVPN-logo.png",
+  search: "express vpn android mac pc ios",
+  description: "✅ Android / Mac / PC / iOS အသုံးပြုနိုင်သည်။\n🔐 All plans use private-style access.\n🛍 Device count ကို plan အလိုက်ရွေးချယ်ပါ။",
+  plans: [
+      { name: "🔐 2 Months – 1 Device – 5000 Ks", price: 5000 },
+      { name: "🔐 3 Months – 2 Devices – 7000 Ks", price: 7000, bestSeller: true },
+      { name: "🔐 6 Months – 4 Devices – 11000 Ks", price: 11000 },
+      { name: "🔐 12 Months – 6 Devices – 15000 Ks", price: 15000 },
+  ]
+},
+      {
 id: "telegram",
 name: "Telegram Premium",
 subtitle: "Tap to see prices",
@@ -1892,7 +1840,6 @@ plans: [
 { name:"Link Plan – 12 Months – 118000 Ks", price:118000 }
 ]
 },
-
       {
   id: "adobe_cc",
   name: "Adobe Creative Cloud",
@@ -1911,7 +1858,7 @@ plans: [
     { name: "1 Year - 100000 Ks (Stock rare)", price: 100000 }
   ]
 },
-{
+      {
   id: "grammarly_ai",
   name: "Grammarly AI",
   subtitle: "Tap to see prices",
@@ -1946,8 +1893,7 @@ plans: [
     { name: "🔐Grok Super Grok - 2 Months - 30000 Ks (Private)", price: 30000 }
   ]
 },
-  
-{
+      {
 id: "perplexity",
 name: "Perplexity AI Pro",
 subtitle: "Tap to see prices",
@@ -1962,8 +1908,7 @@ plans: [
 { name:"🔐Perplexity AI Pro - 1 Month - 8000 Ks (Not Own Mail)", price:8000,outOfStock:true },
 { name:"🔐Perplexity AI Pro - 1 Month - 13500 Ks (Private)", price:13500,outOfStock:true }
 ]
-},    
-
+},
       {
   id: "netflix",
   name: "Netflix Premium",
@@ -1982,25 +1927,121 @@ plans: [
 
   ]
       },
-           {
+      {
+  id: "spotify",
+  name: "Spotify",
+  top: true,
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "Music",
+  iconType: "image",
+  icon: "quality_restoration_20260510232104714.png",
+  search: "spotify music premium individual family own mail",
+  description: "❗ Some options cannot be renewed.\n✔ Renewal is available only for eligible options.\n🔼 Own email may be available.\n🛍 Check the selected plan details before purchase.",
+  plans: [
+    { name: "🔥 Individual Plan — 1 Month — 10000 Ks", price: 10000 },
+    { name: "🔥 Individual Plan — 2 Months — 15000 Ks", price: 15000 },
+    { name: "✨ Family Plan — 3 Months — 18000 Ks", price: 18000, bestSeller: true }
+  ]
+},
+      {
+  id: "tidal_music",
+  name: "Tidal Music",
+  top: true,
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "Music",
+  iconType: "image",
+  icon: "tidal-logo-rounded-hd-free-png.png",
+  search: "tidal music premium individual family own mail",
+  description: "❗ Some options cannot be renewed.\n✔ Renewal is available only for eligible options.\n🔼 Own email may be available.\n🛍 Check account access details before purchase.",
+  plans: [
+    { name: "💥 Individual Plan — 1 Month — 8000 Ks", price: 8000 },
+    { name: "💥 Family Plan — 1 Month — 8000 Ks", price: 8000, bestSeller: true },
+    { name: "💥 Family Plan — 2 Months — 10000 Ks", price: 10000 }
+  ]
+},
+      {
+  id: "youtube_music",
+  name: "YouTube Music",
+  top: true,
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "Music",
+  iconType: "image",
+  icon: "unnamed (1).jpg",
+  search: "youtube music ready made private own mail invite",
+  description: "❌ Some options cannot be renewed.\n✔ Email-invite option can be renewed.\n❗ Availability may change.\n🛍 Choose the account type in the plan selection.",
+  plans: [
+    { name: "YouTube Music — 1 Month — 8000 Ks", price: 8000 },
+    { name: "✔ Private Ready-made Account — 1 Month — 20000 Ks", price: 20000, bestSeller: true },
+    { name: "✔ Own Mail Invite — 1 Month — 9000 Ks", price: 9000 }
+  ]
+},
+      {
+  id: "soundcloud_go",
+  name: "SoundCloud Go",
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "Music",
+  iconType: "image",
+  icon: "488-3.jpg",
+  search: "soundcloud go music private ready made account",
+  description: "❌ Renewal is not available.\n✔ A ready-made account will be delivered.\n🛍 Check access details after delivery.",
+  plans: [
+    { name: "SoundCloud Go — 1 Month — 8000 Ks", price: 8000 }
+  ]
+},
+      {
+  id: "qobuz_music",
+  name: "Qobuz Music",
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "Music",
+  iconType: "image",
+  icon: "a.jpg",
+  search: "qobuz music private ready made account",
+  description: "❌ Renewal is not available.\n✔ A ready-made account will be delivered.\n🛍 Check access details before purchase.",
+  plans: [
+    { name: "Qobuz Music — 1 Month — 8000 Ks", price: 8000 }
+  ]
+},
+      {
+  id: "apple_music",
+  name: "Apple Music (Android)",
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "Music",
+  iconType: "image",
+  icon: "apps.62962.14205055896346606.c235e3d6-fbce-45bb-9051-4be6c2ecba8f.png",
+  search: "apple music android individual family own mail",
+  description: "❗ Some options cannot be renewed.\n✔ Renewal is available only for eligible options.\n🔼 Own email may be available.\n🛍 Confirm Android compatibility before purchase.",
+  plans: [
+    { name: "💥 Individual Plan — 1 Month — 6000 Ks", price: 6000 },
+    { name: "💥 Family Plan — 1 Month — 6000 Ks", price: 6000, bestSeller: true },
+    { name: "💥 Family Plan — 2 Months — 9000 Ks", price: 9000 },
+    { name: "💥 Family Plan — 3 Months — 11000 Ks", price: 11000 }
+  ]
+},
+      {
   id: "youtube",
   name: "YouTube Premium",
-  top: true,         
+  top: true,
   subtitle: "Tap to see prices",
   badge: "available",
   category: "Video",
   iconType: "image",
   icon: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png",
   search: "youtube premium subscription",
-  description: "Family Head account မှာ account 5 ခုထိ invite လုပ်နိုင်ပါတယ်။",
+  description: "✉️ Own Mail/Invite option includes Full Warranty.\n🔗 Link access has No Warranty.\n👑 Family Head can invite up to 5 accounts.\n🛍 Select the access type carefully before purchase.",
   plans: [
-    { name: "🌈1 Month - 9000 Ks\n🔐Private Account", price: 9000 },
-    { name: "🔐Private Account - 3 Months - 25000 Ks", price: 25000 },
-    { name: "🌈(5 invites) - 1 Month - 30000 Ks\nFamily Head Account", price: 30000 }
+      { name: "🌐 Individual – Private Account – 1 Month – 6500 Ks", price: 6500 },
+      { name: "🌐 Individual – Private Account – 3 Months – 20000 Ks", price: 20000, bestSeller: true },
+      { name: "✉️ Individual – Invite Your Mail – 1 Month – 7000 Ks", price: 7000 },
+      { name: "👑 Family Head Account – 1 Month – 30000 Ks", price: 30000 },
   ]
-  },
-
-{
+},
+      {
 id: "disney",
 name: "Disney+",
 subtitle: "Tap to see prices",
@@ -2024,7 +2065,7 @@ plans: [
 { name:"Disney+ Trio - 12 Months - 30000 Ks", price:30000 }
 ]
 },
-  {
+      {
 id: "prime",
 name: "Prime Video",
 subtitle: "Tap to see prices",
@@ -2067,71 +2108,6 @@ plans: [
     { name: "3000 Diamonds 💎 - 265060 Ks", price: 265060 }
   ]
 },
-      {
-  id: "elsa_speak",
-  name: "Elsa Speak",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "AI",
-  iconType: "image",
-  icon: "ap_resize (1).png",
-  search: "elsa speak pro lifetime",
-  description: "🔥 Pro Lifetime\n📩 Own Mail ရပါတယ် (ဒီဈေးပါပဲ)",
-  plans: [
-    { name: "💥Pro Lifetime - 50000 Ks", price: 50000 },
-    { name: "☀️Pre mium Lifetime - 250,000 Ks", price: 250000 }
-  ]
-},
-{
-  id: "apple_music",
-  name: "Apple Music",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "Music",
-  iconType: "image",
-  icon: "apps.62962.14205055896346606.c235e3d6-fbce-45bb-9051-4be6c2ecba8f.png",
-  search: "apple music ios android subscription",
-  description: "✔️ All Private Accounts\n✔️ Full Warranty\n✔️ Own-mail Invite Method\n✔️ ⚡️Instant မရနိုင်",
-
-  plans: [
-
-    // iOS (Own Mail)
-    { name: "iOS - Family Plan (Own Mail) - 1 Month - 8000 Ks", price: 8000 },
-    { name: "iOS - Family Plan (Own Mail) - 3 Months - 20000 Ks", price: 20000 },
-    { name: "iOS - Family Plan (Own Mail) - 6 Months - 37500 Ks", price: 37500 },
-
-    // Android (Own Mail - Family)
-    { name: "Android - Family Plan (Own Mail) - 1 Month - 7600 Ks (1 Account)", price: 7600 },
-    { name: "Android - Family Plan (Own Mail) - 1 Month - 6800 Ks (2 Accounts)", price: 6800 },
-    { name: "Android - Family Plan (Own Mail) - 1 Month - 6000 Ks (3 Accounts)", price: 6000 },
-    { name: "Android - Family Plan (Own Mail) - 1 Month - 5000 Ks (4 Accounts)", price: 5000 },
-
-    // Android Individual
-    { name: "Android - Individual Plan (Private) - 1 Month - 9500 Ks", price: 9500 }
-
-  ]
-},
-
-{
-id: "itunes",
-name: "iTunes Gift Card",
-subtitle: "Tap to see prices",
-badge: "available",
-category:"Gift",
-iconType: "image",
-icon: "itunes-icon.png",
-search: "itunes gift card apple",
-description:"Other Regions Available: Canada, Germany, Japan, China, Taiwan, Nigeria, etc.",
-plans: [
-{ name:"💲2 USD – 8000 Ks", price:8000 },
-{ name:"💲3 USD – 12000 Ks", price:12000 },
-{ name:"💲5 USD – 20100 Ks", price:20100 },
-{ name:"💲10 USD – 40200 Ks", price:40200 },
-{ name:"💲20 USD – 60300 Ks", price:60300 },
-{ name:"💲50 USD – 10700 Ks", price:10700 },
-{ name:"💲100 USD – 405000 Ks", price:405000 }
-]
-  },
       {
   id: "facebook_service",
   name: "Facebook Service",
@@ -2263,84 +2239,7 @@ plans: [
     
   ]
       },
-{
-  id: "happ",
-  name: "Happ VPN",
-  top: true,
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "VPN",
-  iconType: "image",
-  icon: "file_000000007cb471f9a3c200efe0ff8f9e.png",
-  search: "happ vpn secure data",
-  description: "Regions: လောလောဆယ် 🇸🇬Singapore Regionသာလိုင်းအကောင်းဆုံးမို့\n Singaporeပဲရောင်းပါသေးတယ်။\n 💥Unlimited Devices",
-  plans: [
-    { name: "🇸🇬50GB – 3500 Ks\n(1 Month)", price: 3500,bestSeller:true },
-    { name: "🇸🇬100GB – 5000 Ks\n (1 Month)", price: 5000 },
-    { name: "🇸🇬150GB – 7000 Ks\n(1 Month)", price: 7000 },
-    { name: "🇸🇬200GB – 8000 Ks\n(1 Month)", price: 8000 }
-  ]
-},
-      
-{
-  id: "outline",
-  name: "Outline VPN",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "VPN",
-  iconType: "image",
-  icon: "Outline-Client-VPN-1-6-0-Multilingual (1).png",
-  search: "outline vpn secure data",
-  description: "Regions: 🇺🇸, 🇯🇵, 🇸🇬, 🇮🇳, 🇮🇩 လိုင်းကတော့အကုန်အတူတူကောင်းကြပါတယ်၊ ကိုယ့်အတွက်အသုံးဝင်မယ့် region ကိုသာရွေးချယ်ပါ။",
-  plans: [
-    { name: "🌈50GB – 3500 Ks (1 Month)", price: 3500,bestSeller:true },
-    { name: "🌈100GB – 5000 Ks (1 Month)", price: 5000 },
-    { name: "🌈150GB – 7000 Ks (1 Month)", price: 7000 },
-    { name: "🌈200GB – 8000 Ks (1 Month)", price: 8000 },
-
-    { name: "❌Unlimited – 6000 Ks (1 Device | 1 Month)", price: 6000,bestSeller:true },
-    { name: "❌Unlimited – 10500 Ks (2 Devices | 1 Month)", price: 10500 },
-    { name: "❌Unlimited – 15000 Ks (3 Devices | 1 Month)", price: 15000 }
-  ]
-},
-
-{
-  id: "hiddifyvpn",
-  name: "Hiddify VPN",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "VPN",
-  iconType: "image",
-  icon: "apps.4746.14155126203361258.5bed0304-dfff-4ff6-8d04-2e8186b86297.png",
-  search: "hiddify vpn secure data",
-  description: "Region:Singapore",
-  plans: [
-    { name: "🌈50GB - 3000 Ks (1 Month)", price: 3000 },
-    { name: "🌈100GB - 4000 Ks (1 Month)", price: 4000 },
-    { name: "🌈150GB - 5500 Ks (1 Month)", price: 5500 },
-    { name: "🌈200GB - 6500 Ks (1 Month)", price: 6500 }
-  ]
-},
-{
-id: "jumpvpn",
-name: "Jump Jump VPN",
-subtitle: "Tap to see prices",
-badge: "available",
-category:"VPN",
-iconType: "emoji",
-icon: "🚀",
-search: "jump jump vpn",
-description:"own mailနဲ့လည်းရ",
-plans: [
-{ name:"1 Device – 3 Days – 2700 Ks", price:2700 },
-{ name:"1 Device – 1 Month – 13000 Ks", price:13000 },
-{ name:"2 Devices – 1 Month – 18000 Ks", price:18000 },
-{ name:"2 Devices – 6 Months – 90000 Ks", price:90000 },
-{ name:"2 Devices – 12 Months – 108000 Ks", price:108000 }
-]
-},
-
-{
+      {
 id: "wink",
 name: "Wink VIP",
 subtitle: "Tap to see prices",
@@ -2357,7 +2256,7 @@ plans: [
 { name:"🔐Global Region – 1 Year – 160000 Ks (Private) – 3 Devices", price:160000 }
 ]
 },
-{
+      {
   id: "meitu",
   name: "Meitu VIP/SVIP",
   subtitle: "Tap to see prices",
@@ -2423,7 +2322,7 @@ normal users တွေအတွက်
     { name: "✉️Own Mail SVIP Plan - 1 Year - 165000 Ks", price: 165000 }
   ]
 },
-{
+      {
 id: "steam",
 name: "Steam Wallet",
 subtitle: "Tap to see prices",
@@ -2444,8 +2343,7 @@ plans: [
 { name:"100 USD - 460000 Ks", price:460000 }
 ]
 },
-
-{
+      {
 id: "duolingo",
 name: "Duolingo",
 subtitle: "Tap to see prices",
@@ -2463,28 +2361,56 @@ plans: [
 { name:"Family Account – 12 Months – 32000 Ks (Low value)", price:32000 }
 ]
 },
-
-{
-id: "nordvpn",
-name: "Nord VPN",
-subtitle: "Tap to see prices",
-badge: "available",
-category:"VPN",
-iconType: "image",
-icon: "NordVPN_Logo_square.svg (1).png",
-search: "nord vpn secure",
-description:"",
-plans: [
-{ name:"Share Account - 1 Month - 7500 Ks", price:7500 },
-{ name:"Share Account - 3 Months - 19000 Ks", price:19000 },
-{ name:"Share Account - 6 Months - 35000 Ks", price:35000 },
-{ name:"Share Account - 1 Year - 58000 Ks", price:58000 },
-
-{ name:"Private Account (Own Mail) - 1 Month - 8500 Ks", price:8500 },
-{ name:"Private Account (Own Mail) - 3 Months - 35000 Ks", price:35000 }
-]
-}
-          
+      {
+  id: "nordvpn",
+  name: "Nord VPN",
+  
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "VPN",
+  iconType: "image",
+  icon: "NordVPN_Logo_square.svg (1).png",
+  search: "nord vpn android mac pc ios",
+  description: "✅ Android / Mac / PC / iOS အသုံးပြုနိုင်သည်။\n⚠️ Share plan တွင် device 1 ခုသာ အသုံးပြုနိုင်သည်။\n📊 Private plan တွင် devices 8–9 ခု အသုံးပြုနိုင်သည်.",
+  plans: [
+      { name: "👥 2 Months – Share – 8000 Ks", price: 8000 },
+      { name: "🔐 2 Months – Private – 15000 Ks", price: 15000 },
+      { name: "👥 3 Months – Share – 12000 Ks", price: 12000 },
+      { name: "🔐 3 Months – Private – 22000 Ks", price: 22000, bestSeller: true },
+  ]
+},
+      {
+  id: "onevpn",
+  name: "One VPN",
+  
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "VPN",
+  iconType: "image",
+  icon: "unnamed (1).webp",
+  search: "one vpn android mac pc",
+  description: "✅ Android / Mac / PC အသုံးပြုနိုင်သည်။\n❌ iOS မရပါ။\n⚠️ Share plan တွင် device 1 ခုသာ အသုံးပြုနိုင်သည်။\n📊 Private plan တွင် devices 8–9 ခု အသုံးပြုနိုင်သည်.",
+  plans: [
+      { name: "👥 1 Month – Share – 1600 Ks", price: 1600 },
+      { name: "🔐 1 Month – Private – 6000 Ks", price: 6000, bestSeller: true },
+  ]
+},
+      {
+  id: "surfshark",
+  name: "Surfshark VPN",
+  
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "VPN",
+  iconType: "image",
+  icon: "0E7JiQw5SPOUbKbn59GQ.png",
+  search: "surfshark vpn android mac pc ios",
+  description: "✅ Android / Mac / PC / iOS အသုံးပြုနိုင်သည်။\n⚠️ Share plan တွင် device 1 ခုသာ အသုံးပြုနိုင်သည်။\n📊 Private plan တွင် devices 8–9 ခု အသုံးပြုနိုင်သည်.",
+  plans: [
+      { name: "👥 2 Months – Share – 6000 Ks", price: 6000 },
+      { name: "🔐 2 Months – Private – 28000 Ks", price: 28000, bestSeller: true },
+  ]
+},
     ];
 
     const paymentMethods = ["KPay","Wave","AYA","UAB","Binance"];
@@ -2624,8 +2550,11 @@ continueBtn.onclick = () => {
     <div class="badge">${product.badge}</div>
     <div class="price-from">From ${formatKs(getCheapestPrice(product))}</div>
   </div>
+  <button class="buy-now-btn" type="button">Buy Now <span>↗</span></button>
 `;
         card.onclick = () => openOrder(product);
+        const buyBtn = card.querySelector(".buy-now-btn");
+        buyBtn.onclick = (event) => { event.stopPropagation(); openOrder(product); };
         productsEl.appendChild(card);
       });
     }
@@ -2749,8 +2678,9 @@ const descPages = currentProduct.descriptionPages || [
   }
 ];
 
+const visibleDescription = String(descPages[currentDescIndex]?.text || "").replace(/\\n/g, "\n");
 appDescription.innerHTML =
-  `<summary><span>မဝယ်ခင်ဖတ်ရန်</span><span style="font-size:10px;opacity:.72">Tap to view</span></summary><div class="info-content">${descPages[currentDescIndex]?.text || ""}</div>`;
+  `<summary><span>မဝယ်ခင်ဖတ်ရန်</span><span style="font-size:10px;opacity:.72">Tap to view</span></summary><div class="info-content">${visibleDescription.replace(/\n/g, "<br>")}</div>`;
 appDescription.open = false;    
 
 descNav.innerHTML = "";
