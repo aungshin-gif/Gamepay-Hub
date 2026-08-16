@@ -1,4 +1,5 @@
 
+
 <!-- Gamepay Hub international UI revision: plans as rounded-square cards; notes are tap-to-view; guide hidden. -->
 <!DOCTYPE html>
 <html lang="en">
@@ -1544,12 +1545,30 @@ body.light-mode::after{opacity:.28!important}
 @media(max-width:640px){.market-strip{align-items:flex-start!important}.market-strip-actions{width:100%;justify-content:space-between}.theme-toggle{font-size:10px;padding:6px 9px}}
 @media(prefers-reduced-motion:reduce){.hero-title,.hero-sub,.hero-kicker,.hero-copy,.hero-stats{animation:none!important;opacity:1!important}}
 </style>
+<style id="soft-dim-light-mode">
+/* Soft dim light mode: readable, muted, and less glaring */
+body.light-mode{background:#dce7f1!important;color:#263d55!important;background-image:radial-gradient(ellipse at 12% 8%,rgba(96,174,210,.16),transparent 32%),radial-gradient(ellipse at 88% 14%,rgba(135,119,204,.10),transparent 29%),linear-gradient(135deg,#dbe5ee 0%,#e7eef4 52%,#e1e1ed 100%)!important}
+.light-mode .market-strip{background:rgba(218,229,238,.82)!important;border-bottom-color:rgba(62,102,135,.20)!important;color:#36536d!important}.light-mode .market-strip strong{color:#294968!important}.light-mode .market-strip span,.light-mode .market-trust span{color:#60788d!important}
+.light-mode .theme-toggle{color:#304f68!important;background:linear-gradient(135deg,#eaf1f5,#d6e3eb)!important;border-color:rgba(75,139,169,.42)!important;box-shadow:0 4px 12px rgba(44,78,108,.14),inset 0 1px rgba(255,255,255,.78)!important}
+.light-mode .hero{background:linear-gradient(135deg,rgba(226,237,244,.88),rgba(204,221,233,.86))!important;border-color:rgba(74,137,166,.30)!important;box-shadow:0 20px 44px rgba(49,85,112,.16),0 0 24px rgba(69,157,188,.10),inset 0 1px rgba(255,255,255,.70)!important}.light-mode .hero-title{background:linear-gradient(100deg,#294c70,#287b9c 48%,#655799)!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important}.light-mode .hero-sub,.light-mode .hero-kicker,.light-mode .hero-copy,.light-mode .section-note{color:#61788b!important}.light-mode .hero-copy span{color:#2d829e!important}.light-mode .hero-stats strong{color:#315473!important}.light-mode .hero-stats small{color:#71879a!important}
+.light-mode .search-wrap input{background:rgba(224,234,240,.84)!important;color:#294762!important;border-color:rgba(75,139,169,.30)!important;box-shadow:0 7px 18px rgba(47,83,111,.10),inset 0 1px rgba(255,255,255,.68)!important}.light-mode .search-wrap input::placeholder{color:#7a8f9f!important}
+.light-mode .cat{background:rgba(218,231,239,.78)!important;color:#526d83!important;border-color:rgba(74,126,153,.22)!important;box-shadow:0 4px 11px rgba(47,83,111,.08)!important}.light-mode .cat:hover,.light-mode .cat.active{color:#315a76!important;background:linear-gradient(135deg,#d9edf1,#dedcf0)!important;border-color:#65aebe!important;box-shadow:0 0 15px rgba(76,161,182,.18)!important}
+.light-mode .card{background:linear-gradient(145deg,rgba(224,235,241,.88),rgba(198,216,228,.86))!important;color:#294762!important;border-color:rgba(73,126,153,.25)!important;box-shadow:0 11px 23px rgba(46,82,108,.14),inset 0 1px rgba(255,255,255,.64)!important}.light-mode .card:hover{background:linear-gradient(145deg,rgba(233,242,246,.94),rgba(208,227,236,.90))!important;border-color:#69b5c7!important;box-shadow:0 16px 29px rgba(46,82,108,.18),0 0 20px rgba(75,170,191,.14)!important}.light-mode .card-name{color:#294762!important}.light-mode .card-sub{color:#718799!important}.light-mode .price-from{color:#277c98!important}.light-mode .icon-wrap{background:#dbe9ef!important;border-color:rgba(73,141,164,.25)!important;box-shadow:0 0 13px rgba(71,148,171,.12)!important}
+.light-mode .panel{background:linear-gradient(145deg,rgba(224,235,241,.91),rgba(205,220,230,.89))!important;color:#294762!important;border-color:rgba(73,126,153,.28)!important;box-shadow:0 20px 42px rgba(46,82,108,.15),inset 0 1px rgba(255,255,255,.68)!important}.light-mode .panel-title{color:#294762!important}.light-mode .panel-sub,.light-mode .field-title,.light-mode .cart-plan-current{color:#718799!important}.light-mode .info-card,.light-mode .cart-item,.light-mode .preview,.light-mode .input,.light-mode .note-box{background:rgba(215,228,236,.76)!important;color:#3b5a72!important;border-color:rgba(73,126,153,.22)!important}.light-mode .info-card summary,.light-mode .section-title,.light-mode .preview-title{color:#327c98!important}.light-mode .info-content{color:#587389!important}.light-mode .plan-option{background:linear-gradient(145deg,#e0edf2,#ccdee7)!important;color:#34546c!important;border-color:rgba(73,126,153,.28)!important;box-shadow:0 9px 19px rgba(46,82,108,.11),inset 0 1px rgba(255,255,255,.68)!important}.light-mode .plan-option:hover{border-color:#62afbf!important;box-shadow:0 0 20px rgba(75,170,191,.18)!important}.light-mode .plan-option.active{background:linear-gradient(145deg,#d5eef0,#d9d9ec)!important;color:#315c76!important;border-color:#55aabd!important;box-shadow:0 0 0 3px rgba(75,170,191,.12),0 0 22px rgba(75,170,191,.18)!important}.light-mode .site-footer{color:#718799!important;border-color:rgba(73,126,153,.20)!important;text-shadow:none!important}
+</style>
+<style id="compact-top-strip">
+.market-strip,.market-strip-actions,.market-trust{display:none!important}
+.floating-theme-control{position:fixed;top:10px;right:14px;z-index:5000}
+.floating-theme-control .theme-toggle{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.page{padding-top:10px!important}
+@media(max-width:640px){.floating-theme-control{top:8px;right:8px}.page{padding-top:8px!important}.floating-theme-control .theme-toggle{font-size:10px;padding:6px 9px}}
+</style>
 </head>
 <body>
   <div class="intro-splash" aria-hidden="true"><div class="intro-logo">G</div><div class="intro-title">GAMEPAY <span>HUB</span></div><div class="intro-label">PREMIUM DIGITAL MARKETPLACE</div></div>
   <canvas id="particles"></canvas>
 
-  <div class="market-strip"><div><strong>GAMEPAY HUB</strong><span>Digital products marketplace</span></div><div class="market-strip-actions"><div class="market-trust"><span>⚡ Fast delivery</span><span>🔒 Secure checkout</span><span>💬 Telegram support</span></div><button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to light mode">☀ Light Mode</button></div></div>
+  <div class="floating-theme-control"><button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to light mode">☀ Light Mode</button></div>
 
   <div class="page">
     <div class="hero">
@@ -3077,4 +3096,3 @@ animateParticles();
 </script>
 </body>
 </html>
-
