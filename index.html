@@ -1,3 +1,5 @@
+
+<!-- Gamepay Hub international UI revision: plans as rounded-square cards; notes are tap-to-view; guide hidden. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1285,7 +1287,22 @@ body{
   margin-top:14px;
     }
 /* FAQ END */
-  </style>
+  
+/* International game-store UI upgrade */
+:root{--bg1:#041c46;--bg2:#063d91;--bg3:#087cff;--bg4:#19cfff;--bg5:#9cf7ff;--neon:#22e6ff;--neon2:#087cff;--neon3:#d6fbff;--cyan:#6e7bff;--border:rgba(178,249,255,.34);--shadow:0 20px 48px rgba(0,35,110,.34)}
+body{font-family:Inter,Arial,Helvetica,sans-serif;background:radial-gradient(circle at 15% 10%,rgba(255,255,255,.22),transparent 18%),radial-gradient(circle at 88% 20%,rgba(41,230,255,.25),transparent 24%),linear-gradient(135deg,#03183f 0%,#064da8 50%,#16c9ed 100%);background-attachment:fixed}
+.hero-title{background:linear-gradient(90deg,#fff,#d2fbff 42%,#50ddff 70%,#fff);-webkit-background-clip:text;background-clip:text;text-shadow:0 0 18px rgba(33,230,255,.45),0 0 42px rgba(8,124,255,.35)}
+.hero-sub{color:rgba(235,255,255,.76)}.brand-orb{background:radial-gradient(circle at 30% 25%,#fff,#9cf7ff 18%,#087cff 52%,#073a91 82%);box-shadow:0 0 20px rgba(33,230,255,.7),0 0 54px rgba(8,124,255,.45)}
+.search-wrap input,.panel,.payment-card{background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.055)),rgba(4,39,100,.48);border-color:rgba(177,248,255,.34);box-shadow:0 18px 44px rgba(0,35,110,.26),inset 0 1px rgba(255,255,255,.22);backdrop-filter:blur(22px) saturate(145%);-webkit-backdrop-filter:blur(22px) saturate(145%)}
+.cat{background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(255,255,255,.04)),rgba(4,61,145,.34);border-color:rgba(178,249,255,.28)}.cat:hover,.cat.active{background:linear-gradient(135deg,rgba(33,230,255,.30),rgba(8,124,255,.38));border-color:rgba(178,249,255,.72);box-shadow:0 0 20px rgba(33,230,255,.24)}
+.card{background:linear-gradient(145deg,rgba(19,125,255,.78),rgba(4,47,137,.82));border-color:rgba(178,249,255,.40);box-shadow:0 16px 34px rgba(0,35,110,.30),inset 0 1px rgba(255,255,255,.25)}.card:hover{border-color:rgba(178,249,255,.78);box-shadow:0 22px 42px rgba(0,35,110,.36),0 0 24px rgba(33,230,255,.28)}
+.info-card{background:rgba(5,54,130,.28);border-color:rgba(178,249,255,.30);box-shadow:inset 0 1px rgba(255,255,255,.16),0 12px 28px rgba(0,35,110,.18);max-height:none;overflow:hidden;padding:0;transition:box-shadow .24s ease}.info-card summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;color:#eaffff;font-size:14px;font-weight:900;cursor:pointer}.info-card summary::-webkit-details-marker{display:none}.info-card summary:after{content:"+";display:grid;place-items:center;width:25px;height:25px;border-radius:50%;color:#053a91;background:linear-gradient(135deg,#b7fbff,#22e6ff);font-size:19px;line-height:1;box-shadow:0 0 15px rgba(33,230,255,.38);transition:transform .2s ease}.info-card[open] summary:after{content:"−";transform:rotate(180deg)}.info-card[open]{box-shadow:0 0 0 2px rgba(33,230,255,.12),0 16px 32px rgba(0,35,110,.22)}.info-content{max-height:220px;overflow:auto;padding:0 14px 14px;color:rgba(239,255,255,.84);text-shadow:0 0 8px rgba(33,230,255,.16)}.info-content::-webkit-scrollbar{width:5px}.info-content::-webkit-scrollbar-thumb{background:#22e6ff;border-radius:10px}.desc-nav{display:none!important}
+.plan-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:14px}.plan-option{position:relative;display:flex;min-height:178px;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px 12px 14px;border-radius:22px;background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(41,174,255,.10) 48%,rgba(4,54,143,.35));border:1px solid rgba(178,249,255,.34);box-shadow:0 13px 28px rgba(0,35,110,.25),inset 0 1px rgba(255,255,255,.22);font-size:13px;font-weight:900;line-height:1.35;text-align:center;color:#f2ffff;cursor:pointer;overflow:hidden;transition:transform .22s cubic-bezier(.23,1,.32,1),box-shadow .22s ease,border-color .22s ease,background .22s ease}.plan-option:before{content:"";position:absolute;inset:-60% 22% 45% -28%;background:radial-gradient(circle,rgba(255,255,255,.28),transparent 65%);transform:rotate(-16deg);pointer-events:none}.plan-option:hover{transform:translateY(-6px);border-color:rgba(178,249,255,.84);box-shadow:0 21px 38px rgba(0,35,110,.34),0 0 22px rgba(33,230,255,.26)}.plan-option:active{transform:scale(.95)}.plan-option.active{background:linear-gradient(145deg,rgba(33,230,255,.40),rgba(8,124,255,.42) 55%,rgba(95,88,255,.30));border-color:#aefaff;box-shadow:0 0 0 3px rgba(33,230,255,.22),0 0 25px rgba(33,230,255,.50),0 18px 34px rgba(0,35,110,.34);animation:planSelected .45s cubic-bezier(.23,1,.32,1)}@keyframes planSelected{0%{transform:scale(.94);filter:brightness(1.3)}55%{transform:scale(1.045)}100%{transform:scale(1)}}.plan-option.best-seller{border-color:rgba(255,210,91,.82);box-shadow:0 0 16px rgba(255,190,60,.18),0 13px 28px rgba(0,35,110,.23)}.plan-option.active.best-seller{border-color:#ffe36f;box-shadow:0 0 0 3px rgba(255,219,86,.22),0 0 26px rgba(255,196,65,.34)}.plan-option.out-stock{filter:grayscale(.45);opacity:.48}.plan-sub-label{color:#ffe66d;text-shadow:0 0 8px rgba(255,230,109,.6)}.best-seller-badge,.discount-badge,.out-stock-badge{top:9px;font-size:9px;padding:4px 7px}.best-seller-badge{right:8px}.discount-badge,.out-stock-badge{left:8px}.qty-row{margin-top:15px}.telegram-btn{background:linear-gradient(90deg,#087cff,#22e6ff,#087cff);background-size:200% 100%;box-shadow:0 0 20px rgba(33,230,255,.32),0 0 42px rgba(8,124,255,.18)}.section-title,.preview-title{color:#c9fbff;text-shadow:0 0 10px rgba(33,230,255,.45)}
+#guideView,.faq-wrap{display:none!important}.guide-only,.guide-card{display:none!important}
+@media (max-width:900px){.plan-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.plan-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.plan-option{min-height:154px;padding:17px 8px 12px;border-radius:18px;font-size:11px}.plan-sub-label{font-size:10px}.info-content{max-height:180px}.panel-title{font-size:20px}}
+
+</style>
 </head>
 <body>
   <canvas id="particles"></canvas>
@@ -1311,7 +1328,7 @@ body{
     <div id="orderView" class="order-view hidden">
       <div class="panel">
         <div class="top-actions">
-          <button id="backBtn" class="back-btn">← Back to Apps</button>
+          <button id="backBtn" class="back-btn">← Back to Games</button>
           <div></div>
         </div>
 
@@ -1322,11 +1339,7 @@ body{
 
   <div class="field-title">Description</div>
 
-  <div id="appDescription" class="info-card">
-    <div class="info-content">
-      Description will appear here...
-    </div>
-  </div>
+  <details id="appDescription" class="info-card"><summary><span>မဝယ်ခင်ဖတ်ရန်</span><span style="font-size:10px;opacity:.72">Tap to view</span></summary><div class="info-content">Description will appear here...</div></details>
 
   <div id="descNav" class="desc-nav"></div>
 
@@ -1361,7 +1374,7 @@ body{
 </div>
 
 <button id="continueBtn" class="telegram-btn">
-  Continue Checkout
+  Continue to Checkout
 </button>
 
 </div>
@@ -1398,100 +1411,6 @@ body{
         </div>
       </div>
     </div>
-    <!-- ဒီနေရာမှာ guideView ထည့် -->
-<div id="guideView" class="order-view hidden">
-  <div class="panel">
-    <div class="top-actions">
-      <button id="guideBackBtn" class="back-btn">← Back to Apps</button>
-      <div></div>
-    </div>
-
-    <div class="panel-title">အသုံးပြုပုံ</div>
-    <div class="panel-sub">Guide & Tutorial</div>
-
-    <div class="preview">
-      <div class="preview-title">၁။ Plan ရွေးပါ</div>
-      <div class="preview-box">ကိုယ်လိုချင်တဲ့ 🌈App ကိုရွေးပြီး Plan ကိုနှိပ်ပါ။</div>
-    </div>
-
-    <div class="preview">
-      <div class="preview-title">၂။ Own Mail ဟုတ်/မဟုတ် စစ်ပါ</div>
-      <div class="preview-box">✉️Own Mail plan ဆိုရင် ကိုယ့် mail ထည့်ပါ။❗ မဟုတ်ရင် ဘာမှမထည့်ပါနဲ့။</div>
-    </div>
-<div class="preview" style="margin-top:12px;">
-  <div class="preview-title">၃။ Important</div>
-  <div class="preview-box">
-   ❗ဘယ် Plans မဆို မဝယ်ခင် Description Box ကို သေချာဖတ်ပေးပါ၊၊
-    ⚡instant ရတာတွေ 🕰️waiting time ပါတာတွေရှိပါတယ်။
-  </div>
-</div>
-    
-    <div class="preview">
-      <div class="preview-title">၄။ Payment Method ရွေးပါ</div>
-      <div class="preview-box">KPay / Wave / UAB / AYA စတာတွေထဲက ရွေးပါ။</div>
-    </div>
-
-    <div class="preview">
-      <div class="preview-title">၅။ Telegram ကနေ Order တင်ပါ</div>
-      <div class="preview-box">Order via Telegram💯 ကိုနှိပ်ပြီး order စာကိုပို့ပါ။</div>
-    </div>
-  </div>
-</div>
-    
-<div class="faq-wrap">
-      <details class="faq-item">
-        <summary>📌 Share/Private/Own mailအကြောင်း (Tap to view)</summary>
-
-        <div class="faq-answer">
-  💬 Share ဆိုတယ့်သဘောတရားက သူများနဲ့အတူ Share သုံး (တွဲသုံး) တာကို ဆိုလိုတာပါ။  
-  ဆိုလိုတာက အကောင့် ၁ ခုကို 👥 Device ၁ ခုထက်ပိုပြီး ဝင်ထားတာကို ဆိုလိုတာပါ။
-
-  <br><br>
-
-  🗣️ Private ကရော ❓  
-  ✨✨✨✨✨✨✨✨✨✨✨✨
-
-  <br><br>
-
-  🔒 Private ဆိုတာက  
-  🥇 တစ်ဉီးတယောက်တည်း သီးသန့်သုံးရမှာပါ။  
-  ဆိုလိုတာက အကောင့်တစ်ခုကို 📲 Only One Device ပဲ Login ထားတာပါ။
-
-  <br><br>
-
-  ❗ ဒီနေရာမှာ သိထားစေချင်တာက  
-  Private ဆိုပြီး ကိုယ်ရဲ့ E-mail နဲ့ ရမည်မဟုတ်ပါ။  
-  မင်မင်ဘက်က အကောင့်ပေးမှာပါ (💯🛍 Security 🔒) အာမခံပါတယ်။
-
-  <br><br>
-
-  🔈🚨 နားလည်အောင်ပြောရရင်  
-  မင်မင်ပေးလိုက်တဲ့ အကောင့်သည် 🥇 ဝယ်သူတယောက်တည်းအတွက်  
-  သီးသန့်ဖန်တီးထားတာဖြစ်ပါတယ်။ 💥
-
-  <br><br>
-
-  The last one Own Mail ⁉️  
-  ✨✨✨✨✨✨✨✨✨✨✨
-
-  <br><br>
-
-  ✉️ Own Mail ဆိုတာက Customer ဘက်ကပေးတဲ့ ✉️ E-mail နဲ့  
-  🔝 ဝယ်ပေးတာဖြစ်ပါတယ်။
-
-  <br><br>
-
-  ဆိုလိုတာက မင်မင့်ဘက်က 😏 ဘာအကောင့်မှ မပေးတော့ပါဘူး။  
-  ဝယ်သူဘက်ကပေးတဲ့ ✉️ Mail ကို 👑 Premium Subscription ထည့်ပေးတာပါ။
-
-  <br><br>
-
-  🌐 ဒီ Process က အချိန်ယူရသလို  
-  💵 ဈေးအားဖြင့်လည်း အပေါ်က 📈 Plan ၂ ခုထက် ပိုများပါတယ်။
-        </div>
-      </details>
-    </div>
-
     <footer class="site-footer">
       Founder: Diameter Eight
     </footer>
@@ -1505,22 +1424,6 @@ body{
     const categories = ["All","AI","Editing","VPN","Gift","Music","Video","Social","Services"];
 
     const products = [
-      {
-  id: "guide",
-  name: "အသုံးပြုပုံ",
-  top: true,
-  subtitle: "Tap to view guide",
-  badge: "guide",
-  category: "Services",
-  iconType: "emoji",
-  icon: "📒",
-  search: "guide help tutorial အသုံးပြုပုံ",
-  description: "ဒီနေရာမှာ အသုံးပြုပုံ၊ ဝယ်ယူနည်း၊ plan ရွေးနည်းတွေ ကြည့်နိုင်ပါတယ်။",
-  isGuide: true,
-  plans: [
-    { name: "Guide Page", price: 0 }
-  ]
-},
       {
   id: "chatgpt",
   name: "ChatGPT",
@@ -2509,8 +2412,6 @@ plans: [
 
     const catalogView = document.getElementById("catalogView");
     const orderView = document.getElementById("orderView");
-    const guideView = document.getElementById("guideView");
-const guideBackBtn = document.getElementById("guideBackBtn");
     const productsEl = document.getElementById("products");
     const categoriesEl = document.getElementById("categories");
     const searchInput = document.getElementById("searchInput");
@@ -2596,7 +2497,7 @@ continueBtn.onclick = () => {
 
     function renderProducts(){
       productsEl.innerHTML = "";
-      getFilteredProducts().forEach(product => {
+      getFilteredProducts().filter(product => !product.isGuide).forEach(product => {
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
@@ -2651,7 +2552,6 @@ continueBtn.onclick = () => {
 
     catalogView.classList.add("hidden");
     orderView.classList.add("hidden");
-    guideView.classList.remove("hidden");
     return;
   }
 
@@ -2671,14 +2571,13 @@ currentProduct = product;
   activePayment = "";
   accountInput.value = "";
   noteInput.value = "";
-  appDescription.value = "";
+  appDescription.open = false;
 
   // 👉 FIRST scroll instantly
   window.scrollTo(0, 0);
 
   // 👉 THEN show view
   catalogView.classList.add("hidden");
-  guideView.classList.add("hidden");
   orderView.classList.remove("hidden");
 
   renderOrder();
@@ -2696,7 +2595,6 @@ function closeOrder(){
   window.scrollTo(0, 0);
 
   orderView.classList.add("hidden");
-  guideView.classList.add("hidden");
   catalogView.classList.remove("hidden");
 }
     
@@ -2723,9 +2621,8 @@ const descPages = currentProduct.descriptionPages || [
 ];
 
 appDescription.innerHTML =
-  `<div class="info-content">
-    ${descPages[currentDescIndex]?.text || ""}
-  </div>`;    
+  `<summary><span>မဝယ်ခင်ဖတ်ရန်</span><span style="font-size:10px;opacity:.72">Tap to view</span></summary><div class="info-content">${descPages[currentDescIndex]?.text || ""}</div>`;
+appDescription.open = false;    
 
 descNav.innerHTML = "";
 
@@ -2907,11 +2804,6 @@ function openTelegramOrder(){
 
     searchInput.addEventListener("input", renderProducts);
     backBtn.addEventListener("click", closeOrder);
-    guideBackBtn.addEventListener("click", () => {
-      window.scrollTo(0, 0);
-  guideView.classList.add("hidden");
-  catalogView.classList.remove("hidden");
- }); 
     removeBtn.addEventListener("click", closeOrder);
     togglePlansBtn.addEventListener("click", () => {
       plansOpen = !plansOpen;
@@ -3076,3 +2968,4 @@ animateParticles();
 
 </body>
 </html>
+
