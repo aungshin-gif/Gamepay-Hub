@@ -1,4 +1,3 @@
-
 <!-- Gamepay Hub international UI revision: plans as rounded-square cards; notes are tap-to-view; guide hidden. -->
 <!DOCTYPE html>
 <html lang="en">
@@ -1669,6 +1668,217 @@ body.light-mode{background:#dce7f1!important;color:#263d55!important;background-
 .light-mode .checkout-support-shortcut{color:#6f6387}.light-mode .checkout-support-shortcut a{color:#6540ae}
 @media(max-width:520px){.status-pill,.feature-pill{font-size:8px;padding:5px 7px}.card-status-row{gap:5px}.checkout-support-shortcut{font-size:9px}}
 </style>
+<style id="plan-page-neon-fix">
+/* Plan page: remove the large catalog hero while an order is open. */
+body.order-mode .hero{display:none!important}
+body.order-mode .neon-announcement{display:none!important}
+body.order-mode .page{padding-top:18px!important}
+body.order-mode .order-view{margin-top:8px!important}
+
+/* Brighter cyan / electric-blue glass cards instead of grey cards. */
+.order-view .plan-option{
+  position:relative!important;
+  isolation:isolate;
+  overflow:hidden!important;
+  background:
+    radial-gradient(circle at 8% 0%,rgba(86,243,255,.20),transparent 38%),
+    linear-gradient(145deg,rgba(18,62,96,.98),rgba(8,24,51,.98) 54%,rgba(39,25,86,.98))!important;
+  border:1px solid rgba(86,243,255,.42)!important;
+  color:#ecffff!important;
+  box-shadow:0 14px 30px rgba(0,0,0,.30),0 0 18px rgba(35,120,255,.16),inset 0 1px rgba(255,255,255,.12)!important;
+  transition:transform .22s cubic-bezier(.23,1,.32,1),border-color .22s ease,box-shadow .22s ease,background .22s ease!important;
+}
+.order-view .plan-option::after{
+  content:"";position:absolute;left:12%;right:12%;bottom:0;height:2px;border-radius:99px;
+  background:linear-gradient(90deg,transparent,#56f3ff,#8b7dff,transparent);
+  opacity:.42;box-shadow:0 0 14px rgba(86,243,255,.72);pointer-events:none;z-index:1;
+}
+.order-view .plan-option:hover{
+  transform:translateY(-4px)!important;
+  border-color:#56f3ff!important;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(86,243,255,.30),transparent 42%),
+    linear-gradient(145deg,rgba(22,81,119,.98),rgba(10,33,68,.98) 54%,rgba(52,30,112,.98))!important;
+  box-shadow:0 20px 38px rgba(0,0,0,.36),0 0 28px rgba(86,243,255,.28),inset 0 1px rgba(255,255,255,.18)!important;
+}
+.order-view .plan-option.active{
+  background:
+    radial-gradient(circle at 18% 0%,rgba(191,255,255,.34),transparent 43%),
+    linear-gradient(145deg,rgba(24,107,139,.98),rgba(15,53,97,.98) 52%,rgba(69,41,139,.98))!important;
+  border-color:#c7ffff!important;
+  box-shadow:0 0 0 3px rgba(86,243,255,.16),0 0 34px rgba(86,243,255,.48),0 18px 35px rgba(0,0,0,.30)!important;
+}
+.order-view .plan-field-label{color:#7fefff!important;text-shadow:0 0 9px rgba(86,243,255,.24)}
+.order-view .plan-professional-name,.order-view .plan-secondary-line strong{color:#f1ffff!important;text-shadow:0 0 10px rgba(86,243,255,.10)}
+.order-view .plan-price-block strong{color:#67f5ff!important;text-shadow:0 0 13px rgba(86,243,255,.48)}
+.order-view .plan-access-badge{color:#dfffff!important;background:rgba(86,243,255,.14)!important;border-color:rgba(86,243,255,.48)!important}
+
+/* Watermarks stay visible above the card glow and fail quietly if an asset is unavailable. */
+.order-view .plan-watermark{display:block!important;z-index:2!important;width:118px!important;height:118px!important;right:-8px!important;bottom:-12px!important;object-fit:contain!important;opacity:.34!important;filter:drop-shadow(0 0 10px rgba(86,243,255,.36))!important;pointer-events:none!important}
+.order-view .private-plan .plan-watermark{opacity:.38!important;filter:drop-shadow(0 0 12px rgba(86,243,255,.48))!important}
+.order-view .share-plan .plan-watermark{opacity:.34!important;filter:drop-shadow(0 0 12px rgba(139,92,255,.50))!important}
+.order-view .plan-professional{z-index:3!important}
+
+/* Mobile: preserve readable columns and prevent long names/prices from colliding. */
+@media(max-width:640px){
+  body.order-mode .page{width:calc(100% - 18px)!important;padding-top:10px!important}
+  .order-view .plan-option{min-height:136px!important;padding:21px 11px 16px!important}
+  .order-view .plan-professional{gap:11px!important;text-align:left!important}
+  .order-view .plan-primary-line{align-items:flex-start!important;min-width:0!important}
+  .order-view .plan-professional-name{font-size:12px!important;line-height:1.28!important;max-width:100%!important}
+  .order-view .plan-secondary-line{grid-template-columns:minmax(0,1fr) minmax(82px,auto)!important;gap:9px!important;padding-top:10px!important}
+  .order-view .plan-secondary-line strong{font-size:11px!important;line-height:1.24!important;overflow-wrap:anywhere!important}
+  .order-view .plan-price-block{text-align:right!important;min-width:0!important}
+  .order-view .plan-price-block strong{font-size:14px!important;white-space:normal!important;overflow-wrap:anywhere!important}
+  .order-view .plan-watermark{width:88px!important;height:88px!important;right:-7px!important;bottom:-9px!important;opacity:.31!important}
+}
+</style>
+<style id="plan-structural-final-fix">
+/* Structural isolation: checkout must never carry the catalog hero with it. */
+.catalog-shell{display:block!important}
+body.order-mode .catalog-shell{display:none!important;visibility:hidden!important;height:0!important;overflow:hidden!important;margin:0!important;padding:0!important}
+body.order-mode .compact-header{margin-bottom:6px!important}
+body.order-mode .order-view{display:block!important;visibility:visible!important;opacity:1!important}
+
+/* Final high-contrast dark card palette; declared after every legacy theme block. */
+body:not(.light-mode) .order-view .plan-option{
+  background:linear-gradient(145deg,#174c73 0%,#0d2d54 52%,#27205f 100%)!important;
+  border:1px solid #39eaff!important;
+  color:#f5ffff!important;
+  box-shadow:0 14px 30px rgba(0,0,0,.38),0 0 22px rgba(57,234,255,.24),inset 0 1px 0 rgba(255,255,255,.16)!important;
+}
+body:not(.light-mode) .order-view .plan-option.active{
+  background:linear-gradient(145deg,#207e9b 0%,#15529a 52%,#4a2e9d 100%)!important;
+  border-color:#e2ffff!important;
+  box-shadow:0 0 0 3px rgba(57,234,255,.20),0 0 38px rgba(57,234,255,.60),0 18px 36px rgba(0,0,0,.42)!important;
+}
+body:not(.light-mode) .order-view .plan-option:hover{border-color:#bfffff!important;box-shadow:0 0 32px rgba(57,234,255,.52),0 18px 38px rgba(0,0,0,.44)!important}
+body:not(.light-mode) .order-view .plan-field-label{color:#88f7ff!important}
+body:not(.light-mode) .order-view .plan-professional-name,
+body:not(.light-mode) .order-view .plan-secondary-line strong{color:#f5ffff!important}
+body:not(.light-mode) .order-view .plan-price-block strong{color:#70f6ff!important}
+body:not(.light-mode) .order-view .plan-watermark{opacity:.46!important;filter:drop-shadow(0 0 15px rgba(57,234,255,.58))!important}
+body:not(.light-mode) .order-view .private-plan .plan-watermark{opacity:.50!important}
+body:not(.light-mode) .order-view .share-plan .plan-watermark{opacity:.46!important;filter:drop-shadow(0 0 15px rgba(150,113,255,.70))!important}
+
+@media(max-width:640px){
+  .order-view .panel{width:100%!important}
+  .order-view .plan-option{min-height:136px!important}
+  .order-view .plan-secondary-line{grid-template-columns:minmax(0,1fr) 88px!important}
+  .order-view .plan-price-block strong{font-size:13px!important}
+}
+</style>
+<style id="light-plan-card-final-theme">
+/* Light mode intentionally uses its own milky-lavender glass language. */
+body.light-mode .order-view .plan-option{
+  background:
+    radial-gradient(circle at 8% 0%,rgba(255,255,255,.92),transparent 38%),
+    linear-gradient(145deg,#fbf8ff 0%,#f0ebff 54%,#e9f8ff 100%)!important;
+  border:1px solid rgba(132,104,190,.28)!important;
+  color:#40365f!important;
+  box-shadow:0 12px 26px rgba(102,78,148,.14),0 0 18px rgba(170,143,232,.15),inset 0 1px rgba(255,255,255,.95)!important;
+}
+body.light-mode .order-view .plan-option::after{
+  background:linear-gradient(90deg,transparent,#9d7ee8,#76dbe7,transparent)!important;
+  box-shadow:0 0 12px rgba(125,112,220,.30)!important;
+  opacity:.52!important;
+}
+body.light-mode .order-view .plan-option:hover{
+  transform:translateY(-4px)!important;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(255,255,255,.98),transparent 42%),
+    linear-gradient(145deg,#ffffff 0%,#f2edff 52%,#e8fbff 100%)!important;
+  border-color:#9d7ee8!important;
+  box-shadow:0 18px 32px rgba(102,78,148,.16),0 0 24px rgba(125,112,220,.22),inset 0 1px rgba(255,255,255,.98)!important;
+}
+body.light-mode .order-view .plan-option.active{
+  background:
+    radial-gradient(circle at 18% 0%,rgba(255,255,255,1),transparent 43%),
+    linear-gradient(145deg,#eee7ff 0%,#e9e5ff 52%,#e4faff 100%)!important;
+  border-color:#7f68c8!important;
+  box-shadow:0 0 0 3px rgba(127,104,200,.13),0 0 26px rgba(125,112,220,.27),0 14px 28px rgba(102,78,148,.15),inset 0 1px rgba(255,255,255,.98)!important;
+}
+body.light-mode .order-view .plan-field-label{color:#7b6a9e!important;text-shadow:none!important}
+body.light-mode .order-view .plan-professional-name,
+body.light-mode .order-view .plan-secondary-line strong{color:#4a4168!important;text-shadow:none!important}
+body.light-mode .order-view .plan-price-block strong{color:#7652b0!important;text-shadow:none!important}
+body.light-mode .order-view .plan-access-badge{color:#67519a!important;background:rgba(145,119,209,.12)!important;border-color:rgba(132,104,190,.28)!important}
+body.light-mode .order-view .plan-watermark{opacity:.24!important;filter:drop-shadow(0 0 8px rgba(125,112,220,.22))!important;mix-blend-mode:multiply!important}
+body.light-mode .order-view .private-plan .plan-watermark{opacity:.26!important}
+body.light-mode .order-view .share-plan .plan-watermark{opacity:.23!important;filter:drop-shadow(0 0 8px rgba(125,112,220,.24))!important}
+@media(max-width:640px){
+  body.light-mode .order-view .plan-option{min-height:136px!important}
+  body.light-mode .order-view .plan-professional-name{font-size:12px!important}
+  body.light-mode .order-view .plan-secondary-line strong{font-size:11px!important}
+  body.light-mode .order-view .plan-price-block strong{font-size:13px!important}
+}
+</style>
+<style id="premium-header-contrast-final">
+/* Premium header and hero typography: readable in both themes. */
+.compact-header{
+  position:relative!important;overflow:hidden!important;
+  min-height:54px!important;padding:9px 14px 9px 11px!important;
+  border:1px solid rgba(86,243,255,.38)!important;border-radius:18px!important;
+  background:linear-gradient(110deg,rgba(7,28,57,.96),rgba(13,22,49,.90) 58%,rgba(37,19,73,.88))!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.26),0 0 24px rgba(86,243,255,.15),inset 0 1px rgba(255,255,255,.12)!important;
+}
+.compact-header::after{content:"";position:absolute;left:8%;right:8%;bottom:0;height:2px;border-radius:99px;background:linear-gradient(90deg,transparent,#56f3ff,#8d7cff,transparent);box-shadow:0 0 14px rgba(86,243,255,.45);opacity:.72;pointer-events:none}
+.compact-name{font-size:13px!important;letter-spacing:1.8px!important;color:#f4ffff!important;text-shadow:0 0 10px rgba(86,243,255,.16)!important}
+.compact-name b{color:#68f6ff!important;text-shadow:0 0 12px rgba(86,243,255,.60)!important}
+.compact-label{font-size:9px!important;letter-spacing:1.9px!important;color:#9bb5cd!important}
+.compact-divider{height:20px!important;background:rgba(126,205,225,.42)!important}
+.compact-status{font-size:9px!important;color:#a8c6d3!important;letter-spacing:1.2px!important}
+.compact-status i{width:7px!important;height:7px!important;background:#6dffbd!important;box-shadow:0 0 10px #6dffbd!important}
+.compact-header .theme-toggle{position:relative!important;z-index:2!important;color:#dffeff!important;background:rgba(86,243,255,.11)!important;border-color:rgba(86,243,255,.42)!important;box-shadow:0 0 14px rgba(86,243,255,.14),inset 0 1px rgba(255,255,255,.10)!important}
+.compact-header .theme-toggle:hover{background:rgba(86,243,255,.22)!important;border-color:#8cffff!important;box-shadow:0 0 22px rgba(86,243,255,.30)!important}
+
+.hero{border-color:rgba(86,243,255,.30)!important;background:linear-gradient(145deg,rgba(9,30,61,.94),rgba(12,18,42,.86) 55%,rgba(31,18,62,.72))!important;box-shadow:0 18px 44px rgba(0,0,0,.26),0 0 26px rgba(35,120,255,.12),inset 0 1px rgba(255,255,255,.10)!important}
+.hero-title{color:#f5ffff!important;text-shadow:0 0 18px rgba(86,243,255,.38),0 2px 14px rgba(0,0,0,.28)!important}
+.hero-sub{color:#b9d6e6!important;text-shadow:0 0 8px rgba(86,243,255,.14)!important}
+.hero-kicker{color:#70f4ff!important;text-shadow:0 0 12px rgba(86,243,255,.34)!important}
+.hero-copy{color:#e9f8ff!important}.hero-copy span{color:#72efff!important;text-shadow:0 0 12px rgba(86,243,255,.32)!important}
+
+body.light-mode .compact-header{
+  border-color:rgba(126,101,188,.32)!important;
+  background:linear-gradient(110deg,rgba(255,253,255,.98),rgba(244,239,255,.96) 58%,rgba(232,249,255,.95))!important;
+  box-shadow:0 12px 28px rgba(93,72,137,.13),0 0 22px rgba(151,126,216,.12),inset 0 1px #fff!important;
+}
+body.light-mode .compact-header::after{background:linear-gradient(90deg,transparent,#9a7bd9,#6fcbd5,transparent)!important;box-shadow:0 0 12px rgba(126,101,188,.22)!important;opacity:.62!important}
+body.light-mode .compact-name{color:#44365f!important;text-shadow:none!important}.light-mode .compact-name b{color:#7455b0!important;text-shadow:none!important}
+body.light-mode .compact-label{color:#786b94!important}.light-mode .compact-divider{background:rgba(126,101,188,.30)!important}.light-mode .compact-status{color:#6d6286!important}.light-mode .compact-status i{background:#36b77a!important;box-shadow:0 0 8px rgba(54,183,122,.40)!important}
+body.light-mode .compact-header .theme-toggle{color:#51406f!important;background:linear-gradient(135deg,rgba(239,232,255,.96),rgba(226,248,252,.94))!important;border-color:rgba(126,101,188,.36)!important;box-shadow:0 5px 14px rgba(93,72,137,.10),inset 0 1px #fff!important}
+body.light-mode .compact-header .theme-toggle:hover{color:#382651!important;background:#fff!important;border-color:#9a7bd9!important;box-shadow:0 0 18px rgba(126,101,188,.22)!important}
+body.light-mode .hero{border-color:rgba(126,101,188,.30)!important;background:linear-gradient(145deg,rgba(255,253,255,.98),rgba(246,241,255,.96) 55%,rgba(232,249,255,.95))!important;box-shadow:0 18px 42px rgba(93,72,137,.13),0 0 24px rgba(126,101,188,.10),inset 0 1px #fff!important}
+body.light-mode .hero-title{color:#44365f!important;text-shadow:0 3px 12px rgba(93,72,137,.12)!important}.light-mode .hero-sub{color:#70638a!important;text-shadow:none!important}.light-mode .hero-kicker{color:#7756b2!important;text-shadow:none!important}.light-mode .hero-copy{color:#51436d!important}.light-mode .hero-copy span{color:#358e9d!important;text-shadow:none!important}
+@media(max-width:640px){.compact-header{min-height:48px!important;padding:8px 10px!important}.compact-name{font-size:11px!important;letter-spacing:1.3px!important}.compact-header .theme-toggle{font-size:9px!important;padding:6px 9px!important}.hero-title{font-size:clamp(25px,8vw,42px)!important}.hero-sub{font-size:12px!important}.hero-kicker{font-size:9px!important;letter-spacing:1.5px!important}.hero-copy{font-size:13px!important}}
+</style>
+<style id="premium-benefit-tags-final">
+/* Clean premium benefit strip: less dashboard-like, more storefront-like. */
+.trust-row{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;margin:16px 0 28px!important}
+.trust-item{position:relative!important;min-width:0!important;display:grid!important;grid-template-columns:auto auto minmax(0,1fr)!important;align-items:center!important;gap:8px!important;padding:12px 13px!important;border:1px solid rgba(100,153,197,.22)!important;border-radius:14px!important;background:linear-gradient(135deg,rgba(18,36,67,.78),rgba(19,22,49,.72))!important;box-shadow:0 8px 20px rgba(0,0,0,.14),inset 0 1px rgba(255,255,255,.09)!important;overflow:hidden!important;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease!important}
+.trust-item::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#56f3ff,#8f7cff);box-shadow:0 0 10px rgba(86,243,255,.42);opacity:.75}
+.trust-item:hover{transform:translateY(-3px)!important;border-color:rgba(86,243,255,.52)!important;box-shadow:0 13px 25px rgba(0,0,0,.20),0 0 18px rgba(86,243,255,.12),inset 0 1px rgba(255,255,255,.12)!important}
+.trust-index{align-self:start;padding-top:1px;color:#6e9bb6!important;font-size:8px!important;line-height:1!important;font-weight:900!important;letter-spacing:.6px!important}
+.trust-icon{width:25px!important;height:25px!important;border-radius:9px!important;color:#8ff8ff!important;background:linear-gradient(145deg,rgba(86,243,255,.18),rgba(118,92,255,.16))!important;border:1px solid rgba(86,243,255,.24)!important;font-size:12px!important;box-shadow:0 0 12px rgba(86,243,255,.10)!important}
+.trust-item strong{display:block!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;color:#eefcff!important;font-family:Inter,"Plus Jakarta Sans",system-ui,sans-serif!important;font-size:10px!important;font-weight:850!important;letter-spacing:.15px!important}
+.trust-item small{display:block!important;margin-top:3px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;color:#8fa9bc!important;font-family:Inter,"Plus Jakarta Sans",system-ui,sans-serif!important;font-size:8px!important;line-height:1.2!important;letter-spacing:.05px!important}
+body.light-mode .trust-item{border-color:rgba(126,101,188,.22)!important;background:linear-gradient(135deg,rgba(255,253,255,.92),rgba(241,235,255,.88) 58%,rgba(234,250,253,.86))!important;box-shadow:0 8px 20px rgba(93,72,137,.10),inset 0 1px #fff!important}
+body.light-mode .trust-item::before{background:linear-gradient(180deg,#9a7bd9,#6fcbd5)!important;box-shadow:0 0 9px rgba(126,101,188,.26)!important}
+body.light-mode .trust-item:hover{border-color:rgba(126,101,188,.46)!important;box-shadow:0 13px 25px rgba(93,72,137,.14),0 0 17px rgba(126,101,188,.12),inset 0 1px #fff!important}
+body.light-mode .trust-index{color:#9a86b9!important}.light-mode .trust-icon{color:#7658b0!important;background:linear-gradient(145deg,rgba(154,123,217,.14),rgba(111,203,213,.14))!important;border-color:rgba(126,101,188,.23)!important;box-shadow:none!important}.light-mode .trust-item strong{color:#4a4168!important}.light-mode .trust-item small{color:#7e7198!important}
+@media(max-width:760px){.trust-row{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.trust-item{padding:11px 10px!important}}
+@media(max-width:430px){.trust-item{grid-template-columns:auto auto minmax(0,1fr)!important;gap:6px!important;padding:10px 8px!important}.trust-index{font-size:7px!important}.trust-icon{width:22px!important;height:22px!important;font-size:10px!important}.trust-item strong{font-size:9px!important}.trust-item small{font-size:7px!important}}
+</style>
+<style id="single-market-highlight-final">
+/* One clean premium highlight instead of four crowded tags. */
+.market-highlight{position:relative;display:flex;align-items:center;gap:12px;min-height:58px;margin:16px 0 28px;padding:10px 14px;border:1px solid rgba(86,243,255,.26);border-radius:18px;background:linear-gradient(105deg,rgba(13,38,67,.86),rgba(24,24,59,.78) 60%,rgba(43,22,75,.68));box-shadow:0 10px 24px rgba(0,0,0,.16),0 0 20px rgba(86,243,255,.10),inset 0 1px rgba(255,255,255,.09);overflow:hidden}
+.market-highlight::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#56f3ff,#8d7cff);box-shadow:0 0 13px rgba(86,243,255,.50)}
+.market-highlight::after{content:"";position:absolute;left:12%;right:12%;bottom:0;height:1px;background:linear-gradient(90deg,transparent,#56f3ff,#8d7cff,transparent);opacity:.52}
+.market-highlight-mark{position:relative;z-index:1;display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border-radius:11px;color:#061522;background:linear-gradient(145deg,#f5ffff,#56f3ff 50%,#8270ff);font-weight:950;font-size:15px;box-shadow:0 0 18px rgba(86,243,255,.30)}
+.market-highlight-copy{position:relative;z-index:1;min-width:0;display:flex;flex-direction:column;gap:4px}.market-highlight-copy strong{color:#f2ffff;font-family:Inter,"Plus Jakarta Sans",system-ui,sans-serif;font-size:12px;font-weight:900;letter-spacing:.1px}.market-highlight-copy span{color:#9eb6c9;font-family:Inter,"Plus Jakarta Sans",system-ui,sans-serif;font-size:9px;letter-spacing:.15px}.market-highlight-status{position:relative;z-index:1;margin-left:auto;display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;color:#8be8c1;font-size:8px;letter-spacing:1.2px;font-weight:900}.market-highlight-status i{width:6px;height:6px;border-radius:50%;background:#6dffbd;box-shadow:0 0 9px rgba(109,255,189,.72)}
+body.light-mode .market-highlight{border-color:rgba(126,101,188,.25);background:linear-gradient(105deg,rgba(255,253,255,.95),rgba(243,237,255,.92) 60%,rgba(232,249,255,.92));box-shadow:0 10px 24px rgba(93,72,137,.11),0 0 18px rgba(126,101,188,.10),inset 0 1px #fff}.light-mode .market-highlight::before{background:linear-gradient(180deg,#9a7bd9,#6fcbd5);box-shadow:0 0 10px rgba(126,101,188,.28)}.light-mode .market-highlight::after{background:linear-gradient(90deg,transparent,#9a7bd9,#6fcbd5,transparent);opacity:.44}.light-mode .market-highlight-mark{color:#fffaff;background:linear-gradient(145deg,#8e73c8,#6a57a9);box-shadow:0 0 15px rgba(126,101,188,.22)}.light-mode .market-highlight-copy strong{color:#4a4168}.light-mode .market-highlight-copy span{color:#7e7198}.light-mode .market-highlight-status{color:#4f9474}.light-mode .market-highlight-status i{background:#36b77a;box-shadow:0 0 7px rgba(54,183,122,.38)}
+@media(max-width:520px){.market-highlight{min-height:54px;gap:9px;padding:9px 10px;border-radius:15px}.market-highlight-mark{flex-basis:29px;width:29px;height:29px;font-size:13px;border-radius:9px}.market-highlight-copy strong{font-size:10px}.market-highlight-copy span{font-size:7px;letter-spacing:0}.market-highlight-status{font-size:7px;gap:4px}.market-highlight-status i{width:5px;height:5px}}
+</style>
 </head>
 <body>
   <div class="neon-announcement" aria-label="Store announcement"><div class="neon-track"><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b><span>Premium digital products · Clear plans · Fast support</span><b>✦</b><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b></div></div>
@@ -1681,6 +1891,7 @@ body.light-mode{background:#dce7f1!important;color:#263d55!important;background-
   </div>
 
   <div class="page">
+    <div id="catalogShell" class="catalog-shell">
     <div class="hero">
       <div class="brand-wrap">
         <div class="brand-orb"></div>
@@ -1693,7 +1904,7 @@ body.light-mode{background:#dce7f1!important;color:#263d55!important;background-
       <div class="hero-actions"><button id="heroBrowseBtn" class="hero-cta hero-cta-primary" type="button">Browse Products <span>↘</span></button><button id="heroPopularBtn" class="hero-cta hero-cta-secondary" type="button">Popular Plans <span>✦</span></button></div>
     </div>
     <div id="catalogView" class="catalog-view">
-      <div class="trust-row" aria-label="Store benefits"><div class="trust-item"><span class="trust-icon">⚡</span><div><strong>Fast delivery</strong><small>Quick digital access</small></div></div><div class="trust-item"><span class="trust-icon">✓</span><div><strong>Warranty plans</strong><small>Clear access terms</small></div></div><div class="trust-item"><span class="trust-icon">◉</span><div><strong>Manual top-up</strong><small>Verified payment support</small></div></div><div class="trust-item"><span class="trust-icon">↗</span><div><strong>Direct support</strong><small>Telegram & WhatsApp</small></div></div></div>
+      <div class="market-highlight" aria-label="Store highlight"><span class="market-highlight-mark">G</span><div class="market-highlight-copy"><strong>Premium digital products, made simple.</strong><span>Clear plans · Verified manual payment · Direct support</span></div><span class="market-highlight-status"><i></i> ONLINE</span></div>
       <div class="store-heading"><div><span class="section-kicker">CURATED DIGITAL STORE</span><h2>Choose what you need</h2></div><span class="section-note">Simple browsing. Clear plans. Fast checkout.</span></div>
       <div class="search-wrap">
         <span class="search-icon">🔎</span>
@@ -1703,6 +1914,7 @@ body.light-mode{background:#dce7f1!important;color:#263d55!important;background-
       <div class="categories" id="categories"></div>
       <div class="products" id="products"></div>
     </div>
+    </div><!-- /catalogShell -->
 
     <div id="orderView" class="order-view hidden">
       <div class="panel">
@@ -2859,6 +3071,7 @@ continueBtn.onclick = () => {
     }
 
     function openOrder(product){
+  document.body.classList.add("order-mode");
   if(product.isGuide){
     window.scrollTo(0, 0);
 
@@ -2899,6 +3112,7 @@ currentProduct = product;
       window.scrollTo(0, 0);
     }
 function closeOrder(){
+  document.body.classList.remove("order-mode");
   currentProduct = null;
 
   checkoutSection.classList.add("hidden");
@@ -3013,7 +3227,7 @@ planName = planName.replace(/\b(private|share|own[- ]?mail|invite)\b/ig, "").rep
 const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
 const accessValue = String(plan.access || rawPlan).toLowerCase();
 const accessClass = /share/i.test(accessValue) ? " share-plan" : (/private/i.test(accessValue) ? " private-plan" : "");
-const watermark = accessClass === " share-plan" ? '<img class="plan-watermark" src="share-watermark.png" alt="Share access" aria-hidden="true">' : (accessClass === " private-plan" ? '<img class="plan-watermark" src="private-watermark.png" alt="Private access" aria-hidden="true">' : '');
+const watermark = accessClass === " share-plan" ? '<img class="plan-watermark" src="./share-watermark.png" alt="Share access" aria-hidden="true" onerror="this.style.display=\'none\'">' : (accessClass === " private-plan" ? '<img class="plan-watermark" src="./private-watermark.png" alt="Private access" aria-hidden="true" onerror="this.style.display=\'none\'">' : '');
 el.className += accessClass;
 el.innerHTML = `
   ${watermark}
