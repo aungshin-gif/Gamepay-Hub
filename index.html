@@ -1,3 +1,4 @@
+
 <!-- Gamepay Hub international UI revision: plans as rounded-square cards; notes are tap-to-view; guide hidden. -->
 <!DOCTYPE html>
 <html lang="en">
@@ -1879,6 +1880,16 @@ body.light-mode .trust-index{color:#9a86b9!important}.light-mode .trust-icon{col
 body.light-mode .market-highlight{border-color:rgba(126,101,188,.25);background:linear-gradient(105deg,rgba(255,253,255,.95),rgba(243,237,255,.92) 60%,rgba(232,249,255,.92));box-shadow:0 10px 24px rgba(93,72,137,.11),0 0 18px rgba(126,101,188,.10),inset 0 1px #fff}.light-mode .market-highlight::before{background:linear-gradient(180deg,#9a7bd9,#6fcbd5);box-shadow:0 0 10px rgba(126,101,188,.28)}.light-mode .market-highlight::after{background:linear-gradient(90deg,transparent,#9a7bd9,#6fcbd5,transparent);opacity:.44}.light-mode .market-highlight-mark{color:#fffaff;background:linear-gradient(145deg,#8e73c8,#6a57a9);box-shadow:0 0 15px rgba(126,101,188,.22)}.light-mode .market-highlight-copy strong{color:#4a4168}.light-mode .market-highlight-copy span{color:#7e7198}.light-mode .market-highlight-status{color:#4f9474}.light-mode .market-highlight-status i{background:#36b77a;box-shadow:0 0 7px rgba(54,183,122,.38)}
 @media(max-width:520px){.market-highlight{min-height:54px;gap:9px;padding:9px 10px;border-radius:15px}.market-highlight-mark{flex-basis:29px;width:29px;height:29px;font-size:13px;border-radius:9px}.market-highlight-copy strong{font-size:10px}.market-highlight-copy span{font-size:7px;letter-spacing:0}.market-highlight-status{font-size:7px;gap:4px}.market-highlight-status i{width:5px;height:5px}}
 </style>
+<style id="watermark-reliability-final">
+/* Watermarks remain visible even when a deployment misses the PNG assets. */
+.plan-watermark-wrap{position:absolute;z-index:2;right:-8px;bottom:-12px;width:124px;height:124px;display:block;pointer-events:none;opacity:1}
+.plan-watermark-wrap .plan-watermark{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important;display:block!important}
+.plan-watermark-fallback{display:none;position:absolute;inset:0;align-items:center;justify-content:center;color:#56f3ff;font-size:13px;font-weight:950;letter-spacing:2px;transform:rotate(-18deg);text-shadow:0 0 12px currentColor;opacity:.28}
+.plan-watermark-fallback.show{display:flex}
+.private-plan .plan-watermark-wrap{filter:drop-shadow(0 0 12px rgba(86,243,255,.48))}.share-plan .plan-watermark-wrap{filter:drop-shadow(0 0 12px rgba(150,113,255,.62))}.private-plan .private-fallback{color:#56f3ff}.share-plan .share-fallback{color:#a78bff}
+body.light-mode .plan-watermark-wrap{opacity:.82;filter:drop-shadow(0 0 8px rgba(126,101,188,.24))}.light-mode .plan-watermark-fallback{color:#7652b0;text-shadow:none;opacity:.20}.light-mode .share-plan .share-fallback{color:#6c5aa7}
+@media(max-width:640px){.plan-watermark-wrap{width:94px;height:94px;right:-7px;bottom:-9px}.plan-watermark-fallback{font-size:9px;letter-spacing:1.3px}}
+</style>
 </head>
 <body>
   <div class="neon-announcement" aria-label="Store announcement"><div class="neon-track"><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b><span>Premium digital products · Clear plans · Fast support</span><b>✦</b><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b></div></div>
@@ -3225,9 +3236,9 @@ const durationText = durationMatch ? durationMatch[1].replace(/\b\w/g, c => c.to
 let planName = withoutPrice.replace(/\s*[–—-]?\s*(?:\d+\s*(?:minute|minutes|min|mins|hour|hours|hr|hrs|day|days|month|months|year|years|week|weeks)|coming\s+soon|preorder|dm)$/i, "").trim();
 planName = planName.replace(/\b(private|share|own[- ]?mail|invite)\b/ig, "").replace(/[()]/g, "").replace(/\s*[·–—-]\s*/g, " ").replace(/\s{2,}/g, " ").replace(/^\W+|\W+$/g, "").trim() || "Digital plan";
 const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
-const accessValue = String(plan.access || rawPlan).toLowerCase();
+const accessValue = [plan.access, plan.accessType, plan.type, plan.name, rawPlan].filter(Boolean).join(" ").toLowerCase();
 const accessClass = /share/i.test(accessValue) ? " share-plan" : (/private/i.test(accessValue) ? " private-plan" : "");
-const watermark = accessClass === " share-plan" ? '<img class="plan-watermark" src="./share-watermark.png" alt="Share access" aria-hidden="true" onerror="this.style.display=\'none\'">' : (accessClass === " private-plan" ? '<img class="plan-watermark" src="./private-watermark.png" alt="Private access" aria-hidden="true" onerror="this.style.display=\'none\'">' : '');
+const watermark = accessClass === " share-plan" ? '<span class="plan-watermark-wrap"><img class="plan-watermark" src="share-watermark.png" alt="Share access" aria-hidden="true" onerror="this.style.display=\'none\';this.nextElementSibling.classList.add(\'show\')"><span class="plan-watermark-fallback share-fallback" aria-hidden="true">SHARE</span></span>' : (accessClass === " private-plan" ? '<span class="plan-watermark-wrap"><img class="plan-watermark" src="private-watermark.png" alt="Private access" aria-hidden="true" onerror="this.style.display=\'none\';this.nextElementSibling.classList.add(\'show\')"><span class="plan-watermark-fallback private-fallback" aria-hidden="true">PRIVATE</span></span>' : '');
 el.className += accessClass;
 el.innerHTML = `
   ${watermark}
@@ -3544,3 +3555,19 @@ animateParticles();
 <div id="uiToast" class="ui-toast" role="status" aria-live="polite"></div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
