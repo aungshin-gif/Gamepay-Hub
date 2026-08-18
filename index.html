@@ -1,3 +1,4 @@
+
 <!-- Gamepay Hub international UI revision: plans as rounded-square cards; notes are tap-to-view; guide hidden. -->
 <!DOCTYPE html>
 <html lang="en">
@@ -1880,7 +1881,7 @@ body.light-mode{background:#dce7f1!important;color:#263d55!important;background-
   badge: "available",
   category: "Services",
   iconType: "image",
-  icon: "zoom.png",
+  icon: "image.png",
   search: "zoom pro meeting video",
   description: "🔐 Private access is provided.\n🛍 Select the required duration before purchase.\n❗️Availability may change based on stock.",
   plans: [
@@ -2024,24 +2025,6 @@ plans: [
   ]
 },
       {
-  id: "grammarly_ai",
-  name: "Grammarly AI",
-  subtitle: "Tap to see prices",
-  badge: "available",
-  category: "AI",
-  iconType: "image",
-  icon: "grammarly.webp",
-  search: "grammarly ai writing assistant",
-  description: "👌2 Devices/n Full Warranty/n💥 Instant Delivery/n🔥 Projects/Notes Private",
-  plans: [
-    { name: "✒️1 Month - 9000 Ks", price: 9000, bestSeller: true },
-    { name: "✒️2 Months - 13500 Ks", price: 13500 },
-    { name: "✒️3 Months - 21000 Ks", price: 21000 },
-    { name: "6 Months - 38000 Ks", price: 38000,discount:true },
-    { name: "1 Year - 60000 Ks", price: 60000,discount:true }
-  ]
-},
-      {
   id: "grok",
   name: "Grok AI Plans",
   subtitle: "Tap to see prices",
@@ -2079,7 +2062,7 @@ plans: [
   badge: "available",
   category: "Social",
   iconType: "image",
-  icon: "https://cdn.simpleicons.org/x/111827",
+  icon: "twitter-new-logo-x-icon-design_1017-45424.jpg",
   search: "x twitter premium plus",
   description: "💥 Full Warranty ပါ။\n✔️ Access on your account.\n✔️ Premium features are included.",
   plans: [
@@ -2139,7 +2122,7 @@ plans: [
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "https://cdn.simpleicons.org/klingai/4f46e5",
+  icon: "images (5).jpeg",
   search: "kling ai standard pro premier ultra credits",
   description: "✅ Can Renew, but not with this promotional price.\n✅ Own Mail Plan\n✅ Full Warranty\n🔥 Credit options are available separately.",
   plans: [
@@ -2160,7 +2143,7 @@ plans: [
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "https://cdn.simpleicons.org/claude/d97706",
+  icon: "claude_logo_3ec57d87f2.svg",
   search: "claude ai pro max programming research own mail",
   description: "✔️ Best for programming and research.\n✔️ Full Warranty\n✔️ Own Mail Type\n🔼 Claude API coming soon.",
   plans: [
@@ -3023,9 +3006,9 @@ const rawPlan = String(plan.name || "").replace(/\\n/g, "\n");
 const priceMatch = rawPlan.match(/([0-9][0-9,]*)\s*(?:ks|ကျပ်)/i);
 const priceText = priceMatch ? `${priceMatch[1]} Ks` : (plan.custom ? "Custom price" : (plan.price ? formatKs(plan.price) : "DM"));
 const withoutPrice = rawPlan.replace(/\s*[–—-]?\s*[0-9][0-9,]*\s*(?:ks|ကျပ်).*$/i, "").trim();
-const durationMatch = withoutPrice.match(/(\d+\s*(?:day|days|month|months|year|years|week|weeks)|coming\s+soon|preorder|dm)$/i);
+const durationMatch = withoutPrice.match(/(\d+\s*(?:minute|minutes|min|mins|hour|hours|hr|hrs|day|days|month|months|year|years|week|weeks)|coming\s+soon|preorder|dm)$/i);
 const durationText = durationMatch ? durationMatch[1].replace(/\b\w/g, c => c.toUpperCase()) : (plan.outOfStock ? "Preorder" : "Standard");
-let planName = withoutPrice.replace(/\s*[–—-]?\s*(?:\d+\s*(?:day|days|month|months|year|years|week|weeks)|coming\s+soon|preorder|dm)$/i, "").trim();
+let planName = withoutPrice.replace(/\s*[–—-]?\s*(?:\d+\s*(?:minute|minutes|min|mins|hour|hours|hr|hrs|day|days|month|months|year|years|week|weeks)|coming\s+soon|preorder|dm)$/i, "").trim();
 planName = planName.replace(/\b(private|share|own[- ]?mail|invite)\b/ig, "").replace(/[()]/g, "").replace(/\s*[·–—-]\s*/g, " ").replace(/\s{2,}/g, " ").replace(/^\W+|\W+$/g, "").trim() || "Digital plan";
 const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
 const accessValue = String(plan.access || rawPlan).toLowerCase();
