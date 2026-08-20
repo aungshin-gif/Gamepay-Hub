@@ -1,4 +1,18 @@
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- Gamepay Hub international UI revision: plans as rounded-square cards; notes are tap-to-view; guide hidden. -->
 <!DOCTYPE html>
 <html lang="en">
@@ -1890,6 +1904,71 @@ body.light-mode .market-highlight{border-color:rgba(126,101,188,.25);background:
 body.light-mode .plan-watermark-wrap{opacity:.82;filter:drop-shadow(0 0 8px rgba(126,101,188,.24))}.light-mode .plan-watermark-fallback{color:#7652b0;text-shadow:none;opacity:.20}.light-mode .share-plan .share-fallback{color:#6c5aa7}
 @media(max-width:640px){.plan-watermark-wrap{width:94px;height:94px;right:-7px;bottom:-9px}.plan-watermark-fallback{font-size:9px;letter-spacing:1.3px}}
 </style>
+<style id="mobile-three-premium-motion-final">
+/* Mobile: three products per row, with compact but readable cards. */
+@media(max-width:640px){
+  .products{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+  .products .card{min-width:0!important;border-radius:14px!important;padding:8px 5px 7px!important}
+  .products .card-image,.products .card img{width:54px!important;height:54px!important;border-radius:14px!important}
+  .products .card-name{min-height:30px!important;font-size:9px!important;line-height:1.15!important;overflow-wrap:anywhere!important}
+  .products .card-note{font-size:7px!important;line-height:1.15!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .products .card-price,.products .card-bottom{font-size:8px!important}
+  .products .buy-btn,.products button{font-size:8px!important;padding:6px 5px!important;border-radius:8px!important}
+  .products .hot-badge,.products .stock-badge{font-size:7px!important;padding:3px 4px!important}
+}
+@media(max-width:390px){.products{gap:5px!important}.products .card{padding:7px 3px 6px!important}.products .card-image,.products .card img{width:47px!important;height:47px!important}.products .card-name{font-size:8px!important}.products .card-note{font-size:6px!important}.products .buy-btn,.products button{font-size:7px!important;padding:5px 3px!important}}
+
+/* Premium motion: lightweight transforms and opacity only, avoiding layout thrash. */
+@keyframes gpHeadingFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes gpHeadingShimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes gpFeatureSweep{0%{transform:translateX(-120%);opacity:0}18%{opacity:.55}55%,100%{transform:translateX(120%);opacity:0}}
+@keyframes gpPlanBreath{0%,100%{box-shadow:0 8px 22px rgba(0,0,0,.18),0 0 0 rgba(86,243,255,0)}50%{box-shadow:0 10px 26px rgba(0,0,0,.20),0 0 18px rgba(86,243,255,.12)}}
+@keyframes gpPlanReveal{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.hero-title{background-size:220% 100%!important;animation:gpHeadingFloat 4.6s ease-in-out infinite,gpHeadingShimmer 7s linear infinite!important;will-change:transform,background-position}
+.hero-kicker{animation:gpHeadingFloat 5.4s ease-in-out .2s infinite!important;will-change:transform}
+.market-highlight{isolation:isolate!important;animation:gpPlanBreath 4.8s ease-in-out infinite!important}
+.market-highlight::after{width:30%!important;left:-35%!important;right:auto!important;height:100%!important;bottom:0!important;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent)!important;opacity:.8!important;transform:skewX(-18deg);animation:gpFeatureSweep 5.8s ease-in-out infinite!important;z-index:0}
+.plan-option{animation:gpPlanReveal .42s cubic-bezier(.23,1,.32,1) both,gpPlanBreath 5.2s ease-in-out infinite!important;will-change:transform,box-shadow}
+.plan-option:nth-child(2){animation-delay:.08s,.8s!important}.plan-option:nth-child(3){animation-delay:.16s,1.6s!important}.plan-option:nth-child(4){animation-delay:.24s,2.4s!important}
+.plan-option:hover,.plan-option.active{transform:translateY(-3px) scale(1.008)!important}
+.products .card{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease!important}
+.products .card:hover{transform:translateY(-4px)!important}
+body.light-mode .market-highlight{animation:gpPlanBreathLight 4.8s ease-in-out infinite!important}
+@keyframes gpPlanBreathLight{0%,100%{box-shadow:0 8px 22px rgba(93,72,137,.10),0 0 0 rgba(126,101,188,0)}50%{box-shadow:0 10px 26px rgba(93,72,137,.13),0 0 17px rgba(126,101,188,.14)}}
+body.light-mode .plan-option{animation-name:gpPlanReveal,gpPlanBreathLight!important}
+@media(prefers-reduced-motion:reduce){.hero-title,.hero-kicker,.market-highlight,.market-highlight::after,.plan-option{animation:none!important}.products .card{transition:none!important}}
+</style>
+<style id="2d-game-bridge-final">
+/* Lightweight 2D game-style bridge between hero and catalog. */
+.game-bridge{position:relative;display:flex;align-items:center;gap:15px;margin:10px 0 18px;padding:8px 15px 8px 12px;min-height:55px;border:1px solid rgba(86,243,255,.20);border-radius:17px;background:linear-gradient(90deg,rgba(8,23,47,.60),rgba(24,22,57,.54),rgba(11,37,53,.54));box-shadow:inset 0 1px rgba(255,255,255,.07),0 0 20px rgba(86,243,255,.06);overflow:hidden;isolation:isolate}
+.game-bridge::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(86,243,255,.045) 6px 7px);opacity:.46;pointer-events:none;z-index:-1}
+.game-bridge::after{content:"";position:absolute;left:-22%;top:0;width:18%;height:100%;background:linear-gradient(90deg,transparent,rgba(86,243,255,.20),transparent);transform:skewX(-18deg);animation:bridgeScan 4.2s ease-in-out infinite;pointer-events:none}
+.game-bridge-track{position:relative;flex:1;height:29px;min-width:180px;border-bottom:2px solid rgba(86,243,255,.42);background:repeating-linear-gradient(90deg,rgba(86,243,255,.20) 0 2px,transparent 2px 16px);box-shadow:0 7px 12px -10px #56f3ff}
+.game-bridge-track::before{content:"";position:absolute;left:4%;right:4%;top:8px;height:1px;background:linear-gradient(90deg,transparent,#56f3ff 18%,#9a7cff 72%,transparent);opacity:.72}
+.bridge-node,.bridge-spark,.bridge-player,.bridge-goal{position:absolute;display:block;z-index:2}.bridge-node{bottom:-4px;width:7px;height:7px;border-radius:2px;background:#56f3ff;box-shadow:0 0 9px #56f3ff;animation:bridgeNode 1.8s ease-in-out infinite}.node-a{left:18%}.node-b{left:51%;animation-delay:.45s;background:#a98bff;box-shadow:0 0 9px #a98bff}.node-c{left:78%;animation-delay:.9s}.bridge-player{left:38%;top:1px;color:#ecffff;font-size:16px;line-height:1;text-shadow:0 0 10px #56f3ff;animation:bridgeRunner 2.2s ease-in-out infinite;transform:rotate(45deg)}.bridge-goal{right:2%;top:-3px;color:#ffe58a;font-size:17px;text-shadow:0 0 11px #ffcf5a;animation:bridgeGoal 1.5s ease-in-out infinite}.bridge-spark{width:3px;height:3px;background:#fff;box-shadow:0 0 7px #fff;animation:bridgeSpark 2.4s linear infinite}.spark-a{left:28%;top:5px}.spark-b{left:69%;top:16px;animation-delay:1.1s}.game-bridge-caption{display:flex;align-items:center;gap:8px;flex:0 0 auto;color:#8bdbe5;font-size:8px;letter-spacing:1.4px;font-weight:900}.game-bridge-caption b{padding:4px 7px;border:1px solid rgba(255,218,108,.35);border-radius:6px;color:#ffe58a;background:rgba(255,206,82,.08);font-size:7px;letter-spacing:1px;animation:bridgeBadge 2s ease-in-out infinite}
+@keyframes bridgeScan{0%,20%{left:-22%;opacity:0}42%{opacity:.8}72%,100%{left:120%;opacity:0}}@keyframes bridgeNode{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(-5px);opacity:1}}@keyframes bridgeRunner{0%,100%{left:34%;transform:translateY(0) rotate(45deg)}50%{left:66%;transform:translateY(-6px) rotate(45deg)}}@keyframes bridgeGoal{0%,100%{transform:scale(1) rotate(0);opacity:.72}50%{transform:scale(1.3) rotate(18deg);opacity:1}}@keyframes bridgeSpark{0%{transform:translate(0,5px);opacity:0}35%{opacity:1}100%{transform:translate(28px,-8px);opacity:0}}@keyframes bridgeBadge{0%,100%{box-shadow:0 0 0 rgba(255,218,108,0)}50%{box-shadow:0 0 13px rgba(255,218,108,.24)}}
+body.light-mode .game-bridge{border-color:rgba(126,101,188,.22);background:linear-gradient(90deg,rgba(255,253,255,.82),rgba(242,236,255,.82),rgba(232,249,253,.82));box-shadow:inset 0 1px #fff,0 0 18px rgba(126,101,188,.10)}body.light-mode .game-bridge::before{background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(126,101,188,.045) 6px 7px)}.light-mode .game-bridge-track{border-bottom-color:rgba(126,101,188,.35);background:repeating-linear-gradient(90deg,rgba(126,101,188,.16) 0 2px,transparent 2px 16px)}.light-mode .game-bridge-track::before{background:linear-gradient(90deg,transparent,#6fcbd5 18%,#9a7bd9 72%,transparent)}.light-mode .bridge-node{background:#65bfc6;box-shadow:0 0 8px rgba(65,174,184,.60)}.light-mode .bridge-node.node-b{background:#987bd2;box-shadow:0 0 8px rgba(126,101,188,.50)}.light-mode .bridge-player{color:#7456af;text-shadow:0 0 8px rgba(126,101,188,.50)}.light-mode .game-bridge-caption{color:#756493}.light-mode .game-bridge-caption b{color:#82642c;background:rgba(255,210,102,.14);border-color:rgba(145,111,48,.28)}
+@media(max-width:520px){.game-bridge{gap:8px;margin:8px 0 15px;padding:7px 9px;min-height:48px}.game-bridge-track{min-width:110px;height:24px}.game-bridge-caption{gap:4px;font-size:6px;letter-spacing:.8px}.game-bridge-caption b{padding:3px 4px;font-size:6px;letter-spacing:.5px}.bridge-player{font-size:13px}.bridge-goal{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.game-bridge::after,.bridge-node,.bridge-player,.bridge-goal,.bridge-spark,.game-bridge-caption b{animation:none!important}}
+</style>
+<style id="light-animation-contrast-final">
+/* Light mode: keep the motion, strengthen the typography. */
+body.light-mode .hero-title{background:linear-gradient(100deg,#172f50 0%,#125d83 46%,#533995 100%)!important;background-size:180% 100%!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;text-shadow:0 4px 14px rgba(54,57,115,.20)!important}
+body.light-mode .hero-sub{color:#3e5872!important;font-weight:750!important}.light-mode .hero-kicker{color:#50358f!important;font-weight:950!important;letter-spacing:2px!important;text-shadow:0 1px 0 rgba(255,255,255,.65)!important}.light-mode .hero-copy{color:#334d68!important;font-weight:700!important}.light-mode .hero-copy span{color:#087b9f!important;font-weight:900!important}
+body.light-mode .market-highlight-copy strong{color:#35294f!important;font-weight:950!important;text-shadow:0 1px 0 rgba(255,255,255,.80)!important}.light-mode .market-highlight-copy span{color:#5b4e75!important;font-weight:700!important}.light-mode .market-highlight-status{color:#276b51!important;font-weight:950!important}
+body.light-mode .game-bridge{border-color:rgba(91,67,145,.34)!important;background:linear-gradient(90deg,rgba(255,255,255,.96),rgba(239,232,255,.94),rgba(225,247,251,.94))!important;box-shadow:inset 0 1px #fff,0 8px 20px rgba(74,54,119,.12),0 0 18px rgba(111,93,174,.12)!important}
+body.light-mode .game-bridge::before{opacity:.60!important;background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(81,61,139,.08) 6px 7px)!important}.light-mode .game-bridge-track{border-bottom-color:rgba(79,60,135,.56)!important;background:repeating-linear-gradient(90deg,rgba(82,65,144,.24) 0 2px,transparent 2px 16px)!important;box-shadow:0 7px 12px -10px rgba(82,65,144,.72)!important}.light-mode .game-bridge-track::before{background:linear-gradient(90deg,transparent,#1b9caf 18%,#7553bd 72%,transparent)!important;opacity:.94!important}
+body.light-mode .game-bridge-caption{color:#3e2e61!important;font-size:9px!important;font-weight:950!important;letter-spacing:1.25px!important;text-shadow:0 1px 0 #fff!important}.light-mode .game-bridge-caption b{color:#543b13!important;background:rgba(255,220,113,.38)!important;border-color:rgba(117,84,22,.48)!important;font-weight:950!important;text-shadow:0 1px 0 rgba(255,255,255,.55)!important}.light-mode .bridge-player{color:#4f2c98!important;text-shadow:0 0 9px rgba(104,71,175,.70)!important}.light-mode .bridge-goal{color:#a06b08!important;text-shadow:0 0 9px rgba(213,151,26,.64)!important}.light-mode .bridge-spark{background:#5f43ad!important;box-shadow:0 0 7px rgba(95,67,173,.75)!important}.light-mode .bridge-node{background:#1599a8!important;box-shadow:0 0 9px rgba(21,153,168,.78)!important}.light-mode .bridge-node.node-b{background:#8058c7!important;box-shadow:0 0 9px rgba(128,88,199,.74)!important}
+body.light-mode .store-heading h2{color:#263f5d!important;text-shadow:0 2px 0 rgba(255,255,255,.75)!important}.light-mode .section-kicker{color:#624b99!important;font-weight:950!important}.light-mode .section-note{color:#536780!important;font-weight:700!important}
+@media(max-width:520px){body.light-mode .game-bridge-caption{font-size:7px!important;letter-spacing:.75px!important}.light-mode .game-bridge-caption b{font-size:6px!important}}
+</style>
+<style id="css-watermark-no-error-final">
+/* Error-free watermarks: pure CSS, no image requests, no broken asset icons. */
+.css-watermark{position:absolute!important;z-index:3!important;right:-8px!important;bottom:-12px!important;width:124px!important;height:124px!important;display:flex!important;align-items:center!important;justify-content:center!important;flex-direction:column!important;gap:7px!important;transform:rotate(-18deg)!important;pointer-events:none!important;opacity:.30!important}
+.plan-watermark-symbol{position:relative;display:block;color:#56f3ff;filter:drop-shadow(0 0 9px currentColor)}.private-symbol{width:34px;height:25px;border:3px solid currentColor;border-radius:4px}.private-symbol::before{content:"";position:absolute;left:5px;top:-17px;width:18px;height:17px;border:3px solid currentColor;border-bottom:0;border-radius:12px 12px 0 0}.private-symbol::after{content:"";position:absolute;left:13px;top:7px;width:4px;height:9px;border-radius:3px;background:currentColor}.share-symbol{width:44px;height:23px;border:3px solid currentColor;border-radius:5px;margin-top:7px}.share-symbol::before,.share-symbol::after{content:"";position:absolute;top:-18px;width:13px;height:13px;border:3px solid currentColor;border-radius:50%;background:transparent}.share-symbol::before{left:3px}.share-symbol::after{right:3px}.plan-watermark-word{color:currentColor;font-size:11px;font-weight:950;letter-spacing:2px;text-shadow:0 0 10px currentColor}.private-watermark-css{color:#56f3ff;filter:drop-shadow(0 0 12px rgba(86,243,255,.62))}.share-watermark-css{color:#a78bff;filter:drop-shadow(0 0 12px rgba(167,139,255,.70))}
+body.light-mode .css-watermark{opacity:.31!important}.light-mode .private-watermark-css{color:#6f51b0;filter:drop-shadow(0 0 8px rgba(111,81,176,.30))}.light-mode .share-watermark-css{color:#6752a5;filter:drop-shadow(0 0 8px rgba(103,82,165,.30))}.light-mode .plan-watermark-word{text-shadow:0 1px 0 rgba(255,255,255,.65)}
+@media(max-width:640px){.css-watermark{width:94px!important;height:94px!important;right:-7px!important;bottom:-9px!important;gap:4px!important}.private-symbol{width:27px;height:19px;border-width:2px}.private-symbol::before{left:4px;top:-13px;width:14px;height:13px;border-width:2px}.private-symbol::after{left:10px;top:5px;width:3px;height:7px}.share-symbol{width:34px;height:18px;border-width:2px}.share-symbol::before,.share-symbol::after{top:-14px;width:10px;height:10px;border-width:2px}.plan-watermark-word{font-size:8px;letter-spacing:1.3px}}
+</style>
 </head>
 <body>
   <div class="neon-announcement" aria-label="Store announcement"><div class="neon-track"><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b><span>Premium digital products · Clear plans · Fast support</span><b>✦</b><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b></div></div>
@@ -1916,7 +1995,7 @@ body.light-mode .plan-watermark-wrap{opacity:.82;filter:drop-shadow(0 0 8px rgba
     </div>
     <div id="catalogView" class="catalog-view">
       <div class="market-highlight" aria-label="Store highlight"><span class="market-highlight-mark">G</span><div class="market-highlight-copy"><strong>Premium digital products, made simple.</strong><span>Clear plans · Verified manual payment · Direct support</span></div><span class="market-highlight-status"><i></i> ONLINE</span></div>
-      <div class="store-heading"><div><span class="section-kicker">CURATED DIGITAL STORE</span><h2>Choose what you need</h2></div><span class="section-note">Simple browsing. Clear plans. Fast checkout.</span></div>
+      <div class="game-bridge" aria-label="Choose a plan"><div class="game-bridge-track"><span class="bridge-spark spark-a"></span><span class="bridge-spark spark-b"></span><span class="bridge-node node-a"></span><span class="bridge-node node-b"></span><span class="bridge-node node-c"></span><span class="bridge-player">◆</span><span class="bridge-goal">✦</span></div><div class="game-bridge-caption"><span>SELECT YOUR PLAN</span><b>LEVEL UP</b></div></div><div class="store-heading"><div><span class="section-kicker">CURATED DIGITAL STORE</span><h2>Choose what you need</h2></div><span class="section-note">Simple browsing. Clear plans. Fast checkout.</span></div>
       <div class="search-wrap">
         <span class="search-icon">🔎</span>
         <input id="searchInput" type="text" placeholder="Search products..." />
@@ -3238,7 +3317,7 @@ planName = planName.replace(/\b(private|share|own[- ]?mail|invite)\b/ig, "").rep
 const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
 const accessValue = [plan.access, plan.accessType, plan.type, plan.name, rawPlan].filter(Boolean).join(" ").toLowerCase();
 const accessClass = /share/i.test(accessValue) ? " share-plan" : (/private/i.test(accessValue) ? " private-plan" : "");
-const watermark = accessClass === " share-plan" ? '<span class="plan-watermark-wrap"><img class="plan-watermark" src="share-watermark.png" alt="Share access" aria-hidden="true" onerror="this.style.display=\'none\';this.nextElementSibling.classList.add(\'show\')"><span class="plan-watermark-fallback share-fallback" aria-hidden="true">SHARE</span></span>' : (accessClass === " private-plan" ? '<span class="plan-watermark-wrap"><img class="plan-watermark" src="private-watermark.png" alt="Private access" aria-hidden="true" onerror="this.style.display=\'none\';this.nextElementSibling.classList.add(\'show\')"><span class="plan-watermark-fallback private-fallback" aria-hidden="true">PRIVATE</span></span>' : '');
+const watermark = accessClass === " share-plan" ? '<span class="plan-watermark-wrap css-watermark share-watermark-css" aria-hidden="true"><span class="plan-watermark-symbol share-symbol"></span><span class="plan-watermark-word">SHARE</span></span>' : (accessClass === " private-plan" ? '<span class="plan-watermark-wrap css-watermark private-watermark-css" aria-hidden="true"><span class="plan-watermark-symbol private-symbol"></span><span class="plan-watermark-word">PRIVATE</span></span>' : '');
 el.className += accessClass;
 el.innerHTML = `
   ${watermark}
@@ -3555,19 +3634,4 @@ animateParticles();
 <div id="uiToast" class="ui-toast" role="status" aria-live="polite"></div>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
