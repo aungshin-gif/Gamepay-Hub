@@ -1,18 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- Gamepay Hub international UI revision: plans as rounded-square cards; notes are tap-to-view; guide hidden. -->
 <!DOCTYPE html>
 <html lang="en">
@@ -1969,6 +1954,41 @@ body.light-mode .store-heading h2{color:#263f5d!important;text-shadow:0 2px 0 rg
 body.light-mode .css-watermark{opacity:.31!important}.light-mode .private-watermark-css{color:#6f51b0;filter:drop-shadow(0 0 8px rgba(111,81,176,.30))}.light-mode .share-watermark-css{color:#6752a5;filter:drop-shadow(0 0 8px rgba(103,82,165,.30))}.light-mode .plan-watermark-word{text-shadow:0 1px 0 rgba(255,255,255,.65)}
 @media(max-width:640px){.css-watermark{width:94px!important;height:94px!important;right:-7px!important;bottom:-9px!important;gap:4px!important}.private-symbol{width:27px;height:19px;border-width:2px}.private-symbol::before{left:4px;top:-13px;width:14px;height:13px;border-width:2px}.private-symbol::after{left:10px;top:5px;width:3px;height:7px}.share-symbol{width:34px;height:18px;border-width:2px}.share-symbol::before,.share-symbol::after{top:-14px;width:10px;height:10px;border-width:2px}.plan-watermark-word{font-size:8px;letter-spacing:1.3px}}
 </style>
+<style id="order-dashboard-flow-final">
+/* Full-screen dashboard view: no page scrolling and no accidental return to the first plan. */
+#checkoutSection.order-dashboard-view{position:fixed!important;inset:0!important;z-index:80!important;overflow-y:auto!important;overscroll-behavior:contain!important;padding:clamp(14px,3vw,28px)!important;background:linear-gradient(135deg,rgba(4,10,28,.98),rgba(10,21,48,.98) 52%,rgba(20,11,48,.98))!important;animation:dashboardEnter .32s cubic-bezier(.23,1,.32,1) both}
+#checkoutSection.order-dashboard-view>.section-title,#checkoutSection.order-dashboard-view>.summary,#checkoutSection.order-dashboard-view>.field,#checkoutSection.order-dashboard-view>.telegram-btn,#checkoutSection.order-dashboard-view>.checkout-trustline,#checkoutSection.order-dashboard-view>.checkout-support-shortcut,#checkoutSection.order-dashboard-view>.preview{width:min(760px,100%);margin-left:auto;margin-right:auto}
+.dashboard-head{width:min(760px,100%);margin:0 auto 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}.dashboard-back-btn{border:1px solid rgba(86,243,255,.34);border-radius:10px;padding:8px 11px;background:rgba(86,243,255,.08);color:#bdfcff;font:800 11px Inter,system-ui,sans-serif;cursor:pointer;box-shadow:0 0 13px rgba(86,243,255,.10)}.dashboard-back-btn:hover{background:rgba(86,243,255,.16);transform:translateY(-1px)}.dashboard-chip{padding:6px 9px;border:1px solid rgba(167,139,255,.36);border-radius:999px;color:#c9bdff;background:rgba(167,139,255,.10);font:900 8px Inter,system-ui,sans-serif;letter-spacing:1.4px}
+@keyframes dashboardEnter{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+body.dashboard-mode{overflow:hidden!important}.order-view.dashboard-active{display:block!important}.order-view.dashboard-active>.panel{min-height:100vh!important}
+body.light-mode #checkoutSection.order-dashboard-view{background:linear-gradient(135deg,#fbf9ff,#f0eaff 52%,#e9f8fa)!important;color:#33294d!important}body.light-mode .dashboard-back-btn{border-color:rgba(111,81,176,.32);background:rgba(111,81,176,.08);color:#4d3978;box-shadow:0 0 12px rgba(111,81,176,.10)}body.light-mode .dashboard-chip{border-color:rgba(111,81,176,.30);color:#5b438d;background:rgba(111,81,176,.09)}
+@media(max-width:600px){#checkoutSection.order-dashboard-view{padding:12px 10px 22px!important}.dashboard-head{margin-bottom:10px}.dashboard-back-btn{font-size:10px;padding:7px 9px}.dashboard-chip{font-size:7px;padding:5px 7px}.order-dashboard-view .section-title{font-size:20px!important}}
+</style>
+<style id="separate-dashboard-preview-final">
+/* Dashboard collects details; Preview is a separate final-review screen. */
+#checkoutSection .preview{display:none!important}#checkoutSection #orderBtn{display:none!important}.review-order-btn{display:block!important;width:min(760px,100%)!important;margin:18px auto 0!important}
+#previewSection.order-preview-view{position:fixed!important;inset:0!important;z-index:90!important;overflow-y:auto!important;overscroll-behavior:contain!important;padding:clamp(16px,4vw,34px)!important;background:linear-gradient(135deg,rgba(4,10,28,.99),rgba(11,24,52,.99) 52%,rgba(25,11,51,.99))!important;animation:dashboardEnter .30s cubic-bezier(.23,1,.32,1) both}.preview-shell{width:min(760px,100%);min-height:100%;margin:0 auto}.preview-page-title{font-size:clamp(24px,5vw,38px)!important;font-weight:950!important;margin:18px 0 6px!important}.preview-page-sub{color:#9db5c8;font-size:12px;margin-bottom:18px}.preview-final-box{min-height:220px;white-space:pre-wrap;overflow:auto;background:linear-gradient(145deg,rgba(17,34,65,.88),rgba(24,20,56,.86))!important;border-color:rgba(86,243,255,.30)!important;box-shadow:0 0 28px rgba(86,243,255,.10),inset 0 1px rgba(255,255,255,.08)!important}.preview-chip{color:#ffe49a!important;border-color:rgba(255,216,107,.34)!important;background:rgba(255,216,107,.08)!important}body.light-mode #previewSection.order-preview-view{background:linear-gradient(135deg,#fbf9ff,#f0eaff 52%,#e9f8fa)!important;color:#33294d!important}body.light-mode .preview-page-sub{color:#665b7c!important}.light-mode .preview-final-box{background:linear-gradient(145deg,#fff,#f0e8fb 55%,#e8f8fa)!important;color:#41375d!important;border-color:rgba(111,81,176,.28)!important;box-shadow:0 12px 28px rgba(93,72,137,.12),inset 0 1px #fff!important}
+@media(max-width:600px){#previewSection.order-preview-view{padding:12px 10px 22px!important}.preview-page-title{font-size:25px!important}.preview-page-sub{font-size:10px!important}.preview-final-box{min-height:190px;font-size:11px!important}}
+</style>
+<style id="plan-card-stability-final">
+.plan-option{backface-visibility:hidden;transform:translateZ(0)}.plan-option.active{z-index:2}.plan-list{contain:layout paint}
+</style>
+<style id="storefront-polish-final">
+/* Vivid access watermarks */
+.plan-watermark-wrap{opacity:1!important;filter:none!important;mix-blend-mode:normal!important}.private-watermark-css{color:#72f8ff!important;text-shadow:0 0 7px #00d9ff,0 0 18px rgba(0,229,255,.75)!important}.private-watermark-css .private-symbol{background:linear-gradient(145deg,#8fffff,#198cff)!important;box-shadow:0 0 10px #00d9ff,0 0 24px rgba(0,210,255,.8)!important}.private-watermark-css .plan-watermark-word{color:#9fffff!important}.share-watermark-css{color:#ff9bf8!important;text-shadow:0 0 7px #ff4edb,0 0 18px rgba(255,67,211,.72)!important}.share-watermark-css .share-symbol{background:linear-gradient(145deg,#ffd0fb,#bd43ff)!important;box-shadow:0 0 10px #ff4edb,0 0 24px rgba(205,66,255,.8)!important}.share-watermark-css .plan-watermark-word{color:#ffc4fb!important}.light-mode .private-watermark-css{color:#087c9d!important;text-shadow:0 0 8px rgba(0,174,210,.34)!important}.light-mode .private-watermark-css .private-symbol{background:linear-gradient(145deg,#4ce4ee,#4386e8)!important;box-shadow:0 0 14px rgba(0,174,210,.42)!important}.light-mode .private-watermark-css .plan-watermark-word{color:#087c9d!important}.light-mode .share-watermark-css{color:#a13bc4!important;text-shadow:0 0 8px rgba(191,70,216,.32)!important}.light-mode .share-watermark-css .share-symbol{background:linear-gradient(145deg,#ff9be9,#a96bff)!important;box-shadow:0 0 14px rgba(191,70,216,.38)!important}.light-mode .share-watermark-css .plan-watermark-word{color:#a13bc4!important}
+/* Professional preview table */
+.preview-final-box{padding:0!important;overflow:hidden!important}.preview-table-caption{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 16px;border-bottom:1px solid rgba(86,243,255,.18);font-size:10px;letter-spacing:1.5px;color:#a5f9ff}.preview-table-caption b{font-size:8px;color:#8dffbd;border:1px solid rgba(141,255,189,.30);border-radius:999px;padding:5px 8px}.order-preview-table{width:100%;border-collapse:collapse;text-align:left}.order-preview-table th,.order-preview-table td{padding:13px 16px;border-bottom:1px solid rgba(141,163,231,.13);vertical-align:top}.order-preview-table th{width:36%;font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#8da8bd;font-weight:900}.order-preview-table td{font-size:13px;color:#f2fbff;font-weight:800;overflow-wrap:anywhere}.order-preview-table tr:last-child th,.order-preview-table tr:last-child td{border-bottom:0}.order-preview-table tr:last-child td{color:#66f5ff;font-size:18px}.light-mode .preview-table-caption{border-bottom-color:rgba(111,81,176,.17);color:#684a9e}.light-mode .preview-table-caption b{color:#267a55;border-color:rgba(38,122,85,.28)}.light-mode .order-preview-table th{color:#81729c}.light-mode .order-preview-table td{color:#45365f}.light-mode .order-preview-table tr:last-child td{color:#7652b0}.preview-empty{padding:22px;color:#99aac0}
+/* Store information + FAQ */
+.store-info-section{margin:26px auto 4px;width:min(1080px,100%);padding:26px;border-radius:26px;border:1px solid rgba(86,243,255,.17);background:linear-gradient(145deg,rgba(13,27,57,.72),rgba(18,18,45,.60));box-shadow:0 18px 42px rgba(0,0,0,.16)}.store-info-head h2{margin:7px 0 6px;color:#eefbff;font-size:clamp(22px,3vw,34px);letter-spacing:-.8px}.store-info-head p{margin:0;color:#8fa5ba;font-size:12px}.store-info-head.compact{margin-top:28px}.store-info-head.compact h2{font-size:22px}.store-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.store-info-card{display:flex;gap:12px;align-items:flex-start;padding:16px;border:1px solid rgba(141,163,231,.16);border-radius:18px;background:rgba(255,255,255,.045)}.store-info-icon{display:grid;place-items:center;flex:0 0 39px;height:39px;border-radius:12px;color:#07182d;background:linear-gradient(145deg,#8fffff,#6e81ff);font:950 9px Inter,system-ui;letter-spacing:.5px;box-shadow:0 0 18px rgba(86,243,255,.28)}.store-info-card h3{margin:1px 0 5px;color:#effbff;font-size:13px}.store-info-card p{margin:0;color:#91a7bc;font-size:10px;line-height:1.55}.store-info-card a{display:inline-block;margin-top:8px;color:#72f8ff;font-size:10px;font-weight:900;text-decoration:none}.store-faq-item{border-top:1px solid rgba(141,163,231,.14);padding:13px 0}.store-faq-item summary{cursor:pointer;color:#dffaff;font-weight:850;font-size:12px;list-style:none}.store-faq-item summary::-webkit-details-marker{display:none}.store-faq-item summary::after{content:'+';float:right;color:#72f8ff;font-size:17px}.store-faq-item[open] summary::after{content:'−'}.store-faq-item p{margin:9px 24px 2px 0;color:#91a7bc;font-size:11px;line-height:1.6}.light-mode .store-info-section{background:linear-gradient(145deg,#fff,#f0e8fb 55%,#e8f8fa);border-color:rgba(111,81,176,.19);box-shadow:0 16px 36px rgba(93,72,137,.10)}.light-mode .store-info-head h2{color:#45365f}.light-mode .store-info-head p,.light-mode .store-info-card p,.light-mode .store-faq-item p{color:#75698c}.light-mode .store-info-card{background:rgba(255,255,255,.56);border-color:rgba(111,81,176,.15)}.light-mode .store-info-card h3,.light-mode .store-faq-item summary{color:#4d3b69}.light-mode .store-info-card a,.light-mode .store-faq-item summary::after{color:#7652b0}
+@media(max-width:700px){.store-info-section{padding:19px 14px;border-radius:20px}.store-info-grid{grid-template-columns:1fr;gap:9px}.store-info-card{padding:13px}.order-preview-table th,.order-preview-table td{padding:11px 12px}.order-preview-table th{width:38%;font-size:8px}.order-preview-table td{font-size:11px}.order-preview-table tr:last-child td{font-size:15px}}
+</style>
+<style id="watermark-preview-motion-final">
+/* Keep access watermarks decorative and physically separated from plan/price text. */
+.plan-option{isolation:isolate;overflow:hidden!important}.plan-option .plan-watermark-wrap{position:absolute!important;top:10px!important;right:10px!important;left:auto!important;bottom:auto!important;z-index:1!important;transform:rotate(-10deg)!important;opacity:.72!important;pointer-events:none!important;display:flex!important;align-items:center!important;gap:5px!important;max-width:90px!important}.plan-option .plan-watermark-wrap .plan-watermark-word{font-size:8px!important;letter-spacing:1.4px!important;font-weight:1000!important;white-space:nowrap!important}.plan-option .plan-watermark-wrap .plan-watermark-symbol{flex:0 0 auto!important;width:25px!important;height:25px!important}.plan-option .plan-professional{position:relative!important;z-index:4!important;margin-top:22px!important;padding:12px!important;border:1px solid rgba(255,255,255,.10)!important;border-radius:15px!important;background:linear-gradient(145deg,rgba(8,18,39,.78),rgba(11,20,43,.58))!important;box-shadow:0 8px 20px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.10)!important}.plan-option .plan-secondary-line{position:relative!important;z-index:5!important}.plan-option .plan-price-block,.plan-option .plan-price-block strong{position:relative!important;z-index:6!important}.light-mode .plan-option .plan-professional{background:linear-gradient(145deg,rgba(255,255,255,.84),rgba(246,239,255,.80))!important;border-color:rgba(111,81,176,.16)!important;box-shadow:0 8px 20px rgba(93,72,137,.09),inset 0 1px #fff!important}.light-mode .plan-option .plan-watermark-wrap{opacity:.78!important}
+/* Premium final-review surface with a smooth scanning glow bar and staggered rows. */
+.preview-final-box{position:relative!important;border:1px solid rgba(86,243,255,.42)!important;box-shadow:0 0 0 1px rgba(86,243,255,.08),0 0 22px rgba(86,243,255,.16),0 18px 42px rgba(0,0,0,.18)!important;animation:previewSurfacePulse 4.8s ease-in-out infinite}.preview-final-box::before{content:"";position:absolute;left:-25%;right:auto;top:0;width:24%;height:3px;border-radius:999px;background:linear-gradient(90deg,transparent,#bfffff,#66f5ff,transparent);box-shadow:0 0 10px #56f3ff,0 0 24px rgba(86,243,255,.90);animation:previewScan 3.6s linear infinite;z-index:5;pointer-events:none}.preview-table-caption{position:relative;overflow:hidden;background:linear-gradient(90deg,rgba(86,243,255,.10),rgba(142,100,255,.13),rgba(255,83,213,.08));background-size:220% 100%;animation:previewHeaderFlow 6s ease-in-out infinite}.preview-table-caption::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.22) 50%,transparent 65%);transform:translateX(-100%);animation:previewShimmer 4.5s ease-in-out infinite;pointer-events:none}.preview-table-caption span,.preview-table-caption b{position:relative;z-index:1}.order-preview-table tbody tr{animation:previewRowIn .42s cubic-bezier(.23,1,.32,1) both}.order-preview-table tbody tr:nth-child(2){animation-delay:.06s}.order-preview-table tbody tr:nth-child(3){animation-delay:.12s}.order-preview-table tbody tr:nth-child(4){animation-delay:.18s}.order-preview-table tbody tr:nth-child(5){animation-delay:.24s}.order-preview-table tbody tr:nth-child(6){animation-delay:.30s}.order-preview-table tbody tr:hover{background:rgba(86,243,255,.08);transform:translateX(3px);transition:background .2s ease,transform .2s ease}.light-mode .preview-final-box{border-color:rgba(111,81,176,.34)!important;box-shadow:0 0 0 1px rgba(111,81,176,.06),0 12px 30px rgba(93,72,137,.13),inset 0 1px #fff!important}.light-mode .preview-final-box::before{background:linear-gradient(90deg,transparent,#9b7be8,#65dce0,transparent);box-shadow:0 0 10px rgba(126,97,218,.60),0 0 22px rgba(101,220,224,.55)}
+@keyframes previewScan{0%{left:-25%}100%{left:105%}}@keyframes previewShimmer{0%,45%{transform:translateX(-100%)}70%,100%{transform:translateX(100%)}}@keyframes previewHeaderFlow{0%,100%{background-position:0 0}50%{background-position:100% 0}}@keyframes previewSurfacePulse{0%,100%{box-shadow:0 0 0 1px rgba(86,243,255,.08),0 0 22px rgba(86,243,255,.16),0 18px 42px rgba(0,0,0,.18)}50%{box-shadow:0 0 0 1px rgba(86,243,255,.16),0 0 32px rgba(86,243,255,.25),0 18px 42px rgba(0,0,0,.18)}}@keyframes previewRowIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}@media(prefers-reduced-motion:reduce){.preview-final-box,.preview-table-caption,.preview-final-box::before,.preview-table-caption::after,.order-preview-table tbody tr{animation:none!important}}
+</style>
 </head>
 <body>
   <div class="neon-announcement" aria-label="Store announcement"><div class="neon-track"><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b><span>Premium digital products · Clear plans · Fast support</span><b>✦</b><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b></div></div>
@@ -2004,6 +2024,20 @@ body.light-mode .css-watermark{opacity:.31!important}.light-mode .private-waterm
       <div class="categories" id="categories"></div>
       <div class="products" id="products"></div>
     </div>
+    <section class="store-info-section" aria-label="Gamepay Hub information">
+      <div class="store-info-head"><span class="section-kicker">WHY GAMEPAY HUB</span><h2>Simple, trusted, ready when you are.</h2><p>Clear plans, manual payment confirmation, and direct support in one premium digital store.</p></div>
+      <div class="store-info-grid">
+        <article class="store-info-card"><span class="store-info-icon">EDU</span><div><h3>Education support</h3><p>Gamepay Hub supports education and offers selected discounts for students.</p></div></article>
+        <article class="store-info-card"><span class="store-info-icon">PAY</span><div><h3>Flexible payment</h3><p>Local payment options are available, with selected international Visa cards and wallets supported.</p></div></article>
+        <article class="store-info-card"><span class="store-info-icon">LIVE</span><div><h3>Direct channel</h3><p>Get stock updates, offers, and announcements from our official Telegram channel.</p><a href="https://t.me/gamepaydyet" target="_blank" rel="noopener">Join Telegram channel ↗</a></div></article>
+      </div>
+      <div class="store-faq-wrap"><div class="store-info-head compact"><span class="section-kicker">HELP CENTER</span><h2>Frequently asked questions</h2></div>
+        <details class="store-faq-item"><summary>How do I place an order?</summary><p>Choose a product, select a plan, enter the required account details, choose a payment method, then review the order before sending it through Telegram.</p></details>
+        <details class="store-faq-item"><summary>Can I renew my subscription?</summary><p>Renewal depends on the individual plan. Check the plan note before ordering or contact support for confirmation.</p></details>
+        <details class="store-faq-item"><summary>How do student discounts work?</summary><p>Student offers may apply to selected products and periods. Contact support with your request to check current availability.</p></details>
+        <details class="store-faq-item"><summary>Where can I see new stock and updates?</summary><p>Join the official Telegram channel for new stock, offers, and service announcements.</p></details>
+      </div>
+    </section>
     </div><!-- /catalogShell -->
 
     <div id="orderView" class="order-view hidden">
@@ -2061,8 +2095,9 @@ body.light-mode .css-watermark{opacity:.31!important}.light-mode .private-waterm
 
 </div>
 
-<div id="checkoutSection" class="hidden">
-  <div class="section-title">Checkout</div>
+<div id="checkoutSection" class="hidden order-dashboard-view">
+  <div class="dashboard-head"><button id="dashboardBackBtn" class="dashboard-back-btn" type="button">← Back to Plan</button><span class="dashboard-chip">ORDER DASHBOARD</span></div>
+  <div class="section-title">Order Dashboard</div>
           
         <div class="summary">
           <div class="line"><span>Selected Items</span><span id="sumItems">0</span></div>
@@ -2089,15 +2124,21 @@ body.light-mode .css-watermark{opacity:.31!important}.light-mode .private-waterm
         <div class="checkout-trustline" aria-label="Checkout support"><b>Secure manual order</b><span>•</span><span>Fast Telegram confirmation</span></div>
         <div class="checkout-support-shortcut"><span>Need help?</span><a href="https://t.me/angsthtun" target="_blank" rel="noopener">Telegram support</a><span>·</span><a href="https://wa.me/qr/PMHPHBAS33UHB1" target="_blank" rel="noopener">WhatsApp</a></div>
 
-        <div class="preview">
-          <div class="preview-title">Order Preview</div>
-          <div id="previewBox" class="preview-box">No order preview yet.</div>
-        </div>
+        <button id="reviewOrderBtn" class="telegram-btn review-order-btn" type="button">Review Order →</button>
+      </div>
+    </div>
+    <div id="previewSection" class="hidden order-preview-view">
+      <div class="preview-shell">
+        <div class="dashboard-head"><button id="previewBackBtn" class="dashboard-back-btn" type="button">← Back to Dashboard</button><span class="dashboard-chip preview-chip">FINAL REVIEW</span></div>
+        <div class="preview-title preview-page-title">Order Preview</div>
+        <div class="preview-page-sub">Check your plan, payment and total before sending the order.</div>
+        <div id="previewFinalBox" class="preview-box preview-final-box"><div class="preview-empty">No order preview yet.</div></div>
+        <button id="previewOrderBtn" class="telegram-btn" type="button" disabled>Order via Telegram ↗</button>
+        <div class="checkout-trustline"><b>Secure manual order</b><span>•</span><span>Fast Telegram confirmation</span></div>
       </div>
     </div>
     <footer class="site-footer">
       <div class="support-label">Need help? Contact support</div>
-      <div class="support-profile"><img class="support-avatar" src="telegram-logo-telegram-logo-transparent-telegram-icon-transparent-free-free-png.png" alt="Telegram logo"><div><strong>Diameter X</strong><small>@angsthtun · Support available</small></div></div>
       <div class="support-actions">
         <a class="support-btn whatsapp-support" href="https://wa.me/qr/PMHPHBAS33UHB1" target="_blank" rel="noopener"><img class="support-logo whatsapp-logo" src="images (2).jpeg" alt="WhatsApp logo"><span>WhatsApp<br><small>Chat with us</small></span></a>
         <a class="support-btn telegram-support" href="https://t.me/angsthtun" target="_blank" rel="noopener"><img class="support-logo telegram-logo" src="telegram-logo-telegram-logo-transparent-telegram-icon-transparent-free-free-png.png" alt="Telegram logo"><span>Telegram<br><small>@angsthtun</small></span></a>
@@ -2128,7 +2169,7 @@ body.light-mode .css-watermark{opacity:.31!important}.light-mode .private-waterm
   plans: [
       { name: "👐 CGPT GO Official – 8$ Plan – 1 Month – 27000 Ks", price: 27000, ownMail: true },
       { name: "🌌 CHATGPT PLUS Official – 80$ Plan – 1 Month – 90000 Ks", price: 90000, ownMail: true, bestSeller: true },
-      { name: "✴️ CHATGPT PLUS – Private – 1 Month – 35000 Ks", price: 35000 },
+      { name: "✴️ CHATGPT PLUS – Private – 1 Month – 30000 Ks", price: 30000 },
       { name: "☄️ CGPT GO – 3 Months – Preorder", price: 27000, outOfStock: true },
   ]
 },
@@ -2983,6 +3024,7 @@ plans: [
     let activePayment = "";
     let currentProduct = null;
     let currentPlanIndex = 0;
+    const selectedPlanByProduct = new Map();
     let planFilterMode = "all";
     let currentQty = 1;
     let plansOpen = true;
@@ -3026,18 +3068,54 @@ const customAmountInput = document.getElementById("customAmountInput");
 const customHint = document.getElementById("customHint");
 const continueBtn = document.getElementById("continueBtn");
 const checkoutSection = document.getElementById("checkoutSection");
+const previewSection = document.getElementById("previewSection");
+const previewFinalBox = document.getElementById("previewFinalBox");
+const reviewOrderBtn = document.getElementById("reviewOrderBtn");
+const previewOrderBtn = document.getElementById("previewOrderBtn");
+const previewBackBtn = document.getElementById("previewBackBtn");
   
 continueBtn.onclick = () => {
+  if(!currentProduct) return;
   cartItem.classList.add("hidden");
   appDescription.parentElement.classList.add("hidden");
   descNav.classList.add("hidden");
-
   checkoutSection.classList.remove("hidden");
-
-  window.scrollTo(0, 0);
+  orderView.classList.add("dashboard-active");
+  document.body.classList.add("dashboard-mode");
+  document.documentElement.classList.add("dashboard-mode");
+  updatePreview();
 };
 
+document.getElementById("dashboardBackBtn")?.addEventListener("click", () => {
+  checkoutSection.classList.add("hidden");
+  orderView.classList.remove("dashboard-active");
+  document.body.classList.remove("dashboard-mode");
+  document.documentElement.classList.remove("dashboard-mode");
+  cartItem.classList.remove("hidden");
+  appDescription.parentElement.classList.remove("hidden");
+  descNav.classList.remove("hidden");
+  renderOrder();
+  renderPayments();
+  updatePreview();
+});
+
   
+reviewOrderBtn?.addEventListener("click", () => {
+  if(!currentProduct || !activePayment) return;
+  checkoutSection.classList.add("hidden");
+  orderView.classList.remove("dashboard-active");
+  previewSection.classList.remove("hidden");
+  document.body.classList.add("preview-mode");
+  updatePreview();
+});
+previewBackBtn?.addEventListener("click", () => {
+  previewSection.classList.add("hidden");
+  document.body.classList.remove("preview-mode");
+  checkoutSection.classList.remove("hidden");
+  orderView.classList.add("dashboard-active");
+  updatePreview();
+});
+previewOrderBtn?.addEventListener("click", openTelegramOrder);
     function formatKs(n){
       return `${Number(n).toLocaleString()} Ks`;
     }
@@ -3171,15 +3249,20 @@ continueBtn.onclick = () => {
   }
 
   checkoutSection.classList.add("hidden");
+  previewSection?.classList.add("hidden");
+  document.body.classList.remove("preview-mode");
 continueBtn.style.display = "block";
 
 cartItem.classList.remove("hidden");
 appDescription.parentElement.classList.remove("hidden");
 descNav.classList.remove("hidden");
 
-currentProduct = product;
+const sameProduct = currentProduct && currentProduct.id === product.id;
   currentProduct = product;
-  currentPlanIndex = 0;
+  const rememberedIndex = selectedPlanByProduct.get(product.id);
+  currentPlanIndex = sameProduct && Number.isInteger(currentPlanIndex)
+    ? currentPlanIndex
+    : (Number.isInteger(rememberedIndex) ? rememberedIndex : Math.max(0, product.plans.findIndex(p => !p.outOfStock)));
   planFilterMode = "all";
   currentQty = 1;
   plansOpen = true;
@@ -3206,6 +3289,8 @@ function closeOrder(){
   currentProduct = null;
 
   checkoutSection.classList.add("hidden");
+  previewSection?.classList.add("hidden");
+  document.body.classList.remove("preview-mode");
   continueBtn.style.display = "block";
   cartItem.classList.add("hidden");
 
@@ -3319,6 +3404,7 @@ const accessValue = [plan.access, plan.accessType, plan.type, plan.name, rawPlan
 const accessClass = /share/i.test(accessValue) ? " share-plan" : (/private/i.test(accessValue) ? " private-plan" : "");
 const watermark = accessClass === " share-plan" ? '<span class="plan-watermark-wrap css-watermark share-watermark-css" aria-hidden="true"><span class="plan-watermark-symbol share-symbol"></span><span class="plan-watermark-word">SHARE</span></span>' : (accessClass === " private-plan" ? '<span class="plan-watermark-wrap css-watermark private-watermark-css" aria-hidden="true"><span class="plan-watermark-symbol private-symbol"></span><span class="plan-watermark-word">PRIVATE</span></span>' : '');
 el.className += accessClass;
+  el.dataset.planIndex = String(index);
 el.innerHTML = `
   ${watermark}
   ${plan.outOfStock ? '<span class="out-stock-badge">⛔ Out of Stock</span>' : ''}
@@ -3331,8 +3417,29 @@ if(plan.outOfStock){
 } else {
 
     el.onclick = () => {
+      if(currentPlanIndex === index) return;
       currentPlanIndex = index;
-      renderOrder();
+      selectedPlanByProduct.set(currentProduct.id, index);
+      planList.querySelectorAll(".plan-option").forEach(card => {
+        card.classList.toggle("active", card.dataset.planIndex === String(index));
+      });
+      const selected = currentProduct.plans[index];
+      cartPlanCurrent.textContent = selected.name;
+      qtyNum.textContent = currentQty;
+      const customAmount = Number(customAmountInput.value || 0);
+      let amount = Number(selected.price || 0) * currentQty;
+      if(selected.custom && customAmount > 0){
+        amount = Math.ceil((customAmount / Number(selected.baseAmount || 1)) * Number(selected.price || 0));
+      }
+      itemAmount.textContent = formatKs(amount);
+      if(selected.custom){
+        customBox.classList.add("show");
+        customAmountInput.placeholder = `Enter ${selected.unit || "amount"}...`;
+      } else {
+        customBox.classList.remove("show");
+        customAmountInput.value = "";
+        customHint.textContent = "";
+      }
       updatePreview();
     };
 }
@@ -3416,6 +3523,24 @@ msg += "╰────────────────────╯\n";
 
   return msg.trim();
     }
+function escapePreviewText(value){
+  return String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
+}
+function renderPreviewTable(message){
+  if(!previewFinalBox) return;
+  if(!message){ previewFinalBox.innerHTML = '<div class="preview-empty">No order preview yet.</div>'; return; }
+  const rows=[];
+  const lines=String(message).split("\n");
+  const labels={"💌 Product":"Product","📄 Plan":"Plan","💳 Payment":"Payment","📱 Payment Phone":"Payment number","👤 Payment Name":"Payment name","💰 Total Amount":"Total amount","🔢 Custom Amount":"Custom amount","📝Note":"Note","👤Account":"Account"};
+  for(let i=0;i<lines.length;i++){
+    const key=lines[i].trim();
+    if(labels[key]){
+      let value=(lines[i+1]||"").trim().replace(/^➥\s*/,"");
+      if(value) rows.push(`<tr><th>${labels[key]}</th><td>${escapePreviewText(value)}</td></tr>`);
+    }
+  }
+  previewFinalBox.innerHTML = `<div class="preview-table-caption"><span>ORDER SUMMARY</span><b>READY TO SEND</b></div><table class="order-preview-table"><tbody>${rows.join("")}</tbody></table>`;
+}
 function updatePreview(){
   const selectedPlan = currentProduct?.plans[currentPlanIndex];
   const customAmount = Number(customAmountInput.value || 0);
@@ -3423,8 +3548,12 @@ function updatePreview(){
   const invalidCustom = selectedPlan?.custom && customAmount > 0 && customAmount < min;
 
   const preview = buildTelegramMessage();
-  previewBox.textContent = preview || "No order preview yet.";
-  orderBtn.disabled = !(currentProduct && activePayment) || invalidCustom;
+  if(previewBox) previewBox.textContent = preview || "No order preview yet.";
+  if(previewFinalBox) renderPreviewTable(preview);
+  const canOrder = !(currentProduct && activePayment) || invalidCustom;
+  orderBtn.disabled = canOrder;
+  if(reviewOrderBtn) reviewOrderBtn.disabled = canOrder;
+  if(previewOrderBtn) previewOrderBtn.disabled = canOrder;
 }
     
 function openTelegramOrder(){
@@ -3634,4 +3763,18 @@ animateParticles();
 <div id="uiToast" class="ui-toast" role="status" aria-live="polite"></div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
