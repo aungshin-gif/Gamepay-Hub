@@ -5175,109 +5175,79 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
         <div class="lp-scene" aria-hidden="true">
           <svg class="lp-hills" viewBox="0 96 1200 364" preserveAspectRatio="xMidYMax slice" focusable="false">
             <defs>
-              <filter id="soften" x="-40%" y="-40%" width="180%" height="180%">
-                <feGaussianBlur stdDeviation="16"/>
-              </filter>
-              <filter id="haze" x="-10%" y="-10%" width="120%" height="120%">
-                <feGaussianBlur stdDeviation="2.4"/>
-              </filter>
-              <filter id="grain">
-                <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="7"/>
-                <feColorMatrix type="saturate" values="0"/>
-                <feComponentTransfer><feFuncA type="linear" slope=".08"/></feComponentTransfer>
-              </filter>
-              <radialGradient id="lightPool" cx="20%" cy="18%" r="85%">
-                <stop offset="0" stop-color="#FFF8E4" stop-opacity=".30"/>
-                <stop offset="1" stop-color="#FFF8E4" stop-opacity="0"/>
+              <linearGradient id="lpWash" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#F6F1FF"/>
+                <stop offset=".5" stop-color="#EFE8FD"/>
+                <stop offset="1" stop-color="#E6DBFA"/>
+              </linearGradient>
+              <radialGradient id="lpAuroraV" cx="50%" cy="18%" r="64%">
+                <stop offset="0" stop-color="#CBB8F6" stop-opacity=".9"/>
+                <stop offset="1" stop-color="#CBB8F6" stop-opacity="0"/>
               </radialGradient>
-              <linearGradient id="cliffLit" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#9C9BC8"/><stop offset="1" stop-color="#7C7BAC"/>
-              </linearGradient>
-              <linearGradient id="cliffDark" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#5E5C8C"/><stop offset="1" stop-color="#474672"/>
-              </linearGradient>
-              <linearGradient id="peakSnow" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#DDE4F6"/>
-              </linearGradient>
-              <linearGradient id="peakRock" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#B3BADB"/><stop offset="1" stop-color="#8B92BC"/>
-              </linearGradient>
-              <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#A6C79B"/><stop offset="1" stop-color="#7FAE7C"/>
-              </linearGradient>
-              <linearGradient id="grassFront" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#8FBB86"/><stop offset="1" stop-color="#6B9E6C"/>
-              </linearGradient>
-              <linearGradient id="fall" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#FFFFFF" stop-opacity=".9"/>
+              <radialGradient id="lpAuroraTeal" cx="13%" cy="76%" r="60%">
+                <stop offset="0" stop-color="#93DAEC" stop-opacity=".55"/>
+                <stop offset="1" stop-color="#93DAEC" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="lpAuroraPink" cx="88%" cy="72%" r="56%">
+                <stop offset="0" stop-color="#F4B9E0" stop-opacity=".46"/>
+                <stop offset="1" stop-color="#F4B9E0" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="lpCore" cx="50%" cy="30%" r="42%">
+                <stop offset="0" stop-color="#FFFFFF" stop-opacity=".85"/>
                 <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="lpBaseFade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#E6DBFA" stop-opacity="0"/>
+                <stop offset="1" stop-color="#F6F1FF" stop-opacity=".96"/>
               </linearGradient>
+              <radialGradient id="lpVignette" cx="50%" cy="42%" r="62%">
+                <stop offset="0" stop-color="#000000" stop-opacity="0"/>
+                <stop offset=".66" stop-color="#000000" stop-opacity="0"/>
+                <stop offset="1" stop-color="#000000" stop-opacity="1"/>
+              </radialGradient>
+              <mask id="lpEdgeFade">
+                <rect x="0" y="96" width="1200" height="364" fill="#FFFFFF"/>
+                <rect x="0" y="96" width="1200" height="364" fill="url(#lpVignette)"/>
+              </mask>
+              <pattern id="lpDots" width="30" height="30" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2" r="1.6" fill="#8A73C8"/>
+              </pattern>
             </defs>
 
-            <circle cx="250" cy="128" r="74" fill="#FFF6DC" opacity=".24" filter="url(#soften)"/>
-            <circle cx="250" cy="128" r="24" fill="#FFFBEF" opacity=".55" filter="url(#soften)"/>
+            <!-- soft lavender wash + aurora glows, tuned to the page palette -->
+            <rect x="0" y="96" width="1200" height="364" fill="url(#lpWash)"/>
+            <rect x="0" y="96" width="1200" height="364" fill="url(#lpAuroraV)"/>
+            <rect x="0" y="96" width="1200" height="364" fill="url(#lpAuroraTeal)"/>
+            <rect x="0" y="96" width="1200" height="364" fill="url(#lpAuroraPink)"/>
 
-            <!-- snow peaks at the head of the valley -->
-            <g filter="url(#haze)" opacity=".97"><path d="M382 250 L470 118 L558 250 Z" fill="url(#peakRock)"/>
-            <path d="M470 118 L520 194 L500 186 L484 204 L470 190 Z" fill="url(#peakSnow)"/>
-            <path d="M418 194 L470 118 L470 190 L454 202 L438 184 Z" fill="#EEF2FC"/>
-            <path d="M560 250 L648 140 L736 250 Z" fill="url(#peakRock)" opacity=".9"/>
-            <path d="M648 140 L692 208 L674 200 L658 216 L648 204 Z" fill="url(#peakSnow)"/>
-            <path d="M604 210 L648 140 L648 204 L634 214 L620 200 Z" fill="#EEF2FC"/></g>
-
-            <!-- valley walls: a lit face and a shadow face on each side -->
-            <path d="M0 40 L96 40 L180 172 L214 268 L0 268 Z" fill="url(#cliffLit)"/>
-            <path d="M96 40 L206 40 L268 176 L286 268 L214 268 L180 172 Z" fill="url(#cliffDark)"/>
-            <path d="M1200 40 L1096 40 L1010 168 L978 268 L1200 268 Z" fill="url(#cliffLit)"/>
-            <path d="M1096 40 L988 40 L928 174 L910 268 L978 268 L1010 168 Z" fill="url(#cliffDark)"/>
-
-            <!-- the waterfall the valley is known for -->
-            <path d="M243 92 h11 v128 h-11 Z" fill="url(#fall)"/>
-            <ellipse cx="248" cy="224" rx="19" ry="6" fill="#FFFFFF" opacity=".55"/>
-            <path d="M952 104 h9 v112 h-9 Z" fill="url(#fall)" opacity=".8"/>
-
-            <!-- valley floor -->
-            <path d="M0 258 C 200 246 340 268 520 282 C 700 296 860 278 1010 262 C 1090 254 1150 256 1200 262 L1200 460 L0 460 Z" fill="url(#grass)"/>
-            <path d="M286 268 L420 460 L0 460 L0 300 Z" fill="#4A4676" opacity=".13" filter="url(#haze)"/>
-            <path d="M910 268 L820 460 L1200 460 L1200 302 Z" fill="#4A4676" opacity=".10" filter="url(#haze)"/>
-
-            <!-- village: chalets and the church spire -->
-            <g>
-              <path d="M470 286 h30 v22 h-30 Z" fill="#F3F0FA"/>
-              <path d="M485 262 l9 26 h-18 Z" fill="#6E6A9B"/>
-              <path d="M481 268 h8 v20 h-8 Z" fill="#F3F0FA"/>
-              <path d="M520 292 h34 v18 h-34 Z" fill="#F6F3FB"/>
-              <path d="M537 278 l22 15 h-44 Z" fill="#8A6552"/>
-              <path d="M414 294 h30 v16 h-30 Z" fill="#F6F3FB"/>
-              <path d="M429 282 l19 13 h-38 Z" fill="#8A6552"/>
-              <path d="M596 290 h28 v17 h-28 Z" fill="#F6F3FB"/>
-              <path d="M610 278 l18 13 h-36 Z" fill="#8A6552"/>
-              <path d="M664 296 h32 v16 h-32 Z" fill="#F6F3FB"/>
-              <path d="M680 284 l20 13 h-40 Z" fill="#8A6552"/>
+            <!-- product-constellation dot grid, faded toward every edge -->
+            <g mask="url(#lpEdgeFade)" opacity=".5">
+              <rect x="0" y="96" width="1200" height="364" fill="url(#lpDots)"/>
             </g>
 
-            <!-- autumn trees, warm against the violet so the valley reads as real -->
-            <g>
-              <circle cx="330" cy="292" r="17" fill="#E0A552"/><rect x="327" y="300" width="6" height="18" fill="#8A6552"/>
-              <circle cx="366" cy="300" r="13" fill="#D98F45"/><rect x="363" y="306" width="5" height="15" fill="#8A6552"/>
-              <circle cx="756" cy="290" r="18" fill="#E0A552"/><rect x="753" y="298" width="6" height="19" fill="#8A6552"/>
-              <circle cx="796" cy="302" r="13" fill="#D98F45"/><rect x="793" y="308" width="5" height="15" fill="#8A6552"/>
-              <circle cx="866" cy="296" r="15" fill="#E5B268"/><rect x="863" y="303" width="6" height="17" fill="#8A6552"/>
+            <!-- orbital rings the brand logos ride around -->
+            <g mask="url(#lpEdgeFade)" fill="none" stroke="#8E79CE" stroke-opacity=".38">
+              <ellipse cx="600" cy="252" rx="150" ry="96" stroke-width="1.4"/>
+              <ellipse cx="600" cy="252" rx="266" ry="168" stroke-width="1.3"/>
+              <ellipse cx="600" cy="252" rx="388" ry="244" stroke-width="1.2" stroke-dasharray="3 9"/>
+              <ellipse cx="600" cy="252" rx="516" ry="322" stroke-width="1.1" stroke-dasharray="3 9" stroke-opacity=".22"/>
             </g>
 
-            <!-- pines stepping down the slopes -->
-            <g fill="#5C8264">
-              <path d="M150 288 l14 30 h-28 Z"/><path d="M150 304 l17 34 h-34 Z"/>
-              <path d="M228 296 l12 26 h-24 Z"/><path d="M228 310 l15 30 h-30 Z"/>
-              <path d="M980 290 l14 30 h-28 Z"/><path d="M980 306 l17 34 h-34 Z"/>
-              <path d="M1060 298 l12 26 h-24 Z"/><path d="M1060 312 l15 30 h-30 Z"/>
+            <!-- soft light core so the featured photo + wordmark lift off the field -->
+            <ellipse cx="600" cy="212" rx="440" ry="220" fill="url(#lpCore)"/>
+
+            <!-- faint sparkles for depth -->
+            <g fill="#7C5FC0" opacity=".5">
+              <circle cx="196" cy="176" r="2.4"/>
+              <circle cx="1024" cy="164" r="2.2"/>
+              <circle cx="330" cy="392" r="2"/>
+              <circle cx="912" cy="404" r="2.4"/>
+              <circle cx="1066" cy="316" r="2"/>
+              <circle cx="150" cy="330" r="2.2"/>
             </g>
 
-            <!-- foreground meadow, tinted toward the page violet so the scene meets the UI -->
-            <path d="M0 340 C 180 318 330 342 500 360 C 680 380 830 364 980 342 C 1070 330 1150 334 1200 342 L1200 460 L0 460 Z" fill="url(#grassFront)"/>
-            <path d="M0 372 C 190 350 350 376 530 394 C 710 412 860 396 1010 376 C 1090 366 1150 370 1200 378 L1200 460 L0 460 Z" fill="#B9A9E2" opacity=".92"/>
-            <rect x="0" y="96" width="1200" height="364" fill="url(#lightPool)" opacity=".55" style="mix-blend-mode:soft-light"/>
-            <rect x="0" y="96" width="1200" height="364" filter="url(#grain)" opacity=".34" style="mix-blend-mode:overlay"/>
+            <!-- base fade so the field melts into the clouds and the page below -->
+            <rect x="0" y="300" width="1200" height="160" fill="url(#lpBaseFade)"/>
           </svg>
 
           <div class="lp-stage">
