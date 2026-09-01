@@ -8,6 +8,15 @@
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
   />
   <title>Gamepay Hub - Digital Products Store</title>
+  <!-- Warms up the connection to the Supabase JS CDN ahead of time -- the
+       actual <script src> tag near the end of <body> is a page-parsing
+       blocker (it has to run before any button's click listener attaches,
+       since everything is one inline script that depends on it), so
+       shaving the DNS/TLS handshake off its wait time here helps buttons
+       feel responsive sooner without touching load-order/timing anywhere
+       else on the page. -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;700;900&family=Archivo:wdth,wght@75..125,400..900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -1998,7 +2007,7 @@ body.light-mode #checkoutSection.order-dashboard-view{background:linear-gradient
 /* Vivid access watermarks */
 .plan-watermark-wrap{opacity:1!important;filter:none!important;mix-blend-mode:normal!important}.private-watermark-css{color:#72f8ff!important;text-shadow:0 0 7px #00d9ff,0 0 18px rgba(0,229,255,.75)!important}.private-watermark-css .private-symbol{background:linear-gradient(145deg,#8fffff,#198cff)!important;box-shadow:0 0 10px #00d9ff,0 0 24px rgba(0,210,255,.8)!important}.private-watermark-css .plan-watermark-word{color:#9fffff!important}.share-watermark-css{color:#ff9bf8!important;text-shadow:0 0 7px #ff4edb,0 0 18px rgba(255,67,211,.72)!important}.share-watermark-css .share-symbol{background:linear-gradient(145deg,#ffd0fb,#bd43ff)!important;box-shadow:0 0 10px #ff4edb,0 0 24px rgba(205,66,255,.8)!important}.share-watermark-css .plan-watermark-word{color:#ffc4fb!important}.light-mode .private-watermark-css{color:#087c9d!important;text-shadow:0 0 8px rgba(0,174,210,.34)!important}.light-mode .private-watermark-css .private-symbol{background:linear-gradient(145deg,#4ce4ee,#4386e8)!important;box-shadow:0 0 14px rgba(0,174,210,.42)!important}.light-mode .private-watermark-css .plan-watermark-word{color:#087c9d!important}.light-mode .share-watermark-css{color:#a13bc4!important;text-shadow:0 0 8px rgba(191,70,216,.32)!important}.light-mode .share-watermark-css .share-symbol{background:linear-gradient(145deg,#ff9be9,#a96bff)!important;box-shadow:0 0 14px rgba(191,70,216,.38)!important}.light-mode .share-watermark-css .plan-watermark-word{color:#a13bc4!important}
 /* Professional preview table */
-.preview-final-box{padding:0!important;overflow:hidden!important}.preview-table-caption{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 16px;border-bottom:1px solid rgba(86,243,255,.18);font-size:10px;letter-spacing:1.5px;color:#a5f9ff}.preview-table-caption b{font-size:8px;color:#8dffbd;border:1px solid rgba(141,255,189,.30);border-radius:999px;padding:5px 8px}.order-preview-table{width:100%;border-collapse:collapse;text-align:left}.order-preview-table th,.order-preview-table td{padding:13px 16px;border-bottom:1px solid rgba(141,163,231,.13);vertical-align:top}.order-preview-table th{width:36%;font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#8da8bd;font-weight:900}.order-preview-table td{font-size:13px;color:#f2fbff;font-weight:800;overflow-wrap:anywhere}.order-preview-table tr:last-child th,.order-preview-table tr:last-child td{border-bottom:0}.order-preview-table tr:last-child td{color:#66f5ff;font-size:18px}.light-mode .preview-table-caption{border-bottom-color:rgba(111,81,176,.17);color:#684a9e}.light-mode .preview-table-caption b{color:#267a55;border-color:rgba(38,122,85,.28)}.light-mode .order-preview-table th{color:#81729c}.light-mode .order-preview-table td{color:#45365f}.light-mode .order-preview-table tr:last-child td{color:#7652b0}.preview-empty{padding:22px;color:#99aac0}
+.preview-final-box{padding:0!important;overflow:hidden!important}.preview-table-caption{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 16px;border-bottom:1px solid rgba(86,243,255,.18);font-size:10px;letter-spacing:1.5px;color:#a5f9ff}.preview-table-caption b{font-size:8px;color:#8dffbd;border:1px solid rgba(141,255,189,.30);border-radius:999px;padding:5px 8px}.order-preview-table{width:100%;border-collapse:collapse;text-align:left}.order-preview-table th,.order-preview-table td{padding:13px 16px;border-bottom:1px solid rgba(141,163,231,.13);vertical-align:top}.order-preview-table th{width:36%;font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#8da8bd;font-weight:900}.order-preview-table td{font-size:14.5px;color:#f2fbff;font-weight:800;overflow-wrap:anywhere}.order-preview-table tr:last-child th,.order-preview-table tr:last-child td{border-bottom:0}.order-preview-table tr:last-child td{color:#66f5ff;font-size:18px}.light-mode .preview-table-caption{border-bottom-color:rgba(111,81,176,.17);color:#684a9e}.light-mode .preview-table-caption b{color:#267a55;border-color:rgba(38,122,85,.28)}.light-mode .order-preview-table th{color:#81729c}.light-mode .order-preview-table td{color:#45365f}.light-mode .order-preview-table tr:last-child td{color:#7652b0}.preview-empty{padding:22px;color:#99aac0}
 /* Store information + FAQ */
 .store-info-section{margin:26px auto 4px;width:min(1080px,100%);padding:26px;border-radius:26px;border:1px solid rgba(86,243,255,.17);background:linear-gradient(145deg,rgba(13,27,57,.72),rgba(18,18,45,.60));box-shadow:0 18px 42px rgba(0,0,0,.16)}.store-info-head h2{margin:7px 0 6px;color:#eefbff;font-size:clamp(22px,3vw,34px);letter-spacing:-.8px}.store-info-head p{margin:0;color:#8fa5ba;font-size:12px}.store-info-head.compact{margin-top:28px}.store-info-head.compact h2{font-size:22px}.store-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.store-info-card{display:flex;gap:12px;align-items:flex-start;padding:16px;border:1px solid rgba(141,163,231,.16);border-radius:18px;background:rgba(255,255,255,.045)}.store-info-icon{display:grid;place-items:center;flex:0 0 39px;height:39px;border-radius:12px;color:#07182d;background:linear-gradient(145deg,#8fffff,#6e81ff);font:950 9px Inter,system-ui;letter-spacing:.5px;box-shadow:0 0 18px rgba(86,243,255,.28)}.store-info-card h3{margin:1px 0 5px;color:#effbff;font-size:13px}.store-info-card p{margin:0;color:#91a7bc;font-size:10px;line-height:1.55}.store-info-card a{display:inline-block;margin-top:8px;color:#72f8ff;font-size:10px;font-weight:900;text-decoration:none}.store-faq-item{border-top:1px solid rgba(141,163,231,.14);padding:13px 0}.store-faq-item summary{cursor:pointer;color:#dffaff;font-weight:850;font-size:12px;list-style:none}.store-faq-item summary::-webkit-details-marker{display:none}.store-faq-item summary::after{content:'+';float:right;color:#72f8ff;font-size:17px}.store-faq-item[open] summary::after{content:'−'}.store-faq-item p{margin:9px 24px 2px 0;color:#91a7bc;font-size:11px;line-height:1.6}.light-mode .store-info-section{background:linear-gradient(145deg,#fff,#f0e8fb 55%,#e8f8fa);border-color:rgba(111,81,176,.19);box-shadow:0 16px 36px rgba(93,72,137,.10)}.light-mode .store-info-head h2{color:#45365f}.light-mode .store-info-head p,.light-mode .store-info-card p,.light-mode .store-faq-item p{color:#75698c}.light-mode .store-info-card{background:rgba(255,255,255,.56);border-color:rgba(111,81,176,.15)}.light-mode .store-info-card h3,.light-mode .store-faq-item summary{color:#4d3b69}.light-mode .store-info-card a,.light-mode .store-faq-item summary::after{color:#7652b0}
 @media(max-width:700px){.store-info-section{padding:19px 14px;border-radius:20px}.store-info-grid{grid-template-columns:1fr;gap:9px}.store-info-card{padding:13px}.order-preview-table th,.order-preview-table td{padding:11px 12px}.order-preview-table th{width:38%;font-size:8px}.order-preview-table td{font-size:11px}.order-preview-table tr:last-child td{font-size:15px}}
@@ -5225,8 +5234,8 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
   box-shadow:var(--shadow,0 18px 44px rgba(18,0,32,.28));
 }
 .order-status-icon{ font-size:44px; line-height:1; margin-bottom:10px; }
-.order-status-title{ font-size:19px; font-weight:800; margin-bottom:8px; }
-.order-status-sub{ font-size:13px; color:var(--muted,rgba(255,255,255,.74)); margin-bottom:10px; }
+.order-status-title{ font-size:23px; font-weight:800; margin-bottom:8px; }
+.order-status-sub{ font-size:14px; color:var(--muted,rgba(255,255,255,.74)); margin-bottom:10px; }
 .order-status-sub b{ color:#fff; }
 .order-status-hint{ font-size:12px; color:var(--muted,rgba(255,255,255,.74)); line-height:1.5; margin-bottom:18px; }
 #openChatBtn{ width:min(320px,100%); margin:0 auto; }
@@ -5239,9 +5248,10 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
 }
 .order-status-details .order-preview-table{ width:100%; margin:0; }
 .status-details-caption{
-  font-size:9.5px; font-weight:900; letter-spacing:1.4px; text-transform:uppercase;
+  font-size:10.5px; font-weight:900; letter-spacing:1.4px; text-transform:uppercase;
   color:var(--muted,rgba(255,255,255,.55)); padding:13px 16px 0;
 }
+body.light-mode .status-details-caption{ color:var(--muted-2,#81729c); }
 body.light-mode .order-status-details{
   background:#fff; border-color:var(--border,rgba(31,41,55,.14)); box-shadow:0 2px 10px rgba(20,20,43,.05);
 }
@@ -5407,17 +5417,17 @@ body.light-mode .acct-row.danger .acct-row-value{ color:#dc2626; }
   padding:14px;
   display:flex;
   flex-direction:column;
-  gap:8px;
+  gap:6px;
   background:rgba(20,4,34,.45);
   border:1px solid rgba(199,125,255,.18);
   border-radius:var(--radius-md,16px);
 }
 .chat-empty{ margin:auto; font-size:12px; color:var(--muted,rgba(255,255,255,.6)); }
 .chat-bubble{
-  max-width:78%;
-  padding:9px 13px;
-  border-radius:14px;
-  font-size:13px;
+  max-width:74%;
+  padding:9px 14px;
+  border-radius:18px;
+  font-size:13.5px;
   line-height:1.4;
   word-break:break-word;
   white-space:pre-wrap;
@@ -5426,16 +5436,16 @@ body.light-mode .acct-row.danger .acct-row-value{ color:#dc2626; }
   align-self:flex-end;
   background:linear-gradient(135deg,#7a35c7,#b86bff);
   color:#fff;
-  border-bottom-right-radius:4px;
+  border-bottom-right-radius:5px;
 }
 .chat-bubble.admin{
   align-self:flex-start;
   background:rgba(255,255,255,.10);
   color:#fff;
   border:1px solid rgba(224,180,255,.22);
-  border-bottom-left-radius:4px;
+  border-bottom-left-radius:5px;
 }
-.chat-row{ display:flex; align-items:flex-end; gap:7px; }
+.chat-row{ display:flex; align-items:flex-end; gap:7px; margin-bottom:2px; }
 .chat-row.admin{ justify-content:flex-start; }
 .chat-row.customer{ justify-content:flex-end; }
 .chat-row .chat-bubble{ margin:0; }
@@ -5447,8 +5457,12 @@ body.light-mode .acct-row.danger .acct-row-value{ color:#dc2626; }
   display:flex;
   gap:8px;
 }
-.chat-input-row .input{ flex:1; }
-.chat-send-btn{ width:auto; padding:0 22px; }
+.chat-input-row .input{ flex:1; border-radius:999px; }
+.chat-send-btn{
+  width:auto; padding:0 22px; border-radius:999px;
+  background:linear-gradient(135deg,#7a35c7,#b86bff); border:none;
+}
+body.light-mode .chat-bubble.customer{ box-shadow:0 1px 2px rgba(122,53,199,.25); }
 
 .my-orders-btn{
   position:relative;
@@ -5522,6 +5536,7 @@ body.light-mode .mo-badge.rejected{ background:#ffe6ec; color:#c81e4d; border-co
 .chat-avatar{
   flex:0 0 auto; width:18px; height:18px; border-radius:50%;
   background:linear-gradient(160deg,#7a35c7,#4c1480); display:flex; align-items:center; justify-content:center; color:#fff;
+  font-size:11px; line-height:1;
 }
 .chat-avatar svg{ width:10px; height:10px; }
 #chatSupportChip{ display:inline-flex; align-items:center; gap:6px; padding:5px 12px 5px 5px; }
@@ -5539,14 +5554,14 @@ body.light-mode .order-status-sub,
 body.light-mode .order-status-hint{ color:var(--muted,#6b7686); }
 body.light-mode .order-status-sub b{ color:var(--ink,#1f2937); }
 body.light-mode .chat-messages{
-  background:var(--surface-2,#f7f9fc);
-  border-color:var(--border,rgba(31,41,55,.14));
+  background:#efeff2;
+  border-color:#e2e2e6;
 }
 body.light-mode .chat-empty{ color:var(--muted,#6b7686); }
 body.light-mode .chat-bubble.admin{
-  background:var(--surface,#fff);
+  background:#e2e2e6;
   color:var(--ink,#1f2937);
-  border-color:var(--border,rgba(31,41,55,.14));
+  border:none;
 }
 body.light-mode .my-orders-btn{
   color:var(--ink,#1f2937);
@@ -5999,7 +6014,7 @@ body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
 
     <div id="chatView" class="hidden order-chat-view">
       <div class="preview-shell">
-        <div class="dashboard-head"><button id="chatBackBtn" class="dashboard-back-btn" type="button">← Back</button><span class="dashboard-chip" id="chatSupportChip"><span class="chat-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>GAMEPAY SUPPORT</span></div>
+        <div class="dashboard-head"><button id="chatBackBtn" class="dashboard-back-btn" type="button">← Back</button><span class="dashboard-chip" id="chatSupportChip"><span class="chat-avatar">👾</span>GAMEPAY SUPPORT</span></div>
         <div id="chatMessages" class="chat-messages"><div class="chat-empty">No messages yet.</div></div>
         <form id="chatForm" class="chat-input-row">
           <input id="chatInput" class="input" type="text" placeholder="Type a message…" autocomplete="off" />
@@ -7296,6 +7311,12 @@ const landingShell = document.getElementById("landingShell");
 const catalogShell = document.getElementById("catalogShell");
 
 function showProductsPage(){
+  // My Account/My Orders/Order Status leave body.order-mode set (it force-
+  // hides .catalog-shell via CSS) -- clear it here too, not just in their
+  // own Back buttons, so the grid still shows up no matter which path got
+  // you here (e.g. My Account -> Back to home -> Browse products).
+  document.body.classList.remove("order-mode");
+  orderView?.classList.add("hidden");
   showPageLoader("Loading products…");
   setTimeout(() => {
     landingShell.classList.add("hidden");
@@ -7306,6 +7327,8 @@ function showProductsPage(){
   }, 430);
 }
 function showLandingPage(){
+  document.body.classList.remove("order-mode");
+  orderView?.classList.add("hidden");
   catalogShell.classList.add("hidden");
   landingShell.classList.remove("hidden");
   document.body.classList.remove("products-mode");
@@ -8142,7 +8165,7 @@ function appendChatBubble(sender, body){
   avatar.className = "chat-row-avatar chat-avatar";
   const myStyle = getAvatarStyleId();
   avatar.innerHTML = isAdmin
-    ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`
+    ? "👾"
     : (myStyle ? avatarStyleSvg(myStyle, 14) : (getDisplayName()[0]?.toUpperCase() || "?"));
   if(!isAdmin) avatar.style.background = avatarGradient(getAvatarColorId());
   const bubble = document.createElement("div");
