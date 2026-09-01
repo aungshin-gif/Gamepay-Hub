@@ -7334,6 +7334,11 @@ function showProductsPage(){
   // you here (e.g. My Account -> Back to home -> Browse products).
   document.body.classList.remove("order-mode");
   orderView?.classList.add("hidden");
+  // openAccountView()/openMyOrdersView() hide catalogView itself (not just
+  // orderView) to show their own screen inside the same catalogShell --
+  // undo that here too, or the grid stays invisible even after catalogShell
+  // is unhidden below.
+  catalogView?.classList.remove("hidden");
   showPageLoader("Loading products…");
   setTimeout(() => {
     landingShell.classList.add("hidden");
@@ -8425,7 +8430,8 @@ document.getElementById("authSubmitBtn")?.addEventListener("click", async () => 
   const { data, error } = await action;
   if(error){ authError.textContent = error.message; return; }
   if(authMode === "signup" && !data.session){
-    authError.textContent = "Account created — check your email to confirm, then log in.";
+    authModalBackdrop.classList.add("hidden");
+    showToast("Account created — check your email to confirm, then log in.");
     return;
   }
   currentUser = data.user;
