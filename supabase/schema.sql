@@ -171,6 +171,20 @@ create policy "admin can read payment slips" on storage.objects
   for select to authenticated
   using (bucket_id = 'payment-slips' and public.is_admin());
 
+-- 6. Admin: look up which email a "username" (its part before the @)
+-- registered with. auth.users isn't exposed to the API by default, so
+-- this is the only door into it, and only for an admin.
+create or replace function public.admin_search_users(p_query text)
+returns table(email text, created_at timestamptz)
+language sql security definer set search_path = public as $$
+  select u.email, u.created_at
+  from auth.users u
+  where public.is_admin() and u.email ilike '%' || p_query || '%'
+  order by u.created_at desc
+  limit 20;
+$$;
+grant execute on function public.admin_search_users to authenticated;
+
 -- ============================================================
 -- One-time setup after running this file:
 -- 1. Create your own admin login: Authentication -> Users -> Add user
