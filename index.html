@@ -5046,17 +5046,17 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
 .lp-hero .lp-hero-photo{ position:absolute; }
 .lp-hero .lp-hero-photo .lp-badge{
   position:absolute !important; z-index:6 !important;
-  top:-14px !important; right:-16px !important; left:auto !important; bottom:auto !important;
+  top:-10px !important; right:-12px !important; left:auto !important; bottom:auto !important;
   margin:0 !important; transform:rotate(-8deg) !important;
-  width:clamp(58px,17vw,84px) !important; aspect-ratio:1 !important;
+  width:clamp(44px,10vw,60px) !important; aspect-ratio:1 !important;
   display:grid !important; place-content:center !important; justify-items:center !important;
-  padding:4px !important;
+  padding:3px !important;
 }
-.lp-hero .lp-hero-photo .lp-badge b{ font-size:clamp(8px,2vw,10.5px) !important; line-height:1.08 !important; }
-.lp-hero .lp-hero-photo .lp-badge em{ font-size:clamp(11px,2.6vw,15px) !important; margin-top:2px !important; }
+.lp-hero .lp-hero-photo .lp-badge b{ font-size:clamp(6.5px,1.6vw,8.5px) !important; line-height:1.05 !important; }
+.lp-hero .lp-hero-photo .lp-badge em{ font-size:clamp(9px,2vw,12px) !important; margin-top:1px !important; }
 @media(max-width:760px){
   .lp-hero .lp-hero-photo .lp-badge{
-    width:clamp(48px,19vw,62px) !important; top:-8px !important; right:-10px !important;
+    width:clamp(36px,13vw,46px) !important; top:-6px !important; right:-8px !important;
   }
 }
 
@@ -7728,12 +7728,15 @@ function updatePreview(){
   const customAmount = Number(customAmountInput.value || 0);
   const min = selectedPlan?.minAmount || currentProduct?.minAmount || 1;
   const invalidCustom = selectedPlan?.custom && customAmount > 0 && customAmount < min;
-  const missingAccount = !accountInput.value.trim();
 
   const preview = buildTelegramMessage();
   if(previewBox) previewBox.textContent = preview || "No order preview yet.";
   if(previewFinalBox) renderPreviewTable(preview);
-  const canOrder = !(currentProduct && activePayment) || invalidCustom || missingAccount;
+  // The Account field is enforced at submit time instead (see submitOrder),
+  // where a missing value can focus the field and explain why -- disabling
+  // these buttons for it here would make them silently do nothing to tap,
+  // with no way to tell the customer what is wrong.
+  const canOrder = !(currentProduct && activePayment) || invalidCustom;
   orderBtn.disabled = canOrder;
   if(reviewOrderBtn) reviewOrderBtn.disabled = canOrder;
   if(previewOrderBtn) previewOrderBtn.disabled = canOrder;
