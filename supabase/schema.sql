@@ -223,6 +223,15 @@ language sql security definer set search_path = public as $$
 $$;
 grant execute on function public.admin_get_user_email to authenticated;
 
+-- Admin dashboard stat card ("Total Users") -- same is_admin()-gated door
+-- into auth.users as the two functions above, just a count instead of rows.
+create or replace function public.admin_count_users()
+returns integer
+language sql security definer set search_path = public as $$
+  select count(*)::int from auth.users where public.is_admin();
+$$;
+grant execute on function public.admin_count_users to authenticated;
+
 -- 7. No one may delete orders or chat history -- not the customer, not
 -- admin, not a hijacked session, no one. Orders/messages have no DELETE
 -- policy at all, and with RLS enabled that already means every DELETE is

@@ -6,64 +6,60 @@
   2. Delete the default content in the template box, paste this whole file in
   3. Save
 
-  This only changes what the EMAIL BODY looks like. The sender address itself
-  (currently something like "noreply@mail.app.supabase.io") is a separate
-  setting -- see the note at the bottom of this file for how to change that.
+  This only changes what the EMAIL BODY looks like. Custom SMTP (Resend,
+  sender "GamePay Hub" <no-reply@gamepayhub.shop>) is already configured
+  under Project Settings -> Authentication -> SMTP Settings, so once this
+  template is saved here the email will be fully branded end to end --
+  body AND the "From" line.
 -->
-<div style="background:#f4f0fb;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;">
-  <table role="presentation" width="100%" style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e5e0f5;">
+<div style="background:#efe9f7;padding:36px 14px;font-family:Arial,Helvetica,sans-serif;">
+  <table role="presentation" width="100%" style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #e5e0f5;box-shadow:0 18px 40px rgba(58,17,99,.14);">
     <tr>
-      <td style="background:linear-gradient(135deg,#1a0028,#5a1a86,#b57cff);padding:28px 24px;text-align:center;">
-        <div style="width:48px;height:48px;line-height:48px;border-radius:50%;background:#fff;color:#5a1a86;font-weight:900;font-size:22px;margin:0 auto 10px;">G</div>
-        <div style="color:#fff;font-weight:900;font-size:18px;letter-spacing:1px;">GAMEPAY HUB</div>
-        <div style="color:rgba(255,255,255,.75);font-size:11px;letter-spacing:2px;margin-top:2px;">DIGITAL STORE</div>
+      <td style="background:linear-gradient(135deg,#170023,#4c1480 55%,#8c4fe0 100%);padding:34px 24px 26px;text-align:center;">
+        <table role="presentation" align="center" style="margin:0 auto 14px;">
+          <tr><td style="width:56px;height:56px;border-radius:16px;background:#ffffff;text-align:center;vertical-align:middle;font:900 26px Arial,Helvetica,sans-serif;color:#4c1480;box-shadow:0 8px 18px rgba(0,0,0,.25);">G</td></tr>
+        </table>
+        <div style="color:#ffffff;font-weight:900;font-size:19px;letter-spacing:1.5px;">GAMEPAY HUB</div>
+        <div style="color:rgba(255,255,255,.72);font-size:10.5px;letter-spacing:3px;margin-top:3px;">DIGITAL STORE</div>
       </td>
     </tr>
+    <tr><td style="height:4px;background:linear-gradient(90deg,#e9c46a,#8c4fe0,#e9c46a);font-size:0;line-height:0;">&nbsp;</td></tr>
     <tr>
-      <td style="padding:32px 28px;">
-        <h1 style="margin:0 0 12px;font-size:20px;color:#1f2333;">Confirm your email</h1>
-        <p style="margin:0 0 20px;font-size:14px;line-height:1.6;color:#555;">
+      <td style="padding:34px 30px 30px;">
+        <h1 style="margin:0 0 12px;font-size:21px;font-weight:800;color:#1f2333;">Confirm your email</h1>
+        <p style="margin:0 0 24px;font-size:14px;line-height:1.7;color:#5b5468;">
           Thanks for creating a GamePay Hub account. Tap the button below to confirm
-          your email address and start tracking your orders.
+          your email address and start tracking your orders, get delivery updates,
+          and chat with support right from your account.
         </p>
-        <div style="text-align:center;margin:28px 0;">
-          <a href="{{ .ConfirmationURL }}"
-             style="display:inline-block;background:#7c3aed;color:#ffffff;text-decoration:none;
-                    font-weight:700;font-size:14px;padding:13px 28px;border-radius:10px;">
-            Confirm my email
-          </a>
-        </div>
-        <p style="margin:0 0 6px;font-size:12px;color:#999;">
-          If the button doesn't work, copy and paste this link into your browser:
-        </p>
-        <p style="margin:0;font-size:12px;color:#7c3aed;word-break:break-all;">
-          {{ .ConfirmationURL }}
-        </p>
+        <table role="presentation" align="center" style="margin:0 auto 26px;">
+          <tr><td style="border-radius:999px;background:#7c3aed;box-shadow:0 10px 24px rgba(124,58,237,.35);">
+            <a href="{{ .ConfirmationURL }}"
+               style="display:inline-block;color:#ffffff;text-decoration:none;
+                      font-weight:700;font-size:14.5px;padding:14px 34px;border-radius:999px;">
+              Confirm my email →
+            </a>
+          </td></tr>
+        </table>
+        <table role="presentation" width="100%" style="background:#f7f4fc;border-radius:12px;">
+          <tr><td style="padding:14px 16px;">
+            <p style="margin:0 0 4px;font-size:11.5px;color:#8a7fa0;font-weight:700;">TROUBLE WITH THE BUTTON?</p>
+            <p style="margin:0;font-size:12px;color:#7c3aed;word-break:break-all;">
+              <a href="{{ .ConfirmationURL }}" style="color:#7c3aed;">{{ .ConfirmationURL }}</a>
+            </p>
+          </td></tr>
+        </table>
       </td>
     </tr>
     <tr>
-      <td style="padding:18px 28px;border-top:1px solid #eee;text-align:center;">
-        <p style="margin:0;font-size:11px;color:#999;">
-          Sent by GamePay Hub &middot; If you didn't request this, you can ignore this email.
+      <td style="padding:20px 30px;border-top:1px solid #eee;text-align:center;">
+        <p style="margin:0 0 4px;font-size:11.5px;color:#9099ad;">
+          Didn't create this account? You can safely ignore this email.
+        </p>
+        <p style="margin:0;font-size:11px;color:#b7b0c4;">
+          GamePay Hub · gamepayhub.shop · Support: Telegram <a href="https://t.me/angsthtun" style="color:#9099ad;">@angsthtun</a>
         </p>
       </td>
     </tr>
   </table>
 </div>
-
-<!--
-  About the sender address ("From"):
-  Supabase's built-in email sender always shows as something generic
-  (e.g. noreply@mail.app.supabase.io) -- this cannot be changed from the
-  template. To send as "GamePay Hub <no-reply@yourdomain.com>" instead,
-  you need to connect your own SMTP provider:
-
-  Supabase Dashboard -> Project Settings -> Authentication -> SMTP Settings
-  -> turn on "Enable Custom SMTP" -> fill in an SMTP provider's details
-  (Gmail SMTP, Resend, Brevo/Sendinblue, etc. all work) and set the
-  "Sender name" to "GamePay Hub".
-
-  Without this step, the email BODY will look fully branded (this
-  template), but the "From" line in the inbox will still read the
-  Supabase default.
--->
