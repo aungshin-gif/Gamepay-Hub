@@ -211,8 +211,17 @@ async function selectOrder(id){
     Amount: <b>${Number(order.amount).toLocaleString()} Ks</b> · Payment: ${order.payment_method || "-"}<br>
     Account/Email: ${order.account_info || "-"}<br>
     Note: ${order.note || "-"}<br>
-    Placed: ${new Date(order.created_at).toLocaleString()}
+    Placed: ${new Date(order.created_at).toLocaleString()}<br>
+    <span id="slipStatus">${order.payment_slip_path ? "Loading payment slip…" : "No payment slip attached."}</span>
   `;
+  if(order.payment_slip_path){
+    sb.storage.from("payment-slips").createSignedUrl(order.payment_slip_path, 3600).then(({ data, error }) => {
+      const el = document.getElementById("slipStatus");
+      if(!el) return;
+      if(error || !data){ el.textContent = "Could not load payment slip."; return; }
+      el.innerHTML = `<a href="${data.signedUrl}" target="_blank" rel="noopener">View payment slip ↗</a>`;
+    });
+  }
   orderApproveRow.innerHTML = order.status === "pending"
     ? `<button id="approveBtn">Approve ✅</button><button id="rejectBtn" class="danger">Reject</button>`
     : `${statusBadge(order.status)}`;

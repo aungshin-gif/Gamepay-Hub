@@ -1,9 +1,10 @@
 -- ============================================================
--- GamePay Hub — Order + Chat backend
+-- GamePay Hub — Order + Chat + Login + Payment-slip backend
 --
 -- How to run this: Supabase Dashboard -> SQL Editor -> New query
 -- -> paste this whole file -> Run. Safe to re-run (uses IF NOT EXISTS
--- and CREATE OR REPLACE), so re-running after an edit won't duplicate data.
+-- and CREATE OR REPLACE), so re-running after an edit won't duplicate data
+-- or fail on columns/policies that already exist.
 -- ============================================================
 
 create extension if not exists pgcrypto;
@@ -11,7 +12,8 @@ create extension if not exists pgcrypto;
 -- 1. Orders -----------------------------------------------------
 create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),
-  access_token uuid not null default gen_random_uuid(), -- the customer's private "ticket" to their own order
+  access_token uuid not null default gen_random_uuid(), -- the guest customer's private "ticket" to their own order
+  user_id uuid references auth.users(id) on delete set null, -- set automatically when the customer is logged in
   order_code text not null unique,
   product_name text not null,
   plan_name text not null,
@@ -19,10 +21,15 @@ create table if not exists public.orders (
   payment_method text,
   account_info text,
   note text,
+  payment_slip_path text, -- path inside the private "payment-slips" storage bucket
   status text not null default 'pending' check (status in ('pending','approved','rejected','completed')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+-- Re-running on an older copy of this table: add any columns that were
+-- introduced later without wiping existing rows.
+alter table public.orders add column if not exists user_id uuid references auth.users(id) on delete set null;
+alter table public.orders add column if not exists payment_slip_path text;
 
 -- 2. Chat messages, one thread per order -------------------------
 create table if not exists public.messages (
@@ -72,22 +79,36 @@ drop policy if exists "admin insert messages" on public.messages;
 create policy "admin insert messages" on public.messages
   for insert with check (public.is_admin());
 
--- Customers (not logged in) get NO policy on orders/messages at all —
--- meaning the anon key alone can never list or read every order. The
--- only way in is through the four functions below, and only if you
--- already hold the exact access_token (the customer's private order link).
+-- Logged-in customers can see their own orders/messages directly (this is
+-- what powers "My Orders" across devices once you sign in). Guests who
+-- never log in fall back to the token-gated functions further down.
+drop policy if exists "customer read own orders" on public.orders;
+create policy "customer read own orders" on public.orders
+  for select using (auth.uid() is not null and auth.uid() = user_id);
+
+drop policy if exists "customer read own messages" on public.messages;
+create policy "customer read own messages" on public.messages
+  for select using (
+    auth.uid() is not null
+    and exists (select 1 from public.orders o where o.id = messages.order_id and o.user_id = auth.uid())
+  );
+
+-- Guests (not logged in) get no table policy at all — the only way in is
+-- through the functions below, and only if you already hold the exact
+-- access_token (the customer's private order link).
 
 create or replace function public.create_order(
   p_product_name text, p_plan_name text, p_amount numeric,
-  p_payment_method text, p_account_info text, p_note text
+  p_payment_method text, p_account_info text, p_note text,
+  p_payment_slip_path text default null
 ) returns table (id uuid, access_token uuid, order_code text)
 language plpgsql security definer set search_path = public as $$
 declare
   v_code text := 'GPH-' || to_char(now(),'YYYYMMDD') || '-' || substr(replace(gen_random_uuid()::text,'-',''),1,5);
 begin
   return query
-  insert into public.orders(product_name, plan_name, amount, payment_method, account_info, note, order_code)
-  values (p_product_name, p_plan_name, p_amount, p_payment_method, p_account_info, p_note, v_code)
+  insert into public.orders(product_name, plan_name, amount, payment_method, account_info, note, order_code, payment_slip_path, user_id)
+  values (p_product_name, p_plan_name, p_amount, p_payment_method, p_account_info, p_note, v_code, p_payment_slip_path, auth.uid())
   returning orders.id, orders.access_token, orders.order_code;
 end;
 $$;
@@ -121,12 +142,28 @@ begin
 end;
 $$;
 
--- The anon (public) key may call only these four functions —
--- never the raw tables.
-grant execute on function public.create_order to anon;
-grant execute on function public.get_order_status to anon;
-grant execute on function public.get_messages to anon;
-grant execute on function public.send_customer_message to anon;
+-- The anon (public) key may call only these functions — never the raw
+-- tables. "authenticated" gets them too, since a logged-in customer's own
+-- browser still uses the same token flow for chat/order-creation.
+grant execute on function public.create_order to anon, authenticated;
+grant execute on function public.get_order_status to anon, authenticated;
+grant execute on function public.get_messages to anon, authenticated;
+grant execute on function public.send_customer_message to anon, authenticated;
+
+-- 5. Payment-slip screenshots (private storage bucket) -------------
+insert into storage.buckets (id, name, public)
+values ('payment-slips', 'payment-slips', false)
+on conflict (id) do nothing;
+
+drop policy if exists "anyone can upload a payment slip" on storage.objects;
+create policy "anyone can upload a payment slip" on storage.objects
+  for insert to anon, authenticated
+  with check (bucket_id = 'payment-slips');
+
+drop policy if exists "admin can read payment slips" on storage.objects;
+create policy "admin can read payment slips" on storage.objects
+  for select to authenticated
+  using (bucket_id = 'payment-slips' and public.is_admin());
 
 -- ============================================================
 -- One-time setup after running this file:
@@ -139,4 +176,9 @@ grant execute on function public.send_customer_message to anon;
 --
 -- 3. Enable Realtime for the tables: Database -> Replication ->
 --    turn on "orders" and "messages" so admin.html gets live updates.
+--
+-- 4. Customer login (email/password) works out of the box once this
+--    file has run — no extra dashboard step needed for that. If you
+--    want to REQUIRE email confirmation before a customer can log in,
+--    turn it on under Authentication -> Providers -> Email.
 -- ============================================================
