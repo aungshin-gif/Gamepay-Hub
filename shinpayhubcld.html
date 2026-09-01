@@ -113,9 +113,23 @@
   .user-search-row{
     display:flex; justify-content:space-between; align-items:center; gap:10px;
     padding:9px 11px; border-radius:9px; border:1px solid var(--border); background:#fbfbfe;
-    font-size:12.5px; margin-top:6px;
+    font-size:12.5px; margin-top:6px; cursor:pointer; transition:background .15s, border-color .15s;
   }
+  .user-search-row:hover{ background:var(--accent-soft); border-color:var(--accent); }
   .user-search-row .line{ color:var(--muted); font-size:11px; }
+
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(20,20,43,.45); z-index:300;
+    display:flex; align-items:flex-start; justify-content:center;
+    padding:40px 16px; overflow-y:auto;
+  }
+  .modal-backdrop.hidden{ display:none; }
+  .modal-card{
+    width:min(480px,100%); background:#fff; border-radius:16px; padding:22px;
+    box-shadow:0 20px 50px rgba(0,0,0,.25);
+  }
+  .modal-close{ float:right; cursor:pointer; font-size:20px; color:var(--muted); line-height:1; }
+  .user-orders-list{ max-height:340px; overflow-y:auto; margin-top:8px; }
 </style>
 </head>
 <body>
@@ -166,6 +180,13 @@
         </form>
       </div>
     </div>
+  </div>
+</div>
+
+<div id="userDetailModal" class="modal-backdrop hidden">
+  <div class="modal-card">
+    <span class="modal-close" id="userDetailCloseBtn">&times;</span>
+    <div id="userDetailContent"></div>
   </div>
 </div>
 
@@ -290,6 +311,8 @@ document.getElementById("toggleArchivedBtn")?.addEventListener("click", (e) => {
   renderOrderList();
 });
 
+let userSearchResultsCache = [];
+
 document.getElementById("userSearchInput")?.addEventListener("input", async (e) => {
   const box = document.getElementById("userSearchResults");
   const q = e.target.value.trim();
@@ -297,8 +320,51 @@ document.getElementById("userSearchInput")?.addEventListener("input", async (e) 
   const { data, error } = await sb.rpc("admin_search_users", { p_query: q });
   if(error){ box.innerHTML = `<div class="empty-note">${error.message}</div>`; return; }
   if(!data || !data.length){ box.innerHTML = `<div class="empty-note">No matching account.</div>`; return; }
-  box.innerHTML = data.map(u => `<div class="user-search-row"><span>${u.email}</span><span class="line">Joined ${new Date(u.created_at).toLocaleDateString()}</span></div>`).join("");
+  userSearchResultsCache = data;
+  box.innerHTML = data.map(u => `<div class="user-search-row" data-id="${u.id}"><span>${u.email}</span><span class="line">Joined ${new Date(u.created_at).toLocaleDateString()}</span></div>`).join("");
+  box.querySelectorAll(".user-search-row").forEach(el => {
+    el.addEventListener("click", () => {
+      const user = userSearchResultsCache.find(u => u.id === el.dataset.id);
+      if(user) showUserDetail(user);
+    });
+  });
 });
+
+const userDetailModal = document.getElementById("userDetailModal");
+const userDetailContent = document.getElementById("userDetailContent");
+document.getElementById("userDetailCloseBtn")?.addEventListener("click", () => userDetailModal.classList.add("hidden"));
+userDetailModal?.addEventListener("click", (e) => { if(e.target === userDetailModal) userDetailModal.classList.add("hidden"); });
+
+async function showUserDetail(user){
+  userDetailModal.classList.remove("hidden");
+  userDetailContent.innerHTML = "<div class='empty-note'>Loading…</div>";
+  const { data: userOrders, error } = await sb.from("orders")
+    .select("*").eq("user_id", user.id).order("created_at", { ascending: false });
+  if(error){ userDetailContent.innerHTML = `<div class="empty-note">${error.message}</div>`; return; }
+  const list = userOrders || [];
+  const spent = list
+    .filter(o => o.status === "approved" || o.status === "completed")
+    .reduce((sum, o) => sum + Number(o.amount || 0), 0);
+  const rows = list.length
+    ? list.map(o => `
+        <div class="order-row" style="cursor:default;">
+          <div class="code">${o.order_code} ${statusBadge(o.status)}</div>
+          <div class="line">${o.product_name} · ${o.plan_name}</div>
+          <div class="line">${Number(o.amount).toLocaleString()} Ks · ${new Date(o.created_at).toLocaleDateString()}</div>
+        </div>
+      `).join("")
+    : `<div class="empty-note">No orders yet.</div>`;
+  userDetailContent.innerHTML = `
+    <div class="card-title">${ICON_USER}${user.email}</div>
+    <table class="order-detail-table">
+      <tr><th>Registered since</th><td>${new Date(user.created_at).toLocaleString()}</td></tr>
+      <tr><th>Total orders</th><td>${list.length}</td></tr>
+      <tr><th>Total amount spent</th><td><b>${spent.toLocaleString()} Ks</b></td></tr>
+    </table>
+    <div class="card-title" style="margin-top:4px;">Order history</div>
+    <div class="user-orders-list">${rows}</div>
+  `;
+}
 
 async function loadOrders(){
   const { data, error } = await sb.from("orders").select("*").order("created_at", { ascending: false });

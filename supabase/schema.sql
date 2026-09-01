@@ -179,10 +179,15 @@ create policy "admin can read payment slips" on storage.objects
 -- 6. Admin: look up which email a "username" (its part before the @)
 -- registered with. auth.users isn't exposed to the API by default, so
 -- this is the only door into it, and only for an admin.
+-- Postgres can't CREATE OR REPLACE a function whose return columns changed
+-- (adding "id" here) -- it has to be dropped first, the same issue
+-- create_order hit earlier when its argument list changed.
+drop function if exists public.admin_search_users(text);
+
 create or replace function public.admin_search_users(p_query text)
-returns table(email text, created_at timestamptz)
+returns table(id uuid, email text, created_at timestamptz)
 language sql security definer set search_path = public as $$
-  select u.email, u.created_at
+  select u.id, u.email, u.created_at
   from auth.users u
   where public.is_admin() and u.email ilike '%' || p_query || '%'
   order by u.created_at desc
