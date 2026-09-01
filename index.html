@@ -5177,6 +5177,17 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
 .order-status-sub b{ color:#fff; }
 .order-status-hint{ font-size:12px; color:var(--muted,rgba(255,255,255,.74)); line-height:1.5; margin-bottom:18px; }
 #openChatBtn{ width:min(320px,100%); margin:0 auto; }
+.order-status-details{
+  width:min(420px,100%); margin:0 auto 14px; text-align:left;
+  background:rgba(255,255,255,.06); border:1px solid rgba(199,125,255,.18);
+  border-radius:12px; padding:12px 14px; font-size:12px; line-height:1.9;
+}
+.order-status-details .osd-row{ display:flex; justify-content:space-between; gap:10px; }
+.order-status-details .osd-row span:first-child{ color:var(--muted,rgba(255,255,255,.65)); }
+.order-status-details .osd-row span:last-child{ font-weight:800; text-align:right; }
+body.light-mode .order-status-details{ background:var(--surface-2,#f7f9fc); border-color:var(--border,rgba(31,41,55,.14)); }
+body.light-mode .order-status-details .osd-row span:first-child{ color:var(--muted,#6b7686); }
+body.light-mode .order-status-details .osd-row span:last-child{ color:var(--ink,#1f2937); }
 
 .chat-messages{
   width:min(560px,100%);
@@ -5665,6 +5676,7 @@ body.light-mode .auth-modal input{ background:var(--surface-2,#f7f9fc); color:va
           <div class="order-status-icon" id="statusIcon">⏳</div>
           <div class="order-status-title" id="statusTitle">Waiting for approval…</div>
           <div class="order-status-sub">Order code: <b id="statusOrderCode">—</b></div>
+          <div id="statusDetails" class="order-status-details"></div>
           <div class="order-status-hint" id="statusHint">We're checking your payment. This page updates automatically — no need to refresh.</div>
           <button id="openChatBtn" class="telegram-btn hidden" type="button">Open Chat 💬</button>
         </div>
@@ -7503,6 +7515,19 @@ function subscribeToOrderUpdates(){
     .subscribe();
 }
 
+function renderStatusDetails(order){
+  const box = document.getElementById("statusDetails");
+  if(!box || !order) return;
+  const rows = [
+    ["Product", order.product_name],
+    ["Plan", order.plan_name],
+    ["Amount", order.amount != null ? formatKs(order.amount) : null],
+    ["Payment", order.payment_method],
+    ["Placed", order.created_at ? formatOrderDate(order.created_at) : null]
+  ].filter(([, v]) => v);
+  box.innerHTML = rows.map(([label, value]) => `<div class="osd-row"><span>${label}</span><span>${value}</span></div>`).join("");
+}
+
 function showOrderStatusView(){
   document.body.classList.add("order-mode");
   catalogView.classList.add("hidden");
@@ -7515,6 +7540,7 @@ function showOrderStatusView(){
   orderView.classList.remove("hidden");
   document.getElementById("orderStatusView").classList.remove("hidden");
   document.getElementById("statusOrderCode").textContent = currentOrder ? currentOrder.order_code : "—";
+  renderStatusDetails(currentOrder);
   setOrderStatusUI("pending");
   subscribeToOrderUpdates();
   window.scrollTo(0, 0);
@@ -7687,13 +7713,21 @@ function renderMyOrdersRows(rows){
     el.addEventListener("click", () => {
       const row = rows.find(r => r.access_token === el.dataset.token);
       if(!row) return;
-      currentOrder = { id: row.id, access_token: row.access_token, order_code: row.order_code };
+      currentOrder = {
+        id: row.id, access_token: row.access_token, order_code: row.order_code,
+        product_name: row.product_name, plan_name: row.plan_name,
+        amount: row.amount, payment_method: row.payment_method, created_at: row.created_at
+      };
       document.getElementById("myOrdersView").classList.add("hidden");
       document.body.classList.add("order-mode");
       catalogView.classList.add("hidden");
+      checkoutSection.classList.add("hidden");
+      previewSection?.classList.add("hidden");
+      document.getElementById("chatView").classList.add("hidden");
       orderView.classList.remove("hidden");
       document.getElementById("orderStatusView").classList.remove("hidden");
       document.getElementById("statusOrderCode").textContent = row.order_code;
+      renderStatusDetails(currentOrder);
       setOrderStatusUI(row.status);
       subscribeToOrderUpdates();
       window.scrollTo(0, 0);
@@ -7703,8 +7737,16 @@ function renderMyOrdersRows(rows){
 
 async function openMyOrdersView(){
   document.body.classList.add("order-mode");
+  document.body.classList.remove("preview-mode", "dashboard-mode");
+  document.documentElement.classList.remove("dashboard-mode");
   catalogView.classList.add("hidden");
-  orderView.classList.add("hidden");
+  cartItem.classList.add("hidden");
+  checkoutSection.classList.add("hidden");
+  previewSection?.classList.add("hidden");
+  document.getElementById("orderStatusView").classList.add("hidden");
+  document.getElementById("chatView").classList.add("hidden");
+  // myOrdersView lives inside #orderView, so the parent must be visible too.
+  orderView.classList.remove("hidden");
   document.getElementById("myOrdersView").classList.remove("hidden");
   myOrdersList.innerHTML = `<div class="chat-empty">Loading…</div>`;
   window.scrollTo(0, 0);
@@ -7738,6 +7780,7 @@ document.getElementById("myOrdersBtn")?.addEventListener("click", openMyOrdersVi
 myOrdersBackBtn?.addEventListener("click", () => {
   document.getElementById("myOrdersView").classList.add("hidden");
   document.body.classList.remove("order-mode");
+  orderView.classList.add("hidden");
   catalogView.classList.remove("hidden");
 });
 
