@@ -6,80 +6,101 @@
 <title>Gamepay Hub — Admin</title>
 <style>
   :root{
-    --bg1:#160021; --bg2:#2a083f; --bg3:#4c1480;
-    --glass:rgba(255,255,255,.08); --border:rgba(224,180,255,.22);
-    --neon:#b86bff; --text:#fff; --muted:rgba(255,255,255,.7);
+    --bg:#f4f5fa; --card:#ffffff; --border:#e5e7f0; --border-strong:#d7dbe8;
+    --ink:#1f2333; --muted:#6b7280; --muted-2:#9099ad;
+    --accent:#7c3aed; --accent-hover:#6d28d9; --accent-soft:#f2ecff;
+    --good:#16a34a; --good-soft:#dcfce7;
+    --warn:#d97706; --warn-soft:#fef3c7;
+    --bad:#dc2626; --bad-soft:#fee2e2;
+    --info:#2563eb; --info-soft:#dbeafe;
+    --shadow:0 1px 2px rgba(20,20,43,.04), 0 8px 24px rgba(20,20,43,.06);
   }
   *{ box-sizing:border-box; }
   body{
-    margin:0; min-height:100vh; font-family:Arial,Helvetica,sans-serif; color:var(--text);
-    background:linear-gradient(135deg,#1a0028 0%,#34104f 30%,#5a1a86 65%,#7a35c7 100%);
-    background-attachment:fixed;
+    margin:0; min-height:100vh; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--ink); background:var(--bg);
   }
-  .wrap{ width:min(1100px,94%); margin:0 auto; padding:24px 0 60px; }
-  h1{ font-size:22px; margin:0 0 4px; }
-  .sub{ color:var(--muted); font-size:13px; margin-bottom:20px; }
+  .icon{ width:16px; height:16px; vertical-align:-3px; }
+  .icon-lg{ width:22px; height:22px; }
+  .wrap{ width:min(1160px,94%); margin:0 auto; padding:28px 0 60px; }
+  h1{ font-size:20px; margin:0 0 2px; font-weight:800; }
+  .sub{ color:var(--muted); font-size:13px; margin-bottom:22px; }
   .card{
-    background:var(--glass); border:1px solid var(--border); border-radius:16px;
-    padding:18px; backdrop-filter:blur(10px);
+    background:var(--card); border:1px solid var(--border); border-radius:16px;
+    padding:18px; box-shadow:var(--shadow);
   }
   input{
-    width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--border);
-    background:rgba(0,0,0,.25); color:#fff; font-size:14px; margin-bottom:10px;
+    width:100%; padding:11px 13px; border-radius:10px; border:1px solid var(--border-strong);
+    background:#fff; color:var(--ink); font-size:14px; margin-bottom:10px;
   }
+  input:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
   button{
-    padding:11px 18px; border-radius:10px; border:none; cursor:pointer;
-    background:linear-gradient(135deg,#7a35c7,#b86bff); color:#fff; font-weight:700; font-size:13px;
+    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    padding:10px 16px; border-radius:10px; border:none; cursor:pointer;
+    background:var(--accent); color:#fff; font-weight:700; font-size:13px;
+    transition:background .15s;
   }
-  button:disabled{ opacity:.4; cursor:not-allowed; }
-  button.ghost{ background:rgba(255,255,255,.08); border:1px solid var(--border); }
-  button.danger{ background:linear-gradient(135deg,#c73535,#ff6b6b); }
+  button:hover{ background:var(--accent-hover); }
+  button:disabled{ opacity:.5; cursor:not-allowed; }
+  button.ghost{ background:#fff; color:var(--ink); border:1px solid var(--border-strong); }
+  button.ghost:hover{ background:#f8f8fc; }
+  button.danger{ background:#fff; color:var(--bad); border:1px solid #f3c6c6; }
+  button.danger:hover{ background:var(--bad-soft); }
 
-  #loginView{ max-width:380px; margin:80px auto 0; }
+  #loginView{ max-width:380px; margin:90px auto 0; text-align:center; }
   #loginView h1{ text-align:center; }
-  #loginError{ color:#ff9fc9; font-size:13px; min-height:18px; margin-bottom:6px; }
+  #loginError{ color:var(--bad); font-size:13px; min-height:18px; margin-bottom:6px; }
+  .login-icon{ width:44px; height:44px; margin:0 auto 12px; color:var(--accent); }
 
-  .top-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
-  .layout{ display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; }
+  .top-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+  .layout{ display:grid; grid-template-columns:1fr 1.1fr; gap:16px; align-items:start; }
   @media(max-width:820px){ .layout{ grid-template-columns:1fr; } }
 
-  .order-list{ display:flex; flex-direction:column; gap:10px; max-height:78vh; overflow-y:auto; }
+  .card-title{ display:flex; align-items:center; gap:8px; font-weight:800; font-size:14px; margin-bottom:12px; color:var(--ink); }
+  .card-title .icon{ color:var(--accent); }
+
+  .order-list{ display:flex; flex-direction:column; gap:8px; max-height:76vh; overflow-y:auto; }
+  .empty-note{ text-align:center; color:var(--muted); font-size:13px; padding:34px 10px; }
   .order-row{
     padding:12px 14px; border-radius:12px; border:1px solid var(--border);
-    background:rgba(255,255,255,.04); cursor:pointer; transition:.15s;
+    background:#fbfbfe; cursor:pointer; transition:.15s;
   }
-  .order-row:hover{ background:rgba(255,255,255,.09); }
-  .order-row.active{ border-color:var(--neon); background:rgba(184,107,255,.14); }
+  .order-row:hover{ background:var(--accent-soft); border-color:#e4d6ff; }
+  .order-row.active{ border-color:var(--accent); background:var(--accent-soft); }
   .order-row .code{ font-weight:800; font-size:13px; }
   .order-row .line{ font-size:12px; color:var(--muted); margin-top:2px; }
-  .badge{ display:inline-block; font-size:10px; font-weight:800; padding:3px 8px; border-radius:20px; margin-left:6px; }
-  .badge.pending{ background:#5a4a1a; color:#ffe08a; }
-  .badge.approved{ background:#1a5a34; color:#8affc1; }
-  .badge.rejected{ background:#5a1a2a; color:#ff9fc9; }
-  .badge.completed{ background:#1a3a5a; color:#8ad4ff; }
+  .badge{ display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:800; padding:3px 9px; border-radius:20px; margin-left:6px; }
+  .badge.pending{ background:var(--warn-soft); color:var(--warn); }
+  .badge.approved{ background:var(--good-soft); color:var(--good); }
+  .badge.rejected{ background:var(--bad-soft); color:var(--bad); }
+  .badge.completed{ background:var(--info-soft); color:var(--info); }
   .order-actions{ display:flex; gap:8px; margin-top:8px; }
 
-  .chat-panel .chat-empty{ text-align:center; color:var(--muted); font-size:13px; padding:30px 0; }
+  .chat-panel .empty-note{ padding:60px 10px; }
   .chat-messages{
-    display:flex; flex-direction:column; gap:8px; max-height:48vh; overflow-y:auto;
-    padding:6px; margin-bottom:10px;
+    display:flex; flex-direction:column; gap:8px; max-height:42vh; overflow-y:auto;
+    padding:4px 2px; margin-bottom:10px;
   }
   .bubble{ max-width:78%; padding:9px 13px; border-radius:14px; font-size:13px; line-height:1.4; white-space:pre-wrap; word-break:break-word; }
-  .bubble.admin{ align-self:flex-end; background:linear-gradient(135deg,#7a35c7,#b86bff); border-bottom-right-radius:4px; }
-  .bubble.customer{ align-self:flex-start; background:rgba(255,255,255,.1); border:1px solid var(--border); border-bottom-left-radius:4px; }
+  .bubble.admin{ align-self:flex-end; background:var(--accent); color:#fff; border-bottom-right-radius:4px; }
+  .bubble.customer{ align-self:flex-start; background:#f1f2f8; color:var(--ink); border-bottom-left-radius:4px; }
   .chat-input-row{ display:flex; gap:8px; }
   .chat-input-row input{ margin-bottom:0; }
-  .order-detail{ font-size:12px; color:var(--muted); line-height:1.7; margin-bottom:12px; }
-  .order-detail b{ color:#fff; }
+  .order-detail{ font-size:12.5px; color:var(--muted); line-height:1.9; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+  .order-detail b{ color:var(--ink); }
+  .order-detail a{ color:var(--accent); font-weight:700; text-decoration:none; }
+  .order-detail a:hover{ text-decoration:underline; }
   .hidden{ display:none !important; }
-  .signout{ font-size:12px; color:var(--muted); background:none; padding:6px 10px; }
+  .signout{ background:#fff; color:var(--muted); border:1px solid var(--border-strong); }
+  .signout:hover{ background:#f8f8fc; color:var(--ink); }
 </style>
 </head>
 <body>
 
 <div id="loginView" class="card">
+  <svg class="login-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
   <h1>GamePay Hub Admin</h1>
-  <p class="sub" style="text-align:center">Sign in with your admin account</p>
+  <p class="sub">Sign in with your admin account</p>
   <div id="loginError"></div>
   <input id="loginEmail" type="email" placeholder="Email" autocomplete="username" />
   <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" />
@@ -92,23 +113,24 @@
       <h1>Order Dashboard</h1>
       <div class="sub">Live — updates automatically, no refresh needed.</div>
     </div>
-    <button id="signOutBtn" class="signout">Sign out</button>
+    <button id="signOutBtn" class="signout"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign out</button>
   </div>
 
   <div class="layout">
     <div class="card">
-      <div id="orderList" class="order-list"><div class="chat-empty">Loading orders…</div></div>
+      <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>Orders</div>
+      <div id="orderList" class="order-list"><div class="empty-note">Loading orders…</div></div>
     </div>
 
     <div class="card chat-panel">
-      <div id="noOrderSelected" class="chat-empty">Select an order to see details and chat.</div>
+      <div id="noOrderSelected" class="empty-note">Select an order to see details and chat.</div>
       <div id="orderDetailBox" class="hidden">
         <div class="order-detail" id="orderDetail"></div>
         <div class="order-actions" id="orderApproveRow"></div>
         <div id="chatMessages" class="chat-messages"></div>
         <form id="chatForm" class="chat-input-row">
           <input id="chatInput" type="text" placeholder="Reply to customer…" autocomplete="off" />
-          <button type="submit">Send</button>
+          <button type="submit"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Send</button>
         </form>
       </div>
     </div>
@@ -120,7 +142,16 @@
 // Must match the same project as index.html's SUPABASE_URL / SUPABASE_ANON_KEY.
 const SUPABASE_URL = "https://sekntmukqliznwilsxox.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_vGOC2MkDEn9t4tFmuoHV0g_R06t-Jgb";
-const sb = (/^https?:\/\//.test(SUPABASE_URL)) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+// A distinct storageKey keeps this admin login completely separate from a
+// customer session in index.html -- without it, both pages share the same
+// browser storage slot and whichever account logs in last "wins" on both.
+const sb = (/^https?:\/\//.test(SUPABASE_URL))
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { storageKey: "gph-admin-auth" } })
+  : null;
+
+const ICON_CHECK = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>`;
+const ICON_X = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+const ICON_IMAGE = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
 
 const loginView = document.getElementById("loginView");
 const dashboardView = document.getElementById("dashboardView");
@@ -170,7 +201,7 @@ function statusBadge(status){
 }
 
 function renderOrderList(){
-  if(!orders.length){ orderList.innerHTML = "<div class='chat-empty'>No orders yet.</div>"; return; }
+  if(!orders.length){ orderList.innerHTML = "<div class='empty-note'>No orders yet.</div>"; return; }
   orderList.innerHTML = orders.map(o => `
     <div class="order-row ${o.id === selectedOrderId ? "active" : ""}" data-id="${o.id}">
       <div class="code">${o.order_code} ${statusBadge(o.status)}</div>
@@ -219,11 +250,11 @@ async function selectOrder(id){
       const el = document.getElementById("slipStatus");
       if(!el) return;
       if(error || !data){ el.textContent = "Could not load payment slip."; return; }
-      el.innerHTML = `<a href="${data.signedUrl}" target="_blank" rel="noopener">View payment slip ↗</a>`;
+      el.innerHTML = `<a href="${data.signedUrl}" target="_blank" rel="noopener">${ICON_IMAGE} View payment slip</a>`;
     });
   }
   orderApproveRow.innerHTML = order.status === "pending"
-    ? `<button id="approveBtn">Approve ✅</button><button id="rejectBtn" class="danger">Reject</button>`
+    ? `<button id="approveBtn">${ICON_CHECK} Approve</button><button id="rejectBtn" class="danger">${ICON_X} Reject</button>`
     : `${statusBadge(order.status)}`;
   document.getElementById("approveBtn")?.addEventListener("click", () => setStatus(order, "approved"));
   document.getElementById("rejectBtn")?.addEventListener("click", () => setStatus(order, "rejected"));
@@ -239,7 +270,7 @@ async function setStatus(order, status){
 }
 
 function appendBubble(sender, body){
-  const empty = chatMessages.querySelector(".chat-empty");
+  const empty = chatMessages.querySelector(".empty-note");
   if(empty) empty.remove();
   const b = document.createElement("div");
   b.className = "bubble " + (sender === "admin" ? "admin" : "customer");
@@ -249,13 +280,13 @@ function appendBubble(sender, body){
 }
 
 async function loadMessages(orderId){
-  chatMessages.innerHTML = "<div class='chat-empty'>Loading…</div>";
+  chatMessages.innerHTML = "<div class='empty-note'>Loading…</div>";
   const { data, error } = await sb.from("messages").select("*").eq("order_id", orderId).order("created_at", { ascending: true });
   chatMessages.innerHTML = "";
   if(!error && data && data.length){
     data.forEach(m => appendBubble(m.sender, m.body));
   } else {
-    chatMessages.innerHTML = "<div class='chat-empty'>No messages yet.</div>";
+    chatMessages.innerHTML = "<div class='empty-note'>No messages yet.</div>";
   }
 }
 
