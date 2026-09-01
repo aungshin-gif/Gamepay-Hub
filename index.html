@@ -5232,8 +5232,19 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
 #openChatBtn{ width:min(320px,100%); margin:0 auto; }
 /* Reuses the existing .order-preview-table look (see the Order Preview
    screen) so this reads as the same polished table, not a second style. */
-.order-status-details{ width:min(500px,100%); margin:0 auto 16px; text-align:left; }
-.order-status-details .order-preview-table{ width:100%; }
+.order-status-details{
+  width:min(500px,100%); margin:0 auto 16px; text-align:left;
+  background:rgba(255,255,255,.045); border:1px solid rgba(199,125,255,.20);
+  border-radius:16px; overflow:hidden;
+}
+.order-status-details .order-preview-table{ width:100%; margin:0; }
+.status-details-caption{
+  font-size:9.5px; font-weight:900; letter-spacing:1.4px; text-transform:uppercase;
+  color:var(--muted,rgba(255,255,255,.55)); padding:13px 16px 0;
+}
+body.light-mode .order-status-details{
+  background:#fff; border-color:var(--border,rgba(31,41,55,.14)); box-shadow:0 2px 10px rgba(20,20,43,.05);
+}
 
 /* Indeterminate progress bar shown while an order is being placed */
 .order-progress-bar{
@@ -5295,6 +5306,14 @@ body.light-mode .status-step-line{ background:var(--border,rgba(31,41,55,.14)); 
 }
 .acct-profile-name{ font-size:19px; font-weight:800; }
 .acct-profile-handle{ font-size:13px; color:var(--muted,rgba(255,255,255,.6)); margin-top:2px; }
+.acct-avatar-swatches{ display:flex; gap:8px; justify-content:center; margin-top:14px; }
+.acct-swatch{
+  width:24px; height:24px; border-radius:50%; cursor:pointer; border:2px solid transparent;
+  padding:0; transition:transform .12s, border-color .12s;
+}
+.acct-swatch:hover{ transform:scale(1.12); }
+.acct-swatch.active{ border-color:#fff; box-shadow:0 0 0 2px rgba(122,53,199,.55); }
+body.light-mode .acct-swatch.active{ border-color:#1f2937; box-shadow:0 0 0 2px rgba(122,53,199,.35); }
 
 .acct-section-label{
   width:min(460px,100%); margin:0 auto 8px; font-size:10.5px; font-weight:800;
@@ -5387,6 +5406,12 @@ body.light-mode .acct-row.danger .acct-row-value{ color:#dc2626; }
   border:1px solid rgba(224,180,255,.22);
   border-bottom-left-radius:4px;
 }
+.chat-row{ display:flex; align-items:flex-end; gap:7px; }
+.chat-row.admin{ justify-content:flex-start; }
+.chat-row.customer{ justify-content:flex-end; }
+.chat-row .chat-bubble{ margin:0; }
+.chat-row-avatar{ width:24px; height:24px; font-size:10.5px; }
+.chat-row-avatar svg{ width:12px; height:12px; }
 .chat-input-row{
   width:min(560px,100%);
   margin:10px auto 0;
@@ -5966,6 +5991,7 @@ body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
           </div>
           <div class="acct-profile-name" id="acctProfileName">—</div>
           <div class="acct-profile-handle" id="acctProfileHandle">—</div>
+          <div class="acct-avatar-swatches" id="acctAvatarSwatches"></div>
         </div>
 
         <div class="acct-section-label">ACCOUNT</div>
@@ -7012,6 +7038,25 @@ plans: [
     let currentOrder = null; // { id, access_token, order_code }
     let orderChannel = null; // realtime channel for the active order
     let currentUser = null; // Supabase Auth user, once logged in
+
+    // Initial-letter avatars (no photo upload -- just a customer-picked
+    // color), shared by the account page and the chat bubbles.
+    const AVATAR_COLORS = {
+      purple: ["#7a35c7", "#b86bff"],
+      blue:   ["#2e6fd6", "#56d2ff"],
+      green:  ["#0f7a3f", "#3ec98b"],
+      orange: ["#e0a83c", "#ffcf6b"],
+      pink:   ["#a3218b", "#ff8fae"],
+      teal:   ["#0e8f8a", "#56f3d6"]
+    };
+    function getAvatarColorId(){
+      const id = currentUser?.user_metadata?.avatar_color;
+      return AVATAR_COLORS[id] ? id : "purple";
+    }
+    function avatarGradient(colorId){
+      const c = AVATAR_COLORS[colorId] || AVATAR_COLORS.purple;
+      return `linear-gradient(135deg,${c[0]},${c[1]})`;
+    }
     // Small inline-SVG icon set, used instead of emoji for a cleaner look.
     const ICONS = {
       copy: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`,
@@ -7997,7 +8042,7 @@ function renderStatusDetails(order){
     ["Placed", order.created_at ? formatOrderDate(order.created_at) : null]
   ].filter(([, v]) => v);
   const trs = rows.map(([label, value]) => `<tr><th>${label}</th><td>${escapePreviewText(value)}</td></tr>`).join("");
-  box.innerHTML = `<table class="order-preview-table"><tbody>${trs}</tbody></table>`;
+  box.innerHTML = `<div class="status-details-caption">Order Summary</div><table class="order-preview-table"><tbody>${trs}</tbody></table>`;
 }
 
 function showOrderStatusView(){
@@ -8019,10 +8064,21 @@ function showOrderStatusView(){
 function appendChatBubble(sender, body){
   const box = document.getElementById("chatMessages");
   if(box.querySelector(".chat-empty")) box.innerHTML = "";
+  const isAdmin = sender === "admin";
+  const row = document.createElement("div");
+  row.className = "chat-row " + (isAdmin ? "admin" : "customer");
+  const avatar = document.createElement("span");
+  avatar.className = "chat-row-avatar chat-avatar";
+  avatar.innerHTML = isAdmin
+    ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`
+    : (getDisplayName()[0]?.toUpperCase() || "?");
+  if(!isAdmin) avatar.style.background = avatarGradient(getAvatarColorId());
   const bubble = document.createElement("div");
-  bubble.className = "chat-bubble " + (sender === "admin" ? "admin" : "customer");
+  bubble.className = "chat-bubble " + (isAdmin ? "admin" : "customer");
   bubble.textContent = body;
-  box.appendChild(bubble);
+  if(isAdmin){ row.appendChild(avatar); row.appendChild(bubble); }
+  else { row.appendChild(bubble); row.appendChild(avatar); }
+  box.appendChild(row);
   box.scrollTop = box.scrollHeight;
 }
 
@@ -8390,13 +8446,34 @@ function getUsername(){
   return currentUser?.user_metadata?.username || currentUser?.email.split("@")[0] || "—";
 }
 
+function renderAvatarSwatches(){
+  const box = document.getElementById("acctAvatarSwatches");
+  if(!box) return;
+  const active = getAvatarColorId();
+  box.innerHTML = Object.keys(AVATAR_COLORS).map(id => `
+    <button type="button" class="acct-swatch ${id === active ? "active" : ""}" data-color="${id}"
+      style="background:${avatarGradient(id)};" aria-label="${id} avatar color"></button>
+  `).join("");
+  box.querySelectorAll(".acct-swatch").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const { data, error } = await supabaseClient.auth.updateUser({ data: { avatar_color: btn.dataset.color } });
+      if(error){ showToast("Could not update: " + error.message); return; }
+      currentUser = data.user;
+      refreshAccountFields();
+    });
+  });
+}
+
 function refreshAccountFields(){
   if(!currentUser) return;
   const name = getDisplayName();
   const username = getUsername();
-  document.getElementById("acctAvatarCircle").textContent = name[0]?.toUpperCase() || "?";
+  const avatarCircle = document.getElementById("acctAvatarCircle");
+  avatarCircle.textContent = name[0]?.toUpperCase() || "?";
+  avatarCircle.style.background = avatarGradient(getAvatarColorId());
   document.getElementById("acctProfileName").textContent = name;
   document.getElementById("acctProfileHandle").textContent = "@" + username;
+  renderAvatarSwatches();
   document.getElementById("acctDisplayNameValue").textContent = name;
   document.getElementById("acctUsernameValue").textContent = "@" + username;
   document.getElementById("acctEmailValue").textContent = maskEmail(currentUser.email);

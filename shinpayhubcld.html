@@ -83,8 +83,16 @@
     padding:4px 2px; margin-bottom:10px;
   }
   .bubble{ max-width:78%; padding:9px 13px; border-radius:14px; font-size:13px; line-height:1.4; white-space:pre-wrap; word-break:break-word; }
-  .bubble.admin{ align-self:flex-end; background:var(--accent); color:#fff; border-bottom-right-radius:4px; }
-  .bubble.customer{ align-self:flex-start; background:#f1f2f8; color:var(--ink); border-bottom-left-radius:4px; }
+  .bubble.admin{ background:var(--accent); color:#fff; border-bottom-right-radius:4px; }
+  .bubble.customer{ background:#f1f2f8; color:var(--ink); border-bottom-left-radius:4px; }
+  .msg-row{ display:flex; align-items:flex-end; gap:7px; }
+  .msg-row.admin{ align-self:flex-end; flex-direction:row-reverse; }
+  .msg-row.customer{ align-self:flex-start; }
+  .msg-avatar{
+    flex:0 0 auto; width:22px; height:22px; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; color:#fff; font-size:10px; font-weight:800;
+  }
+  .msg-avatar svg{ width:11px; height:11px; }
   .chat-input-row{ display:flex; gap:8px; }
   .chat-input-row input{ margin-bottom:0; }
   .order-detail-table{ width:100%; border-collapse:collapse; font-size:12.5px; margin-bottom:14px; }
@@ -286,10 +294,16 @@ function statusBadge(status){
   return `<span class="badge ${status}">${status.toUpperCase()}</span>`;
 }
 
+let currentChatCustomerInitial = "?";
+
 function renderChatCustomerHeader(label){
   const el = document.getElementById("chatCustomerHeader");
   if(el) el.innerHTML = `<div class="chat-customer-header">${ICON_USER}Chatting with <b>${label}</b></div>`;
+  const clean = String(label).replace("@", "").replace("Loading…", "").trim();
+  currentChatCustomerInitial = (clean[0] || "?").toUpperCase();
 }
+
+const ICON_SUPPORT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`;
 
 document.getElementById("loginPwToggle")?.addEventListener("click", () => {
   const input = document.getElementById("loginPassword");
@@ -512,10 +526,24 @@ async function setArchived(order, archived){
 function appendBubble(sender, body){
   const empty = chatMessages.querySelector(".empty-note");
   if(empty) empty.remove();
+  const isAdmin = sender === "admin";
+  const row = document.createElement("div");
+  row.className = "msg-row " + (isAdmin ? "admin" : "customer");
+  const avatar = document.createElement("span");
+  avatar.className = "msg-avatar";
+  if(isAdmin){
+    avatar.style.background = "linear-gradient(135deg,#7a35c7,#b86bff)";
+    avatar.innerHTML = ICON_SUPPORT;
+  } else {
+    avatar.style.background = "linear-gradient(135deg,#e0a83c,#ffcf6b)";
+    avatar.textContent = currentChatCustomerInitial;
+  }
   const b = document.createElement("div");
-  b.className = "bubble " + (sender === "admin" ? "admin" : "customer");
+  b.className = "bubble " + (isAdmin ? "admin" : "customer");
   b.textContent = body;
-  chatMessages.appendChild(b);
+  row.appendChild(avatar);
+  row.appendChild(b);
+  chatMessages.appendChild(row);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
