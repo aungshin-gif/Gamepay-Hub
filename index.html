@@ -5217,13 +5217,14 @@ body.light-mode .order-progress-bar{ background:var(--border,rgba(31,41,55,.14))
   background:rgba(255,255,255,.10); border:2px solid rgba(255,255,255,.22); color:var(--muted,rgba(255,255,255,.6));
   font-size:11px; font-weight:800;
 }
-.status-step.done .status-step-dot{ background:#3ec98b; border-color:#3ec98b; color:#0a2e1c; }
-.status-step.current .status-step-dot{ background:#d58cff; border-color:#d58cff; color:#2d0847; }
+.status-step.done .status-step-dot{ background:#3ec98b; border-color:#3ec98b; color:#0a2e1c; box-shadow:0 0 10px rgba(62,201,139,.65), 0 0 22px rgba(62,201,139,.35); }
+.status-step.current .status-step-dot{ background:#d58cff; border-color:#d58cff; color:#2d0847; box-shadow:0 0 10px rgba(213,140,255,.7), 0 0 24px rgba(213,140,255,.4); animation:stepPulse 1.6s ease-in-out infinite; }
+@keyframes stepPulse{ 0%,100%{ box-shadow:0 0 10px rgba(213,140,255,.7), 0 0 24px rgba(213,140,255,.4); } 50%{ box-shadow:0 0 16px rgba(213,140,255,.95), 0 0 34px rgba(213,140,255,.6); } }
 .status-step-label{ font-size:9.5px; font-weight:700; color:var(--muted,rgba(255,255,255,.65)); text-align:center; line-height:1.3; }
 .status-step.done .status-step-label, .status-step.current .status-step-label{ color:var(--text,#fff); }
-.status-step-line{ flex:1 1 auto; height:2px; background:rgba(255,255,255,.18); margin-top:13px; }
-.status-step-line.done{ background:#3ec98b; }
-.status-step.rejected .status-step-dot{ background:#ff8fae; border-color:#ff8fae; color:#3a0016; }
+.status-step-line{ flex:1 1 auto; height:3px; border-radius:3px; background:rgba(255,255,255,.18); margin-top:12px; }
+.status-step-line.done{ background:linear-gradient(90deg,#3ec98b,#7ee6b8); box-shadow:0 0 8px rgba(62,201,139,.6); }
+.status-step.rejected .status-step-dot{ background:#ff8fae; border-color:#ff8fae; color:#3a0016; box-shadow:0 0 10px rgba(255,143,174,.65), 0 0 22px rgba(255,143,174,.35); }
 body.light-mode .status-step-dot{ background:var(--surface-2,#f7f9fc); border-color:var(--border,rgba(31,41,55,.18)); color:var(--muted,#6b7686); }
 body.light-mode .status-step-label{ color:var(--muted,#6b7686); }
 body.light-mode .status-step.done .status-step-label, body.light-mode .status-step.current .status-step-label{ color:var(--ink,#1f2937); }
@@ -5446,11 +5447,19 @@ body.light-mode .auth-btn{ color:var(--ink,#1f2937); background:var(--surface,#f
 body:not(.light-mode) .auth-modal{ background:linear-gradient(180deg,#2a083f,#1a0028); color:#fff; }
 .auth-modal h3{ margin:0 0 4px; font-size:18px; }
 .auth-modal p.auth-sub{ font-size:12px; color:var(--muted,rgba(255,255,255,.7)); margin:0 0 16px; }
-.auth-modal input{
-  width:100%; padding:12px 14px; border-radius:10px; margin-bottom:10px;
-  border:1px solid rgba(224,180,255,.28); background:rgba(0,0,0,.2); color:#fff; font-size:14px;
+.auth-field{ position:relative; margin-bottom:12px; }
+.auth-field-icon{
+  position:absolute; left:13px; top:50%; transform:translateY(-50%);
+  width:16px; height:16px; color:var(--muted,rgba(255,255,255,.5)); pointer-events:none;
 }
+.auth-modal input{
+  width:100%; padding:13px 14px 13px 40px; border-radius:11px; margin-bottom:0;
+  border:1.5px solid rgba(224,180,255,.28); background:rgba(0,0,0,.2); color:#fff; font-size:14px;
+  transition:border-color .15s, box-shadow .15s;
+}
+.auth-modal input:focus{ outline:none; border-color:#b86bff; box-shadow:0 0 0 3px rgba(184,107,255,.18); }
 body.light-mode .auth-modal input{ background:var(--surface-2,#f7f9fc); color:var(--ink,#1f2937); border-color:var(--border,rgba(31,41,55,.18)); }
+body.light-mode .auth-field-icon{ color:var(--muted,#6b7686); }
 .auth-error{ color:#ff9fc9; font-size:12px; min-height:16px; margin-bottom:6px; }
 .auth-switch{ text-align:center; font-size:12px; color:var(--muted,rgba(255,255,255,.7)); margin-top:14px; }
 .auth-switch a{ color:#b86bff; font-weight:800; cursor:pointer; }
@@ -5487,8 +5496,14 @@ body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
       <h3 id="authModalTitle">Login</h3>
       <p class="auth-sub" id="authModalSub">Sign in to see your orders on any device.</p>
       <div class="auth-error" id="authError"></div>
-      <input id="authEmail" type="email" placeholder="Email" autocomplete="username" />
-      <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" />
+      <div class="auth-field">
+        <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6 12 13 2 6"/><path d="M2 6h20v12H2z"/></svg></span>
+        <input id="authEmail" type="email" placeholder="Email" autocomplete="username" />
+      </div>
+      <div class="auth-field">
+        <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+        <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" />
+      </div>
       <button id="authSubmitBtn" class="telegram-btn" type="button" style="width:100%">Login</button>
       <div class="auth-switch">
         <span id="authSwitchText">No account? <a id="authSwitchLink">Get Started</a></span>
