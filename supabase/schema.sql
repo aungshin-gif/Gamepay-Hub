@@ -195,6 +195,17 @@ language sql security definer set search_path = public as $$
 $$;
 grant execute on function public.admin_search_users to authenticated;
 
+-- 6b. Admin: look up one customer's email by their user_id, so the chat
+-- panel can show a real "username" (email's part before the @) instead of
+-- just the order's typed-in account_info. auth.users isn't exposed to the
+-- API directly, so this is the door in, same pattern as admin_search_users.
+create or replace function public.admin_get_user_email(p_user_id uuid)
+returns text
+language sql security definer set search_path = public as $$
+  select email from auth.users where public.is_admin() and id = p_user_id;
+$$;
+grant execute on function public.admin_get_user_email to authenticated;
+
 -- 7. No one may delete orders or chat history -- not the customer, not
 -- admin, not a hijacked session, no one. Orders/messages have no DELETE
 -- policy at all, and with RLS enabled that already means every DELETE is
