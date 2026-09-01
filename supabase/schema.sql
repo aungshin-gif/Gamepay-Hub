@@ -35,6 +35,11 @@ alter table public.orders add column if not exists payment_slip_path text;
 -- history stay in the database exactly as the "no one deletes" policies
 -- below intend, just filtered out of view until "Show archived" is toggled.
 alter table public.orders add column if not exists archived boolean not null default false;
+-- When each side last opened this order's chat -- lets both the admin
+-- dashboard and the customer's "My Orders" list show a real, persisted
+-- unread-message count instead of an in-memory one that forgets on reload.
+alter table public.orders add column if not exists admin_last_read_at timestamptz;
+alter table public.orders add column if not exists customer_last_read_at timestamptz;
 
 -- 2. Chat messages, one thread per order -------------------------
 create table if not exists public.messages (
@@ -152,6 +157,18 @@ begin
   insert into public.messages(order_id, sender, body) values (v_order_id, 'customer', p_body);
 end;
 $$;
+
+-- Stamps "I've seen this chat" for a guest/token-holding customer -- same
+-- token-gated pattern as send_customer_message, since a customer (logged
+-- in or not) has no direct UPDATE policy on orders.
+create or replace function public.mark_customer_read(p_token uuid)
+returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  update public.orders set customer_last_read_at = now() where access_token = p_token;
+end;
+$$;
+grant execute on function public.mark_customer_read to anon, authenticated;
 
 -- The anon (public) key may call only these functions — never the raw
 -- tables. "authenticated" gets them too, since a logged-in customer's own

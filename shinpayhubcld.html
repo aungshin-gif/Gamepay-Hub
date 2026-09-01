@@ -68,6 +68,11 @@
   .order-row:hover{ background:var(--accent-soft); border-color:#e4d6ff; }
   .order-row.active{ border-color:var(--accent); background:var(--accent-soft); }
   .order-row .code{ font-weight:800; font-size:13px; }
+  .unread-badge{
+    display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px;
+    padding:0 5px; border-radius:999px; background:var(--bad); color:#fff; font-size:10.5px; font-weight:800;
+    margin-left:6px; vertical-align:middle;
+  }
   .order-row .line{ font-size:12px; color:var(--muted); margin-top:2px; }
   .badge{ display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:800; padding:3px 9px; border-radius:20px; margin-left:6px; }
   .badge.pending{ background:var(--warn-soft); color:var(--warn); }
@@ -327,9 +332,10 @@ function friendlyDateLabel(dateStr){
 }
 
 function renderOrderRow(o){
+  const unread = o._unread > 0 ? `<span class="unread-badge">${o._unread}</span>` : "";
   return `
     <div class="order-row ${o.id === selectedOrderId ? "active" : ""}" data-id="${o.id}">
-      <div class="code">${o.order_code} ${o.archived ? statusBadge("archived") : statusBadge(o.status)}</div>
+      <div class="code">${o.order_code} ${o.archived ? statusBadge("archived") : statusBadge(o.status)}${unread}</div>
       <div class="line">${o.product_name} · ${o.plan_name}</div>
       <div class="line">${Number(o.amount).toLocaleString()} Ks · ${o.payment_method || "-"}</div>
     </div>
@@ -426,7 +432,19 @@ async function showUserDetail(user){
 
 async function loadOrders(){
   const { data, error } = await sb.from("orders").select("*").order("created_at", { ascending: false });
-  if(!error){ orders = data || []; renderOrderList(); }
+  if(error) return;
+  orders = data || [];
+  // One query for every customer message, RLS already lets an admin read
+  // all of them -- cheaper than a per-order round trip for this shop's
+  // scale, and keeps "unread" a real DB-backed count instead of guessing.
+  const { data: msgs } = await sb.from("messages").select("order_id, sender, created_at").eq("sender", "customer");
+  const byOrder = {};
+  (msgs || []).forEach(m => { (byOrder[m.order_id] ||= []).push(m); });
+  orders.forEach(o => {
+    const since = o.admin_last_read_at ? new Date(o.admin_last_read_at) : null;
+    o._unread = (byOrder[o.id] || []).filter(m => !since || new Date(m.created_at) > since).length;
+  });
+  renderOrderList();
 }
 
 function subscribeRealtime(){
@@ -437,13 +455,28 @@ function subscribeRealtime(){
   sb.channel("admin-orders")
     .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => loadOrders())
     .subscribe();
+  // Separate purpose from the broadcast channel above: keeps the *list's*
+  // unread badges fresh for orders the admin isn't currently looking at.
+  // This one does depend on Realtime being enabled for "messages" -- if
+  // it isn't, badges still update on the next natural loadOrders() call.
+  sb.channel("admin-messages")
+    .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, (payload) => {
+      if(payload.new?.sender === "customer") loadOrders();
+    })
+    .subscribe();
 }
 
 async function selectOrder(id){
   selectedOrderId = id;
-  renderOrderList();
   const order = orders.find(o => o.id === id);
-  if(!order) return;
+  if(!order){ renderOrderList(); return; }
+
+  // Mark read immediately (both the visible badge and the DB timestamp
+  // other devices/reloads will see) rather than waiting on a round trip.
+  order._unread = 0;
+  renderOrderList();
+  order.admin_last_read_at = new Date().toISOString();
+  sb.from("orders").update({ admin_last_read_at: order.admin_last_read_at }).eq("id", order.id);
 
   // The customer's browser broadcasts new chat messages on this same
   // channel (see index.html) -- postgres_changes below is a useful
