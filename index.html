@@ -7156,6 +7156,22 @@ function showLandingPage(){
   document.body.classList.remove("products-mode");
   window.scrollTo(0, 0);
 }
+// My Orders / My Account / Order Status all force catalog mode open so they
+// have one consistent screen to render into (see openMyOrdersView), even
+// when opened straight from the landing page. Their own "Back to Store"
+// buttons only knew how to reveal the catalog underneath, so a guest who
+// started on the landing page could never get back to it -- this flag
+// remembers that case so the same buttons can restore the landing page
+// instead when that's genuinely where the visit started.
+let cameFromLanding = false;
+function returnToStoreHome(){
+  if(cameFromLanding){
+    cameFromLanding = false;
+    showLandingPage();
+  } else {
+    catalogView.classList.remove("hidden");
+  }
+}
 document.getElementById("seeDetailsBtn")?.addEventListener("click", showProductsPage);
 document.getElementById("backToLandingBtn")?.addEventListener("click", showLandingPage);
 
@@ -7488,9 +7504,9 @@ function closeOrder(){
   window.scrollTo(0, 0);
 
   orderView.classList.add("hidden");
-  catalogView.classList.remove("hidden");
+  returnToStoreHome();
 }
-    
+
 
     function renderOrder(){
       if(!currentProduct){
@@ -8262,6 +8278,7 @@ async function openMyOrdersView(){
   // whole hero still on screen underneath, which is why this worked from
   // the products page but not from the main page. Land on the catalog
   // every time so there's exactly one consistent place to come back to.
+  cameFromLanding = !landingShell.classList.contains("hidden");
   landingShell.classList.add("hidden");
   catalogShell.classList.remove("hidden");
   document.body.classList.add("products-mode");
@@ -8306,7 +8323,7 @@ myOrdersBackBtn?.addEventListener("click", () => {
   document.getElementById("myOrdersView").classList.add("hidden");
   document.body.classList.remove("order-mode");
   orderView.classList.add("hidden");
-  catalogView.classList.remove("hidden");
+  returnToStoreHome();
 });
 
 /* ================= My Account ================= */
@@ -8339,6 +8356,7 @@ function refreshAccountFields(){
 
 async function openAccountView(){
   if(!currentUser) return;
+  cameFromLanding = !landingShell.classList.contains("hidden");
   landingShell.classList.add("hidden");
   catalogShell.classList.remove("hidden");
   document.body.classList.add("products-mode", "order-mode");
@@ -8374,7 +8392,7 @@ document.getElementById("accountBackBtn")?.addEventListener("click", () => {
   document.getElementById("accountView").classList.add("hidden");
   document.body.classList.remove("order-mode");
   orderView.classList.add("hidden");
-  catalogView.classList.remove("hidden");
+  returnToStoreHome();
 });
 
 document.getElementById("viewOrderHistoryBtn")?.addEventListener("click", () => {
