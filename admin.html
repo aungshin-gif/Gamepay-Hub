@@ -165,6 +165,7 @@ const chatMessages = document.getElementById("chatMessages");
 
 let orders = [];
 let selectedOrderId = null;
+let orderChannel = null; // per-order broadcast channel, for instant customer replies
 
 function fail(msg){ loginError.textContent = msg; }
 
@@ -220,13 +221,12 @@ async function loadOrders(){
 }
 
 function subscribeRealtime(){
+  // New chat messages arrive via the per-order broadcast channel
+  // subscribed in selectOrder() instead of postgres_changes here, so a
+  // customer's reply never depends on Realtime replication being
+  // enabled for the "messages" table (and never double-renders if it is).
   sb.channel("admin-orders")
     .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => loadOrders())
-    .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, (payload) => {
-      if(payload.new.order_id === selectedOrderId && payload.new.sender === "customer"){
-        appendBubble(payload.new.sender, payload.new.body);
-      }
-    })
     .subscribe();
 }
 
@@ -235,6 +235,22 @@ async function selectOrder(id){
   renderOrderList();
   const order = orders.find(o => o.id === id);
   if(!order) return;
+
+  // The customer's browser broadcasts new chat messages on this same
+  // channel (see index.html) -- postgres_changes below is a useful
+  // backup, but depends on Realtime replication being turned on for the
+  // "messages" table, so it alone was showing customer replies late or
+  // not at all. Subscribing here gets them instantly either way.
+  if(orderChannel) sb.removeChannel(orderChannel);
+  orderChannel = sb.channel("order-" + order.access_token);
+  orderChannel
+    .on("broadcast", { event: "new_message" }, (msg) => {
+      if(msg.payload.sender === "customer" && selectedOrderId === order.id){
+        appendBubble("customer", msg.payload.body);
+      }
+    })
+    .subscribe();
+
   noOrderSelected.classList.add("hidden");
   orderDetailBox.classList.remove("hidden");
   orderDetail.innerHTML = `
