@@ -5156,6 +5156,74 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
   #orderView .plan-type-line{ margin-top:8px; padding-top:8px; }
 }
 </style>
+<style id="order-status-chat-style">
+/* Order status (pending -> approved) + live chat, styled to match the
+   existing dashboard/preview cards so the new flow doesn't look bolted on. */
+.order-status-view, .order-chat-view{ display:block; }
+.order-status-view.hidden, .order-chat-view.hidden{ display:none; }
+.order-status-card{
+  width:min(560px,100%);
+  margin:18px auto 0;
+  padding:34px 22px;
+  text-align:center;
+  background:linear-gradient(180deg, rgba(75,20,120,.55), rgba(45,8,71,.55));
+  border:1px solid rgba(199,125,255,.22);
+  border-radius:var(--radius-lg,22px);
+  box-shadow:var(--shadow,0 18px 44px rgba(18,0,32,.28));
+}
+.order-status-icon{ font-size:44px; line-height:1; margin-bottom:10px; }
+.order-status-title{ font-size:19px; font-weight:800; margin-bottom:8px; }
+.order-status-sub{ font-size:13px; color:var(--muted,rgba(255,255,255,.74)); margin-bottom:10px; }
+.order-status-sub b{ color:#fff; }
+.order-status-hint{ font-size:12px; color:var(--muted,rgba(255,255,255,.74)); line-height:1.5; margin-bottom:18px; }
+#openChatBtn{ width:min(320px,100%); margin:0 auto; }
+
+.chat-messages{
+  width:min(560px,100%);
+  margin:14px auto 0;
+  min-height:280px;
+  max-height:52vh;
+  overflow-y:auto;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  background:rgba(20,4,34,.45);
+  border:1px solid rgba(199,125,255,.18);
+  border-radius:var(--radius-md,16px);
+}
+.chat-empty{ margin:auto; font-size:12px; color:var(--muted,rgba(255,255,255,.6)); }
+.chat-bubble{
+  max-width:78%;
+  padding:9px 13px;
+  border-radius:14px;
+  font-size:13px;
+  line-height:1.4;
+  word-break:break-word;
+  white-space:pre-wrap;
+}
+.chat-bubble.customer{
+  align-self:flex-end;
+  background:linear-gradient(135deg,#7a35c7,#b86bff);
+  color:#fff;
+  border-bottom-right-radius:4px;
+}
+.chat-bubble.admin{
+  align-self:flex-start;
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  border:1px solid rgba(224,180,255,.22);
+  border-bottom-left-radius:4px;
+}
+.chat-input-row{
+  width:min(560px,100%);
+  margin:10px auto 0;
+  display:flex;
+  gap:8px;
+}
+.chat-input-row .input{ flex:1; }
+.chat-send-btn{ width:auto; padding:0 22px; }
+</style>
 </head>
 <body class="light-mode">
   <div class="neon-announcement" aria-label="Store announcement"><div class="neon-track"><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b><span>Premium digital products · Clear plans · Fast support</span><b>✦</b><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b></div></div>
@@ -5439,6 +5507,31 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
         <div class="checkout-trustline"><b>Secure manual order</b><span>•</span><span>Fast Telegram confirmation</span></div>
       </div>
     </div>
+
+    <div id="orderStatusView" class="hidden order-status-view">
+      <div class="preview-shell">
+        <div class="dashboard-head"><button id="statusBackBtn" class="dashboard-back-btn" type="button">← Back to Store</button><span class="dashboard-chip">ORDER STATUS</span></div>
+        <div class="order-status-card">
+          <div class="order-status-icon" id="statusIcon">⏳</div>
+          <div class="order-status-title" id="statusTitle">Waiting for approval…</div>
+          <div class="order-status-sub">Order code: <b id="statusOrderCode">—</b></div>
+          <div class="order-status-hint" id="statusHint">We're checking your payment. This page updates automatically — no need to refresh.</div>
+          <button id="openChatBtn" class="telegram-btn hidden" type="button">Open Chat 💬</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="chatView" class="hidden order-chat-view">
+      <div class="preview-shell">
+        <div class="dashboard-head"><button id="chatBackBtn" class="dashboard-back-btn" type="button">← Back</button><span class="dashboard-chip">CHAT WITH GAMEPAY HUB</span></div>
+        <div id="chatMessages" class="chat-messages"><div class="chat-empty">No messages yet.</div></div>
+        <form id="chatForm" class="chat-input-row">
+          <input id="chatInput" class="input" type="text" placeholder="Type a message…" autocomplete="off" />
+          <button type="submit" class="telegram-btn chat-send-btn">Send</button>
+        </form>
+      </div>
+    </div>
+
     <footer class="site-footer">
       <div class="support-label">Need help? Contact support</div>
       <div class="support-actions">
@@ -5448,6 +5541,7 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
       <div class="founder-line">Founder: Diameter Eight</div>
     </footer>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const TELEGRAM_USERNAME = "angsthtun";
 
@@ -6412,6 +6506,18 @@ plans: [
   }
 };
 
+    // ---- Supabase backend: order status + live chat ----
+    // Paste your project's own values here (Supabase Dashboard -> Project Settings -> API).
+    // Until these are filled in, the site keeps working exactly as before
+    // (Telegram-only ordering) -- this feature only turns on once configured.
+    const SUPABASE_URL = "PASTE_YOUR_SUPABASE_URL_HERE";
+    const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
+    const supabaseClient = (window.supabase && /^https?:\/\//.test(SUPABASE_URL))
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      : null;
+    let currentOrder = null; // { id, access_token, order_code }
+    let orderChannel = null; // realtime channel for the active order
+
     let activeCategory = "All";
     let activePayment = "";
     let currentProduct = null;
@@ -7118,16 +7224,148 @@ function updatePreview(){
   if(previewOrderBtn) previewOrderBtn.disabled = canOrder;
 }
     
-function openTelegramOrder(){
-  
+async function submitOrderToBackend(){
+  if(!supabaseClient || !currentProduct) return null;
+  const selectedPlan = currentProduct.plans[currentPlanIndex];
+  let customAmount = Number(customAmountInput.value || 0);
+  let amount = Number(selectedPlan.price) * currentQty;
+  if(selectedPlan.custom && customAmount > 0){
+    amount = Math.ceil((customAmount / Number(selectedPlan.baseAmount)) * Number(selectedPlan.price));
+  }
+  const { data, error } = await supabaseClient.rpc("create_order", {
+    p_product_name: currentProduct.name,
+    p_plan_name: selectedPlan.name,
+    p_amount: amount,
+    p_payment_method: activePayment || "Not selected",
+    p_account_info: accountInput.value.trim(),
+    p_note: noteInput.value.trim()
+  });
+  if(error || !data || !data[0]){
+    console.error("Order save failed:", error);
+    return null;
+  }
+  const row = data[0];
+  currentOrder = { id: row.id, access_token: row.access_token, order_code: row.order_code };
+  localStorage.setItem("gph_last_order", JSON.stringify(currentOrder));
+  return currentOrder;
+}
+
+function setOrderStatusUI(status){
+  const icon = document.getElementById("statusIcon");
+  const title = document.getElementById("statusTitle");
+  const hint = document.getElementById("statusHint");
+  const chatBtn = document.getElementById("openChatBtn");
+  if(status === "approved" || status === "completed"){
+    icon.textContent = "✅";
+    title.textContent = "Order Success!";
+    hint.textContent = "Your order has been approved. Open the chat to share your account details with our team.";
+    chatBtn.classList.remove("hidden");
+  } else if(status === "rejected"){
+    icon.textContent = "⚠️";
+    title.textContent = "Order needs attention";
+    hint.textContent = "Please open the chat, we need to sort something out about this order.";
+    chatBtn.classList.remove("hidden");
+  } else {
+    icon.textContent = "⏳";
+    title.textContent = "Waiting for approval…";
+    hint.textContent = "We're checking your payment. This page updates automatically — no need to refresh.";
+    chatBtn.classList.add("hidden");
+  }
+}
+
+function subscribeToOrderUpdates(){
+  if(!supabaseClient || !currentOrder) return;
+  if(orderChannel) supabaseClient.removeChannel(orderChannel);
+  orderChannel = supabaseClient.channel("order-" + currentOrder.access_token);
+  orderChannel
+    .on("broadcast", { event: "status_update" }, (msg) => setOrderStatusUI(msg.payload.status))
+    .on("broadcast", { event: "new_message" }, (msg) => {
+      if(msg.payload.sender === "admin"){
+        if(!document.getElementById("chatView").classList.contains("hidden")){
+          appendChatBubble("admin", msg.payload.body);
+        } else {
+          showToast("New message from support");
+        }
+      }
+    })
+    .subscribe();
+}
+
+function showOrderStatusView(){
+  document.body.classList.add("order-mode");
+  catalogView.classList.add("hidden");
+  cartItem.classList.add("hidden");
+  checkoutSection.classList.add("hidden");
+  previewSection?.classList.add("hidden");
+  document.getElementById("chatView").classList.add("hidden");
+  document.body.classList.remove("preview-mode", "dashboard-mode");
+  document.documentElement.classList.remove("dashboard-mode");
+  orderView.classList.remove("hidden");
+  document.getElementById("orderStatusView").classList.remove("hidden");
+  document.getElementById("statusOrderCode").textContent = currentOrder ? currentOrder.order_code : "—";
+  setOrderStatusUI("pending");
+  subscribeToOrderUpdates();
+  window.scrollTo(0, 0);
+}
+
+function appendChatBubble(sender, body){
+  const box = document.getElementById("chatMessages");
+  if(box.querySelector(".chat-empty")) box.innerHTML = "";
+  const bubble = document.createElement("div");
+  bubble.className = "chat-bubble " + (sender === "admin" ? "admin" : "customer");
+  bubble.textContent = body;
+  box.appendChild(bubble);
+  box.scrollTop = box.scrollHeight;
+}
+
+async function openChatView(){
+  document.getElementById("orderStatusView").classList.add("hidden");
+  document.getElementById("chatView").classList.remove("hidden");
+  const box = document.getElementById("chatMessages");
+  box.innerHTML = "<div class='chat-empty'>Loading messages…</div>";
+  if(!supabaseClient || !currentOrder) return;
+  const { data, error } = await supabaseClient.rpc("get_messages", { p_token: currentOrder.access_token });
+  box.innerHTML = "";
+  if(!error && data && data.length){
+    data.forEach(m => appendChatBubble(m.sender, m.body));
+  } else {
+    box.innerHTML = "<div class='chat-empty'>No messages yet. Say hello!</div>";
+  }
+}
+
+document.getElementById("openChatBtn")?.addEventListener("click", openChatView);
+document.getElementById("statusBackBtn")?.addEventListener("click", () => {
+  document.getElementById("orderStatusView").classList.add("hidden");
+  closeOrder();
+});
+document.getElementById("chatBackBtn")?.addEventListener("click", () => {
+  document.getElementById("chatView").classList.add("hidden");
+  document.getElementById("orderStatusView").classList.remove("hidden");
+});
+document.getElementById("chatForm")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if(!text || !supabaseClient || !currentOrder) return;
+  input.value = "";
+  appendChatBubble("customer", text);
+  await supabaseClient.rpc("send_customer_message", { p_token: currentOrder.access_token, p_body: text });
+  orderChannel?.send({ type: "broadcast", event: "new_message", payload: { sender: "customer", body: text } });
+});
+
+async function openTelegramOrder(){
+
   const message = buildTelegramMessage();
   const username = TELEGRAM_USERNAME.replace("@", "");
   const telegramURL = "https://t.me/" + username + "?text=" + encodeURIComponent(message);
+
+  await submitOrderToBackend();
 
   window.open(telegramURL, "_blank");
 
   setTimeout(() => {
     alert("Order message copied.\nTelegram မှာ auto မပေါ်ရင် paste လုပ်ပေးပါ။");
+    if(currentOrder) showOrderStatusView();
   }, 300);
 }
     
@@ -7441,7 +7679,8 @@ animateParticles();
    each handler, so any path that reveals a view lands at the top. */
 (function () {
   var views = ["landingShell", "catalogShell", "orderView", "checkoutSection",
-               "previewSection", "productPage", "cartItem"]
+               "previewSection", "productPage", "cartItem",
+               "orderStatusView", "chatView"]
     .map(function (id) { return document.getElementById(id); })
     .filter(Boolean);
   if (!views.length || typeof MutationObserver === "undefined") return;
