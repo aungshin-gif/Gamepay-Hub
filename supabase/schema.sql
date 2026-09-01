@@ -97,6 +97,12 @@ create policy "customer read own messages" on public.messages
 -- through the functions below, and only if you already hold the exact
 -- access_token (the customer's private order link).
 
+-- Postgres treats a changed argument list as a distinct overload rather
+-- than replacing it, so an older 6-argument version of this function
+-- (from before payment slips existed) would otherwise stick around and
+-- make every call to "create_order" ambiguous. Drop it explicitly first.
+drop function if exists public.create_order(text, text, numeric, text, text, text);
+
 create or replace function public.create_order(
   p_product_name text, p_plan_name text, p_amount numeric,
   p_payment_method text, p_account_info text, p_note text,
