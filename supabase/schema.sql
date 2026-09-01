@@ -40,7 +40,7 @@ create table if not exists public.messages (
   created_at timestamptz not null default now()
 );
 
--- 3. Admin allow-list (who may use admin.html) --------------------
+-- 3. Admin allow-list (who may use shinpayhubcld.html) --------------------
 create table if not exists public.admins (
   user_id uuid primary key references auth.users(id) on delete cascade
 );
@@ -61,7 +61,7 @@ as $$
 $$;
 grant execute on function public.is_admin() to authenticated, anon;
 
--- Admins (logged in via admin.html AND listed in public.admins) can
+-- Admins (logged in via shinpayhubcld.html AND listed in public.admins) can
 -- read/update the real tables directly.
 drop policy if exists "admin read orders" on public.orders;
 create policy "admin read orders" on public.orders
@@ -185,6 +185,20 @@ language sql security definer set search_path = public as $$
 $$;
 grant execute on function public.admin_search_users to authenticated;
 
+-- 7. No one may delete orders or chat history -- not the customer, not
+-- admin, not a hijacked session, no one. Orders/messages have no DELETE
+-- policy at all, and with RLS enabled that already means every DELETE is
+-- refused by default -- these two are here anyway to say so explicitly,
+-- so the "no deleting" rule can't be lost or misread as an oversight the
+-- next time this file is edited. The only way to remove a row at all is
+-- a superuser running SQL directly in the dashboard, never through the
+-- app or the API.
+drop policy if exists "no one deletes orders" on public.orders;
+create policy "no one deletes orders" on public.orders for delete using (false);
+
+drop policy if exists "no one deletes messages" on public.messages;
+create policy "no one deletes messages" on public.messages for delete using (false);
+
 -- ============================================================
 -- One-time setup after running this file:
 -- 1. Create your own admin login: Authentication -> Users -> Add user
@@ -195,7 +209,7 @@ grant execute on function public.admin_search_users to authenticated;
 --    select id from auth.users where email = 'you@example.com';
 --
 -- 3. Enable Realtime for the tables: Database -> Replication ->
---    turn on "orders" and "messages" so admin.html gets live updates.
+--    turn on "orders" and "messages" so shinpayhubcld.html gets live updates.
 --
 -- 4. Customer login (email/password) works out of the box once this
 --    file has run — no extra dashboard step needed for that. If you

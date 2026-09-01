@@ -200,6 +200,8 @@ body{
       pointer-events:none;
       opacity:.82;
       font-size:18px;
+      width:18px;
+      height:18px;
     }
 
     .categories{
@@ -5230,43 +5232,72 @@ body.light-mode .status-step-label{ color:var(--muted,#6b7686); }
 body.light-mode .status-step.done .status-step-label, body.light-mode .status-step.current .status-step-label{ color:var(--ink,#1f2937); }
 body.light-mode .status-step-line{ background:var(--border,rgba(31,41,55,.14)); }
 
-/* My Account */
-.account-card{ text-align:center; margin:6px auto 18px; }
-.account-avatar{
-  width:64px; height:64px; margin:0 auto 12px; border-radius:50%;
-  background:linear-gradient(135deg,#7a35c7,#b86bff); display:flex; align-items:center; justify-content:center;
+/* My Account -- settings-list style */
+.acct-profile-card{
+  text-align:center; margin:6px auto 22px; width:min(460px,100%);
+}
+.acct-avatar-wrap{ position:relative; width:64px; height:64px; margin:0 auto 12px; }
+.acct-avatar{
+  width:64px; height:64px; border-radius:50%; font-size:24px; font-weight:800; color:#fff;
+  background:linear-gradient(135deg,#e07a3c,#d58cff); display:flex; align-items:center; justify-content:center;
   box-shadow:0 8px 20px rgba(122,53,199,.35);
 }
-.account-avatar svg{ width:32px; height:32px; color:#fff; }
-.account-name{ font-size:18px; font-weight:800; }
-.account-email{ font-size:12.5px; color:var(--muted,rgba(255,255,255,.65)); margin-top:2px; }
-.account-stats-row{ display:flex; gap:12px; width:min(460px,100%); margin:0 auto 18px; }
-.account-stat-box{
-  flex:1; display:flex; align-items:center; gap:10px; padding:14px 16px;
-  border-radius:14px; background:rgba(255,255,255,.06); border:1px solid rgba(199,125,255,.2);
+.acct-profile-name{ font-size:19px; font-weight:800; }
+.acct-profile-handle{ font-size:13px; color:var(--muted,rgba(255,255,255,.6)); margin-top:2px; }
+
+.acct-section-label{
+  width:min(460px,100%); margin:0 auto 8px; font-size:10.5px; font-weight:800;
+  letter-spacing:.08em; color:var(--muted,rgba(255,255,255,.5));
 }
-.account-stat-icon{
-  width:36px; height:36px; border-radius:10px; flex:0 0 auto;
-  background:rgba(255,255,255,.10); display:flex; align-items:center; justify-content:center; color:#d58cff;
-}
-.account-stat-icon svg{ width:18px; height:18px; }
-.account-stat-num{ font-size:17px; font-weight:800; line-height:1.2; }
-.account-stat-label{ font-size:10.5px; color:var(--muted,rgba(255,255,255,.6)); }
-#viewOrderHistoryBtn{ width:min(460px,100%); margin:0 auto 20px; }
-.account-section{
-  width:min(460px,100%); margin:0 auto 16px; padding:16px; border-radius:14px;
+.acct-list{
+  width:min(460px,100%); margin:0 auto 22px; border-radius:16px; overflow:hidden;
   background:rgba(255,255,255,.05); border:1px solid rgba(199,125,255,.16);
 }
-.account-password-msg{ font-size:11.5px; margin-top:8px; min-height:14px; }
+.acct-row{
+  display:flex; align-items:center; gap:13px; padding:13px 15px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.acct-list .acct-row:last-child{ border-bottom:none; }
+.acct-row-btn{ cursor:pointer; transition:background .15s; }
+.acct-row-btn:hover{ background:rgba(255,255,255,.05); }
+.acct-row-icon{
+  flex:0 0 auto; width:34px; height:34px; border-radius:50%;
+  background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center; color:var(--muted,rgba(255,255,255,.65));
+}
+.acct-row-icon svg{ width:16px; height:16px; }
+.acct-row-icon-text{ font-size:14px; font-weight:800; }
+.acct-row-body{ flex:1; min-width:0; }
+.acct-row-label{ font-size:9.5px; font-weight:800; letter-spacing:.06em; color:var(--muted,rgba(255,255,255,.5)); margin-bottom:2px; }
+.acct-row-value{ font-size:14px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.acct-row-edit{
+  flex:0 0 auto; width:30px; height:30px; border-radius:50%; border:none;
+  background:transparent; color:var(--muted,rgba(255,255,255,.5)); display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+.acct-row-edit:hover{ background:rgba(255,255,255,.08); color:#fff; }
+.acct-row-edit svg{ width:15px; height:15px; }
+.acct-row-chevron{ flex:0 0 auto; width:15px; height:15px; color:var(--muted,rgba(255,255,255,.4)); }
+.acct-row.danger .acct-row-value{ color:#ff8fae; font-weight:800; }
+.acct-row.danger .acct-row-icon{ background:rgba(255,143,174,.14); color:#ff8fae; }
+.acct-password-form{ padding:6px 15px 15px; }
+.acct-password-form input{ margin-bottom:8px; }
+.acct-password-form.hidden{ display:none; }
+.account-password-msg{ font-size:11.5px; margin-top:6px; min-height:14px; }
 .account-password-msg.ok{ color:#3ec98b; }
 .account-password-msg.err{ color:#ff8fae; }
-.account-logout-btn{ width:min(460px,100%); margin:0 auto; background:transparent !important; border:1px solid rgba(255,143,174,.4) !important; color:#ff8fae !important; }
-body.light-mode .account-email{ color:var(--muted,#6b7686); }
-body.light-mode .account-stat-box{ background:var(--surface,#fff); border-color:var(--border,rgba(31,41,55,.14)); }
-body.light-mode .account-stat-icon{ background:var(--accent-soft,#f2ecff); color:#7c3aed; }
-body.light-mode .account-stat-label{ color:var(--muted,#6b7686); }
-body.light-mode .account-section{ background:var(--surface,#fff); border-color:var(--border,rgba(31,41,55,.14)); }
-body.light-mode .account-logout-btn{ border-color:#f3c6c6 !important; color:#dc2626 !important; }
+
+body.light-mode .acct-profile-handle{ color:var(--muted,#6b7686); }
+body.light-mode .acct-section-label{ color:var(--muted,#6b7686); }
+body.light-mode .acct-list{ background:var(--surface,#fff); border-color:var(--border,rgba(31,41,55,.14)); }
+body.light-mode .acct-row{ border-bottom-color:var(--border,rgba(31,41,55,.10)); }
+body.light-mode .acct-row-btn:hover{ background:var(--surface-2,#f7f9fc); }
+body.light-mode .acct-row-icon{ background:var(--accent-soft,#f2ecff); color:#7c3aed; }
+body.light-mode .acct-row-label{ color:var(--muted,#6b7686); }
+body.light-mode .acct-row-value{ color:var(--ink,#1f2937); }
+body.light-mode .acct-row-edit{ color:var(--muted,#6b7686); }
+body.light-mode .acct-row-edit:hover{ background:var(--surface-2,#f7f9fc); color:var(--ink,#1f2937); }
+body.light-mode .acct-row-chevron{ color:var(--muted,#98a1ad); }
+body.light-mode .acct-row.danger .acct-row-icon{ background:#fee2e2; color:#dc2626; }
+body.light-mode .acct-row.danger .acct-row-value{ color:#dc2626; }
 
 .chat-messages{
   width:min(560px,100%);
@@ -5687,6 +5718,7 @@ body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
       </div>
       <div id="catalogView" class="catalog-view">
         <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input id="searchInput" type="text" placeholder="Search products..." />
         </div>
         <div class="categories" id="categories"></div>
@@ -5837,33 +5869,67 @@ body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
     <div id="accountView" class="hidden order-status-view">
       <div class="preview-shell">
         <div class="dashboard-head"><button id="accountBackBtn" class="dashboard-back-btn" type="button">← Back to Store</button><span class="dashboard-chip">MY ACCOUNT</span></div>
-        <div class="account-card">
-          <div class="account-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-          <div class="account-name" id="accountNameText">—</div>
-          <div class="account-email" id="accountEmailText">—</div>
-        </div>
 
-        <div class="account-stats-row">
-          <div class="account-stat-box">
-            <span class="account-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg></span>
-            <div><div class="account-stat-num" id="statOrderCount">0</div><div class="account-stat-label">Orders</div></div>
+        <div class="acct-profile-card">
+          <div class="acct-avatar-wrap">
+            <div class="acct-avatar" id="acctAvatarCircle">—</div>
           </div>
-          <div class="account-stat-box">
-            <span class="account-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></span>
-            <div><div class="account-stat-num" id="statTotalSpent">0 Ks</div><div class="account-stat-label">Total Spent</div></div>
+          <div class="acct-profile-name" id="acctProfileName">—</div>
+          <div class="acct-profile-handle" id="acctProfileHandle">—</div>
+        </div>
+
+        <div class="acct-section-label">ACCOUNT</div>
+        <div class="acct-list">
+          <div class="acct-row">
+            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            <div class="acct-row-body"><div class="acct-row-label">DISPLAY NAME</div><div class="acct-row-value" id="acctDisplayNameValue">—</div></div>
+            <button class="acct-row-edit" id="editDisplayNameBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
+          </div>
+          <div class="acct-row">
+            <span class="acct-row-icon acct-row-icon-text">@</span>
+            <div class="acct-row-body"><div class="acct-row-label">USERNAME</div><div class="acct-row-value" id="acctUsernameValue">—</div></div>
+            <button class="acct-row-edit" id="editUsernameBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
+          </div>
+          <div class="acct-row">
+            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span>
+            <div class="acct-row-body"><div class="acct-row-label">EMAIL</div><div class="acct-row-value" id="acctEmailValue">—</div></div>
           </div>
         </div>
 
-        <button id="viewOrderHistoryBtn" class="telegram-btn" type="button"><svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>View Order History</button>
-
-        <div class="account-section">
-          <div class="field-title">Change Password</div>
-          <input id="newPasswordInput" type="password" class="input" placeholder="New password (min 6 characters)" autocomplete="new-password" />
-          <button id="changePasswordBtn" class="telegram-btn" type="button"><svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Update Password</button>
-          <div id="passwordMsg" class="account-password-msg"></div>
+        <div class="acct-section-label">ORDERS</div>
+        <div class="acct-list">
+          <div class="acct-row">
+            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg></span>
+            <div class="acct-row-body"><div class="acct-row-label">TOTAL ORDERS</div><div class="acct-row-value" id="statOrderCount">0</div></div>
+          </div>
+          <div class="acct-row">
+            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></span>
+            <div class="acct-row-body"><div class="acct-row-label">TOTAL SPENT</div><div class="acct-row-value" id="statTotalSpent">0 Ks</div></div>
+          </div>
+          <div class="acct-row acct-row-btn" id="viewOrderHistoryBtn">
+            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            <div class="acct-row-body"><div class="acct-row-value">View Order History</div></div>
+            <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </div>
         </div>
 
-        <button id="accountLogoutBtn" class="telegram-btn account-logout-btn" type="button"><svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</button>
+        <div class="acct-section-label">SECURITY</div>
+        <div class="acct-list">
+          <div class="acct-row acct-row-btn" id="changePasswordRow">
+            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span>
+            <div class="acct-row-body"><div class="acct-row-value">Change password</div></div>
+            <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </div>
+          <div id="passwordFormBox" class="acct-password-form hidden">
+            <input id="newPasswordInput" type="password" class="input" placeholder="New password (min 6 characters)" autocomplete="new-password" />
+            <button id="changePasswordBtn" class="telegram-btn" type="button">Update Password</button>
+            <div id="passwordMsg" class="account-password-msg"></div>
+          </div>
+          <div class="acct-row acct-row-btn danger" id="accountLogoutBtn">
+            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+            <div class="acct-row-body"><div class="acct-row-value">Log out</div></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -7900,7 +7966,7 @@ async function submitOrder(){
   if(!currentProduct || !activePayment) return;
 
   // Backend configured: save the order and jump straight to the live
-  // status screen. No Telegram popup -- admin sees it in admin.html instantly.
+  // status screen. No Telegram popup -- admin sees it in shinpayhubcld.html instantly.
   if(supabaseClient){
     setOrderButtonsBusy(true, "Placing order…");
     try{
@@ -7943,7 +8009,7 @@ const authPassword = document.getElementById("authPassword");
 
 function renderAuthUI(){
   if(currentUser){
-    authHeaderActions.innerHTML = `<button id="myAccountBtn" class="auth-btn" type="button">${ICONS.user}${currentUser.email.split("@")[0]}</button><button id="logoutBtn" class="auth-btn" type="button">Logout</button>`;
+    authHeaderActions.innerHTML = `<button id="myAccountBtn" class="auth-btn" type="button">${ICONS.user}${getDisplayName()}</button><button id="logoutBtn" class="auth-btn" type="button">Logout</button>`;
     document.getElementById("myAccountBtn")?.addEventListener("click", openAccountView);
     document.getElementById("logoutBtn")?.addEventListener("click", async () => {
       await supabaseClient.auth.signOut();
@@ -8108,6 +8174,33 @@ myOrdersBackBtn?.addEventListener("click", () => {
 });
 
 /* ================= My Account ================= */
+function maskEmail(email){
+  const at = email.indexOf("@");
+  if(at < 0) return email;
+  const local = email.slice(0, at), domain = email.slice(at);
+  if(local.length <= 3) return local[0] + "***" + domain;
+  return local.slice(0, 2) + "*".repeat(Math.max(local.length - 3, 3)) + local.slice(-1) + domain;
+}
+
+function getDisplayName(){
+  return currentUser?.user_metadata?.display_name || currentUser?.email.split("@")[0] || "—";
+}
+function getUsername(){
+  return currentUser?.user_metadata?.username || currentUser?.email.split("@")[0] || "—";
+}
+
+function refreshAccountFields(){
+  if(!currentUser) return;
+  const name = getDisplayName();
+  const username = getUsername();
+  document.getElementById("acctAvatarCircle").textContent = name[0]?.toUpperCase() || "?";
+  document.getElementById("acctProfileName").textContent = name;
+  document.getElementById("acctProfileHandle").textContent = "@" + username;
+  document.getElementById("acctDisplayNameValue").textContent = name;
+  document.getElementById("acctUsernameValue").textContent = "@" + username;
+  document.getElementById("acctEmailValue").textContent = maskEmail(currentUser.email);
+}
+
 async function openAccountView(){
   if(!currentUser) return;
   landingShell.classList.add("hidden");
@@ -8121,8 +8214,8 @@ async function openAccountView(){
   document.getElementById("accountView").classList.remove("hidden");
   window.scrollTo(0, 0);
 
-  document.getElementById("accountNameText").textContent = currentUser.email.split("@")[0];
-  document.getElementById("accountEmailText").textContent = currentUser.email;
+  refreshAccountFields();
+  document.getElementById("passwordFormBox").classList.add("hidden");
   document.getElementById("newPasswordInput").value = "";
   document.getElementById("passwordMsg").textContent = "";
   document.getElementById("passwordMsg").className = "account-password-msg";
@@ -8183,6 +8276,35 @@ document.getElementById("accountLogoutBtn")?.addEventListener("click", async () 
   orderView.classList.add("hidden");
   catalogView.classList.remove("hidden");
   showToast("Logged out");
+});
+
+document.getElementById("changePasswordRow")?.addEventListener("click", () => {
+  document.getElementById("passwordFormBox").classList.toggle("hidden");
+});
+
+document.getElementById("editDisplayNameBtn")?.addEventListener("click", async (e) => {
+  e.stopPropagation();
+  if(!supabaseClient || !currentUser) return;
+  const next = prompt("Enter your display name:", getDisplayName());
+  if(!next || !next.trim()) return;
+  const { data, error } = await supabaseClient.auth.updateUser({ data: { display_name: next.trim() } });
+  if(error){ showToast("Could not update: " + error.message); return; }
+  currentUser = data.user;
+  refreshAccountFields();
+  showToast("Display name updated");
+});
+
+document.getElementById("editUsernameBtn")?.addEventListener("click", async (e) => {
+  e.stopPropagation();
+  if(!supabaseClient || !currentUser) return;
+  const next = prompt("Enter your username (no spaces):", getUsername());
+  if(!next || !next.trim()) return;
+  const clean = next.trim().replace(/\s+/g, "");
+  const { data, error } = await supabaseClient.auth.updateUser({ data: { username: clean } });
+  if(error){ showToast("Could not update: " + error.message); return; }
+  currentUser = data.user;
+  refreshAccountFields();
+  showToast("Username updated");
 });
 
 // Restore an existing login session on page load, if any -- either way,
