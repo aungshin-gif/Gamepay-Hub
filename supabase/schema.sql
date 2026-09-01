@@ -30,6 +30,11 @@ create table if not exists public.orders (
 -- introduced later without wiping existing rows.
 alter table public.orders add column if not exists user_id uuid references auth.users(id) on delete set null;
 alter table public.orders add column if not exists payment_slip_path text;
+-- Lets an admin hide clutter (old test orders, etc.) from the default
+-- dashboard view without ever deleting the row -- the order and its chat
+-- history stay in the database exactly as the "no one deletes" policies
+-- below intend, just filtered out of view until "Show archived" is toggled.
+alter table public.orders add column if not exists archived boolean not null default false;
 
 -- 2. Chat messages, one thread per order -------------------------
 create table if not exists public.messages (
