@@ -5199,6 +5199,14 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
 }
 body.light-mode .order-progress-bar{ background:var(--border,rgba(31,41,55,.14)); }
 
+/* Checkout/preview/status/chat/My-Orders each carry their own back button
+   and title chip (.dashboard-head) -- the plan-selection cart's own
+   "Order Cart / Back to Products" bar above it was showing on every one
+   of those screens too, doubling up. Hide it everywhere except the cart. */
+.order-view.hide-cart-header > .panel > .top-actions,
+.order-view.hide-cart-header > .panel > .panel-title,
+.order-view.hide-cart-header > .panel > .panel-sub{ display:none; }
+
 .chat-messages{
   width:min(560px,100%);
   margin:14px auto 0;
@@ -5603,7 +5611,7 @@ body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
     <div id="orderView" class="order-view hidden">
       <div class="panel">
         <div class="top-actions">
-          <button id="backBtn" class="back-btn">← Back to Games</button>
+          <button id="backBtn" class="back-btn">← Back to Products</button>
           <div></div>
         </div>
 
@@ -6797,6 +6805,10 @@ function hideAllOrderSubviews(){
   document.getElementById("orderStatusView")?.classList.add("hidden");
   document.getElementById("chatView")?.classList.add("hidden");
   document.getElementById("myOrdersView")?.classList.add("hidden");
+  // Every caller of this helper goes on to show something other than the
+  // cart itself, so hide the cart's own header bar by default; openOrder()
+  // (the one place that shows the cart) turns it back on afterwards.
+  orderView.classList.add("hide-cart-header");
 }
 
 slipUploadLabel?.addEventListener("click", (e) => { e.preventDefault(); slipInput.click(); });
@@ -6840,6 +6852,7 @@ function openCheckoutBox(){
 document.getElementById("dashboardBackBtn")?.addEventListener("click", () => {
   checkoutSection.classList.add("hidden");
   orderView.classList.remove("dashboard-active");
+  orderView.classList.remove("hide-cart-header");
   document.body.classList.remove("dashboard-mode");
   document.documentElement.classList.remove("dashboard-mode");
   cartItem.classList.remove("hidden");
@@ -7171,6 +7184,7 @@ if(document.readyState === "loading"){
   }
 
   hideAllOrderSubviews();
+  orderView.classList.remove("hide-cart-header");
   document.body.classList.remove("preview-mode");
 continueBtn.style.display = "block";
 
