@@ -5833,7 +5833,7 @@ body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
           <div class="line-total"><span>Total</span><span id="sumTotal">0 Ks</span></div>
         </div>
         <div class="field">
-          <div class="field-title">Account / Email / Username <span class="field-required">*</span></div>
+          <div class="field-title">Account / Email / Username</div>
           <input id="accountInput" class="input" type="text" placeholder="Enter account you're buying for..." />
         </div>
 
@@ -8019,13 +8019,6 @@ function setOrderButtonsBusy(busy, label){
 
 async function submitOrder(){
   if(!currentProduct || !activePayment) return;
-  if(!accountInput.value.trim()){
-    accountInput.focus();
-    accountInput.classList.add("input-error");
-    setTimeout(() => accountInput.classList.remove("input-error"), 1500);
-    alert("Account / Email / Username ကို ဖြည့်ပေးပါ — Adminက ဘယ်account ကို ပို့ပေးရမလဲသိဖို့ လိုအပ်ပါတယ်။");
-    return;
-  }
 
   // Backend configured: save the order and jump straight to the live
   // status screen. No Telegram popup -- admin sees it in shinpayhubcld.html instantly.
