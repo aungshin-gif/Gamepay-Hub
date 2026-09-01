@@ -5543,6 +5543,9 @@ body:not(.light-mode) .auth-modal{ background:linear-gradient(180deg,#2a083f,#1a
 body.light-mode .auth-modal input{ background:var(--surface-2,#f7f9fc); color:var(--ink,#1f2937); border-color:var(--border,rgba(31,41,55,.18)); }
 body.light-mode .auth-field-icon{ color:var(--muted,#6b7686); }
 .auth-error{ color:#ff9fc9; font-size:12px; min-height:16px; margin-bottom:6px; }
+.auth-forgot-row{ text-align:right; margin:-4px 0 12px; }
+.auth-forgot-row a{ color:#b86bff; font-size:11.5px; font-weight:700; cursor:pointer; }
+.auth-forgot-row.hidden{ display:none; }
 .auth-switch{ text-align:center; font-size:12px; color:var(--muted,rgba(255,255,255,.7)); margin-top:14px; }
 .auth-switch a{ color:#b86bff; font-weight:800; cursor:pointer; }
 .auth-close{ float:right; cursor:pointer; font-size:18px; color:var(--muted,rgba(255,255,255,.6)); }
@@ -5582,9 +5585,18 @@ body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
         <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6 12 13 2 6"/><path d="M2 6h20v12H2z"/></svg></span>
         <input id="authEmail" type="email" placeholder="Email" autocomplete="username" />
       </div>
-      <div class="auth-field">
+      <div class="auth-field" id="authPasswordField">
         <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
         <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" />
+      </div>
+      <div class="auth-forgot-row" id="authForgotRow"><a id="authForgotLink">Forgot password?</a></div>
+      <div class="auth-field hidden" id="authOtpField">
+        <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><line x1="12" y1="15" x2="12" y2="17"/></svg></span>
+        <input id="authOtp" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="6-digit code from email" />
+      </div>
+      <div class="auth-field hidden" id="authNewPasswordField">
+        <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+        <input id="authNewPassword" type="password" autocomplete="new-password" placeholder="New password" />
       </div>
       <button id="authSubmitBtn" class="telegram-btn" type="button" style="width:100%">Login</button>
       <div class="auth-switch">
@@ -5833,7 +5845,7 @@ body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
           <div class="line-total"><span>Total</span><span id="sumTotal">0 Ks</span></div>
         </div>
         <div class="field">
-          <div class="field-title">Account / Email / Username <span class="field-required">*</span></div>
+          <div class="field-title">Account / Email / Username</div>
           <input id="accountInput" class="input" type="text" placeholder="Enter account you're buying for..." />
         </div>
 
@@ -6977,7 +6989,8 @@ plans: [
       check: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>`,
       user: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`
     };
-    let authMode = "login"; // "login" | "signup"
+    let authMode = "login"; // "login" | "signup" | "forgot-email" | "forgot-otp"
+    let resetEmail = ""; // remembered between the forgot-password steps
 
     let activeCategory = "All";
     let activePayment = "";
@@ -8019,13 +8032,6 @@ function setOrderButtonsBusy(busy, label){
 
 async function submitOrder(){
   if(!currentProduct || !activePayment) return;
-  if(!accountInput.value.trim()){
-    accountInput.focus();
-    accountInput.classList.add("input-error");
-    setTimeout(() => accountInput.classList.remove("input-error"), 1500);
-    alert("Account / Email / Username ကို ဖြည့်ပေးပါ — Adminက ဘယ်account ကို ပို့ပေးရမလဲသိဖို့ လိုအပ်ပါတယ်။");
-    return;
-  }
 
   // Backend configured: save the order and jump straight to the live
   // status screen. No Telegram popup -- admin sees it in shinpayhubcld.html instantly.
@@ -8086,21 +8092,59 @@ function renderAuthUI(){
   }
 }
 
+const authPasswordField = document.getElementById("authPasswordField");
+const authForgotRow = document.getElementById("authForgotRow");
+const authOtpField = document.getElementById("authOtpField");
+const authNewPasswordField = document.getElementById("authNewPasswordField");
+const authOtp = document.getElementById("authOtp");
+const authNewPassword = document.getElementById("authNewPassword");
+
 function openAuthModal(mode){
   authMode = mode;
   authError.textContent = "";
   authEmail.value = "";
   authPassword.value = "";
-  const isLogin = mode === "login";
-  document.getElementById("authModalTitle").textContent = isLogin ? "Login" : "Get Started";
-  document.getElementById("authModalSub").textContent = isLogin
-    ? "Sign in to see your orders on any device."
-    : "Create an account to track your orders anywhere.";
-  document.getElementById("authSubmitBtn").textContent = isLogin ? "Login" : "Sign Up";
-  document.getElementById("authSwitchText").innerHTML = isLogin
-    ? `No account? <a id="authSwitchLink">Get Started</a>`
-    : `Already have an account? <a id="authSwitchLink">Login</a>`;
-  document.getElementById("authSwitchLink")?.addEventListener("click", () => openAuthModal(isLogin ? "signup" : "login"));
+  authOtp.value = "";
+  authNewPassword.value = "";
+  const switchLink = () => document.getElementById("authSwitchLink")?.addEventListener("click", () => openAuthModal(
+    mode === "forgot-email" || mode === "forgot-otp" ? "login" : (mode === "login" ? "signup" : "login")
+  ));
+
+  if(mode === "forgot-email"){
+    authPasswordField.classList.add("hidden");
+    authForgotRow.classList.add("hidden");
+    authOtpField.classList.add("hidden");
+    authNewPasswordField.classList.add("hidden");
+    document.getElementById("authModalTitle").textContent = "Reset password";
+    document.getElementById("authModalSub").textContent = "Enter your account email — we'll send a 6-digit code.";
+    document.getElementById("authSubmitBtn").textContent = "Send code";
+    document.getElementById("authSwitchText").innerHTML = `Remembered it? <a id="authSwitchLink">Back to Login</a>`;
+  } else if(mode === "forgot-otp"){
+    authPasswordField.classList.add("hidden");
+    authForgotRow.classList.add("hidden");
+    authOtpField.classList.remove("hidden");
+    authNewPasswordField.classList.remove("hidden");
+    document.getElementById("authModalTitle").textContent = "Enter code";
+    document.getElementById("authModalSub").textContent = `We sent a 6-digit code to ${resetEmail}.`;
+    document.getElementById("authSubmitBtn").textContent = "Reset password";
+    document.getElementById("authSwitchText").innerHTML = `<a id="authSwitchLink">Back to Login</a>`;
+  } else {
+    const isLogin = mode === "login";
+    authPasswordField.classList.remove("hidden");
+    authForgotRow.classList.toggle("hidden", !isLogin);
+    authOtpField.classList.add("hidden");
+    authNewPasswordField.classList.add("hidden");
+    document.getElementById("authModalTitle").textContent = isLogin ? "Login" : "Get Started";
+    document.getElementById("authModalSub").textContent = isLogin
+      ? "Sign in to see your orders on any device."
+      : "Create an account to track your orders anywhere.";
+    document.getElementById("authSubmitBtn").textContent = isLogin ? "Login" : "Sign Up";
+    document.getElementById("authSwitchText").innerHTML = isLogin
+      ? `No account? <a id="authSwitchLink">Get Started</a>`
+      : `Already have an account? <a id="authSwitchLink">Login</a>`;
+  }
+  switchLink();
+  document.getElementById("authForgotLink")?.addEventListener("click", () => openAuthModal("forgot-email"));
   authModalBackdrop.classList.remove("hidden");
 }
 document.getElementById("authCloseBtn")?.addEventListener("click", () => authModalBackdrop.classList.add("hidden"));
@@ -8108,10 +8152,40 @@ authModalBackdrop?.addEventListener("click", (e) => { if(e.target === authModalB
 
 document.getElementById("authSubmitBtn")?.addEventListener("click", async () => {
   if(!supabaseClient){ authError.textContent = "Backend not configured yet."; return; }
+  authError.textContent = "";
+
+  if(authMode === "forgot-email"){
+    const email = authEmail.value.trim();
+    if(!email){ authError.textContent = "Please enter your email."; return; }
+    const btn = document.getElementById("authSubmitBtn");
+    const prevLabel = btn.textContent; btn.disabled = true; btn.textContent = "Sending…";
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+    btn.disabled = false; btn.textContent = prevLabel;
+    if(error){ authError.textContent = error.message; return; }
+    resetEmail = email;
+    openAuthModal("forgot-otp");
+    showToast("Code sent — check your email");
+    return;
+  }
+
+  if(authMode === "forgot-otp"){
+    const otp = authOtp.value.trim();
+    const newPassword = authNewPassword.value;
+    if(!otp || !newPassword){ authError.textContent = "Please fill in both fields."; return; }
+    const { data, error } = await supabaseClient.auth.verifyOtp({ email: resetEmail, token: otp, type: "recovery" });
+    if(error){ authError.textContent = error.message; return; }
+    const { error: updateError } = await supabaseClient.auth.updateUser({ password: newPassword });
+    if(updateError){ authError.textContent = updateError.message; return; }
+    currentUser = data.user;
+    renderAuthUI();
+    authModalBackdrop.classList.add("hidden");
+    showToast("Password updated — you're logged in!");
+    return;
+  }
+
   const email = authEmail.value.trim();
   const password = authPassword.value;
   if(!email || !password){ authError.textContent = "Please fill in both fields."; return; }
-  authError.textContent = "";
   const action = authMode === "login"
     ? supabaseClient.auth.signInWithPassword({ email, password })
     : supabaseClient.auth.signUp({ email, password });
