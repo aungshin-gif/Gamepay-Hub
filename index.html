@@ -7728,12 +7728,15 @@ function updatePreview(){
   const customAmount = Number(customAmountInput.value || 0);
   const min = selectedPlan?.minAmount || currentProduct?.minAmount || 1;
   const invalidCustom = selectedPlan?.custom && customAmount > 0 && customAmount < min;
-  const missingAccount = !accountInput.value.trim();
 
   const preview = buildTelegramMessage();
   if(previewBox) previewBox.textContent = preview || "No order preview yet.";
   if(previewFinalBox) renderPreviewTable(preview);
-  const canOrder = !(currentProduct && activePayment) || invalidCustom || missingAccount;
+  // The Account field is enforced at submit time instead (see submitOrder),
+  // where a missing value can focus the field and explain why -- disabling
+  // these buttons for it here would make them silently do nothing to tap,
+  // with no way to tell the customer what is wrong.
+  const canOrder = !(currentProduct && activePayment) || invalidCustom;
   orderBtn.disabled = canOrder;
   if(reviewOrderBtn) reviewOrderBtn.disabled = canOrder;
   if(previewOrderBtn) previewOrderBtn.disabled = canOrder;
