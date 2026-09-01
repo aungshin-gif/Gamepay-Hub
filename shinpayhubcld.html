@@ -53,27 +53,73 @@
   .login-icon{ width:44px; height:44px; margin:0 auto 12px; color:var(--accent); }
 
   .top-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
-  .layout{ display:grid; grid-template-columns:1fr 1.1fr; gap:16px; align-items:start; }
-  @media(max-width:820px){ .layout{ grid-template-columns:1fr; } }
 
   .card-title{ display:flex; align-items:center; gap:8px; font-weight:800; font-size:14px; margin-bottom:12px; color:var(--ink); }
   .card-title .icon{ color:var(--accent); }
 
-  .order-list{ display:flex; flex-direction:column; gap:8px; max-height:76vh; overflow-y:auto; }
+  /* ---------- Admin shell: sidebar + main content ---------- */
+  .admin-shell{ display:flex; align-items:stretch; min-height:100vh; }
+  .admin-sidebar{
+    width:224px; flex:0 0 224px; background:#161a2c; color:#c7cbe0;
+    padding:22px 14px; display:flex; flex-direction:column; gap:3px;
+  }
+  .admin-logo{
+    color:#fff; font-weight:900; font-size:14.5px; letter-spacing:.03em;
+    padding:2px 10px 20px; display:flex; align-items:center; gap:8px;
+  }
+  .admin-logo .dot{ color:#b391ff; font-size:18px; line-height:1; }
+  .admin-nav-item{
+    display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:10px;
+    color:#c7cbe0; font-size:13.5px; font-weight:700; cursor:pointer; transition:background .15s, color .15s;
+  }
+  .admin-nav-item svg{ width:17px; height:17px; flex:0 0 auto; }
+  .admin-nav-item:hover{ background:rgba(255,255,255,.07); color:#fff; }
+  .admin-nav-item.active{ background:var(--accent); color:#fff; }
+  .admin-nav-spacer{ flex:1; }
+  .admin-main{ flex:1; min-width:0; padding:26px 30px 60px; }
+  @media(max-width:820px){
+    .admin-shell{ flex-direction:column; min-height:0; }
+    .admin-sidebar{ width:auto; flex-direction:row; align-items:center; padding:12px 14px; gap:6px; overflow-x:auto; }
+    .admin-logo{ padding:2px 10px 2px 2px; }
+    .admin-nav-spacer{ display:none; }
+    .admin-main{ padding:20px 16px 50px; }
+  }
+
+  /* ---------- Stat cards ---------- */
+  .stats-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px; margin-bottom:18px; }
+  .stat-card{
+    background:var(--card); border:1px solid var(--border); border-radius:16px;
+    padding:18px; box-shadow:var(--shadow); display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .stat-card .stat-label{ font-size:11px; color:var(--muted); font-weight:700; margin-bottom:6px; }
+  .stat-card .stat-value{ font-size:21px; font-weight:900; color:var(--ink); line-height:1.1; }
+  .stat-icon{
+    flex:0 0 auto; width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  }
+  .stat-icon svg{ width:20px; height:20px; }
+
+  /* ---------- Order list rows (full-width now that detail lives on its own page) ---------- */
+  .order-list{ display:flex; flex-direction:column; gap:8px; }
   .empty-note{ text-align:center; color:var(--muted); font-size:13px; padding:34px 10px; }
   .order-row{
-    padding:12px 14px; border-radius:12px; border:1px solid var(--border);
+    display:flex; align-items:center; gap:14px;
+    padding:13px 16px; border-radius:12px; border:1px solid var(--border);
     background:#fbfbfe; cursor:pointer; transition:.15s;
   }
   .order-row:hover{ background:var(--accent-soft); border-color:#e4d6ff; }
-  .order-row.active{ border-color:var(--accent); background:var(--accent-soft); }
-  .order-row .code{ font-weight:800; font-size:13px; }
+  .or-main{ flex:1; min-width:0; }
+  .or-code{ font-weight:800; font-size:13.5px; display:flex; align-items:center; flex-wrap:wrap; gap:2px; }
+  .or-sub{ font-size:12px; color:var(--muted); margin-top:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .or-amount{ flex:0 0 auto; font-weight:800; font-size:14px; text-align:right; min-width:88px; }
+  .or-meta{ flex:0 0 auto; font-size:11.5px; color:var(--muted); text-align:right; min-width:96px; }
+  .or-chevron{ flex:0 0 auto; width:16px; height:16px; color:var(--muted-2); }
+  @media(max-width:640px){ .or-meta{ display:none; } }
+
   .unread-badge{
     display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px;
     padding:0 5px; border-radius:999px; background:var(--bad); color:#fff; font-size:10.5px; font-weight:800;
     margin-left:6px; vertical-align:middle;
   }
-  .order-row .line{ font-size:12px; color:var(--muted); margin-top:2px; }
   .badge{ display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:800; padding:3px 9px; border-radius:20px; margin-left:6px; }
   .badge.pending{ background:var(--warn-soft); color:var(--warn); }
   .badge.approved{ background:var(--good-soft); color:var(--good); }
@@ -160,6 +206,21 @@
   }
   .modal-close{ float:right; cursor:pointer; font-size:20px; color:var(--muted); line-height:1; }
   .user-orders-list{ max-height:340px; overflow-y:auto; margin-top:8px; }
+
+  /* ---------- Order detail "page" ---------- */
+  .page-back-row{ margin-bottom:18px; }
+  .page-back-btn{ background:#fff; color:var(--ink); border:1px solid var(--border-strong); padding:9px 14px; }
+  .page-back-btn:hover{ background:#f8f8fc; }
+  .order-detail-grid{ display:grid; grid-template-columns:1fr 1.1fr; gap:16px; align-items:start; }
+  @media(max-width:820px){ .order-detail-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- Settings rows ---------- */
+  .settings-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:12px 0;
+  }
+  .settings-label{ font-weight:700; font-size:13.5px; }
+  .settings-sub{ font-size:12px; color:var(--muted); margin-top:2px; }
 </style>
 </head>
 <body>
@@ -177,49 +238,100 @@
   <button id="loginBtn" style="width:100%">Sign in</button>
 </div>
 
-<div id="dashboardView" class="wrap hidden">
-  <div class="top-row">
-    <div>
-      <h1>Order Dashboard</h1>
-      <div class="sub">Live — updates automatically, no refresh needed.</div>
-    </div>
-    <button id="signOutBtn" class="signout"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign out</button>
-  </div>
-
-  <div class="card" style="margin-bottom:16px;">
-    <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search Registered Users</div>
-    <input id="userSearchInput" type="text" placeholder="Type a username or email…" autocomplete="off" style="margin-bottom:0;" />
-    <div id="userSearchResults"></div>
-  </div>
-
-  <div class="layout">
-    <div class="card">
-      <div class="card-title" style="justify-content:space-between;">
-        <span style="display:flex;align-items:center;gap:8px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>Orders</span>
-        <button id="toggleArchivedBtn" class="ghost" style="padding:6px 12px;font-size:12px;">Show archived</button>
+<div id="dashboardView" class="hidden">
+  <div class="admin-shell">
+    <div class="admin-sidebar">
+      <div class="admin-logo"><span class="dot">●</span> GAMEPAY ADMIN</div>
+      <div class="admin-nav-item active" id="navHomeBtn" data-view="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard
       </div>
-      <div id="orderList" class="order-list"><div class="empty-note">Loading orders…</div></div>
+      <div class="admin-nav-item" id="navSettingsBtn" data-view="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+        Settings
+      </div>
+      <div class="admin-nav-spacer"></div>
+      <div class="admin-nav-item" id="sidebarSignOutBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign out
+      </div>
     </div>
 
-    <div class="right-col">
-      <div id="noOrderSelected" class="card empty-note">Select an order to see details and chat.</div>
-      <div id="orderDetailBox" class="hidden right-col-inner">
+    <div class="admin-main">
+
+      <div id="dashboardHomeView">
+        <div class="top-row">
+          <div>
+            <h1>Dashboard</h1>
+            <div class="sub">Live — updates automatically, no refresh needed.</div>
+          </div>
+        </div>
+
+        <div class="stats-grid" id="statsGrid"></div>
+
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search Registered Users</div>
+          <input id="userSearchInput" type="text" placeholder="Type a username or email…" autocomplete="off" style="margin-bottom:0;" />
+          <div id="userSearchResults"></div>
+        </div>
+
         <div class="card">
-          <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Order Details</div>
-          <div class="order-detail" id="orderDetail"></div>
-          <div class="order-actions" id="orderApproveRow"></div>
-        </div>
-        <div class="card chat-panel">
-          <div class="card-title"><span class="icon" style="font-size:16px;line-height:1;">👾</span>Chat</div>
-          <div id="chatOrderStrip" class="chat-order-strip"></div>
-          <div id="chatCustomerHeader"></div>
-          <div id="chatMessages" class="chat-messages"></div>
-          <form id="chatForm" class="chat-input-row">
-            <input id="chatInput" type="text" placeholder="Reply to customer…" autocomplete="off" />
-            <button type="submit"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Send</button>
-          </form>
+          <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>Orders</div>
+          <div id="orderList" class="order-list"><div class="empty-note">Loading orders…</div></div>
         </div>
       </div>
+
+      <div id="orderDetailView" class="hidden">
+        <div class="page-back-row">
+          <button class="page-back-btn" id="orderDetailBackBtn"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back to Dashboard</button>
+        </div>
+        <div class="order-detail-grid">
+          <div class="card">
+            <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Order Details</div>
+            <div class="order-detail" id="orderDetail"></div>
+            <div class="order-actions" id="orderApproveRow"></div>
+          </div>
+          <div class="card chat-panel">
+            <div class="card-title"><span class="icon" style="font-size:16px;line-height:1;">👾</span>Chat</div>
+            <div id="chatOrderStrip" class="chat-order-strip"></div>
+            <div id="chatCustomerHeader"></div>
+            <div id="chatMessages" class="chat-messages"></div>
+            <form id="chatForm" class="chat-input-row">
+              <input id="chatInput" type="text" placeholder="Reply to customer…" autocomplete="off" />
+              <button type="submit"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Send</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div id="settingsView" class="hidden">
+        <div class="top-row">
+          <div>
+            <h1>Settings</h1>
+            <div class="sub">Admin account &amp; dashboard preferences.</div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>Change Password</div>
+          <div class="pw-wrap">
+            <input id="adminNewPasswordInput" type="password" placeholder="New password (min 6 characters)" autocomplete="new-password" />
+            <button type="button" class="pw-toggle" id="adminNewPwToggle" aria-label="Show password"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+          <button id="adminChangePasswordBtn">Update Password</button>
+          <div id="adminPasswordMsg" style="font-size:12.5px;margin-top:8px;color:var(--muted);"></div>
+        </div>
+        <div class="card">
+          <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>Dashboard Preferences</div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-label">Show archived orders</div>
+              <div class="settings-sub">Include archived orders in the Dashboard's Orders list.</div>
+            </div>
+            <button id="toggleArchivedBtn" class="ghost">Show archived</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -254,11 +366,46 @@ const loginView = document.getElementById("loginView");
 const dashboardView = document.getElementById("dashboardView");
 const loginError = document.getElementById("loginError");
 const orderList = document.getElementById("orderList");
-const noOrderSelected = document.getElementById("noOrderSelected");
-const orderDetailBox = document.getElementById("orderDetailBox");
 const orderDetail = document.getElementById("orderDetail");
 const orderApproveRow = document.getElementById("orderApproveRow");
 const chatMessages = document.getElementById("chatMessages");
+
+const ICON_USERS_STAT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
+const ICON_ORDERS_STAT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>`;
+const ICON_CALENDAR_STAT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+const ICON_COIN_STAT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1.4 1.1-2.5 2.5-2.5s2.5.7 2.5 2c0 2-5 1.5-5 4 0 1.3 1.1 2 2.5 2s2.5-1.1 2.5-2.5"/></svg>`;
+
+/* ---------- View switching: Dashboard / Order detail / Settings ---------- */
+const dashboardHomeView = document.getElementById("dashboardHomeView");
+const orderDetailView = document.getElementById("orderDetailView");
+const settingsView = document.getElementById("settingsView");
+const navHomeBtn = document.getElementById("navHomeBtn");
+const navSettingsBtn = document.getElementById("navSettingsBtn");
+
+function showDashboardHome(){
+  dashboardHomeView.classList.remove("hidden");
+  orderDetailView.classList.add("hidden");
+  settingsView.classList.add("hidden");
+  navHomeBtn.classList.add("active");
+  navSettingsBtn.classList.remove("active");
+}
+function showOrderDetailView(){
+  dashboardHomeView.classList.add("hidden");
+  orderDetailView.classList.remove("hidden");
+  settingsView.classList.add("hidden");
+  navHomeBtn.classList.remove("active");
+  navSettingsBtn.classList.remove("active");
+}
+function showSettingsView(){
+  dashboardHomeView.classList.add("hidden");
+  orderDetailView.classList.add("hidden");
+  settingsView.classList.remove("hidden");
+  navHomeBtn.classList.remove("active");
+  navSettingsBtn.classList.add("active");
+}
+navHomeBtn.addEventListener("click", showDashboardHome);
+navSettingsBtn.addEventListener("click", showSettingsView);
+document.getElementById("orderDetailBackBtn").addEventListener("click", showDashboardHome);
 
 let orders = [];
 let showArchived = false;
@@ -277,7 +424,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
   await checkAdminAndEnter();
 });
 
-document.getElementById("signOutBtn").addEventListener("click", async () => {
+document.getElementById("sidebarSignOutBtn").addEventListener("click", async () => {
   await sb.auth.signOut();
   location.reload();
 });
@@ -291,6 +438,7 @@ async function checkAdminAndEnter(){
   }
   loginView.classList.add("hidden");
   dashboardView.classList.remove("hidden");
+  showDashboardHome();
   loadOrders();
   subscribeRealtime();
 }
@@ -321,6 +469,37 @@ document.getElementById("loginPwToggle")?.addEventListener("click", () => {
   btn.setAttribute("aria-label", show ? "Hide password" : "Show password");
 });
 
+document.getElementById("adminNewPwToggle")?.addEventListener("click", () => {
+  const input = document.getElementById("adminNewPasswordInput");
+  const btn = document.getElementById("adminNewPwToggle");
+  const show = input.type === "password";
+  input.type = show ? "text" : "password";
+  btn.innerHTML = show
+    ? `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.8 21.8 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a21.8 21.8 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+    : `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  btn.setAttribute("aria-label", show ? "Hide password" : "Show password");
+});
+
+document.getElementById("adminChangePasswordBtn")?.addEventListener("click", async () => {
+  const input = document.getElementById("adminNewPasswordInput");
+  const msg = document.getElementById("adminPasswordMsg");
+  const newPassword = input.value;
+  if(!newPassword || newPassword.length < 6){
+    msg.textContent = "Password must be at least 6 characters.";
+    msg.style.color = "var(--bad)";
+    return;
+  }
+  const { error } = await sb.auth.updateUser({ password: newPassword });
+  if(error){
+    msg.textContent = error.message;
+    msg.style.color = "var(--bad)";
+    return;
+  }
+  input.value = "";
+  msg.textContent = "Password updated.";
+  msg.style.color = "var(--good)";
+});
+
 function friendlyDateLabel(dateStr){
   const d = new Date(dateStr);
   const dOnly = new Date(d); dOnly.setHours(0, 0, 0, 0);
@@ -334,10 +513,14 @@ function friendlyDateLabel(dateStr){
 function renderOrderRow(o){
   const unread = o._unread > 0 ? `<span class="unread-badge">${o._unread}</span>` : "";
   return `
-    <div class="order-row ${o.id === selectedOrderId ? "active" : ""}" data-id="${o.id}">
-      <div class="code">${o.order_code} ${o.archived ? statusBadge("archived") : statusBadge(o.status)}${unread}</div>
-      <div class="line">${o.product_name} · ${o.plan_name}</div>
-      <div class="line">${Number(o.amount).toLocaleString()} Ks · ${o.payment_method || "-"}</div>
+    <div class="order-row" data-id="${o.id}">
+      <div class="or-main">
+        <div class="or-code">${o.order_code} ${o.archived ? statusBadge("archived") : statusBadge(o.status)}${unread}</div>
+        <div class="or-sub">${o.product_name} · ${o.plan_name}</div>
+      </div>
+      <div class="or-amount">${Number(o.amount).toLocaleString()} Ks</div>
+      <div class="or-meta">${o.payment_method || "-"}</div>
+      <svg class="or-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
   `;
 }
@@ -411,10 +594,10 @@ async function showUserDetail(user){
     .reduce((sum, o) => sum + Number(o.amount || 0), 0);
   const rows = list.length
     ? list.map(o => `
-        <div class="order-row" style="cursor:default;">
-          <div class="code">${o.order_code} ${statusBadge(o.status)}</div>
-          <div class="line">${o.product_name} · ${o.plan_name}</div>
-          <div class="line">${Number(o.amount).toLocaleString()} Ks · ${new Date(o.created_at).toLocaleDateString()}</div>
+        <div style="padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:#fbfbfe;margin-bottom:8px;">
+          <div class="or-code" style="white-space:normal;">${o.order_code} ${statusBadge(o.status)}</div>
+          <div class="or-sub" style="white-space:normal;">${o.product_name} · ${o.plan_name}</div>
+          <div class="or-sub" style="white-space:normal;">${Number(o.amount).toLocaleString()} Ks · ${new Date(o.created_at).toLocaleDateString()}</div>
         </div>
       `).join("")
     : `<div class="empty-note">No orders yet.</div>`;
@@ -428,6 +611,31 @@ async function showUserDetail(user){
     <div class="card-title" style="margin-top:4px;">Order history</div>
     <div class="user-orders-list">${rows}</div>
   `;
+}
+
+function statCard(label, value, icon, tint){
+  return `
+    <div class="stat-card">
+      <div><div class="stat-label">${label}</div><div class="stat-value">${value}</div></div>
+      <div class="stat-icon" style="background:${tint}1a;color:${tint};">${icon}</div>
+    </div>
+  `;
+}
+
+function renderStats(totalUsers){
+  const isToday = (iso) => new Date(iso).toDateString() === new Date().toDateString();
+  const revenueOf = (list) => list
+    .filter(o => o.status === "approved" || o.status === "completed")
+    .reduce((sum, o) => sum + Number(o.amount || 0), 0);
+  const dailyOrders = orders.filter(o => isToday(o.created_at));
+  const grid = document.getElementById("statsGrid");
+  grid.innerHTML = [
+    statCard("Total Users", totalUsers == null ? "…" : totalUsers.toLocaleString(), ICON_USERS_STAT, "#7c3aed"),
+    statCard("Total Orders", orders.length.toLocaleString(), ICON_ORDERS_STAT, "#2563eb"),
+    statCard("Daily Orders", dailyOrders.length.toLocaleString(), ICON_CALENDAR_STAT, "#d97706"),
+    statCard("Daily Amount", revenueOf(dailyOrders).toLocaleString() + " Ks", ICON_COIN_STAT, "#16a34a"),
+    statCard("Total Amount", revenueOf(orders).toLocaleString() + " Ks", ICON_COIN_STAT, "#dc2626"),
+  ].join("");
 }
 
 async function loadOrders(){
@@ -445,6 +653,10 @@ async function loadOrders(){
     o._unread = (byOrder[o.id] || []).filter(m => !since || new Date(m.created_at) > since).length;
   });
   renderOrderList();
+  renderStats(null); // render immediately with order-derived numbers; user count follows once the RPC returns
+  sb.rpc("admin_count_users").then(({ data: count, error }) => {
+    renderStats(error ? null : count);
+  });
 }
 
 function subscribeRealtime(){
@@ -493,8 +705,7 @@ async function selectOrder(id){
     })
     .subscribe();
 
-  noOrderSelected.classList.add("hidden");
-  orderDetailBox.classList.remove("hidden");
+  showOrderDetailView();
   orderDetail.innerHTML = `
     <table class="order-detail-table">
       <tr><th>Product</th><td>${order.product_name}</td></tr>
