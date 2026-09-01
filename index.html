@@ -5177,17 +5177,27 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
 .order-status-sub b{ color:#fff; }
 .order-status-hint{ font-size:12px; color:var(--muted,rgba(255,255,255,.74)); line-height:1.5; margin-bottom:18px; }
 #openChatBtn{ width:min(320px,100%); margin:0 auto; }
-.order-status-details{
-  width:min(420px,100%); margin:0 auto 14px; text-align:left;
-  background:rgba(255,255,255,.06); border:1px solid rgba(199,125,255,.18);
-  border-radius:12px; padding:12px 14px; font-size:12px; line-height:1.9;
+/* Reuses the existing .order-preview-table look (see the Order Preview
+   screen) so this reads as the same polished table, not a second style. */
+.order-status-details{ width:min(500px,100%); margin:0 auto 16px; text-align:left; }
+.order-status-details .order-preview-table{ width:100%; }
+
+/* Indeterminate progress bar shown while an order is being placed */
+.order-progress-bar{
+  width:min(760px,100%); height:4px; margin:12px auto 0;
+  background:rgba(255,255,255,.14); border-radius:4px; overflow:hidden;
 }
-.order-status-details .osd-row{ display:flex; justify-content:space-between; gap:10px; }
-.order-status-details .osd-row span:first-child{ color:var(--muted,rgba(255,255,255,.65)); }
-.order-status-details .osd-row span:last-child{ font-weight:800; text-align:right; }
-body.light-mode .order-status-details{ background:var(--surface-2,#f7f9fc); border-color:var(--border,rgba(31,41,55,.14)); }
-body.light-mode .order-status-details .osd-row span:first-child{ color:var(--muted,#6b7686); }
-body.light-mode .order-status-details .osd-row span:last-child{ color:var(--ink,#1f2937); }
+.order-progress-bar.hidden{ display:none; }
+.order-progress-fill{
+  height:100%; width:35%; border-radius:4px;
+  background:linear-gradient(90deg,#7a35c7,#d58cff);
+  animation:orderProgressSlide 1.1s ease-in-out infinite;
+}
+@keyframes orderProgressSlide{
+  0%{ transform:translateX(-110%); }
+  100%{ transform:translateX(320%); }
+}
+body.light-mode .order-progress-bar{ background:var(--border,rgba(31,41,55,.14)); }
 
 .chat-messages{
   width:min(560px,100%);
@@ -5660,6 +5670,7 @@ body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
         </div>
 
         <button id="orderBtn" class="telegram-btn" disabled>Place Order</button>
+        <div id="orderProgressBar" class="order-progress-bar hidden"><div class="order-progress-fill"></div></div>
         <div class="checkout-trustline" aria-label="Checkout support"><b>Live order tracking</b><span>•</span><span>Chat with support after approval</span></div>
         <div class="checkout-support-shortcut"><span>Need help?</span><a href="https://t.me/angsthtun" target="_blank" rel="noopener">Telegram support</a><span>·</span><a href="https://wa.me/qr/PMHPHBAS33UHB1" target="_blank" rel="noopener">WhatsApp</a></div>
 
@@ -5675,6 +5686,7 @@ body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
         <div class="preview-page-sub">Check your plan, payment and total before sending the order.</div>
         <div id="previewFinalBox" class="preview-box preview-final-box"><div class="preview-empty">No order preview yet.</div></div>
         <button id="previewOrderBtn" class="telegram-btn" type="button" disabled><svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Place Order</button>
+        <div id="previewProgressBar" class="order-progress-bar hidden"><div class="order-progress-fill"></div></div>
         <div class="checkout-trustline"><b>Live order tracking</b><span>•</span><span>Chat with support after approval</span></div>
       </div>
     </div>
@@ -6763,6 +6775,20 @@ const slipUploadLabel = document.getElementById("slipUploadLabel");
 const slipPreview = document.getElementById("slipPreview");
 let selectedSlipFile = null;
 
+// #orderStatusView, #chatView and #myOrdersView all live inside #orderView
+// as siblings of cartItem/checkoutSection/previewSection. Every function
+// that shows one of them must hide the rest, or two "pages" render
+// stacked on top of each other -- centralize that here instead of
+// repeating (and forgetting) it in each function.
+function hideAllOrderSubviews(){
+  cartItem.classList.add("hidden");
+  checkoutSection.classList.add("hidden");
+  previewSection?.classList.add("hidden");
+  document.getElementById("orderStatusView")?.classList.add("hidden");
+  document.getElementById("chatView")?.classList.add("hidden");
+  document.getElementById("myOrdersView")?.classList.add("hidden");
+}
+
 slipUploadLabel?.addEventListener("click", (e) => { e.preventDefault(); slipInput.click(); });
 slipInput?.addEventListener("change", () => {
   const file = slipInput.files && slipInput.files[0];
@@ -6788,7 +6814,7 @@ continueBtn.onclick = () => {
 function openCheckoutBox(){
   showPageLoader("Opening secure checkout…");
   setTimeout(() => {
-    cartItem.classList.add("hidden");
+    hideAllOrderSubviews();
     checkoutSection.classList.remove("hidden");
     orderView.classList.remove("hidden");
     orderView.classList.add("dashboard-active");
@@ -7134,8 +7160,7 @@ if(document.readyState === "loading"){
     return;
   }
 
-  checkoutSection.classList.add("hidden");
-  previewSection?.classList.add("hidden");
+  hideAllOrderSubviews();
   document.body.classList.remove("preview-mode");
 continueBtn.style.display = "block";
 
@@ -7175,11 +7200,9 @@ function closeOrder(){
   document.body.classList.remove("order-mode");
   currentProduct = null;
 
-  checkoutSection.classList.add("hidden");
-  previewSection?.classList.add("hidden");
+  hideAllOrderSubviews();
   document.body.classList.remove("preview-mode");
   continueBtn.style.display = "block";
-  cartItem.classList.add("hidden");
 
   window.scrollTo(0, 0);
 
@@ -7447,12 +7470,26 @@ function updatePreview(){
   if(previewOrderBtn) previewOrderBtn.disabled = canOrder;
 }
     
+// Neither supabase-js nor the browser's fetch enforce a timeout on their
+// own, so a stalled connection (bad network, a sleeping free-tier project)
+// could leave the UI waiting forever with no feedback. Give every network
+// call in the order flow a hard ceiling instead.
+function withTimeout(promise, ms, timeoutMessage){
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(timeoutMessage)), ms))
+  ]);
+}
+
 async function uploadPaymentSlip(){
   if(!selectedSlipFile || !supabaseClient) return { path: null, failed: false };
   try{
     const ext = (selectedSlipFile.name.split(".").pop() || "jpg").toLowerCase();
     const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-    const { data, error } = await supabaseClient.storage.from("payment-slips").upload(path, selectedSlipFile);
+    const { data, error } = await withTimeout(
+      supabaseClient.storage.from("payment-slips").upload(path, selectedSlipFile),
+      15000, "Payment slip upload timed out."
+    );
     if(error){
       console.error("Slip upload failed:", error);
       return { path: null, failed: true, message: error.message };
@@ -7481,15 +7518,18 @@ async function submitOrderToBackend(){
   }
   let data, error;
   try{
-    ({ data, error } = await supabaseClient.rpc("create_order", {
-      p_product_name: currentProduct.name,
-      p_plan_name: selectedPlan.name,
-      p_amount: amount,
-      p_payment_method: activePayment || "Not selected",
-      p_account_info: accountInput.value.trim(),
-      p_note: noteInput.value.trim(),
-      p_payment_slip_path: slip.path
-    }));
+    ({ data, error } = await withTimeout(
+      supabaseClient.rpc("create_order", {
+        p_product_name: currentProduct.name,
+        p_plan_name: selectedPlan.name,
+        p_amount: amount,
+        p_payment_method: activePayment || "Not selected",
+        p_account_info: accountInput.value.trim(),
+        p_note: noteInput.value.trim(),
+        p_payment_slip_path: slip.path
+      }),
+      15000, "Saving the order timed out."
+    ));
   }catch(err){
     console.error("create_order threw:", err);
     return { order: null, error: err?.message || String(err) };
@@ -7565,16 +7605,14 @@ function renderStatusDetails(order){
     ["Payment", order.payment_method],
     ["Placed", order.created_at ? formatOrderDate(order.created_at) : null]
   ].filter(([, v]) => v);
-  box.innerHTML = rows.map(([label, value]) => `<div class="osd-row"><span>${label}</span><span>${value}</span></div>`).join("");
+  const trs = rows.map(([label, value]) => `<tr><th>${label}</th><td>${escapePreviewText(value)}</td></tr>`).join("");
+  box.innerHTML = `<table class="order-preview-table"><tbody>${trs}</tbody></table>`;
 }
 
 function showOrderStatusView(){
   document.body.classList.add("order-mode");
   catalogView.classList.add("hidden");
-  cartItem.classList.add("hidden");
-  checkoutSection.classList.add("hidden");
-  previewSection?.classList.add("hidden");
-  document.getElementById("chatView").classList.add("hidden");
+  hideAllOrderSubviews();
   document.body.classList.remove("preview-mode", "dashboard-mode");
   document.documentElement.classList.remove("dashboard-mode");
   orderView.classList.remove("hidden");
@@ -7597,7 +7635,7 @@ function appendChatBubble(sender, body){
 }
 
 async function openChatView(){
-  document.getElementById("orderStatusView").classList.add("hidden");
+  hideAllOrderSubviews();
   document.getElementById("chatView").classList.remove("hidden");
   const box = document.getElementById("chatMessages");
   box.innerHTML = "<div class='chat-empty'>Loading messages…</div>";
@@ -7655,6 +7693,11 @@ function setOrderButtonsBusy(busy, label){
       }
       // updatePreview() re-applies the real disabled state (needs product+payment).
     }
+  });
+  // The animated bar is the real "this is still moving" signal -- the
+  // button label alone looked frozen sitting still for a few seconds.
+  [document.getElementById("orderProgressBar"), document.getElementById("previewProgressBar")].forEach(bar => {
+    bar?.classList.toggle("hidden", !busy);
   });
 }
 
@@ -7789,12 +7832,9 @@ function renderMyOrdersRows(rows){
         product_name: row.product_name, plan_name: row.plan_name,
         amount: row.amount, payment_method: row.payment_method, created_at: row.created_at
       };
-      document.getElementById("myOrdersView").classList.add("hidden");
       document.body.classList.add("order-mode");
       catalogView.classList.add("hidden");
-      checkoutSection.classList.add("hidden");
-      previewSection?.classList.add("hidden");
-      document.getElementById("chatView").classList.add("hidden");
+      hideAllOrderSubviews();
       orderView.classList.remove("hidden");
       document.getElementById("orderStatusView").classList.remove("hidden");
       document.getElementById("statusOrderCode").textContent = row.order_code;
@@ -7811,11 +7851,7 @@ async function openMyOrdersView(){
   document.body.classList.remove("preview-mode", "dashboard-mode");
   document.documentElement.classList.remove("dashboard-mode");
   catalogView.classList.add("hidden");
-  cartItem.classList.add("hidden");
-  checkoutSection.classList.add("hidden");
-  previewSection?.classList.add("hidden");
-  document.getElementById("orderStatusView").classList.add("hidden");
-  document.getElementById("chatView").classList.add("hidden");
+  hideAllOrderSubviews();
   // myOrdersView lives inside #orderView, so the parent must be visible too.
   orderView.classList.remove("hidden");
   document.getElementById("myOrdersView").classList.remove("hidden");
