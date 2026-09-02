@@ -3222,9 +3222,27 @@ body.light-mode .compact-header,
 body.light-mode .card,
 body.light-mode .panel,
 body.light-mode .store-info-section,
-body.light-mode .product-buybox,
-body.light-mode .preview-final-box{
+body.light-mode .product-buybox{
   background:var(--surface) !important; border-color:var(--border) !important; box-shadow:var(--shadow-sm) !important;
+}
+/* The final order-preview card gets its own gold+purple glass treatment
+   instead of the plain white "surface" every other card gets -- this is
+   the last screen a customer sees before placing the order, so it's
+   worth it standing out. Kept as the last ".preview-final-box" rule in
+   the file (several earlier ones fight over this same selector) so it
+   actually wins. */
+body.light-mode .preview-final-box{
+  background:linear-gradient(160deg,rgba(255,251,240,.92),rgba(233,215,255,.75)) !important;
+  backdrop-filter:blur(20px) !important; -webkit-backdrop-filter:blur(20px) !important;
+  border:2px solid rgba(212,168,67,.65) !important;
+  box-shadow:0 0 0 4px rgba(168,124,224,.22), 0 18px 40px rgba(93,72,137,.22), inset 0 1px rgba(255,255,255,.85) !important;
+  color:#372b52 !important;
+  animation:none !important;
+}
+body.light-mode .preview-final-box::before{
+  background:linear-gradient(90deg,transparent,#d4a843,#a87ce0,transparent) !important;
+  box-shadow:0 0 10px rgba(212,168,67,.55),0 0 20px rgba(168,124,224,.50) !important;
+  display:block !important;
 }
 body.light-mode .store-info-card,
 body.light-mode .icon-wrap,
