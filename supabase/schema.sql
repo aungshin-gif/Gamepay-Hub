@@ -246,6 +246,193 @@ create policy "no one deletes orders" on public.orders for delete using (false);
 drop policy if exists "no one deletes messages" on public.messages;
 create policy "no one deletes messages" on public.messages for delete using (false);
 
+-- 8. Coupons ------------------------------------------------------
+-- Each row is a single-use coupon code worth a fixed Kyat amount off an
+-- order. assigned_user_id null = a public promo code anyone who has the
+-- code can redeem; set = gifted straight to that one customer, and only
+-- they can redeem it. used_at set = "Expired" in the admin dashboard,
+-- null = "Live".
+create table if not exists public.coupons (
+  id uuid primary key default gen_random_uuid(),
+  code text not null unique,
+  amount numeric not null check (amount > 0),
+  assigned_user_id uuid references auth.users(id) on delete set null,
+  created_by uuid references auth.users(id) on delete set null,
+  used_at timestamptz,
+  used_by_user_id uuid references auth.users(id) on delete set null,
+  used_by_order_id uuid references public.orders(id) on delete set null,
+  created_at timestamptz not null default now()
+);
+alter table public.coupons enable row level security;
+
+drop policy if exists "admin manage coupons" on public.coupons;
+create policy "admin manage coupons" on public.coupons
+  for all using (public.is_admin()) with check (public.is_admin());
+
+-- Orders: remember which coupon (if any) an order used, and how much it
+-- knocked off -- amount already holds the post-discount total charged.
+alter table public.orders add column if not exists coupon_code text;
+alter table public.orders add column if not exists discount_amount numeric not null default 0;
+
+-- 9. Notifications --------------------------------------------------
+-- Powers the customer-side "Notice" tab -- currently only used to tell a
+-- customer they were gifted a coupon, but kept general so admin can drop
+-- other one-off notices later without a schema change.
+create table if not exists public.notifications (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  title text not null,
+  body text not null,
+  read_at timestamptz,
+  created_at timestamptz not null default now()
+);
+alter table public.notifications enable row level security;
+
+drop policy if exists "customer read own notifications" on public.notifications;
+create policy "customer read own notifications" on public.notifications
+  for select using (auth.uid() = user_id);
+
+drop policy if exists "customer mark own notifications read" on public.notifications;
+create policy "customer mark own notifications read" on public.notifications
+  for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+drop policy if exists "admin manage notifications" on public.notifications;
+create policy "admin manage notifications" on public.notifications
+  for all using (public.is_admin()) with check (public.is_admin());
+
+-- Admin: create a coupon code (optionally gifted straight to one user, with
+-- a notification telling them to go check it).
+create or replace function public.admin_create_coupon(p_code text, p_amount numeric, p_user_id uuid default null)
+returns table(id uuid, code text, amount numeric)
+language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_admin() then
+    raise exception 'not authorized';
+  end if;
+  return query
+  insert into public.coupons(code, amount, assigned_user_id, created_by)
+  values (p_code, p_amount, p_user_id, auth.uid())
+  returning coupons.id, coupons.code, coupons.amount;
+
+  if p_user_id is not null then
+    insert into public.notifications(user_id, title, body)
+    values (p_user_id, 'You got a coupon!', 'Hey, Gamepay Hub give u coupon code, check in notification box.');
+  end if;
+end;
+$$;
+grant execute on function public.admin_create_coupon to authenticated;
+
+-- Admin: full coupon list for the dashboard's Coupons tab.
+create or replace function public.admin_list_coupons()
+returns setof public.coupons
+language sql security definer set search_path = public as $$
+  select * from public.coupons where public.is_admin() order by created_at desc;
+$$;
+grant execute on function public.admin_list_coupons to authenticated;
+
+-- Admin: manually remove a coupon, live or already-expired.
+create or replace function public.admin_delete_coupon(p_id uuid)
+returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_admin() then raise exception 'not authorized'; end if;
+  delete from public.coupons where id = p_id;
+end;
+$$;
+grant execute on function public.admin_delete_coupon to authenticated;
+
+-- Admin: every registered user with an order count, for the dashboard's
+-- User List (auth.users isn't exposed to the API directly, same reason
+-- admin_search_users exists below).
+create or replace function public.admin_list_users()
+returns table(id uuid, email text, created_at timestamptz, order_count bigint)
+language sql security definer set search_path = public as $$
+  select u.id, u.email, u.created_at, count(o.id) as order_count
+  from auth.users u
+  left join public.orders o on o.user_id = u.id
+  where public.is_admin()
+  group by u.id, u.email, u.created_at
+  order by u.created_at desc;
+$$;
+grant execute on function public.admin_list_users to authenticated;
+
+-- Customer (or guest, for a public code): check a coupon at checkout
+-- without consuming it -- create_order is what actually redeems it.
+create or replace function public.check_coupon(p_code text)
+returns table(amount numeric, valid boolean)
+language plpgsql security definer set search_path = public as $$
+declare v_row public.coupons%rowtype;
+begin
+  select * into v_row from public.coupons where code = p_code;
+  if v_row.id is null or v_row.used_at is not null then
+    return query select 0::numeric, false;
+    return;
+  end if;
+  if v_row.assigned_user_id is not null and v_row.assigned_user_id is distinct from auth.uid() then
+    return query select 0::numeric, false;
+    return;
+  end if;
+  return query select v_row.amount, true;
+end;
+$$;
+grant execute on function public.check_coupon to anon, authenticated;
+
+-- Customer: read their own notifications (My Account -> Notice tab).
+create or replace function public.get_notifications()
+returns setof public.notifications
+language sql security definer set search_path = public as $$
+  select * from public.notifications where user_id = auth.uid() order by created_at desc;
+$$;
+grant execute on function public.get_notifications to authenticated;
+
+create or replace function public.mark_notifications_read()
+returns void
+language sql security definer set search_path = public as $$
+  update public.notifications set read_at = now() where user_id = auth.uid() and read_at is null;
+$$;
+grant execute on function public.mark_notifications_read to authenticated;
+
+-- create_order now accepts an optional coupon code. The discount is
+-- computed and the coupon marked used here -- never trust a client-sent
+-- discount, always re-derive it from the coupon row server-side.
+drop function if exists public.create_order(text, text, numeric, text, text, text, text);
+
+create or replace function public.create_order(
+  p_product_name text, p_plan_name text, p_amount numeric,
+  p_payment_method text, p_account_info text, p_note text,
+  p_payment_slip_path text default null,
+  p_coupon_code text default null
+) returns table (id uuid, access_token uuid, order_code text)
+language plpgsql security definer set search_path = public as $$
+declare
+  v_code text := 'GPH-' || to_char(now(),'YYYYMMDD') || '-' || substr(replace(gen_random_uuid()::text,'-',''),1,5);
+  v_coupon public.coupons%rowtype;
+  v_discount numeric := 0;
+  v_order_id uuid;
+  v_access_token uuid;
+begin
+  if p_coupon_code is not null then
+    select * into v_coupon from public.coupons where code = p_coupon_code for update;
+    if v_coupon.id is not null and v_coupon.used_at is null
+       and (v_coupon.assigned_user_id is null or v_coupon.assigned_user_id = auth.uid()) then
+      v_discount := least(v_coupon.amount, p_amount);
+    end if;
+  end if;
+
+  insert into public.orders(product_name, plan_name, amount, payment_method, account_info, note, order_code, payment_slip_path, user_id, coupon_code, discount_amount)
+  values (p_product_name, p_plan_name, p_amount - v_discount, p_payment_method, p_account_info, p_note, v_code, p_payment_slip_path, auth.uid(),
+          case when v_discount > 0 then p_coupon_code else null end, v_discount)
+  returning orders.id, orders.access_token into v_order_id, v_access_token;
+
+  if v_discount > 0 then
+    update public.coupons set used_at = now(), used_by_user_id = auth.uid(), used_by_order_id = v_order_id where id = v_coupon.id;
+  end if;
+
+  return query select v_order_id, v_access_token, v_code;
+end;
+$$;
+grant execute on function public.create_order to anon, authenticated;
+
 -- ============================================================
 -- One-time setup after running this file:
 -- 1. Create your own admin login: Authentication -> Users -> Add user
