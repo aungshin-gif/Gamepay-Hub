@@ -2327,7 +2327,12 @@ body.light-mode .amount{ color:var(--ink) !important; }
 body.light-mode .summary{ border-top-color:var(--border) !important; }
 body.light-mode .summary::before{ color:var(--muted-2) !important; }
 body.light-mode .line{ color:var(--muted) !important; }
+/* The label (first span) stays muted, but the actual value next to it
+   was inheriting that same faint gray -- "Amount", "Total" etc. read as
+   washed out instead of the numbers customers actually came to check. */
+body.light-mode .line span:last-child{ color:var(--ink) !important; font-weight:800 !important; }
 body.light-mode .line-total{ color:var(--ink) !important; }
+body.light-mode .line-total span:last-child{ color:#a3790a !important; }
 
 /* ---------- Primary CTAs (checkout + review + dashboard) ---------- */
 body.light-mode .telegram-btn,
@@ -6020,6 +6025,19 @@ body.light-mode .noti-menu-item:hover{ background:rgba(124,58,237,.08); }
 </div>
 
 <style id="coupon-apply-ui">
+/* A soft gold trim around the order summary -- makes it read as a real
+   receipt card instead of a loose stack of rows. */
+.summary{
+  border:1px solid rgba(212,168,67,.42) !important;
+  border-radius:16px !important;
+  padding:14px 16px !important;
+  background:linear-gradient(180deg,rgba(212,168,67,.07),transparent 60%) !important;
+  box-shadow:0 0 0 1px rgba(212,168,67,.12), 0 10px 24px rgba(0,0,0,.28) !important;
+}
+body.light-mode .summary{
+  background:linear-gradient(180deg,rgba(212,168,67,.06),transparent 60%) !important;
+  box-shadow:0 0 0 1px rgba(212,168,67,.14), 0 8px 18px rgba(80,60,10,.08) !important;
+}
 .coupon-discount-line span:last-child{ color:#7de8b3; font-weight:800; }
 .coupon-apply-row{ display:flex; gap:8px; }
 .coupon-apply-row input{ flex:1; }
@@ -7773,6 +7791,19 @@ if(document.readyState === "loading"){
       });
       document.getElementById("pqCloseBtn")?.addEventListener("click", (e) => { e.stopPropagation(); hidePaymentQuick(); });
     }
+
+    // The popup opens upward from the payment grid, so it sits directly
+    // over the Coupon/Account fields above it -- without this, a customer
+    // had to explicitly tap Copy or Close on the popup before they could
+    // even reach those fields to keep filling out the order. Only the two
+    // buttons are excluded (Copy needs its own "Copied!" moment to show),
+    // so even a tap that lands on the popup's own background -- not just
+    // one truly outside it -- dismisses it.
+    document.addEventListener("click", (e) => {
+      if(paymentQuickPop.classList.contains("hidden")) return;
+      if(e.target.closest("#pqCopyBtn") || e.target.closest("#pqCloseBtn") || e.target.closest(".pay-option")) return;
+      hidePaymentQuick();
+    });
 
     function renderPayments(){
   payGrid.innerHTML = "";
