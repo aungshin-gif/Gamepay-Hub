@@ -2759,20 +2759,54 @@ body:not(.light-mode) .product-secondary-btn{ background:rgba(255,255,255,.05); 
 }
 .page-loader.show{ opacity:1; pointer-events:auto; }
 .page-loader.hidden{ display:none !important; }
-.page-loader-inner{ display:grid; justify-items:center; gap:14px; }
-.page-loader-ring{
-  width:38px; height:38px; border-radius:50%;
-  border:3px solid rgba(43,38,30,.12); border-top-color:#2f4370;
-  animation:gpSpin .75s linear infinite;
+.page-loader-inner{ display:grid; justify-items:center; gap:16px; }
+/* A radar-style "connecting" ping instead of a plain spinner -- reads as
+   "reaching out to a system" rather than a generic wait indicator. */
+.page-loader-signal{ position:relative; width:44px; height:44px; display:grid; place-items:center; }
+.page-loader-signal i{
+  width:10px; height:10px; border-radius:50%;
+  background:#2f4370; box-shadow:0 0 10px rgba(47,67,112,.5);
 }
-@keyframes gpSpin{ to{ transform:rotate(360deg); } }
+.page-loader-signal span{
+  position:absolute; inset:0; border-radius:50%;
+  border:2px solid rgba(47,67,112,.45);
+  animation:gpPing 1.5s cubic-bezier(.2,.6,.4,1) infinite;
+}
+.page-loader-signal span:nth-child(2){ animation-delay:.4s; }
+.page-loader-signal span:nth-child(3){ animation-delay:.8s; }
+@keyframes gpPing{ 0%{ transform:scale(.25); opacity:.9; } 100%{ transform:scale(1.7); opacity:0; } }
+.page-loader-track{
+  width:150px; height:4px; border-radius:999px; overflow:hidden;
+  background:rgba(43,38,30,.10);
+}
+.page-loader-fill{
+  height:100%; width:0%; border-radius:999px;
+  background:#2f4370;
+  transition:width .55s cubic-bezier(.16,1,.3,1);
+}
 .page-loader-text{
   font-size:11px; font-weight:800; letter-spacing:1.4px;
   text-transform:uppercase; color:#786f63;
 }
 body:not(.light-mode) .page-loader{ background:rgba(5,8,18,.92); }
-body:not(.light-mode) .page-loader-ring{ border-color:rgba(255,255,255,.14); border-top-color:#56f3ff; }
+body:not(.light-mode) .page-loader-signal i{ background:#56f3ff; box-shadow:0 0 14px rgba(86,243,255,.7); }
+body:not(.light-mode) .page-loader-signal span{ border-color:rgba(86,243,255,.55); }
+body:not(.light-mode) .page-loader-track{ background:rgba(255,255,255,.10); }
+body:not(.light-mode) .page-loader-fill{ background:linear-gradient(90deg,#56f3ff,#8a6bff); box-shadow:0 0 12px rgba(86,243,255,.55); }
 body:not(.light-mode) .page-loader-text{ color:#8fa5ba; }
+/* The page loader used to hand off to whatever it revealed with a hard
+   cut -- the spinner would fade out over the same beat the destination
+   view just snapped in, so the "loading" never felt connected to what
+   came after it. Give the two views the loader actually swaps between
+   (product catalog and the dedicated product page) a matching arrival
+   animation instead, timed to the loader's own fade-out. */
+#catalogShell:not(.hidden), #productPage:not(.hidden){
+  animation:gpPageArrive .38s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes gpPageArrive{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+@media(prefers-reduced-motion:reduce){
+  #catalogShell:not(.hidden), #productPage:not(.hidden){ animation:none !important; }
+}
 body:not(.light-mode) .product-page{ background:#050812; background-image:linear-gradient(180deg,#060a18,#050812); }
 body:not(.light-mode) .product-page-head,
 body:not(.light-mode) .product-spec{
@@ -2812,7 +2846,7 @@ body:not(.light-mode) .custom-box.show{ border-top-color:rgba(141,163,231,.18); 
 
 @media(prefers-reduced-motion:reduce){
   .order-view,#checkoutSection.order-dashboard-view,#previewSection.order-preview-view,
-  .plan-option,.reveal-up,.reveal-up.in-view,.page-loader-ring{ animation:none !important; }
+  .plan-option,.reveal-up,.reveal-up.in-view,.page-loader-signal span{ animation:none !important; }
   .reveal-up{ opacity:1; transform:none; }
 }
 </style>
@@ -2968,25 +3002,17 @@ body.light-mode .preview-table-caption{ background:#f7f9fc !important; border-bo
   .product-gallery-tags{ margin-top:0 !important; justify-content:flex-start !important; }
 }
 
-/* ---------- Loading overlay: smoother, on-brand ---------- */
-.page-loader{ background:rgba(255,255,255,.86) !important; }
-.page-loader-inner{ gap:12px; }
-.page-loader-ring{
-  width:34px; height:34px; border-width:3px;
-  border-color:rgba(37,64,107,.16); border-top-color:#25406b;
-  animation:gpSpin .7s cubic-bezier(.5,.1,.5,.9) infinite;
-}
-.page-loader-text{ color:#6b7686; font-size:10.5px; }
-.page-loader-inner::after{
-  content:""; display:block; width:96px; height:3px; border-radius:999px;
-  background:linear-gradient(90deg,transparent,#3a5f96,transparent);
-  background-size:60% 100%; background-repeat:no-repeat;
-  animation:gpLoadBar 1.05s ease-in-out infinite;
-}
-@keyframes gpLoadBar{
-  0%{ background-position:-60% 0; }
-  100%{ background-position:160% 0; }
-}
+/* ---------- Loading overlay: smoother, on-brand ----------
+   Light mode only -- these were previously unscoped and used !important,
+   so (unlike a normal specificity fight) they silently beat the dark-mode
+   colors above regardless of which theme was active. */
+body.light-mode .page-loader{ background:rgba(255,255,255,.86) !important; }
+.page-loader-inner{ gap:14px; }
+body.light-mode .page-loader-signal i{ background:#25406b; box-shadow:0 0 10px rgba(37,64,107,.45); }
+body.light-mode .page-loader-signal span{ border-color:rgba(37,64,107,.40); }
+body.light-mode .page-loader-track{ background:rgba(37,64,107,.12); }
+body.light-mode .page-loader-fill{ background:linear-gradient(90deg,#3a5f96,#25406b); }
+body.light-mode .page-loader-text{ color:#6b7686; font-size:10.5px; }
 
 /* ---------- Misc trims ---------- */
 body.light-mode .site-footer{ margin-top:26px !important; padding:18px 10px 22px !important; }
@@ -2995,7 +3021,7 @@ body.light-mode .store-info-head.compact{ margin-top:18px !important; }
 .theme-toggle, .floating-theme-control{ display:none !important; }
 
 @media(prefers-reduced-motion:reduce){
-  .page-loader-ring, .page-loader-inner::after{ animation:none !important; }
+  .page-loader-signal span{ animation:none !important; opacity:.6 !important; transform:none !important; }
 }
 </style>
 
@@ -7498,18 +7524,38 @@ document.getElementById("backToLandingBtn")?.addEventListener("click", showLandi
 const getProductPage = () => document.getElementById("productPage");
 const getPageLoader = () => document.getElementById("pageLoader");
 
+let pageLoaderHideTimer = null;
 function showPageLoader(label){
   const loader = getPageLoader();
   if(!loader) return;
+  // A show right after a hide (two transitions fired back to back) would
+  // otherwise race the previous hide's deferred "display:none" and could
+  // hide the loader again out from under this call.
+  if(pageLoaderHideTimer){ clearTimeout(pageLoaderHideTimer); pageLoaderHideTimer = null; }
   loader.querySelector(".page-loader-text").textContent = label || "Loading…";
+  const fill = document.getElementById("pageLoaderFill");
+  if(fill){
+    // Snap back to empty with no transition, then (after a reflow, so the
+    // browser doesn't collapse the two width changes into one) animate up
+    // to "almost done" -- hidePageLoader() finishes the last stretch to
+    // 100% right as the new page appears, so the bar reads as real
+    // progress completing rather than a looping decoration.
+    fill.style.transition = "none";
+    fill.style.width = "0%";
+    void fill.offsetWidth;
+    fill.style.transition = "";
+    requestAnimationFrame(() => { fill.style.width = "72%"; });
+  }
   loader.classList.remove("hidden");
   requestAnimationFrame(() => loader.classList.add("show"));
 }
 function hidePageLoader(){
   const loader = getPageLoader();
   if(!loader) return;
+  const fill = document.getElementById("pageLoaderFill");
+  if(fill) fill.style.width = "100%";
   loader.classList.remove("show");
-  setTimeout(() => loader.classList.add("hidden"), 260);
+  pageLoaderHideTimer = setTimeout(() => { loader.classList.add("hidden"); pageLoaderHideTimer = null; }, 260);
 }
 
 // Plan details fall back to the product, then to a blank template placeholder.
@@ -9200,7 +9246,11 @@ animateParticles();
 </script>
 <script>setTimeout(()=>document.querySelector(".intro-splash")?.remove(),1900);</script>
 <div id="pageLoader" class="page-loader hidden" aria-hidden="true">
-  <div class="page-loader-inner"><span class="page-loader-ring"></span><span class="page-loader-text">Loading product…</span></div>
+  <div class="page-loader-inner">
+    <div class="page-loader-signal"><span></span><span></span><span></span><i></i></div>
+    <div class="page-loader-track"><div class="page-loader-fill" id="pageLoaderFill"></div></div>
+    <span class="page-loader-text">Loading product…</span>
+  </div>
 </div>
 
 <section id="productPage" class="product-page hidden" aria-live="polite">
