@@ -246,6 +246,14 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
         Dashboard
       </div>
+      <div class="admin-nav-item" id="navUsersBtn" data-view="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Users
+      </div>
+      <div class="admin-nav-item" id="navCouponsBtn" data-view="coupons">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L2.83 12.83a2 2 0 0 1 0-2.83L10 3a2 2 0 0 1 1.41-.59H19a2 2 0 0 1 2 2v7.59a2 2 0 0 1-.41 1.41Z"/><circle cx="15.5" cy="8.5" r="1.5"/></svg>
+        Coupons
+      </div>
       <div class="admin-nav-item" id="navSettingsBtn" data-view="settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
         Settings
@@ -332,6 +340,43 @@
         </div>
       </div>
 
+      <div id="usersView" class="hidden">
+        <div class="top-row">
+          <div>
+            <h1>Users</h1>
+            <div class="sub">All registered customers, most recent first.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div id="usersList" class="order-list"><div class="empty-note">Loading users…</div></div>
+        </div>
+      </div>
+
+      <div id="couponsView" class="hidden">
+        <div class="top-row">
+          <div>
+            <h1>Coupons</h1>
+            <div class="sub">Create promo codes and track redemptions.</div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L2.83 12.83a2 2 0 0 1 0-2.83L10 3a2 2 0 0 1 1.41-.59H19a2 2 0 0 1 2 2v7.59a2 2 0 0 1-.41 1.41Z"/><circle cx="15.5" cy="8.5" r="1.5"/></svg>Create Coupon</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <input id="couponAmountInput" type="number" min="1" placeholder="Amount (Ks)" style="flex:1;min-width:140px;" />
+            <input id="couponCodeInput" type="text" placeholder="Code name (e.g. gamepay2838k)" style="flex:2;min-width:200px;" />
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button id="couponGenerateBtn" class="ghost" type="button">Random code</button>
+            <button id="couponCreateBtn" type="button">Create Coupon</button>
+          </div>
+          <div id="couponCreateMsg" style="font-size:12.5px;margin-top:8px;color:var(--muted);"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">All Coupons</div>
+          <div id="couponsList" class="order-list"><div class="empty-note">Loading coupons…</div></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -361,6 +406,8 @@ const ICON_IMAGE = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="cu
 const ICON_USER = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
 const ICON_ARCHIVE = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>`;
 const ICON_RESTORE = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>`;
+const ICON_GIFT = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7Z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7Z"/></svg>`;
+function randomCouponCode(){ return "GPH" + Math.random().toString(36).slice(2, 8).toUpperCase(); }
 
 const loginView = document.getElementById("loginView");
 const dashboardView = document.getElementById("dashboardView");
@@ -379,35 +426,55 @@ const ICON_COIN_STAT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColo
 const dashboardHomeView = document.getElementById("dashboardHomeView");
 const orderDetailView = document.getElementById("orderDetailView");
 const settingsView = document.getElementById("settingsView");
+const usersView = document.getElementById("usersView");
+const couponsView = document.getElementById("couponsView");
 const navHomeBtn = document.getElementById("navHomeBtn");
 const navSettingsBtn = document.getElementById("navSettingsBtn");
+const navUsersBtn = document.getElementById("navUsersBtn");
+const navCouponsBtn = document.getElementById("navCouponsBtn");
+
+const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView];
+const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn];
 
 function showDashboardHome(){
+  ALL_VIEWS.forEach(v => v.classList.add("hidden"));
+  ALL_NAV_BTNS.forEach(b => b.classList.remove("active"));
   dashboardHomeView.classList.remove("hidden");
-  orderDetailView.classList.add("hidden");
-  settingsView.classList.add("hidden");
   navHomeBtn.classList.add("active");
-  navSettingsBtn.classList.remove("active");
 }
 function showOrderDetailView(){
-  dashboardHomeView.classList.add("hidden");
+  ALL_VIEWS.forEach(v => v.classList.add("hidden"));
+  ALL_NAV_BTNS.forEach(b => b.classList.remove("active"));
   orderDetailView.classList.remove("hidden");
-  settingsView.classList.add("hidden");
-  navHomeBtn.classList.remove("active");
-  navSettingsBtn.classList.remove("active");
 }
 function showSettingsView(){
-  dashboardHomeView.classList.add("hidden");
-  orderDetailView.classList.add("hidden");
+  ALL_VIEWS.forEach(v => v.classList.add("hidden"));
+  ALL_NAV_BTNS.forEach(b => b.classList.remove("active"));
   settingsView.classList.remove("hidden");
-  navHomeBtn.classList.remove("active");
   navSettingsBtn.classList.add("active");
+}
+function showUsersView(){
+  ALL_VIEWS.forEach(v => v.classList.add("hidden"));
+  ALL_NAV_BTNS.forEach(b => b.classList.remove("active"));
+  usersView.classList.remove("hidden");
+  navUsersBtn.classList.add("active");
+  loadUsers();
+}
+function showCouponsView(){
+  ALL_VIEWS.forEach(v => v.classList.add("hidden"));
+  ALL_NAV_BTNS.forEach(b => b.classList.remove("active"));
+  couponsView.classList.remove("hidden");
+  navCouponsBtn.classList.add("active");
+  loadCoupons();
 }
 navHomeBtn.addEventListener("click", showDashboardHome);
 navSettingsBtn.addEventListener("click", showSettingsView);
+navUsersBtn.addEventListener("click", showUsersView);
+navCouponsBtn.addEventListener("click", showCouponsView);
 document.getElementById("orderDetailBackBtn").addEventListener("click", showDashboardHome);
 
 let orders = [];
+let usersCache = [];
 let showArchived = false;
 let selectedOrderId = null;
 let orderChannel = null; // per-order broadcast channel, for instant customer replies
@@ -608,10 +675,129 @@ async function showUserDetail(user){
       <tr><th>Total orders</th><td>${list.length}</td></tr>
       <tr><th>Total amount spent</th><td><b>${spent.toLocaleString()} Ks</b></td></tr>
     </table>
-    <div class="card-title" style="margin-top:4px;">Order history</div>
+    <div class="card-title" style="margin-top:4px;">${ICON_GIFT}Gift a Coupon</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+      <input id="giftCouponAmount" type="number" min="1" placeholder="Amount (Ks)" style="flex:1;min-width:110px;margin-bottom:0;" />
+      <input id="giftCouponCode" type="text" placeholder="Code" value="${randomCouponCode()}" style="flex:1.4;min-width:140px;margin-bottom:0;" />
+    </div>
+    <button id="giftCouponBtn" type="button" style="width:100%;margin-bottom:6px;">${ICON_GIFT}Gift Coupon</button>
+    <div id="giftCouponMsg" style="font-size:12.5px;color:var(--muted);margin-bottom:6px;"></div>
+    <div class="card-title" style="margin-top:10px;">Order history</div>
     <div class="user-orders-list">${rows}</div>
   `;
+  document.getElementById("giftCouponBtn")?.addEventListener("click", async () => {
+    const amountInput = document.getElementById("giftCouponAmount");
+    const codeInput = document.getElementById("giftCouponCode");
+    const msg = document.getElementById("giftCouponMsg");
+    const amount = Number(amountInput.value);
+    const code = codeInput.value.trim();
+    if(!amount || amount <= 0){ msg.textContent = "Enter a valid amount."; msg.style.color = "var(--bad)"; return; }
+    if(!code){ msg.textContent = "Enter a coupon code."; msg.style.color = "var(--bad)"; return; }
+    msg.textContent = "Sending…"; msg.style.color = "var(--muted)";
+    const { error: giftError } = await sb.rpc("admin_create_coupon", { p_code: code, p_amount: amount, p_user_id: user.id });
+    if(giftError){ msg.textContent = giftError.message; msg.style.color = "var(--bad)"; return; }
+    msg.textContent = `Gifted ${amount.toLocaleString()} Ks coupon "${code}" — they'll see it in Notifications.`;
+    msg.style.color = "var(--good)";
+    amountInput.value = "";
+    codeInput.value = randomCouponCode();
+  });
 }
+
+/* ---------- Users tab: full registered-user list with order counts ---------- */
+function emailUsername(email){ return "@" + String(email || "").split("@")[0]; }
+
+function renderUserRow(u){
+  return `
+    <div class="order-row" data-id="${u.id}">
+      <div class="or-main">
+        <div class="or-code">${emailUsername(u.email)}</div>
+        <div class="or-sub">${u.email}</div>
+      </div>
+      <div class="or-amount">${Number(u.order_count).toLocaleString()} orders</div>
+      <div class="or-meta">Joined ${new Date(u.created_at).toLocaleDateString()}</div>
+      <svg class="or-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+  `;
+}
+
+async function loadUsers(){
+  const box = document.getElementById("usersList");
+  box.innerHTML = "<div class='empty-note'>Loading users…</div>";
+  const { data, error } = await sb.rpc("admin_list_users");
+  if(error){ box.innerHTML = `<div class="empty-note">${error.message}</div>`; return; }
+  usersCache = data || [];
+  if(!usersCache.length){ box.innerHTML = "<div class='empty-note'>No registered users yet.</div>"; return; }
+  box.innerHTML = usersCache.map(renderUserRow).join("");
+  box.querySelectorAll(".order-row").forEach(el => {
+    el.addEventListener("click", () => {
+      const user = usersCache.find(u => u.id === el.dataset.id);
+      if(user) showUserDetail(user);
+    });
+  });
+}
+
+/* ---------- Coupons tab: create + list + delete ---------- */
+function couponStatusBadge(c){
+  return c.used_at ? `<span class="badge rejected">EXPIRED</span>` : `<span class="badge approved">LIVE</span>`;
+}
+function couponAssigneeLabel(c){
+  if(!c.assigned_user_id) return "Public code";
+  const u = usersCache.find(u => u.id === c.assigned_user_id);
+  return u ? `Gifted → ${emailUsername(u.email)}` : "Gifted to a user";
+}
+function renderCouponRow(c){
+  return `
+    <div class="order-row" data-id="${c.id}" style="cursor:default;">
+      <div class="or-main">
+        <div class="or-code">${c.code} ${couponStatusBadge(c)}</div>
+        <div class="or-sub">${couponAssigneeLabel(c)} · Created ${new Date(c.created_at).toLocaleDateString()}</div>
+      </div>
+      <div class="or-amount">${Number(c.amount).toLocaleString()} Ks</div>
+      <button class="danger coupon-delete-btn" data-id="${c.id}" type="button" style="flex:0 0 auto;">${ICON_X} Delete</button>
+    </div>
+  `;
+}
+async function loadCoupons(){
+  const box = document.getElementById("couponsList");
+  box.innerHTML = "<div class='empty-note'>Loading coupons…</div>";
+  if(!usersCache.length){
+    const { data: u } = await sb.rpc("admin_list_users");
+    usersCache = u || usersCache;
+  }
+  const { data, error } = await sb.rpc("admin_list_coupons");
+  if(error){ box.innerHTML = `<div class="empty-note">${error.message}</div>`; return; }
+  const coupons = data || [];
+  if(!coupons.length){ box.innerHTML = "<div class='empty-note'>No coupons yet.</div>"; return; }
+  box.innerHTML = coupons.map(renderCouponRow).join("");
+  box.querySelectorAll(".coupon-delete-btn").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      if(!confirm("Delete this coupon permanently?")) return;
+      const { error: delError } = await sb.rpc("admin_delete_coupon", { p_id: btn.dataset.id });
+      if(delError){ alert("Delete failed: " + delError.message); return; }
+      loadCoupons();
+    });
+  });
+}
+document.getElementById("couponGenerateBtn")?.addEventListener("click", () => {
+  document.getElementById("couponCodeInput").value = randomCouponCode();
+});
+document.getElementById("couponCreateBtn")?.addEventListener("click", async () => {
+  const amountInput = document.getElementById("couponAmountInput");
+  const codeInput = document.getElementById("couponCodeInput");
+  const msg = document.getElementById("couponCreateMsg");
+  const amount = Number(amountInput.value);
+  const code = codeInput.value.trim() || randomCouponCode();
+  if(!amount || amount <= 0){ msg.textContent = "Enter a valid amount."; msg.style.color = "var(--bad)"; return; }
+  msg.textContent = "Creating…"; msg.style.color = "var(--muted)";
+  const { error } = await sb.rpc("admin_create_coupon", { p_code: code, p_amount: amount });
+  if(error){ msg.textContent = error.message; msg.style.color = "var(--bad)"; return; }
+  msg.textContent = `Coupon "${code}" created.`;
+  msg.style.color = "var(--good)";
+  amountInput.value = "";
+  codeInput.value = "";
+  loadCoupons();
+});
 
 function statCard(label, value, icon, tint){
   return `
