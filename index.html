@@ -7,6 +7,14 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
   />
+  <!-- GitHub Pages doesn't let this static file set its own HTTP response
+       headers, and mobile Chrome in particular can hold onto an old cached
+       copy of this page well past a deploy -- these tell it (and any CDN
+       in front of the custom domain) not to serve a stale copy without
+       checking the server first. -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Gamepay Hub - Digital Products Store</title>
   <meta name="description" content="AI, streaming, VPN and 180+ game top-ups — ordered in Burmese, paid with KBZPay or WavePay, and delivered by a real person the same day." />
   <meta property="og:type" content="website" />

@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
 <title>Gamepay Hub — Admin</title>
 <style>
   :root{
@@ -361,6 +364,17 @@
             <button id="toggleArchivedBtn" class="ghost">Show archived</button>
           </div>
         </div>
+        <div class="card" style="margin-top:16px;">
+          <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>Clean Up Order History</div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-label">Archive completed &amp; rejected orders</div>
+              <div class="settings-sub">Clears finished orders out of the active list in one go -- nothing is deleted, they're still viewable anytime via "Show archived" above.</div>
+            </div>
+            <button id="bulkArchiveBtn" class="ghost">Archive old orders</button>
+          </div>
+          <div id="bulkArchiveMsg" style="font-size:12.5px;margin-top:8px;color:var(--muted);"></div>
+        </div>
       </div>
 
       <div id="usersView" class="hidden">
@@ -646,6 +660,25 @@ document.getElementById("toggleArchivedBtn")?.addEventListener("click", (e) => {
   showArchived = !showArchived;
   e.target.textContent = showArchived ? "Show active orders" : "Show archived";
   renderOrderList();
+});
+
+document.getElementById("bulkArchiveBtn")?.addEventListener("click", async () => {
+  const msg = document.getElementById("bulkArchiveMsg");
+  const targets = orders.filter(o => !o.archived && (o.status === "completed" || o.status === "rejected"));
+  if(!targets.length){
+    msg.textContent = "Nothing to archive -- no finished orders in the active list.";
+    msg.style.color = "var(--muted)";
+    return;
+  }
+  if(!confirm(`Archive ${targets.length} completed/rejected order(s)? You can still view them anytime via "Show archived".`)) return;
+  msg.textContent = "Archiving…";
+  msg.style.color = "var(--muted)";
+  const { error } = await sb.from("orders").update({ archived: true }).in("id", targets.map(o => o.id));
+  if(error){ msg.textContent = error.message; msg.style.color = "var(--bad)"; return; }
+  targets.forEach(o => { o.archived = true; });
+  renderOrderList();
+  msg.textContent = `Archived ${targets.length} order(s).`;
+  msg.style.color = "var(--good)";
 });
 
 let userSearchResultsCache = [];
