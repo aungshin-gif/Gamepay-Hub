@@ -111,7 +111,13 @@ create policy "customer read own messages" on public.messages
 -- than replacing it, so an older 6-argument version of this function
 -- (from before payment slips existed) would otherwise stick around and
 -- make every call to "create_order" ambiguous. Drop it explicitly first.
+-- Also drop the later 8-argument version (with a coupon code, defined
+-- further down in this file) -- otherwise re-running this whole script on
+-- a database that already has it leaves two overloads alive at once for
+-- the moment this block recreates the 7-argument one, and the "grant"
+-- right below fails with "function name is not unique".
 drop function if exists public.create_order(text, text, numeric, text, text, text);
+drop function if exists public.create_order(text, text, numeric, text, text, text, text, text);
 
 create or replace function public.create_order(
   p_product_name text, p_plan_name text, p_amount numeric,
@@ -432,6 +438,32 @@ begin
 end;
 $$;
 grant execute on function public.create_order to anon, authenticated;
+
+-- 10. Support messages ----------------------------------------------
+-- A general chat thread between a logged-in customer and GamePay support,
+-- independent of any specific order (per-order chat in "messages" keeps
+-- working exactly as before). Powers the customer-side "Message" tab and
+-- the admin's per-user message box.
+create table if not exists public.support_messages (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  sender text not null check (sender in ('customer','admin')),
+  body text not null,
+  created_at timestamptz not null default now()
+);
+alter table public.support_messages enable row level security;
+
+drop policy if exists "customer read own support messages" on public.support_messages;
+create policy "customer read own support messages" on public.support_messages
+  for select using (auth.uid() = user_id);
+
+drop policy if exists "customer send own support messages" on public.support_messages;
+create policy "customer send own support messages" on public.support_messages
+  for insert with check (auth.uid() = user_id and sender = 'customer');
+
+drop policy if exists "admin manage support messages" on public.support_messages;
+create policy "admin manage support messages" on public.support_messages
+  for all using (public.is_admin()) with check (public.is_admin());
 
 -- ============================================================
 -- One-time setup after running this file:

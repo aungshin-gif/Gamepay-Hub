@@ -682,6 +682,12 @@ async function showUserDetail(user){
     </div>
     <button id="giftCouponBtn" type="button" style="width:100%;margin-bottom:6px;">${ICON_GIFT}Gift Coupon</button>
     <div id="giftCouponMsg" style="font-size:12.5px;color:var(--muted);margin-bottom:6px;"></div>
+    <div class="card-title" style="margin-top:10px;">💬 Messages</div>
+    <div id="userMsgMessages" class="chat-messages" style="max-height:220px;"></div>
+    <form id="userMsgForm" class="chat-input-row">
+      <input id="userMsgInput" type="text" placeholder="Reply to this customer…" autocomplete="off" />
+      <button type="submit"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+    </form>
     <div class="card-title" style="margin-top:10px;">Order history</div>
     <div class="user-orders-list">${rows}</div>
   `;
@@ -701,6 +707,50 @@ async function showUserDetail(user){
     amountInput.value = "";
     codeInput.value = randomCouponCode();
   });
+
+  const msgBox = document.getElementById("userMsgMessages");
+  loadUserMessages(user.id, msgBox);
+  document.getElementById("userMsgForm")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const input = document.getElementById("userMsgInput");
+    const text = input.value.trim();
+    if(!text) return;
+    input.value = "";
+    appendUserMsgBubble(msgBox, "admin", text);
+    const { error: sendError } = await sb.from("support_messages").insert({ user_id: user.id, sender: "admin", body: text });
+    if(sendError){ alert("Send failed: " + sendError.message); return; }
+    sb.channel("support-" + user.id).send({ type: "broadcast", event: "new_message", payload: { sender: "admin", body: text } });
+  });
+}
+
+function appendUserMsgBubble(container, sender, body){
+  const isAdmin = sender === "admin";
+  const row = document.createElement("div");
+  row.className = "msg-row " + (isAdmin ? "admin" : "customer");
+  const avatar = document.createElement("span");
+  avatar.className = "msg-avatar";
+  if(isAdmin){ avatar.style.background = "linear-gradient(135deg,#7a35c7,#b86bff)"; avatar.innerHTML = ICON_SUPPORT; }
+  else { avatar.style.background = "linear-gradient(135deg,#e0a83c,#ffcf6b)"; avatar.textContent = "?"; }
+  const b = document.createElement("div");
+  b.className = "bubble " + (isAdmin ? "admin" : "customer");
+  b.textContent = body;
+  row.appendChild(avatar);
+  row.appendChild(b);
+  container.appendChild(row);
+  container.scrollTop = container.scrollHeight;
+}
+
+async function loadUserMessages(userId, container){
+  if(!container) return;
+  container.innerHTML = "<div class='empty-note'>Loading…</div>";
+  const { data, error } = await sb.from("support_messages").select("*").eq("user_id", userId).order("created_at", { ascending: true });
+  if(error){ container.innerHTML = `<div class="empty-note">${error.message}</div>`; return; }
+  container.innerHTML = "";
+  if(data && data.length){
+    data.forEach(m => appendUserMsgBubble(container, m.sender, m.body));
+  } else {
+    container.innerHTML = "<div class='empty-note'>No messages yet.</div>";
+  }
 }
 
 /* ---------- Users tab: full registered-user list with order counts ---------- */
