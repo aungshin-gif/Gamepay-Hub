@@ -111,7 +111,13 @@ create policy "customer read own messages" on public.messages
 -- than replacing it, so an older 6-argument version of this function
 -- (from before payment slips existed) would otherwise stick around and
 -- make every call to "create_order" ambiguous. Drop it explicitly first.
+-- Also drop the later 8-argument version (with a coupon code, defined
+-- further down in this file) -- otherwise re-running this whole script on
+-- a database that already has it leaves two overloads alive at once for
+-- the moment this block recreates the 7-argument one, and the "grant"
+-- right below fails with "function name is not unique".
 drop function if exists public.create_order(text, text, numeric, text, text, text);
+drop function if exists public.create_order(text, text, numeric, text, text, text, text, text);
 
 create or replace function public.create_order(
   p_product_name text, p_plan_name text, p_amount numeric,
