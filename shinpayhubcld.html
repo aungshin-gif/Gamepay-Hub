@@ -115,6 +115,29 @@
   .or-chevron{ flex:0 0 auto; width:16px; height:16px; color:var(--muted-2); }
   @media(max-width:640px){ .or-meta{ display:none; } }
 
+  /* ---------- Row avatars: Users/Coupons rows read as plain text lines
+     without something for the eye to land on first -- give each row a
+     small colored badge, same spirit as the stat cards' icon chips. */
+  .row-avatar{
+    flex:0 0 auto; width:38px; height:38px; border-radius:11px;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-weight:800; font-size:14px;
+    box-shadow:0 2px 6px rgba(20,20,43,.10);
+  }
+  .row-avatar svg{ width:17px; height:17px; }
+  .or-pill{
+    display:inline-flex; align-items:center; gap:4px;
+    font-size:11px; font-weight:800; color:var(--muted);
+    background:#f1f2f8; border-radius:999px; padding:4px 10px;
+  }
+  .or-pill svg{ width:12px; height:12px; }
+  .coupon-row-actions{ display:flex; align-items:center; gap:10px; flex:0 0 auto; }
+  @media(max-width:560px){
+    .coupon-row{ flex-wrap:wrap; }
+    .coupon-row .or-main{ flex:1 1 100%; }
+    .coupon-row .coupon-row-actions{ flex:1 1 100%; justify-content:space-between; margin-top:8px; padding-left:50px; }
+  }
+
   .unread-badge{
     display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px;
     padding:0 5px; border-radius:999px; background:var(--bad); color:#fff; font-size:10.5px; font-weight:800;
@@ -756,14 +779,27 @@ async function loadUserMessages(userId, container){
 /* ---------- Users tab: full registered-user list with order counts ---------- */
 function emailUsername(email){ return "@" + String(email || "").split("@")[0]; }
 
+const AVATAR_GRADIENTS = [
+  "linear-gradient(135deg,#7c3aed,#a78bfa)", "linear-gradient(135deg,#2563eb,#60a5fa)",
+  "linear-gradient(135deg,#16a34a,#4ade80)", "linear-gradient(135deg,#d97706,#fbbf24)",
+  "linear-gradient(135deg,#db2777,#f472b6)", "linear-gradient(135deg,#0891b2,#22d3ee)",
+];
+function avatarGradientFor(seed){
+  let hash = 0;
+  const s = String(seed || "");
+  for(let i = 0; i < s.length; i++) hash = (hash * 31 + s.charCodeAt(i)) >>> 0;
+  return AVATAR_GRADIENTS[hash % AVATAR_GRADIENTS.length];
+}
+
 function renderUserRow(u){
   return `
     <div class="order-row" data-id="${u.id}">
+      <span class="row-avatar" style="background:${avatarGradientFor(u.email)}">${(u.email[0] || "?").toUpperCase()}</span>
       <div class="or-main">
         <div class="or-code">${emailUsername(u.email)}</div>
         <div class="or-sub">${u.email}</div>
       </div>
-      <div class="or-amount">${Number(u.order_count).toLocaleString()} orders</div>
+      <span class="or-pill">${ICON_ORDERS_STAT}${Number(u.order_count).toLocaleString()} orders</span>
       <div class="or-meta">Joined ${new Date(u.created_at).toLocaleDateString()}</div>
       <svg class="or-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
@@ -795,15 +831,20 @@ function couponAssigneeLabel(c){
   const u = usersCache.find(u => u.id === c.assigned_user_id);
   return u ? `Gifted → ${emailUsername(u.email)}` : "Gifted to a user";
 }
+const ICON_COUPON_TAG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L2.83 12.83a2 2 0 0 1 0-2.83L10 3a2 2 0 0 1 1.41-.59H19a2 2 0 0 1 2 2v7.59a2 2 0 0 1-.41 1.41Z"/><circle cx="15.5" cy="8.5" r="1.5"/></svg>`;
 function renderCouponRow(c){
+  const live = !c.used_at;
   return `
-    <div class="order-row" data-id="${c.id}" style="cursor:default;">
+    <div class="order-row coupon-row" data-id="${c.id}" style="cursor:default;">
+      <span class="row-avatar" style="background:${live ? "linear-gradient(135deg,#16a34a,#4ade80)" : "linear-gradient(135deg,#9099ad,#c3c8d4)"}">${ICON_COUPON_TAG}</span>
       <div class="or-main">
         <div class="or-code">${c.code} ${couponStatusBadge(c)}</div>
         <div class="or-sub">${couponAssigneeLabel(c)} · Created ${new Date(c.created_at).toLocaleDateString()}</div>
       </div>
-      <div class="or-amount">${Number(c.amount).toLocaleString()} Ks</div>
-      <button class="danger coupon-delete-btn" data-id="${c.id}" type="button" style="flex:0 0 auto;">${ICON_X} Delete</button>
+      <div class="coupon-row-actions">
+        <div class="or-amount">${Number(c.amount).toLocaleString()} Ks</div>
+        <button class="danger coupon-delete-btn" data-id="${c.id}" type="button" style="flex:0 0 auto;">${ICON_X} Delete</button>
+      </div>
     </div>
   `;
 }
