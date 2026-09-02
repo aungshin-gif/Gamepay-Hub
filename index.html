@@ -914,6 +914,35 @@ body{
     inset 0 0 0 1px rgba(255,255,255,.03);
   pointer-events:none;
 }
+
+.low-stock-badge{
+  position:absolute;
+  top:-10px;
+  left:10px;
+  z-index:2;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.2px;
+  color:#3a2405;
+  background:linear-gradient(135deg,#ffd166,#ffb020);
+  border:1px solid rgba(255,255,255,.28);
+  box-shadow:
+    0 8px 18px rgba(255,176,32,.22),
+    0 0 16px rgba(255,176,32,.18);
+  white-space:nowrap;
+}
+
+.plan-option.low-stock{
+  border-color:rgba(255,176,32,.45);
+  box-shadow:
+    0 0 18px rgba(255,176,32,.12),
+    inset 0 0 0 1px rgba(255,255,255,.03);
+}
     .qty-row{
       margin-top:12px;
       display:flex;
@@ -1330,8 +1359,20 @@ body{
       transparent
     );
 }
-    #continueBtn{
-  margin-top:14px;
+    /* A full-width, 15px-padded CTA felt oversized for a mid-flow "next
+       step" action (vs. the final Place Order button, which should stay
+       the biggest thing on screen) -- shrink it to a compact right-aligned
+       pill instead. */
+    #continueBtn.telegram-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  width:fit-content;
+  margin:14px 0 0 auto;
+  padding:11px 26px;
+  font-size:13.5px;
+  border-radius:999px;
     }
 /* FAQ END */
   
@@ -2518,12 +2559,18 @@ body.light-mode .hero-cta-primary:hover{ filter:brightness(1.08) !important; }
   box-shadow:0 6px 18px rgba(43,35,20,.16);
 }
 .compact-logo{
-  display:block; width:26px; height:26px; flex:0 0 26px;
-  object-fit:cover; border-radius:8px;
+  display:block; width:30px; height:30px; flex:0 0 30px;
+  object-fit:cover; border-radius:9px;
+  border:1.5px solid rgba(120,235,255,.55);
+  box-shadow:0 0 10px rgba(86,243,255,.40),0 2px 7px rgba(0,10,30,.30);
+}
+body.light-mode .compact-logo{
+  border-color:rgba(126,101,188,.40);
+  box-shadow:0 0 8px rgba(126,101,188,.26),0 2px 7px rgba(60,40,120,.14);
 }
 @media(max-width:640px){
   .brand-logo{ width:46px; height:46px; flex-basis:46px; border-radius:13px; }
-  .compact-logo{ width:22px; height:22px; flex-basis:22px; border-radius:7px; }
+  .compact-logo{ width:25px; height:25px; flex-basis:25px; border-radius:8px; }
 }
 
 /* Close the gap between hero and the "Choose what you need" heading */
@@ -4913,6 +4960,7 @@ body.preview-mode .page{
 /* ---------- badges ---------- */
 #orderView .plan-option .best-seller-badge,
 #orderView .plan-option .out-stock-badge,
+#orderView .plan-option .low-stock-badge,
 #orderView .plan-option .discount-badge{
   position:absolute !important; top:-9px !important; right:11px !important; left:auto !important;
   padding:3px 9px !important; border-radius:999px !important;
@@ -4924,6 +4972,9 @@ body.preview-mode .page{
 #orderView .plan-option .discount-badge{ background:linear-gradient(140deg,#2FBE8C,#1F9E74) !important; }
 #orderView .plan-option .out-stock-badge{
   background:#9A94B2 !important; box-shadow:0 3px 8px rgba(60,50,90,.22) !important;
+}
+#orderView .plan-option .low-stock-badge{
+  color:#3a2405 !important; background:linear-gradient(140deg,#ffd166,#ffb020) !important;
 }
 #orderView .plan-option.out-of-stock,
 #orderView .plan-option:has(.out-stock-badge){ opacity:.62 !important; }
@@ -7752,6 +7803,48 @@ if(document.readyState === "loading"){
       return priced.length ? Math.min(...priced) : 0;
     }
 
+    // Admin-editable price/stock overlay on top of the static catalog above.
+    // A plan the admin has never touched keeps using the catalog's own
+    // price/outOfStock exactly as before -- only rows present in
+    // public.stock_overrides change anything here.
+    function applyStockOverrides(rows){
+      if(!rows || !rows.length) return;
+      const byKey = new Map();
+      rows.forEach(r => byKey.set(`${r.product_id}::${r.plan_name}`, r));
+      products.forEach(product => {
+        product.plans.forEach(plan => {
+          const row = byKey.get(`${product.id}::${plan.name}`);
+          if(!row) return;
+          if(row.price != null){
+            const newPrice = Number(row.price);
+            if(newPrice > 0 && newPrice !== Number(plan.price)){
+              // The plan card, and the final order message, both display the
+              // price digits embedded in plan.name -- not plan.price -- so
+              // that text has to be kept in sync too, not just the number.
+              const priceMatch = plan.name.match(/([0-9][0-9,]*)\s*(ks|ကျပ်)/i);
+              if(priceMatch) plan.name = plan.name.replace(priceMatch[0], `${newPrice} ${priceMatch[2]}`);
+              plan.price = newPrice;
+            }
+          }
+          plan.outOfStock = Boolean(row.out_of_stock);
+          plan.lowStock = Boolean(row.low_stock);
+        });
+      });
+    }
+
+    async function loadStockOverrides(){
+      if(!supabaseClient) return;
+      try{
+        const { data, error } = await supabaseClient.from("stock_overrides").select("*");
+        if(error || !data || !data.length) return;
+        applyStockOverrides(data);
+        renderProducts();
+        if(currentProduct) renderOrder();
+      }catch(err){
+        console.error("Stock override fetch failed:", err);
+      }
+    }
+
     function renderCategories(){
       categoriesEl.innerHTML = "";
       categories.forEach(cat => {
@@ -7953,12 +8046,13 @@ function closeOrder(){
 }
 
 
-    function renderOrder(){
-      if(!currentProduct){
-        cartItem.classList.add("hidden");
-        return;
-      }
-
+    // Qty/custom-amount are just numbers next to the plan grid -- they never
+    // change which plans exist. Recomputing only this summary (instead of
+    // the full renderOrder(), which wipes and rebuilds every plan card) is
+    // what plusBtn/minusBtn/customAmountInput now call, so the plan grid's
+    // entrance animation doesn't replay on every tap/keystroke.
+    function refreshCartSummary(){
+      if(!currentProduct) return;
       const selectedPlan = currentProduct.plans[currentPlanIndex];
       let customAmount = Number(customAmountInput.value || 0);
 
@@ -7988,6 +8082,16 @@ customHint.textContent = isInvalid
   customHint.textContent = "";
       }
       itemAmount.textContent = formatKs(amount);
+      return amount;
+    }
+
+    function renderOrder(){
+      if(!currentProduct){
+        cartItem.classList.add("hidden");
+        return;
+      }
+
+      const amount = refreshCartSummary();
 
       togglePlansBtn.textContent = plansOpen ? "Hide Plan Selection" : "Choose Plan";
       planList.innerHTML = "";
@@ -8012,7 +8116,8 @@ planList.style.display = plansOpen ? "grid" : "none";
   (index === currentPlanIndex ? " active" : "") +
   (plan.bestSeller ? " best-seller" : "") +
   (plan.discount ? " discount" : "") +
-  (plan.outOfStock ? " out-stock" : "");  
+  (plan.outOfStock ? " out-stock" : "") +
+  (!plan.outOfStock && plan.lowStock ? " low-stock" : "");
 
    // plan.name ထဲက (Stable|Unstable|⚡Instant|🕰️Waiting Time) ကိုခွဲထုတ်
 // 🔹 လျှော့ပြီး Stable/Unstable/Instant/Waiting Time အရသာ extract
@@ -8063,7 +8168,7 @@ el.className += accessClass;
   }
 el.innerHTML = `
   ${watermark}
-  ${plan.outOfStock ? '<span class="out-stock-badge">⛔ Out of Stock</span>' : ''}
+  ${plan.outOfStock ? '<span class="out-stock-badge">⛔ Out of Stock</span>' : (plan.lowStock ? '<span class="low-stock-badge">⚠️ Low Stock</span>' : '')}
   ${plan.discount ? '<span class="discount-badge">💸 Discount</span>' : ''}
   ${plan.bestSeller ? '<span class="best-seller-badge">🔥 Best Seller</span>' : ''}
   <div class="plan-professional"><div class="plan-primary-line"><span class="plan-field-label">Plan</span><strong class="plan-professional-name">${planName}</strong><span class="plan-chip-row">${tierChipFor(tier)}${typeOf(plan) ? "" : ownMailLabel}</span></div><div class="plan-type-line">${typeOf(plan) ? `<span class="plan-field-label">Type</span><strong class="plan-type-value">${typeOf(plan)}</strong>` : ""}</div><div class="plan-secondary-line${plan.noDuration ? " no-duration" : ""}">${plan.noDuration ? "" : `<div><span class="plan-field-label">Duration</span><strong>${durationText}</strong></div>`}<div class="plan-price-block"><span class="plan-field-label">Price</span><strong>${priceText}</strong></div></div></div>
@@ -9208,7 +9313,7 @@ if(selectedPlan?.custom){
     currentQty = Math.max(1, currentQty - 1);
   }
 
-  renderOrder();
+  refreshCartSummary();
   updatePreview();
 });
 
@@ -9223,14 +9328,14 @@ plusBtn.addEventListener("click", () => {
     currentQty += 1;
   }
 
-  renderOrder();
+  refreshCartSummary();
   updatePreview();
 });
     accountInput.addEventListener("input", updatePreview);
 noteInput.addEventListener("input", updatePreview);
 
 customAmountInput.addEventListener("input", () => {
-  renderOrder();
+  refreshCartSummary();
   updatePreview();
 });
 
@@ -9239,6 +9344,7 @@ orderBtn.addEventListener("click", submitOrder);
 renderCategories();
 renderProducts();
 renderPayments();
+loadStockOverrides();
   
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
