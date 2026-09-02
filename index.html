@@ -2416,7 +2416,10 @@ body.light-mode .preview-final-box::before{ display:none !important; }
 body.light-mode .preview-table-caption{ background:var(--surface-2) !important; border-bottom-color:var(--border) !important; color:var(--muted) !important; animation:none !important; }
 body.light-mode .preview-table-caption::after{ display:none !important; }
 body.light-mode .preview-table-caption b{ color:var(--good) !important; border-color:rgba(47,125,90,.28) !important; }
-body.light-mode .order-preview-table th{ color:var(--muted-2) !important; }
+/* --muted-2 (a light gray meant for onwhite cards elsewhere) reads as
+   nearly invisible against this box's own warm glass background --
+   darken it specifically here instead of reusing the generic token. */
+body.light-mode .order-preview-table th{ color:#6b5f85 !important; }
 body.light-mode .order-preview-table td{ color:var(--ink) !important; }
 body.light-mode .order-preview-table th,
 body.light-mode .order-preview-table td{ border-bottom-color:var(--border) !important; }
@@ -3746,6 +3749,15 @@ body .order-view .plan-secondary-line strong{
    cannot fit -- break-word, unlike anywhere, keeps intrinsic sizing sane. */
 body .plan-option .plan-professional-name,
 body .order-view .plan-professional-name{
+  overflow-wrap:break-word !important;
+  word-break:normal !important;
+  hyphens:none !important;
+}
+/* Same fix for the Final Review table -- a long "Plan" value (name +
+   duration + price all in one string) was shattering mid-word the same
+   way the plan cards used to, reading as ragged/uneven next to the
+   short one-line Product/Payment rows above and below it. */
+body .order-preview-table td{
   overflow-wrap:break-word !important;
   word-break:normal !important;
   hyphens:none !important;
@@ -5736,8 +5748,13 @@ body.light-mode .status-icon-svg.pending{ color:#d97706; }
 body.light-mode .status-icon-svg.approved{ color:#16a34a; }
 body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
 .noti-dropdown-wrap{ position:relative; }
+/* Fixed, not absolute: .compact-header (the dropdown's ancestor) has
+   overflow:hidden !important for its own decorative background, which
+   was silently clipping this menu -- it opened (the class toggled fine)
+   but nothing was ever visible. Fixed positioning escapes that clip;
+   its top/right are set from the button's real position in JS on open. */
 .noti-menu{
-  position:absolute; top:calc(100% + 8px); right:0; z-index:200;
+  position:fixed; z-index:9999;
   width:220px; padding:7px; border-radius:14px;
   background:rgba(18,14,38,.97); border:1px solid rgba(199,125,255,.28);
   box-shadow:0 14px 34px rgba(0,0,0,.35);
@@ -6064,6 +6081,12 @@ body.light-mode .summary{
   background:linear-gradient(180deg,rgba(212,168,67,.06),transparent 60%) !important;
   box-shadow:0 0 0 1px rgba(212,168,67,.14), 0 8px 18px rgba(80,60,10,.08) !important;
 }
+.checkout-hint{
+  display:none; font-size:11.5px; font-weight:800; margin-top:7px;
+  color:#ff9fc9;
+}
+.checkout-hint.show{ display:block; }
+body.light-mode .checkout-hint{ color:#c81e4d; }
 .coupon-discount-line span:last-child{ color:#7de8b3; font-weight:800; }
 .coupon-apply-row{ display:flex; gap:8px; }
 .coupon-apply-row input{ flex:1; }
@@ -6101,6 +6124,7 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
         <div class="field">
           <div class="field-title">Account / Email / Username</div>
           <input id="accountInput" class="input" type="text" placeholder="Enter account you're buying for..." />
+          <div id="checkoutHint" class="checkout-hint"></div>
         </div>
 
         <div class="field payment-field">
@@ -7386,6 +7410,7 @@ const previewSection = document.getElementById("previewSection");
 const previewFinalBox = document.getElementById("previewFinalBox");
 const reviewOrderBtn = document.getElementById("reviewOrderBtn");
 const previewOrderBtn = document.getElementById("previewOrderBtn");
+const checkoutHint = document.getElementById("checkoutHint");
 const previewBackBtn = document.getElementById("previewBackBtn");
 const slipInput = document.getElementById("slipInput");
 const slipUploadLabel = document.getElementById("slipUploadLabel");
@@ -8204,6 +8229,15 @@ function updatePreview(){
   orderBtn.disabled = canOrder;
   if(reviewOrderBtn) reviewOrderBtn.disabled = canOrder;
   if(previewOrderBtn) previewOrderBtn.disabled = canOrder;
+
+  if(checkoutHint){
+    let hintText = "";
+    if(!currentProduct) hintText = "⚠️ ဝယ်ယူလိုသော ပစ္စည်းရွေးချယ်ပါ";
+    else if(!activePayment) hintText = "⚠️ ရှေ့ဆက်ရန် Payment method တစ်ခု ရွေးချယ်ပါ";
+    else if(invalidCustom) hintText = `⚠️ အနည်းဆုံး ${min} Ks ထည့်ပါ`;
+    checkoutHint.textContent = hintText;
+    checkoutHint.classList.toggle("show", !!hintText);
+  }
 }
     
 // Neither supabase-js nor the browser's fetch enforce a timeout on their
@@ -8849,6 +8883,14 @@ async function openMyOrdersView(){
 
 const notiBtn = document.getElementById("notiBtn");
 const notiMenu = document.getElementById("notiMenu");
+// .compact-header has overflow:hidden for its own decorative background,
+// and its entrance animation leaves a residual (identity) transform on it
+// even after finishing -- any transform, even a no-op one, makes an
+// ancestor the containing block for position:fixed children, so the menu
+// was still being clipped by that overflow:hidden no matter what
+// position/z-index it had. Moving it out to be a direct child of <body>
+// removes it from that ancestor chain entirely.
+if(notiMenu && notiMenu.parentElement !== document.body) document.body.appendChild(notiMenu);
 function refreshNotiTopBadge(){
   const top = document.getElementById("notiBtnBadge");
   if(!top) return;
@@ -8856,13 +8898,28 @@ function refreshNotiTopBadge(){
   const ordersOn = !document.getElementById("myOrdersBadge")?.classList.contains("hidden");
   if(noticeOn || ordersOn) top.classList.remove("hidden"); else top.classList.add("hidden");
 }
+function positionNotiMenu(){
+  if(!notiBtn || !notiMenu) return;
+  const rect = notiBtn.getBoundingClientRect();
+  notiMenu.style.top = (rect.bottom + 8) + "px";
+  notiMenu.style.right = (window.innerWidth - rect.right) + "px";
+}
 notiBtn?.addEventListener("click", (e) => {
   e.stopPropagation();
-  notiMenu?.classList.toggle("hidden");
+  if(!notiMenu) return;
+  const opening = notiMenu.classList.contains("hidden");
+  if(opening) positionNotiMenu();
+  notiMenu.classList.toggle("hidden");
+});
+window.addEventListener("resize", () => {
+  if(notiMenu && !notiMenu.classList.contains("hidden")) positionNotiMenu();
 });
 document.addEventListener("click", (e) => {
   if(!notiMenu || notiMenu.classList.contains("hidden")) return;
-  if(!e.target.closest("#notiDropdownWrap")) notiMenu.classList.add("hidden");
+  // notiMenu now lives directly under <body> (see above), so a click on
+  // one of its own items is no longer inside #notiDropdownWrap -- check
+  // both.
+  if(!e.target.closest("#notiDropdownWrap") && !e.target.closest("#notiMenu")) notiMenu.classList.add("hidden");
 });
 document.getElementById("notiMenuNotice")?.addEventListener("click", () => { notiMenu?.classList.add("hidden"); openNoticeView(); });
 document.getElementById("notiMenuOrders")?.addEventListener("click", () => { notiMenu?.classList.add("hidden"); openMyOrdersView(); });
