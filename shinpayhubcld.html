@@ -304,6 +304,20 @@
   .stock-chip.on.low{ background:#fff3d6; border-color:#f0d68a; color:#96720a; }
   .stock-plan-row button{ padding:7px 12px; font-size:11.5px; }
   .stock-save-msg{ font-size:11px; color:var(--good); min-width:18px; }
+
+  /* ---------- Broadcast composer ---------- */
+  .broadcast-textarea{
+    width:100%; min-height:220px; padding:14px 15px; border-radius:12px;
+    border:1px solid var(--border-strong); background:#fff; color:var(--ink);
+    font-size:14px; line-height:1.65; font-family:inherit; resize:vertical;
+    margin-bottom:0;
+  }
+  .broadcast-preview-label{ font-size:11px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--muted-2); margin:16px 0 8px; }
+  .broadcast-preview-card{
+    border-radius:14px; padding:16px; background:var(--accent-soft); border:1px solid rgba(124,58,237,.18);
+  }
+  .broadcast-preview-title{ font-weight:900; font-size:14px; color:var(--ink); margin-bottom:8px; }
+  .broadcast-preview-body{ font-size:13.5px; line-height:1.7; color:var(--ink); white-space:pre-wrap; word-break:break-word; }
 </style>
 </head>
 <body>
@@ -340,6 +354,10 @@
       <div class="admin-nav-item" id="navStockBtn" data-view="stock">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
         Stock
+      </div>
+      <div class="admin-nav-item" id="navBroadcastBtn" data-view="broadcast">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+        Broadcast
       </div>
       <div class="admin-nav-item" id="navSettingsBtn" data-view="settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
@@ -540,6 +558,27 @@
         <div id="stockList"><div class="empty-note">Loading stock list…</div></div>
       </div>
 
+      <div id="broadcastView" class="hidden">
+        <div class="top-row">
+          <div>
+            <h1>Broadcast</h1>
+            <div class="sub">Send a one-way announcement to every registered customer's Noti box. They can read it, but can't reply.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>New Announcement</div>
+          <input id="broadcastTitleInput" type="text" placeholder="Title (e.g. Scheduled maintenance tonight)" maxlength="120" />
+          <textarea id="broadcastBodyInput" class="broadcast-textarea" placeholder="Write the full message here. Line breaks are kept exactly as you type them."></textarea>
+          <div class="broadcast-preview-label">Preview</div>
+          <div id="broadcastPreview" class="broadcast-preview-card">
+            <div class="broadcast-preview-title">Title appears here</div>
+            <div class="broadcast-preview-body">Body text appears here, formatted the same way customers will see it.</div>
+          </div>
+          <button id="broadcastSendBtn" type="button" style="width:100%;margin-top:14px;">Send to All Customers</button>
+          <div id="broadcastMsg" style="font-size:12.5px;margin-top:8px;color:var(--muted);"></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -589,6 +628,9 @@ const ICON_ARCHIVE = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="
 const ICON_RESTORE = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>`;
 const ICON_GIFT = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7Z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7Z"/></svg>`;
 function randomCouponCode(){ return "GPH" + Math.random().toString(36).slice(2, 8).toUpperCase(); }
+function escapeHtml(value){
+  return String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
+}
 
 let adminToastTimer = null;
 function showAdminToast(message, isError){
@@ -652,14 +694,16 @@ const settingsView = document.getElementById("settingsView");
 const usersView = document.getElementById("usersView");
 const couponsView = document.getElementById("couponsView");
 const stockView = document.getElementById("stockView");
+const broadcastView = document.getElementById("broadcastView");
 const navHomeBtn = document.getElementById("navHomeBtn");
 const navSettingsBtn = document.getElementById("navSettingsBtn");
 const navUsersBtn = document.getElementById("navUsersBtn");
 const navCouponsBtn = document.getElementById("navCouponsBtn");
 const navStockBtn = document.getElementById("navStockBtn");
+const navBroadcastBtn = document.getElementById("navBroadcastBtn");
 
-const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView, stockView];
-const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn, navStockBtn];
+const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView, stockView, broadcastView];
+const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn, navStockBtn, navBroadcastBtn];
 
 function showDashboardHome(){
   ALL_VIEWS.forEach(v => v.classList.add("hidden"));
@@ -699,11 +743,18 @@ function showStockView(){
   navStockBtn.classList.add("active");
   loadStockView();
 }
+function showBroadcastView(){
+  ALL_VIEWS.forEach(v => v.classList.add("hidden"));
+  ALL_NAV_BTNS.forEach(b => b.classList.remove("active"));
+  broadcastView.classList.remove("hidden");
+  navBroadcastBtn.classList.add("active");
+}
 navHomeBtn.addEventListener("click", showDashboardHome);
 navSettingsBtn.addEventListener("click", showSettingsView);
 navUsersBtn.addEventListener("click", showUsersView);
 navCouponsBtn.addEventListener("click", showCouponsView);
 navStockBtn.addEventListener("click", showStockView);
+navBroadcastBtn.addEventListener("click", showBroadcastView);
 document.getElementById("orderDetailBackBtn").addEventListener("click", showDashboardHome);
 
 let orders = [];
@@ -1521,6 +1572,50 @@ function wireStockPlanRow(rowEl, { product, plan }){
 }
 
 document.getElementById("stockSearchInput")?.addEventListener("input", renderStockList);
+
+// ---------------------------------------------------------------------
+// Broadcast: a one-way announcement to every registered customer's Noti
+// box (see admin_broadcast_notification in schema.sql). Live preview
+// mirrors exactly how the customer-side popup renders it (white-space:
+// pre-wrap, no reply affordance) so what's typed here is what's sent.
+// ---------------------------------------------------------------------
+function renderBroadcastPreview(){
+  const title = document.getElementById("broadcastTitleInput").value.trim();
+  const body = document.getElementById("broadcastBodyInput").value.trim();
+  document.getElementById("broadcastPreview").innerHTML = `
+    <div class="broadcast-preview-title">${escapeHtml(title) || "Title appears here"}</div>
+    <div class="broadcast-preview-body">${escapeHtml(body) || "Body text appears here, formatted the same way customers will see it."}</div>
+  `;
+}
+document.getElementById("broadcastTitleInput")?.addEventListener("input", renderBroadcastPreview);
+document.getElementById("broadcastBodyInput")?.addEventListener("input", renderBroadcastPreview);
+
+document.getElementById("broadcastSendBtn")?.addEventListener("click", async () => {
+  const titleInput = document.getElementById("broadcastTitleInput");
+  const bodyInput = document.getElementById("broadcastBodyInput");
+  const msg = document.getElementById("broadcastMsg");
+  const title = titleInput.value.trim();
+  const body = bodyInput.value.trim();
+  if(!title || !body){ msg.textContent = "Title and message are both required."; msg.style.color = "var(--bad)"; return; }
+
+  const ok = await showAdminConfirm(
+    `Send "${title}" to every registered customer? This can't be undone or unsent.`,
+    { title: "Send to all customers?", confirmText: "Send" }
+  );
+  if(!ok) return;
+
+  const btn = document.getElementById("broadcastSendBtn");
+  btn.disabled = true;
+  msg.textContent = "Sending…"; msg.style.color = "var(--muted)";
+  const { data, error } = await sb.rpc("admin_broadcast_notification", { p_title: title, p_body: body });
+  btn.disabled = false;
+  if(error){ msg.textContent = error.message; msg.style.color = "var(--bad)"; return; }
+  msg.textContent = `Sent to ${data} customer(s).`;
+  msg.style.color = "var(--good)";
+  showAdminToast(`Broadcast sent to ${data} customer(s).`);
+  titleInput.value = ""; bodyInput.value = "";
+  renderBroadcastPreview();
+});
 
 // Stay signed in across refreshes.
 (async () => {

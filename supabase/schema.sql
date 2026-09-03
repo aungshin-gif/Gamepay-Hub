@@ -331,6 +331,27 @@ end;
 $$;
 grant execute on function public.admin_create_coupon to authenticated;
 
+-- Admin: send a one-way announcement to every registered customer at once
+-- (drops a row in notifications per user -- same table and Noti box the
+-- coupon-gift notice above already uses, just addressed to everyone
+-- instead of one person). Read-only for the customer; there's nowhere for
+-- a reply to go.
+create or replace function public.admin_broadcast_notification(p_title text, p_body text)
+returns int
+language plpgsql security definer set search_path = public as $$
+declare v_count int;
+begin
+  if not public.is_admin() then
+    raise exception 'not authorized';
+  end if;
+  insert into public.notifications(user_id, title, body)
+  select id, p_title, p_body from auth.users;
+  get diagnostics v_count = row_count;
+  return v_count;
+end;
+$$;
+grant execute on function public.admin_broadcast_notification to authenticated;
+
 -- Admin: full coupon list for the dashboard's Coupons tab.
 create or replace function public.admin_list_coupons()
 returns setof public.coupons
