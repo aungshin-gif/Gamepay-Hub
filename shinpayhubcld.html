@@ -258,6 +258,38 @@
   }
   .settings-label{ font-weight:700; font-size:13.5px; }
   .settings-sub{ font-size:12px; color:var(--muted); margin-top:2px; }
+
+  /* ---------- Account Security card ---------- */
+  .security-block{ padding:14px 0; }
+  .security-divider{ height:1px; background:var(--border); margin:2px 0; }
+  .link-btn{
+    background:none; color:var(--accent); font-weight:700; font-size:12.5px;
+    padding:6px 0; margin-top:2px; box-shadow:none;
+  }
+  .link-btn:hover{ background:none; text-decoration:underline; }
+  .otp-input{ letter-spacing:6px; font-weight:800; text-align:center; }
+
+  /* ---------- Stock list ---------- */
+  .stock-product-group{ margin-bottom:16px; }
+  .stock-product-head{ display:flex; align-items:center; gap:9px; padding:8px 2px; font-weight:800; font-size:13.5px; color:var(--ink); }
+  .stock-product-head img{ width:26px; height:26px; border-radius:8px; object-fit:cover; flex:0 0 auto; background:#eef0f8; }
+  .stock-plan-row{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    padding:10px 12px; border-radius:10px; background:var(--card); border:1px solid var(--border);
+    margin-bottom:8px;
+  }
+  .stock-plan-name{ flex:1 1 220px; font-size:12.5px; font-weight:600; min-width:0; }
+  .stock-plan-row input[type="number"]{ width:110px; margin-bottom:0; }
+  .stock-custom-price{ width:110px; font-size:11.5px; color:var(--muted-2); font-style:italic; }
+  .stock-chip{
+    display:inline-flex; align-items:center; gap:5px; padding:7px 11px; border-radius:999px;
+    border:1px solid var(--border-strong); background:#fff; color:var(--muted); font-size:11.5px; font-weight:700;
+    cursor:pointer; user-select:none; transition:background .15s,color .15s,border-color .15s;
+  }
+  .stock-chip.on.out{ background:var(--bad-soft); border-color:#f3c6c6; color:var(--bad); }
+  .stock-chip.on.low{ background:#fff3d6; border-color:#f0d68a; color:#96720a; }
+  .stock-plan-row button{ padding:7px 12px; font-size:11.5px; }
+  .stock-save-msg{ font-size:11px; color:var(--good); min-width:18px; }
 </style>
 </head>
 <body>
@@ -290,6 +322,10 @@
       <div class="admin-nav-item" id="navCouponsBtn" data-view="coupons">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L2.83 12.83a2 2 0 0 1 0-2.83L10 3a2 2 0 0 1 1.41-.59H19a2 2 0 0 1 2 2v7.59a2 2 0 0 1-.41 1.41Z"/><circle cx="15.5" cy="8.5" r="1.5"/></svg>
         Coupons
+      </div>
+      <div class="admin-nav-item" id="navStockBtn" data-view="stock">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        Stock
       </div>
       <div class="admin-nav-item" id="navSettingsBtn" data-view="settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
@@ -357,13 +393,67 @@
           </div>
         </div>
         <div class="card" style="margin-bottom:16px;">
-          <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>Change Password</div>
-          <div class="pw-wrap">
-            <input id="adminNewPasswordInput" type="password" placeholder="New password (min 6 characters)" autocomplete="new-password" />
-            <button type="button" class="pw-toggle" id="adminNewPwToggle" aria-label="Show password"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Account Security</div>
+
+          <div class="settings-row">
+            <div>
+              <div class="settings-label">Linked Email</div>
+              <div class="settings-sub" id="adminLinkedEmail">Loading…</div>
+            </div>
           </div>
-          <button id="adminChangePasswordBtn">Update Password</button>
-          <div id="adminPasswordMsg" style="font-size:12.5px;margin-top:8px;color:var(--muted);"></div>
+
+          <div class="security-divider"></div>
+
+          <div class="security-block">
+            <div class="settings-label" style="margin-bottom:10px;">Update Password</div>
+            <div class="pw-wrap">
+              <input id="adminCurrentPasswordInput" type="password" placeholder="Current password" autocomplete="current-password" />
+              <button type="button" class="pw-toggle" id="adminCurrentPwToggle" aria-label="Show password"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+            <div class="pw-wrap">
+              <input id="adminNewPasswordInput" type="password" placeholder="New password (min 6 characters)" autocomplete="new-password" />
+              <button type="button" class="pw-toggle" id="adminNewPwToggle" aria-label="Show password"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+            <div class="pw-wrap">
+              <input id="adminConfirmPasswordInput" type="password" placeholder="Confirm new password" autocomplete="new-password" />
+              <button type="button" class="pw-toggle" id="adminConfirmPwToggle" aria-label="Show password"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+            <button id="adminChangePasswordBtn">Update Password</button>
+            <button type="button" id="adminForgotPasswordBtn" class="link-btn">Forgot current password?</button>
+            <div id="adminPasswordMsg" style="font-size:12.5px;margin-top:8px;color:var(--muted);"></div>
+          </div>
+
+          <div id="adminForgotPasswordBlock" class="security-block hidden">
+            <div class="security-divider" style="margin-bottom:14px;"></div>
+            <div class="settings-label" style="margin-bottom:6px;">Reset Password by Email Code</div>
+            <div class="settings-sub" style="margin-bottom:10px;">We'll send a 6-digit code to <b id="adminForgotEmailLabel"></b>.</div>
+            <button type="button" id="adminSendResetCodeBtn" class="ghost">Send Code</button>
+            <div id="adminResetCodeFields" class="hidden" style="margin-top:12px;">
+              <input id="adminResetCodeInput" class="otp-input" placeholder="6-digit code" inputmode="numeric" maxlength="6" />
+              <input id="adminResetNewPasswordInput" type="password" placeholder="New password (min 6 characters)" autocomplete="new-password" />
+              <input id="adminResetConfirmPasswordInput" type="password" placeholder="Confirm new password" autocomplete="new-password" />
+              <button id="adminResetPasswordBtn">Verify &amp; Reset Password</button>
+            </div>
+            <div id="adminForgotPasswordMsg" style="font-size:12.5px;margin-top:8px;color:var(--muted);"></div>
+            <button type="button" id="adminCancelForgotBtn" class="link-btn">Cancel</button>
+          </div>
+
+          <div class="security-divider"></div>
+
+          <div class="security-block">
+            <div class="settings-label" style="margin-bottom:6px;">Change Email</div>
+            <div class="settings-sub" style="margin-bottom:10px;">For security, verify your current linked email with a code before setting a new one.</div>
+            <button type="button" id="adminSendEmailChangeCodeBtn" class="ghost">Send Verification Code</button>
+            <div id="adminEmailChangeStep2" class="hidden" style="margin-top:12px;">
+              <input id="adminEmailChangeCodeInput" class="otp-input" placeholder="6-digit code" inputmode="numeric" maxlength="6" />
+              <button id="adminVerifyEmailChangeCodeBtn">Verify Code</button>
+            </div>
+            <div id="adminEmailChangeStep3" class="hidden" style="margin-top:12px;">
+              <input id="adminNewEmailInput" type="email" placeholder="New email address" />
+              <button id="adminSubmitNewEmailBtn">Change Email</button>
+            </div>
+            <div id="adminEmailChangeMsg" style="font-size:12.5px;margin-top:8px;color:var(--muted);"></div>
+          </div>
         </div>
         <div class="card">
           <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>Dashboard Preferences</div>
@@ -425,6 +515,17 @@
         </div>
       </div>
 
+      <div id="stockView" class="hidden">
+        <div class="top-row">
+          <div>
+            <h1>Stock</h1>
+            <div class="sub">Edit price, out of stock and low stock per plan. Changes show on the storefront right away.</div>
+          </div>
+        </div>
+        <input id="stockSearchInput" type="text" placeholder="Search a product or plan…" autocomplete="off" style="margin-bottom:16px;" />
+        <div id="stockList"><div class="empty-note">Loading stock list…</div></div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -447,6 +548,11 @@ const SUPABASE_ANON_KEY = "sb_publishable_vGOC2MkDEn9t4tFmuoHV0g_R06t-Jgb";
 const sb = (/^https?:\/\//.test(SUPABASE_URL))
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { storageKey: "gph-admin-auth" } })
   : null;
+
+// Read-only mirror of index.html's hardcoded product/plan catalog -- used
+// only to build the Stock list below. Regenerate by re-running the catalog
+// export whenever products/plans are added or renamed in index.html.
+const CATALOG_MANIFEST = [{"id":"chatgpt","name":"ChatGPT","icon":"chatgpt-icon.png","plans":[{"name":"👐 CGPT GO Official – 8$ Plan – 1 Month – 27000 Ks","price":27000,"custom":false,"outOfStock":false},{"name":"🌌 CHATGPT PLUS Official – 80$ Plan – 1 Month – 90000 Ks","price":90000,"custom":false,"outOfStock":false},{"name":"✴️ CHATGPT PLUS – Private – 1 Month – 30000 Ks","price":30000,"custom":false,"outOfStock":false},{"name":"☄️ CGPT GO – 3 Months – Preorder","price":27000,"custom":false,"outOfStock":true}]},{"id":"canva","name":"Canva Pro","icon":"Untitled-design-2025-01-28T101702.381.png","plans":[{"name":"Canva Education – Own Mail – 1.5 Year – 5000 Ks","price":5000,"custom":false,"outOfStock":false},{"name":"Canva Education – Code Redeem – 1.5 Years – 5000 Ks","price":5000,"custom":false,"outOfStock":false},{"name":"Canva Business – Own Mail – 1 Month – 6000 Ks","price":6000,"custom":false,"outOfStock":false},{"name":"Canva Pro Individual – Private Acc – 1 Month – 7000 Ks","price":7000,"custom":false,"outOfStock":false}]},{"id":"capcut","name":"CapCut Pro","icon":"IMG_20260307_045206_183.jpg","plans":[{"name":"CapCut Team – Private Acc – 7 Days – 2000 Ks","price":2000,"custom":false,"outOfStock":false},{"name":"CapCut Team – Private Acc – 1 Month – 8000 Ks","price":8000,"custom":false,"outOfStock":false},{"name":"CapCut Pro Individual (crd 1200) – Private Acc – 34 Days – 12000 Ks","price":12000,"custom":false,"outOfStock":false},{"name":"CapCut Individual – Private Acc – 6 Months – 50000 Ks","price":50000,"custom":false,"outOfStock":false},{"name":"CapCut Team Head – Own Mail – 1 Month – Contact me","price":0,"custom":true,"outOfStock":false}]},{"id":"gemini","name":"Gemini AI Pro","icon":"file_00000000168071fa8d5d17512a7591b5.png","plans":[{"name":"Gemini AI Pro – Own Mail – 1 Month – 4000 Ks","price":4000,"custom":false,"outOfStock":false},{"name":"Gemini AI Pro – Own Mail – 2 Months – 7000 Ks","price":7000,"custom":false,"outOfStock":false},{"name":"Gemini AI Pro – Own Mail – 3 Months – 10000 Ks","price":10000,"custom":false,"outOfStock":false},{"name":"Gemini AI Pro – Own Mail – 4 Months – 12000 Ks","price":12000,"custom":false,"outOfStock":false},{"name":"Family Manager – Own Mail – 3 Months – 10000 Ks","price":10000,"custom":false,"outOfStock":false},{"name":"Family Manager – Own Mail – 12 Months – 15000 Ks","price":15000,"custom":false,"outOfStock":false},{"name":"Gemini Link – Own Mail – 1.5 Years – 8000 Ks","price":8000,"custom":false,"outOfStock":false}]},{"id":"zoom","name":"Zoom Pro","icon":"image.png","plans":[{"name":"🔐 Private – 14 Days – 5000 Ks","price":5000,"custom":false,"outOfStock":false},{"name":"🔐 Private – 1 Month – 8000 Ks","price":8000,"custom":false,"outOfStock":false},{"name":"🔐 Private – 2 Months – 15000 Ks","price":15000,"custom":false,"outOfStock":false}]},{"id":"hbomax","name":"HBO Max","icon":"quality_restoration_20260510231859313.png","plans":[{"name":"👤1 Profile - 8500 Ks\n1 Month","price":8500,"custom":false,"outOfStock":false},{"name":"👥2 Profiles - 13000 Ks\n1 Month","price":13000,"custom":false,"outOfStock":false},{"name":"Each Profile - 6000 Ks\nAbove 3 Pf","price":6000,"custom":false,"outOfStock":false},{"name":"🔥HBO Head - 25000 Ks\n1 Month","price":25000,"custom":false,"outOfStock":false}]},{"id":"picsart","name":"PicsArt Pro","icon":"IMG_20260307_042958_666.jpg","plans":[{"name":"1 Month (👥Share) – 4000 Ks","price":4000,"custom":false,"outOfStock":false},{"name":"1 Month (🔐Private) – 5700 Ks","price":5700,"custom":false,"outOfStock":false},{"name":"3 Months – 14000 Ks","price":14000,"custom":false,"outOfStock":true},{"name":"1 Year – 50000 Ks","price":50000,"custom":false,"outOfStock":false},{"name":"Own Mail - 1 Month – 24000 Ks","price":24000,"custom":false,"outOfStock":true}]},{"id":"hma_vpn","name":"HMA VPN","icon":"file_00000000fc3c71fab87726fc991b3be0.png","plans":[{"name":"👥 1 Month – Share – 1400 Ks","price":1400,"custom":false,"outOfStock":false},{"name":"🔐 1 Month – Private – 5000 Ks","price":5000,"custom":false,"outOfStock":false},{"name":"✉️ 1 Month – Own Mail – 6000 Ks","price":6000,"custom":false,"outOfStock":false}]},{"id":"vpn","name":"Express VPN","icon":"ExpressVPN-logo.png","plans":[{"name":"🔐 2 Months – 1 Device – 5000 Ks","price":5000,"custom":false,"outOfStock":false},{"name":"🔐 3 Months – 2 Devices – 7000 Ks","price":7000,"custom":false,"outOfStock":false},{"name":"🔐 6 Months – 4 Devices – 11000 Ks","price":11000,"custom":false,"outOfStock":false},{"name":"🔐 12 Months – 6 Devices – 15000 Ks","price":15000,"custom":false,"outOfStock":false}]},{"id":"telegram","name":"Telegram Premium","icon":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgMjQwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InQiIHgxPSIuNSIgeTE9IjAiIHgyPSIuNSIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzJBQUJFRSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzIyOUVEOSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjEyMCIgY3k9IjEyMCIgcj0iMTIwIiBmaWxsPSJ1cmwoI3QpIi8+PHBhdGggZD0iTTU0IDExOC41YzM1LTE1LjIgNTguMy0yNS4zIDcwLTMwLjIgMzMuMy0xMy45IDQwLjItMTYuMyA0NC43LTE2LjQgMSAwIDMuMi4yIDQuNyAxLjQgMS4yIDEgMS41IDIuMyAxLjcgMy4zLjIgMSAuNCAzLjEuMiA0LjgtMS44IDE5LjQtOS44IDY2LjMtMTMuOSA4OC0xLjcgOS4yLTUuMSAxMi4zLTguNCAxMi42LTcuMi43LTEyLjYtNC43LTE5LjUtOS4yLTEwLjgtNy4xLTE2LjktMTEuNS0yNy40LTE4LjQtMTIuMS04LTQuMy0xMi40IDIuNy0xOS42IDEuOC0xLjkgMzMuMi0zMC40IDMzLjgtMzMgLjEtLjMuMS0xLjUtLjYtMi4xLS43LS42LTEuNy0uNC0yLjUtLjItMS4xLjItMTguMyAxMS42LTUxLjcgMzQuMi00LjkgMy40LTkuMyA1LTEzLjMgNC45LTQuNC0uMS0xMi44LTIuNS0xOS00LjUtNy43LTIuNS0xMy44LTMuOC0xMy4zLTggLjMtMi4yIDMuMy00LjQgOS02Ljd6IiBmaWxsPSIjZmZmIi8+PC9zdmc+","plans":[{"name":"Login Method – 1 Month – 20500 Ks","price":20500,"custom":false,"outOfStock":false},{"name":"Gift Plan – 3 Months – 50000 Ks","price":50000,"custom":false,"outOfStock":false},{"name":"Gift Plan – 6 Months – 67000 Ks","price":67000,"custom":false,"outOfStock":false},{"name":"Gift Plan – 9 Months – 118000 Ks","price":118000,"custom":false,"outOfStock":false},{"name":"Link Plan – 3 Months – 44000 Ks","price":44000,"custom":false,"outOfStock":false},{"name":"Link Plan – 6 Months – 65000 Ks","price":65000,"custom":false,"outOfStock":false},{"name":"Link Plan – 12 Months – 118000 Ks","price":118000,"custom":false,"outOfStock":false}]},{"id":"adobe_cc","name":"Adobe Creative Cloud","icon":"Adobe_Creative_Cloud_rainbow_icon.svg.png","plans":[{"name":"1 Month - 15000 Ks","price":15000,"custom":false,"outOfStock":false},{"name":"2 Months - 25000 Ks","price":25000,"custom":false,"outOfStock":false},{"name":"3 Months - 39000 Ks","price":39000,"custom":false,"outOfStock":false},{"name":"6 Months - 35000 Ks","price":35000,"custom":false,"outOfStock":false},{"name":"1 Year - 100000 Ks (Stock rare)","price":100000,"custom":false,"outOfStock":false}]},{"id":"claude_ai","name":"Claude AI Plans","icon":"claude_logo_3ec57d87f2.svg","plans":[{"name":"Claude PRO – 1 Month – 93000 Ks","price":93000,"custom":false,"outOfStock":false},{"name":"Claude MAX – 1 Month – 500000 Ks","price":500000,"custom":false,"outOfStock":false}]},{"id":"cursor","name":"Cursor AI Plans","icon":"images (1).png","plans":[{"name":"Cursor Pro – 1 Month – 92000 Ks","price":92000,"custom":false,"outOfStock":false},{"name":"Cursor Plus – 1 Month – 285000 Ks","price":285000,"custom":false,"outOfStock":false}]},{"id":"grok","name":"Grok AI Plans","icon":"grok-icon.webp","plans":[{"name":"Super Grok – 1 Month – 58000 Ks","price":58000,"custom":false,"outOfStock":false},{"name":"Super Grok – 3 Months – 190000 Ks","price":190000,"custom":false,"outOfStock":false},{"name":"SuperGrok Plus – 1 Month – 480000 Ks","price":480000,"custom":false,"outOfStock":false},{"name":"SuperGrok Heavy – 1 Month – DM","price":0,"custom":false,"outOfStock":false}]},{"id":"perplexity","name":"Perplexity AI Pro","icon":"perplexity-ai-icon.png","plans":[{"name":"Perplexity AI Pro – 1 Month – 43000 Ks","price":43000,"custom":false,"outOfStock":false}]},{"id":"kling_ai","name":"Kling AI","icon":"images (5).jpeg","plans":[{"name":"Standard Plan – 1 Month – 40000 Ks","price":40000,"custom":false,"outOfStock":false},{"name":"Pro Plan – 1 Month – 130000 Ks","price":130000,"custom":false,"outOfStock":false},{"name":"Premier Plan – 1 Month – 320000 Ks","price":320000,"custom":false,"outOfStock":false},{"name":"Ultra Plan – 1 Month – 590000 Ks","price":590000,"custom":false,"outOfStock":false},{"name":"330 Credits – 26500 Ks","price":26500,"custom":false,"outOfStock":false},{"name":"660 Credits – 45500 Ks","price":45500,"custom":false,"outOfStock":false},{"name":"1320 Credits – 92500 Ks","price":92500,"custom":false,"outOfStock":false},{"name":"3500 Credits – 230000 Ks","price":230000,"custom":false,"outOfStock":false}]},{"id":"suno_ai","name":"Suno AI Plans","icon":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMGIwYjBmIi8+PGcgZmlsbD0iI2ZmZiI+PHJlY3QgeD0iMjIiIHk9IjQyIiB3aWR0aD0iNyIgaGVpZ2h0PSIxNiIgcng9IjMuNSIvPjxyZWN0IHg9IjM1IiB5PSIzMiIgd2lkdGg9IjciIGhlaWdodD0iMzYiIHJ4PSIzLjUiLz48cmVjdCB4PSI0OCIgeT0iMjIiIHdpZHRoPSI3IiBoZWlnaHQ9IjU2IiByeD0iMy41Ii8+PHJlY3QgeD0iNjEiIHk9IjM0IiB3aWR0aD0iNyIgaGVpZ2h0PSIzMiIgcng9IjMuNSIvPjxyZWN0IHg9Ijc0IiB5PSI0NCIgd2lkdGg9IjciIGhlaWdodD0iMTIiIHJ4PSIzLjUiLz48L2c+PC9zdmc+","plans":[{"name":"Pro Plan – 1 Month – 50000 Ks","price":50000,"custom":false,"outOfStock":false},{"name":"Premier Plan – 1 Month – 140000 Ks","price":140000,"custom":false,"outOfStock":false}]},{"id":"gitHub copilot","name":"GitHub Copilot Pro/Plus/Max","icon":"images.png","plans":[{"name":"GitHub Copilot Pro – 1 Month – 48000 Ks","price":48000,"custom":false,"outOfStock":false},{"name":"GitHub Copilot Pro+ – 1 Month – 178000 Ks","price":178000,"custom":false,"outOfStock":false},{"name":"GitHub Copilot Max – 1 Month – 480000 Ks","price":480000,"custom":false,"outOfStock":false}]},{"id":"x_premium","name":"X (Twitter) Premium","icon":"twitter-new-logo-x-icon-design_1017-45424.jpg","plans":[{"name":"X Premium – 1 Month – 30000 Ks","price":30000,"custom":false,"outOfStock":false},{"name":"X Premium Plus – 1 Month – 135000 Ks","price":135000,"custom":false,"outOfStock":false}]},{"id":"whatsapp_plus","name":"WhatsApp Plus","icon":"images (2).jpeg","plans":[{"name":"WhatsApp Plus – 1 Month – 22000 Ks","price":22000,"custom":false,"outOfStock":false}]},{"id":"whatsapp_accounts","name":"WhatsApp Accounts","icon":"images (2).jpeg","plans":[{"name":"USA Number – 20000 Ks","price":20000,"custom":false,"outOfStock":false},{"name":"Canada Number – 21000 Ks","price":21000,"custom":false,"outOfStock":false},{"name":"France Number – 25000 Ks","price":25000,"custom":false,"outOfStock":false}]},{"id":"netflix","name":"Netflix Premium","icon":"netflix-icon.png","plans":[{"name":"🌈(1 Profile) -8000 Ks\n1 Month","price":8000,"custom":false,"outOfStock":false},{"name":"🌈(3 Profiles) - 19000 Ks\n1 Month","price":19000,"custom":false,"outOfStock":false},{"name":"🌈(4 Profiles) - 25000 Ks\n1 Month","price":25000,"custom":false,"outOfStock":false},{"name":"🌈(Head) - 38000 Ks\n1 Month","price":38000,"custom":false,"outOfStock":false}]},{"id":"spotify","name":"Spotify","icon":"quality_restoration_20260510232104714.png","plans":[{"name":"🔥 Individual Plan — 1 Month — 10000 Ks","price":10000,"custom":false,"outOfStock":false},{"name":"🔥 Individual Plan — 2 Months — 15000 Ks","price":15000,"custom":false,"outOfStock":false},{"name":"✨ Family Plan — 3 Months — 18000 Ks","price":18000,"custom":false,"outOfStock":false}]},{"id":"tidal_music","name":"Tidal Music","icon":"tidal-logo-rounded-hd-free-png.png","plans":[{"name":"💥 Individual Plan — 1 Month — 8000 Ks","price":8000,"custom":false,"outOfStock":false},{"name":"💥 Family Plan — 1 Month — 8000 Ks","price":8000,"custom":false,"outOfStock":false},{"name":"💥 Family Plan — 2 Months — 10000 Ks","price":10000,"custom":false,"outOfStock":false}]},{"id":"youtube_music","name":"YouTube Music","icon":"unnamed (1).jpg","plans":[{"name":"YouTube Music – Your Mail – 1 Month – 7000 Ks","price":7000,"custom":false,"outOfStock":false}]},{"id":"soundcloud_go","name":"SoundCloud Go","icon":"488-3.jpg","plans":[{"name":"SoundCloud Go — 1 Month — 8000 Ks","price":8000,"custom":false,"outOfStock":false}]},{"id":"qobuz_music","name":"Qobuz Music","icon":"a.jpg","plans":[{"name":"Qobuz Music — 1 Month — 8000 Ks","price":8000,"custom":false,"outOfStock":false}]},{"id":"apple_music","name":"Apple Music (Android)","icon":"apps.62962.14205055896346606.c235e3d6-fbce-45bb-9051-4be6c2ecba8f.png","plans":[{"name":"💥 Individual Plan — 1 Month — 6000 Ks","price":6000,"custom":false,"outOfStock":false},{"name":"💥 Family Plan — 1 Month — 6000 Ks","price":6000,"custom":false,"outOfStock":false},{"name":"💥 Family Plan — 2 Months — 9000 Ks","price":9000,"custom":false,"outOfStock":false},{"name":"💥 Family Plan — 3 Months — 11000 Ks","price":11000,"custom":false,"outOfStock":false}]},{"id":"youtube","name":"YouTube Premium","icon":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTYgMTgwIj48cGF0aCBkPSJNMjUwLjMgMjguMUMyNDcuNCAxNyAyMzguNyA4LjMgMjI3LjYgNS40IDIwNy41IDAgMTI4IDAgMTI4IDBTNDguNSAwIDI4LjQgNS40QzE3LjMgOC4zIDguNiAxNyA1LjcgMjguMSAwIDQ4LjMgMCA5MCAwIDkwczAgNDEuNyA1LjcgNjEuOWMyLjkgMTEuMSAxMS42IDE5LjggMjIuNyAyMi43QzQ4LjUgMTgwIDEyOCAxODAgMTI4IDE4MHM3OS41IDAgOTkuNi01LjRjMTEuMS0yLjkgMTkuOC0xMS42IDIyLjctMjIuN0MyNTYgMTMxLjcgMjU2IDkwIDI1NiA5MHMwLTQxLjctNS43LTYxLjl6IiBmaWxsPSIjRkYwMDAwIi8+PHBhdGggZD0iTTEwMi40IDEyOC42IDE2OC44IDkwbC02Ni40LTM4LjZ6IiBmaWxsPSIjZmZmIi8+PC9zdmc+","plans":[{"name":"🌐 Individual – Private Account – 1 Month – 6500 Ks","price":6500,"custom":false,"outOfStock":false},{"name":"🌐 Individual – 3 Months – 20000 Ks","price":20000,"custom":false,"outOfStock":false},{"name":"✉️ Individual – Invite Your Mail – 1 Month – 7000 Ks","price":7000,"custom":false,"outOfStock":false},{"name":"👑 Family Head Account – 1 Month – 30000 Ks","price":30000,"custom":false,"outOfStock":false}]},{"id":"disney","name":"Disney+","icon":"disney_1xun.3840.webp","plans":[{"name":"Disney+ Premium - 1 Month - 7000 Ks","price":7000,"custom":false,"outOfStock":false},{"name":"Disney+ Duo - 1 Month - 8000 Ks","price":8000,"custom":false,"outOfStock":false},{"name":"Disney+ Trio - 1 Month - 10000 Ks","price":10000,"custom":false,"outOfStock":false},{"name":"Disney+ Premium - 3 Months - 8500 Ks","price":8500,"custom":false,"outOfStock":false},{"name":"Disney+ Duo - 3 Months - 12000 Ks","price":12000,"custom":false,"outOfStock":false},{"name":"Disney+ Trio - 3 Months - 15000 Ks","price":15000,"custom":false,"outOfStock":false},{"name":"Disney+ Premium - 12 Months - 20000 Ks","price":20000,"custom":false,"outOfStock":false},{"name":"Disney+ Duo - 12 Months - 22000 Ks","price":22000,"custom":false,"outOfStock":false},{"name":"Disney+ Trio - 12 Months - 30000 Ks","price":30000,"custom":false,"outOfStock":false}]},{"id":"prime","name":"Prime Video","icon":"Prime-Video.webp","plans":[{"name":"Premium – 1 Month – 8000 Ks","price":8000,"custom":false,"outOfStock":false},{"name":"Premium – 6 Months – 20000 Ks","price":20000,"custom":false,"outOfStock":false}]},{"id":"bigo","name":"Bigo Live","icon":"8bb1f032b24ebd0dc4eb601a22dc622f.jpg","plans":[{"name":"50 Diamonds 💎 - 4200 Ks","price":4200,"custom":false,"outOfStock":false},{"name":"100 Diamonds 💎 - 8500 Ks","price":8500,"custom":false,"outOfStock":false},{"name":"150 Diamonds 💎 - 12980 Ks","price":12980,"custom":false,"outOfStock":false},{"name":"200 Diamonds 💎 - 16950 Ks","price":16950,"custom":false,"outOfStock":false},{"name":"250 Diamonds 💎 - 21200 Ks","price":21200,"custom":false,"outOfStock":false},{"name":"300 Diamonds 💎 - 25300 Ks","price":25300,"custom":false,"outOfStock":false},{"name":"400 Diamonds 💎 - 34200 Ks","price":34200,"custom":false,"outOfStock":false},{"name":"500 Diamonds 💎 - 42300 Ks","price":42300,"custom":false,"outOfStock":false},{"name":"750 Diamonds 💎 - 63200 Ks","price":63200,"custom":false,"outOfStock":false},{"name":"1000 Diamonds 💎 - 84580 Ks","price":84580,"custom":false,"outOfStock":false},{"name":"2000 Diamonds 💎 - 168700 Ks","price":168700,"custom":false,"outOfStock":false},{"name":"3000 Diamonds 💎 - 265060 Ks","price":265060,"custom":false,"outOfStock":false}]},{"id":"facebook_service","name":"Facebook Service","icon":"8379988-768x768.jpg","plans":[{"name":"👥Followers(NoRefill)⚡","price":5000,"custom":true,"outOfStock":false},{"name":"👥Followers (Refill / High Quality)🔥","price":7000,"custom":true,"outOfStock":false},{"name":"👍Like 💥","price":5000,"custom":true,"outOfStock":false},{"name":"❤️Love 💥","price":5000,"custom":true,"outOfStock":false},{"name":"😂Haha 💥","price":5000,"custom":true,"outOfStock":false},{"name":"😮Wow 💥","price":5000,"custom":true,"outOfStock":false},{"name":"😢Sad 💥","price":5000,"custom":true,"outOfStock":false},{"name":"😡Angry 💥","price":5000,"custom":true,"outOfStock":false},{"name":"👍❤️🤣🥲😯 Mixed Reactions 💥","price":6500,"custom":true,"outOfStock":false},{"name":"👥👁️Story Views 💯","price":6500,"custom":true,"outOfStock":false},{"name":"📢 Facebook Ads 1️⃣💲 ⏩ 5600 Ks","price":5600,"custom":true,"outOfStock":false}]},{"id":"🪙tiktok_coins_promote","name":"TikTok Coins & Promote","icon":"1000_F_1535651940_vg2Yd6yUBMgpL49j6H9FTK7Y111hHCmk.jpg","plans":[{"name":"🪙Titok Coins 🪙","price":5200,"custom":true,"outOfStock":false},{"name":"🔥📈 TikTok Promote 💲💲","price":6000,"custom":true,"outOfStock":false}]},{"id":"wink","name":"Wink VIP","icon":"41054661-1713936918042-110deb4aa0105.jpg","plans":[{"name":"China Region – 1 Month – 4500 Ks","price":4500,"custom":false,"outOfStock":true},{"name":"👥Global Region – 1 Month – 7000 Ks (Share) – 1 Device","price":8000,"custom":false,"outOfStock":false},{"name":"🔐Global Region – 1 Month – 18000 Ks (Private) – 3 Devices","price":18000,"custom":false,"outOfStock":false},{"name":"🔐Global Region – 1 Year – 160000 Ks (Private) – 3 Devices","price":160000,"custom":false,"outOfStock":false}]},{"id":"meitu","name":"Meitu VIP/SVIP","icon":"FB_IMG_1774857673765.jpg","plans":[{"name":"👥VIP Plan (Share account) - 1 Month - 8000 Ks","price":8000,"custom":false,"outOfStock":false},{"name":"🔐VIP Plan (Private account) - 1 Month - 12000 Ks","price":12000,"custom":false,"outOfStock":false},{"name":"🔐VIP Plan (Private account) - 1 Year - 98000 Ks","price":98000,"custom":false,"outOfStock":false},{"name":"👥SVIP Plan (Share account) - 1 Month - 15000 Ks","price":15000,"custom":false,"outOfStock":false},{"name":"🔐SVIP Plan (Private account) - 1 Month - 22000 Ks","price":22000,"custom":false,"outOfStock":false},{"name":"🔐SVIP Plan (Private account) - 3 Months - 53000 Ks","price":53000,"custom":false,"outOfStock":false},{"name":"🔐SVIP Plan (Private account) - 1 Year - 160000 Ks","price":160000,"custom":false,"outOfStock":false},{"name":"✉️Own Mail VIP Plan - 1 Month - 12500 Ks","price":12500,"custom":false,"outOfStock":false},{"name":"✉️Own Mail SVIP Plan - 1 Month - 21000 Ks","price":21000,"custom":false,"outOfStock":false},{"name":"✉️Own Mail SVIP Plan - 3 Months - 54000 Ks","price":54000,"custom":false,"outOfStock":false},{"name":"✉️Own Mail SVIP Plan - 1 Year - 165000 Ks","price":165000,"custom":false,"outOfStock":false}]},{"id":"steam","name":"Steam Wallet","icon":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMxYjI4MzgiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwZTE3MjAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIgZmlsbD0idXJsKCNzKSIvPjxwYXRoIGQ9Ik02NC41IDI0Yy05IDAtMTYuMyA3LjItMTYuNCAxNi4yTDM3LjYgNTUuNGMtLjctLjEtMS40LS4yLTIuMS0uMi0yLjYgMC01IC44LTcgMi4yTDE2IDUxLjl2MTguNGw5LjYgNGMxLjUgNC4yIDUuNSA3LjIgMTAuMiA3LjIgNS45IDAgMTAuNy00LjcgMTAuOS0xMC41bDE0LjktMTAuN2guM2M5IDAgMTYuNC03LjQgMTYuNC0xNi40UzczLjUgMjQgNjQuNSAyNHptLTI4LjcgNTEuNWMtMy4zIDAtNi4yLTItNy40LTQuOGw0LjggMmMyLjUgMS4xIDUuNC0uMSA2LjQtMi42IDEuMS0yLjUtLjEtNS40LTIuNi02LjRsLTQuOC0yYzEtLjQgMi4yLS42IDMuNi0uMyAxLjkuMyAzLjUgMS40IDQuNiAyLjkgMSAxLjYgMS40IDMuNSAxIDUuMy0uNyAzLjQtMy44IDUuOS01LjYgNS45em0yOC43LTE5LjZjLTYgMC0xMC45LTQuOS0xMC45LTEwLjlTNTguNSAzNCA2NC41IDM0czEwLjkgNC45IDEwLjkgMTAuOS00LjkgMTEtMTAuOSAxMXptMC0xOS4xYy00LjUgMC04LjIgMy43LTguMiA4LjJzMy43IDguMiA4LjIgOC4yIDguMi0zLjcgOC4yLTguMi0zLjctOC4yLTguMi04LjJ6IiBmaWxsPSIjZmZmIi8+PC9zdmc+","plans":[{"name":"5 USD - 23200 Ks","price":23200,"custom":false,"outOfStock":false},{"name":"10 USD - 45000 Ks","price":45000,"custom":false,"outOfStock":false},{"name":"20 USD - 90000 Ks","price":90000,"custom":false,"outOfStock":false},{"name":"25 USD - 113000 Ks","price":113000,"custom":false,"outOfStock":false},{"name":"30 USD - 137000 Ks","price":137000,"custom":false,"outOfStock":false},{"name":"35 USD - 157000 Ks","price":157000,"custom":false,"outOfStock":false},{"name":"50 USD - 228000 Ks","price":228000,"custom":false,"outOfStock":false},{"name":"100 USD - 460000 Ks","price":460000,"custom":false,"outOfStock":false}]},{"id":"duolingo","name":"Duolingo","icon":"duolingo-duo-owl-logo-2022.jpg","plans":[{"name":"Individual Plan – 1 Month – 5000 Ks","price":5000,"custom":false,"outOfStock":false},{"name":"Family Plan – Coming Soon","price":0,"custom":false,"outOfStock":true}]},{"id":"nordvpn","name":"Nord VPN","icon":"NordVPN_Logo_square.svg (1).png","plans":[{"name":"👥 2 Months – Share – 8000 Ks","price":8000,"custom":false,"outOfStock":false},{"name":"🔐 2 Months – Private – 15000 Ks","price":15000,"custom":false,"outOfStock":false},{"name":"👥 3 Months – Share – 12000 Ks","price":12000,"custom":false,"outOfStock":false},{"name":"🔐 3 Months – Private – 22000 Ks","price":22000,"custom":false,"outOfStock":false}]},{"id":"onevpn","name":"One VPN","icon":"unnamed (1).webp","plans":[{"name":"👥 1 Month – Share – 1600 Ks","price":1600,"custom":false,"outOfStock":false},{"name":"🔐 1 Month – Private – 6000 Ks","price":6000,"custom":false,"outOfStock":false}]},{"id":"surfshark","name":"Surfshark VPN","icon":"0E7JiQw5SPOUbKbn59GQ.png","plans":[{"name":"👥 2 Months – Share – 6000 Ks","price":6000,"custom":false,"outOfStock":false},{"name":"🔐 2 Months – Private – 28000 Ks","price":28000,"custom":false,"outOfStock":false}]}]
 
 const ICON_CHECK = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>`;
 const ICON_X = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
@@ -476,13 +582,15 @@ const orderDetailView = document.getElementById("orderDetailView");
 const settingsView = document.getElementById("settingsView");
 const usersView = document.getElementById("usersView");
 const couponsView = document.getElementById("couponsView");
+const stockView = document.getElementById("stockView");
 const navHomeBtn = document.getElementById("navHomeBtn");
 const navSettingsBtn = document.getElementById("navSettingsBtn");
 const navUsersBtn = document.getElementById("navUsersBtn");
 const navCouponsBtn = document.getElementById("navCouponsBtn");
+const navStockBtn = document.getElementById("navStockBtn");
 
-const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView];
-const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn];
+const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView, stockView];
+const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn, navStockBtn];
 
 function showDashboardHome(){
   ALL_VIEWS.forEach(v => v.classList.add("hidden"));
@@ -515,10 +623,18 @@ function showCouponsView(){
   navCouponsBtn.classList.add("active");
   loadCoupons();
 }
+function showStockView(){
+  ALL_VIEWS.forEach(v => v.classList.add("hidden"));
+  ALL_NAV_BTNS.forEach(b => b.classList.remove("active"));
+  stockView.classList.remove("hidden");
+  navStockBtn.classList.add("active");
+  loadStockView();
+}
 navHomeBtn.addEventListener("click", showDashboardHome);
 navSettingsBtn.addEventListener("click", showSettingsView);
 navUsersBtn.addEventListener("click", showUsersView);
 navCouponsBtn.addEventListener("click", showCouponsView);
+navStockBtn.addEventListener("click", showStockView);
 document.getElementById("orderDetailBackBtn").addEventListener("click", showDashboardHome);
 
 let orders = [];
@@ -526,6 +642,7 @@ let usersCache = [];
 let showArchived = false;
 let selectedOrderId = null;
 let orderChannel = null; // per-order broadcast channel, for instant customer replies
+let currentAdminEmail = "";
 
 function fail(msg){ loginError.textContent = msg; }
 
@@ -551,6 +668,13 @@ async function checkAdminAndEnter(){
     await sb.auth.signOut();
     return;
   }
+  const { data: { user } } = await sb.auth.getUser();
+  currentAdminEmail = user?.email || "";
+  const linkedEmailEl = document.getElementById("adminLinkedEmail");
+  if(linkedEmailEl) linkedEmailEl.textContent = currentAdminEmail || "-";
+  const forgotEmailLabel = document.getElementById("adminForgotEmailLabel");
+  if(forgotEmailLabel) forgotEmailLabel.textContent = currentAdminEmail || "-";
+
   loginView.classList.add("hidden");
   dashboardView.classList.remove("hidden");
   showDashboardHome();
@@ -573,46 +697,126 @@ function renderChatCustomerHeader(label){
 
 const ICON_SUPPORT = `👾`;
 
-document.getElementById("loginPwToggle")?.addEventListener("click", () => {
-  const input = document.getElementById("loginPassword");
-  const btn = document.getElementById("loginPwToggle");
-  const show = input.type === "password";
-  input.type = show ? "text" : "password";
-  btn.innerHTML = show
-    ? `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.8 21.8 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a21.8 21.8 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
-    : `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>`;
-  btn.setAttribute("aria-label", show ? "Hide password" : "Show password");
-});
+function wirePwToggle(inputId, btnId){
+  const input = document.getElementById(inputId);
+  const btn = document.getElementById(btnId);
+  if(!input || !btn) return;
+  btn.addEventListener("click", () => {
+    const show = input.type === "password";
+    input.type = show ? "text" : "password";
+    btn.innerHTML = show
+      ? `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.8 21.8 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a21.8 21.8 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+      : `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>`;
+    btn.setAttribute("aria-label", show ? "Hide password" : "Show password");
+  });
+}
+wirePwToggle("loginPassword", "loginPwToggle");
+wirePwToggle("adminCurrentPasswordInput", "adminCurrentPwToggle");
+wirePwToggle("adminNewPasswordInput", "adminNewPwToggle");
+wirePwToggle("adminConfirmPasswordInput", "adminConfirmPwToggle");
 
-document.getElementById("adminNewPwToggle")?.addEventListener("click", () => {
-  const input = document.getElementById("adminNewPasswordInput");
-  const btn = document.getElementById("adminNewPwToggle");
-  const show = input.type === "password";
-  input.type = show ? "text" : "password";
-  btn.innerHTML = show
-    ? `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.8 21.8 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a21.8 21.8 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
-    : `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>`;
-  btn.setAttribute("aria-label", show ? "Hide password" : "Show password");
-});
+function setSecurityMsg(el, text, ok){
+  el.textContent = text;
+  el.style.color = ok ? "var(--good)" : "var(--bad)";
+}
 
+// Supabase's updateUser() doesn't ask for the current password on its own,
+// so re-running signInWithPassword first is the standard way to prove the
+// admin still knows it before a change is allowed to go through.
 document.getElementById("adminChangePasswordBtn")?.addEventListener("click", async () => {
-  const input = document.getElementById("adminNewPasswordInput");
+  const currentInput = document.getElementById("adminCurrentPasswordInput");
+  const newInput = document.getElementById("adminNewPasswordInput");
+  const confirmInput = document.getElementById("adminConfirmPasswordInput");
   const msg = document.getElementById("adminPasswordMsg");
-  const newPassword = input.value;
-  if(!newPassword || newPassword.length < 6){
-    msg.textContent = "Password must be at least 6 characters.";
-    msg.style.color = "var(--bad)";
-    return;
-  }
+  const currentPassword = currentInput.value;
+  const newPassword = newInput.value;
+  const confirmPassword = confirmInput.value;
+
+  if(!currentPassword){ setSecurityMsg(msg, "Enter your current password.", false); return; }
+  if(!newPassword || newPassword.length < 6){ setSecurityMsg(msg, "New password must be at least 6 characters.", false); return; }
+  if(newPassword !== confirmPassword){ setSecurityMsg(msg, "New password and confirmation don't match.", false); return; }
+
+  setSecurityMsg(msg, "Checking current password…", true);
+  const { error: verifyError } = await sb.auth.signInWithPassword({ email: currentAdminEmail, password: currentPassword });
+  if(verifyError){ setSecurityMsg(msg, "Current password is incorrect.", false); return; }
+
   const { error } = await sb.auth.updateUser({ password: newPassword });
-  if(error){
-    msg.textContent = error.message;
-    msg.style.color = "var(--bad)";
-    return;
-  }
-  input.value = "";
-  msg.textContent = "Password updated.";
-  msg.style.color = "var(--good)";
+  if(error){ setSecurityMsg(msg, error.message, false); return; }
+
+  currentInput.value = ""; newInput.value = ""; confirmInput.value = "";
+  setSecurityMsg(msg, "Password updated.", true);
+});
+
+// ---- Forgot password (email OTP code) ----
+document.getElementById("adminForgotPasswordBtn")?.addEventListener("click", () => {
+  document.getElementById("adminForgotPasswordBlock").classList.remove("hidden");
+});
+document.getElementById("adminCancelForgotBtn")?.addEventListener("click", () => {
+  document.getElementById("adminForgotPasswordBlock").classList.add("hidden");
+  document.getElementById("adminResetCodeFields").classList.add("hidden");
+  document.getElementById("adminForgotPasswordMsg").textContent = "";
+  document.getElementById("adminResetCodeInput").value = "";
+});
+document.getElementById("adminSendResetCodeBtn")?.addEventListener("click", async () => {
+  const msg = document.getElementById("adminForgotPasswordMsg");
+  if(!currentAdminEmail){ setSecurityMsg(msg, "No linked email found.", false); return; }
+  setSecurityMsg(msg, "Sending code…", true);
+  const { error } = await sb.auth.resetPasswordForEmail(currentAdminEmail);
+  if(error){ setSecurityMsg(msg, error.message, false); return; }
+  document.getElementById("adminResetCodeFields").classList.remove("hidden");
+  setSecurityMsg(msg, `Code sent to ${currentAdminEmail}. It expires shortly, so enter it soon.`, true);
+});
+document.getElementById("adminResetPasswordBtn")?.addEventListener("click", async () => {
+  const codeInput = document.getElementById("adminResetCodeInput");
+  const newInput = document.getElementById("adminResetNewPasswordInput");
+  const confirmInput = document.getElementById("adminResetConfirmPasswordInput");
+  const msg = document.getElementById("adminForgotPasswordMsg");
+  const code = codeInput.value.trim();
+  const newPassword = newInput.value;
+  if(!code){ setSecurityMsg(msg, "Enter the 6-digit code.", false); return; }
+  if(!newPassword || newPassword.length < 6){ setSecurityMsg(msg, "New password must be at least 6 characters.", false); return; }
+  if(newPassword !== confirmInput.value){ setSecurityMsg(msg, "New password and confirmation don't match.", false); return; }
+
+  const { error: otpError } = await sb.auth.verifyOtp({ email: currentAdminEmail, token: code, type: "recovery" });
+  if(otpError){ setSecurityMsg(msg, "Invalid or expired code.", false); return; }
+
+  const { error } = await sb.auth.updateUser({ password: newPassword });
+  if(error){ setSecurityMsg(msg, error.message, false); return; }
+
+  codeInput.value = ""; newInput.value = ""; confirmInput.value = "";
+  document.getElementById("adminResetCodeFields").classList.add("hidden");
+  setSecurityMsg(msg, "Password reset. You're still signed in.", true);
+});
+
+// ---- Change email: verify the CURRENT linked inbox with a code first ----
+document.getElementById("adminSendEmailChangeCodeBtn")?.addEventListener("click", async () => {
+  const msg = document.getElementById("adminEmailChangeMsg");
+  if(!currentAdminEmail){ setSecurityMsg(msg, "No linked email found.", false); return; }
+  setSecurityMsg(msg, "Sending code…", true);
+  const { error } = await sb.auth.signInWithOtp({ email: currentAdminEmail });
+  if(error){ setSecurityMsg(msg, error.message, false); return; }
+  document.getElementById("adminEmailChangeStep2").classList.remove("hidden");
+  setSecurityMsg(msg, `Code sent to ${currentAdminEmail}.`, true);
+});
+document.getElementById("adminVerifyEmailChangeCodeBtn")?.addEventListener("click", async () => {
+  const codeInput = document.getElementById("adminEmailChangeCodeInput");
+  const msg = document.getElementById("adminEmailChangeMsg");
+  const code = codeInput.value.trim();
+  if(!code){ setSecurityMsg(msg, "Enter the 6-digit code.", false); return; }
+  const { error } = await sb.auth.verifyOtp({ email: currentAdminEmail, token: code, type: "email" });
+  if(error){ setSecurityMsg(msg, "Invalid or expired code.", false); return; }
+  document.getElementById("adminEmailChangeStep3").classList.remove("hidden");
+  setSecurityMsg(msg, "Verified. Enter the new email below.", true);
+});
+document.getElementById("adminSubmitNewEmailBtn")?.addEventListener("click", async () => {
+  const newEmailInput = document.getElementById("adminNewEmailInput");
+  const msg = document.getElementById("adminEmailChangeMsg");
+  const newEmail = newEmailInput.value.trim();
+  if(!newEmail || !newEmail.includes("@")){ setSecurityMsg(msg, "Enter a valid email address.", false); return; }
+  const { error } = await sb.auth.updateUser({ email: newEmail });
+  if(error){ setSecurityMsg(msg, error.message, false); return; }
+  newEmailInput.value = "";
+  setSecurityMsg(msg, `Confirmation email sent to ${newEmail} — click the link there to finish the change.`, true);
 });
 
 function friendlyDateLabel(dateStr){
@@ -1135,6 +1339,116 @@ document.getElementById("chatForm").addEventListener("submit", async (e) => {
   appendBubble("admin", text);
   sb.channel("order-" + order.access_token).send({ type: "broadcast", event: "new_message", payload: { sender: "admin", body: text } });
 });
+
+// ---------------------------------------------------------------------
+// Stock: price / out-of-stock / low-stock overrides on top of the static
+// catalog baked into index.html. CATALOG_MANIFEST (above) mirrors that
+// catalog's product/plan names; public.stock_overrides holds only the
+// rows an admin has actually touched, keyed by (product_id, plan_name).
+// ---------------------------------------------------------------------
+let stockOverridesCache = {};
+let stockRenderedRows = []; // parallel to the .stock-plan-row elements, in DOM order
+
+function stockRowKey(productId, planName){ return productId + "::" + planName; }
+
+async function loadStockView(){
+  const list = document.getElementById("stockList");
+  list.innerHTML = '<div class="empty-note">Loading stock list…</div>';
+  const { data, error } = await sb.from("stock_overrides").select("*");
+  if(error){ list.innerHTML = `<div class="empty-note">${error.message}</div>`; return; }
+  stockOverridesCache = {};
+  (data || []).forEach(row => { stockOverridesCache[stockRowKey(row.product_id, row.plan_name)] = row; });
+  renderStockList();
+}
+
+function renderStockList(){
+  const list = document.getElementById("stockList");
+  const q = (document.getElementById("stockSearchInput").value || "").trim().toLowerCase();
+
+  const groups = CATALOG_MANIFEST.map(product => {
+    const productMatches = !q || product.name.toLowerCase().includes(q);
+    const plans = product.plans.filter(plan => productMatches || plan.name.toLowerCase().includes(q));
+    return { product, plans };
+  }).filter(g => g.plans.length);
+
+  if(!groups.length){
+    list.innerHTML = '<div class="empty-note">No products match.</div>';
+    stockRenderedRows = [];
+    return;
+  }
+
+  stockRenderedRows = [];
+  list.innerHTML = groups.map(({ product, plans }) => {
+    plans.forEach(plan => stockRenderedRows.push({ product, plan }));
+    return `
+      <div class="stock-product-group">
+        <div class="stock-product-head">
+          ${product.icon ? `<img src="${product.icon}" alt="" onerror="this.remove()">` : ""}
+          <span>${product.name}</span>
+        </div>
+        ${plans.map(plan => renderStockPlanRow(product, plan)).join("")}
+      </div>
+    `;
+  }).join("");
+
+  list.querySelectorAll(".stock-plan-row").forEach((rowEl, i) => wireStockPlanRow(rowEl, stockRenderedRows[i]));
+}
+
+function renderStockPlanRow(product, plan){
+  const key = stockRowKey(product.id, plan.name);
+  const override = stockOverridesCache[key];
+  const outOfStock = override ? override.out_of_stock : plan.outOfStock;
+  const lowStock = override ? override.low_stock : false;
+  const priceVal = override && override.price != null ? override.price : plan.price;
+  return `
+    <div class="stock-plan-row">
+      <div class="stock-plan-name">${plan.name}</div>
+      ${plan.custom
+        ? `<span class="stock-custom-price">Custom pricing</span>`
+        : `<input type="number" min="0" class="stock-price-input" value="${priceVal != null ? priceVal : ""}" placeholder="Price (Ks)">`}
+      <span class="stock-chip out ${outOfStock ? "on" : ""}" data-field="out_of_stock">${ICON_X} Out of Stock</span>
+      <span class="stock-chip low ${lowStock ? "on" : ""}" data-field="low_stock">⚠️ Low Stock</span>
+      <button type="button" class="ghost stock-save-btn">Save</button>
+      <span class="stock-save-msg"></span>
+    </div>
+  `;
+}
+
+function wireStockPlanRow(rowEl, { product, plan }){
+  const outChip = rowEl.querySelector('.stock-chip.out');
+  const lowChip = rowEl.querySelector('.stock-chip.low');
+  const priceInput = rowEl.querySelector('.stock-price-input');
+  const saveBtn = rowEl.querySelector('.stock-save-btn');
+  const msgEl = rowEl.querySelector('.stock-save-msg');
+
+  outChip?.addEventListener("click", () => outChip.classList.toggle("on"));
+  lowChip?.addEventListener("click", () => lowChip.classList.toggle("on"));
+
+  saveBtn.addEventListener("click", async () => {
+    const key = stockRowKey(product.id, plan.name);
+    const row = {
+      product_id: product.id,
+      plan_name: plan.name,
+      price: priceInput ? (priceInput.value === "" ? null : Number(priceInput.value)) : null,
+      out_of_stock: outChip.classList.contains("on"),
+      low_stock: lowChip.classList.contains("on"),
+      updated_at: new Date().toISOString(),
+    };
+    saveBtn.disabled = true;
+    msgEl.textContent = "";
+    const { data: { user } } = await sb.auth.getUser();
+    row.updated_by = user?.id || null;
+    const { error } = await sb.from("stock_overrides").upsert(row, { onConflict: "product_id,plan_name" });
+    saveBtn.disabled = false;
+    if(error){ msgEl.style.color = "var(--bad)"; msgEl.textContent = "Failed"; return; }
+    stockOverridesCache[key] = row;
+    msgEl.style.color = "var(--good)";
+    msgEl.textContent = "Saved";
+    setTimeout(() => { if(msgEl.textContent === "Saved") msgEl.textContent = ""; }, 2000);
+  });
+}
+
+document.getElementById("stockSearchInput")?.addEventListener("input", renderStockList);
 
 // Stay signed in across refreshes.
 (async () => {

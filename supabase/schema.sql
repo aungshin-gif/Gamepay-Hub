@@ -465,6 +465,35 @@ drop policy if exists "admin manage support messages" on public.support_messages
 create policy "admin manage support messages" on public.support_messages
   for all using (public.is_admin()) with check (public.is_admin());
 
+-- 10. Stock overrides -------------------------------------------------
+-- The product/plan catalog itself is still the static list baked into
+-- index.html (no schema for it), so this is a thin overlay: for any
+-- (product_id, plan_name) pair the admin has touched, the storefront
+-- merges these fields on top of the catalog at render time. A row that's
+-- never edited just doesn't exist -- the catalog's own price/outOfStock
+-- keep being used until an admin overrides them here.
+create table if not exists public.stock_overrides (
+  product_id text not null,
+  plan_name text not null,
+  price numeric,
+  out_of_stock boolean not null default false,
+  low_stock boolean not null default false,
+  updated_at timestamptz not null default now(),
+  updated_by uuid references auth.users(id) on delete set null,
+  primary key (product_id, plan_name)
+);
+alter table public.stock_overrides enable row level security;
+
+-- Anyone (including logged-out shoppers) needs to read this to see
+-- accurate stock/price on the storefront.
+drop policy if exists "anyone reads stock overrides" on public.stock_overrides;
+create policy "anyone reads stock overrides" on public.stock_overrides
+  for select using (true);
+
+drop policy if exists "admin manage stock overrides" on public.stock_overrides;
+create policy "admin manage stock overrides" on public.stock_overrides
+  for all using (public.is_admin()) with check (public.is_admin());
+
 -- ============================================================
 -- One-time setup after running this file:
 -- 1. Create your own admin login: Authentication -> Users -> Add user
