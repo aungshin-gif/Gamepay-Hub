@@ -7523,6 +7523,7 @@ plans: [
     let appliedCoupon = null; // { code, amount } once a coupon has been validated at checkout
     let chatMode = "order"; // "order" (per-order chat) | "support" (general GamePay support chat)
     let supportChannel = null;
+    let noticeChannel = null;
 
     const catalogView = document.getElementById("catalogView");
     const orderView = document.getElementById("orderView");
@@ -8750,6 +8751,22 @@ function subscribeSupportRealtime(){
   }).subscribe();
 }
 
+// A Broadcast notice only ever landed on next login/page load (or opening
+// the Notice view) -- there was no live channel for it at all, unlike
+// orders/chat. Every signed-in customer joins one shared channel; the
+// admin side sends one broadcast on it after inserting the notification
+// rows, and each client just re-fetches its own (RLS-scoped) notices --
+// no per-user looping needed on the admin side.
+function subscribeNoticeRealtime(){
+  if(!supabaseClient || !currentUser) return;
+  if(noticeChannel) return;
+  noticeChannel = supabaseClient.channel("site-notices");
+  noticeChannel.on("broadcast", { event: "new_notice" }, () => {
+    refreshNoticeBadge();
+    showToast("You have a new notice");
+  }).subscribe();
+}
+
 async function openSupportMessageView(){
   chatMode = "support";
   cameFromLanding = !landingShell.classList.contains("hidden");
@@ -8902,6 +8919,7 @@ function renderAuthUI(){
     refreshNoticeBadge();
     subscribeAllMyOrdersRealtime();
     subscribeSupportRealtime();
+    subscribeNoticeRealtime();
   } else {
     authHeaderActions.innerHTML = `<button id="loginBtn" class="auth-btn" type="button">Login</button><button id="getStartedBtn" class="auth-btn" type="button">Get Started</button>`;
     document.getElementById("loginBtn")?.addEventListener("click", () => openAuthModal("login"));
@@ -9484,6 +9502,7 @@ document.getElementById("accountLogoutBtn")?.addEventListener("click", async () 
   Object.values(myOrderChannels).forEach(ch => supabaseClient.removeChannel(ch));
   myOrderChannels = {};
   if(supportChannel){ supabaseClient.removeChannel(supportChannel); supportChannel = null; }
+  if(noticeChannel){ supabaseClient.removeChannel(noticeChannel); noticeChannel = null; }
   renderAuthUI();
   document.getElementById("accountView").classList.add("hidden");
   document.body.classList.remove("order-mode");

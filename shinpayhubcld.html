@@ -1650,6 +1650,11 @@ document.getElementById("broadcastSendBtn")?.addEventListener("click", async () 
   const { data, error } = await sb.rpc("admin_broadcast_notification", { p_title: title, p_body: body });
   btn.disabled = false;
   if(error){ msg.textContent = error.message; msg.style.color = "var(--bad)"; return; }
+  // Rows are already in the DB at this point -- this is just a "go check"
+  // ping so anyone currently on the site sees it immediately instead of
+  // only on their next login/page load. See subscribeNoticeRealtime() in
+  // index.html for the customer-side listener on this same channel.
+  sb.channel("site-notices").send({ type: "broadcast", event: "new_notice", payload: {} });
   msg.textContent = `Sent to ${data} customer(s).`;
   msg.style.color = "var(--good)";
   showAdminToast(`Broadcast sent to ${data} customer(s).`);
