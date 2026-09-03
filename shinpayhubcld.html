@@ -332,6 +332,7 @@
     <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" />
     <button type="button" class="pw-toggle" id="loginPwToggle" aria-label="Show password"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>
   </div>
+  <input id="loginGateCode" type="text" inputmode="numeric" autocomplete="off" placeholder="Admin access code" />
   <button id="loginBtn" style="width:100%">Sign in</button>
 </div>
 
@@ -485,6 +486,18 @@
               <button id="adminSubmitNewEmailBtn">Change Email</button>
             </div>
             <div id="adminEmailChangeMsg" style="font-size:12.5px;margin-top:8px;color:var(--muted);"></div>
+          </div>
+
+          <div class="security-divider"></div>
+
+          <div class="security-block">
+            <div class="settings-label" style="margin-bottom:6px;">Dashboard Access Code</div>
+            <div class="settings-sub" style="margin-bottom:10px;">A second lock in front of login itself -- checked before email/password are ever tried, so a correct account alone isn't enough to get in. Leave "Current" blank if none is set yet.</div>
+            <input id="adminGateCurrentInput" type="text" inputmode="numeric" autocomplete="off" placeholder="Current access code (leave blank if none set)" />
+            <input id="adminGateNewInput" type="text" inputmode="numeric" autocomplete="off" placeholder="New access code" />
+            <input id="adminGateConfirmInput" type="text" inputmode="numeric" autocomplete="off" placeholder="Confirm new access code" />
+            <button id="adminGateSaveBtn">Update Access Code</button>
+            <div id="adminGateMsg" style="font-size:12.5px;margin-top:8px;color:var(--muted);"></div>
           </div>
         </div>
         <div class="card">
@@ -771,6 +784,17 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
   fail("");
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value;
+  const gateCode = document.getElementById("loginGateCode").value.trim();
+
+  // A gate code checked before ever attempting sign-in, entirely separate
+  // from Supabase Auth -- even a correct email+password for a real account
+  // (admin or otherwise) doesn't get past this without it. The RPC only
+  // ever returns true/false (never the stored code itself) and treats "no
+  // code configured yet" as open, so first-time setup still works before
+  // one is set from Settings.
+  const { data: gateOk, error: gateError } = await sb.rpc("check_admin_gate_code", { p_code: gateCode });
+  if(gateError || !gateOk){ fail("Access code မှားနေပါတယ်။"); return; }
+
   const { error } = await sb.auth.signInWithPassword({ email, password });
   if(error){ fail(error.message); return; }
   await checkAdminAndEnter();
@@ -937,6 +961,22 @@ document.getElementById("adminSubmitNewEmailBtn")?.addEventListener("click", asy
   if(error){ setSecurityMsg(msg, error.message, false); return; }
   newEmailInput.value = "";
   setSecurityMsg(msg, `Confirmation email sent to ${newEmail} — click the link there to finish the change.`, true);
+});
+
+document.getElementById("adminGateSaveBtn")?.addEventListener("click", async () => {
+  const currentInput = document.getElementById("adminGateCurrentInput");
+  const newInput = document.getElementById("adminGateNewInput");
+  const confirmInput = document.getElementById("adminGateConfirmInput");
+  const msg = document.getElementById("adminGateMsg");
+  const current = currentInput.value.trim();
+  const next = newInput.value.trim();
+  const confirm = confirmInput.value.trim();
+  if(!next){ setSecurityMsg(msg, "Enter a new access code.", false); return; }
+  if(next !== confirm){ setSecurityMsg(msg, "New code and confirmation don't match.", false); return; }
+  const { data, error } = await sb.rpc("set_admin_gate_code", { p_current: current || null, p_new: next });
+  if(error || !data){ setSecurityMsg(msg, error?.message.includes("incorrect") ? "Current access code is incorrect." : (error?.message || "Update failed."), false); return; }
+  currentInput.value = ""; newInput.value = ""; confirmInput.value = "";
+  setSecurityMsg(msg, "Access code updated.", true);
 });
 
 function friendlyDateLabel(dateStr){

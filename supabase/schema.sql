@@ -518,10 +518,63 @@ drop policy if exists "admin manage stock overrides" on public.stock_overrides;
 create policy "admin manage stock overrides" on public.stock_overrides
   for all using (public.is_admin()) with check (public.is_admin());
 
+-- 11. Dashboard access code -----------------------------------------
+-- A second lock in front of shinpayhubcld.html's login, entirely separate
+-- from Supabase Auth: checked before email/password are ever tried, so a
+-- correct account alone isn't enough to get in. RLS has zero policies on
+-- this table (not even for admins) -- both RPCs below are the only way
+-- in or out, and check_admin_gate_code only ever returns true/false,
+-- never the stored code itself, even to a logged-in admin.
+create table if not exists public.admin_gate (
+  id boolean primary key default true check (id),
+  code text,
+  updated_at timestamptz not null default now()
+);
+alter table public.admin_gate enable row level security;
+
+create or replace function public.check_admin_gate_code(p_code text)
+returns boolean
+language plpgsql security definer set search_path = public as $$
+declare v_code text;
+begin
+  select code into v_code from public.admin_gate where id = true;
+  -- No code configured yet -- stay reachable so first-time setup (logging
+  -- in once with just email/password to set the code from Settings) works.
+  if v_code is null then
+    return true;
+  end if;
+  return v_code = p_code;
+end;
+$$;
+grant execute on function public.check_admin_gate_code to anon, authenticated;
+
+create or replace function public.set_admin_gate_code(p_current text, p_new text)
+returns boolean
+language plpgsql security definer set search_path = public as $$
+declare v_code text;
+begin
+  if not public.is_admin() then
+    raise exception 'not authorized';
+  end if;
+  select code into v_code from public.admin_gate where id = true;
+  if v_code is not null and v_code is distinct from p_current then
+    raise exception 'current code is incorrect';
+  end if;
+  insert into public.admin_gate (id, code, updated_at) values (true, p_new, now())
+    on conflict (id) do update set code = excluded.code, updated_at = excluded.updated_at;
+  return true;
+end;
+$$;
+grant execute on function public.set_admin_gate_code to authenticated;
+
 -- ============================================================
 -- One-time setup after running this file:
 -- 1. Create your own admin login: Authentication -> Users -> Add user
---    (use your real email + a strong password).
+--    (use your real email + a strong password). Use an email that's
+--    dedicated to this and never used as a regular customer login --
+--    otherwise "clean up test accounts" in Authentication can delete
+--    your own admin access along with it (public.admins cascades on
+--    that user being deleted).
 -- 2. Make that user an admin by running (replace the email):
 --
 --    insert into public.admins (user_id)
@@ -534,4 +587,9 @@ create policy "admin manage stock overrides" on public.stock_overrides
 --    file has run — no extra dashboard step needed for that. If you
 --    want to REQUIRE email confirmation before a customer can log in,
 --    turn it on under Authentication -> Providers -> Email.
+--
+-- 5. Dashboard access code: no code is required until you set one. Log
+--    into shinpayhubcld.html once (leave the "Access code" field blank),
+--    then set one under Settings -> Dashboard Access Code. From then on
+--    that code is required on every login, checked before email/password.
 -- ============================================================
