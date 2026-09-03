@@ -5646,6 +5646,10 @@ body.light-mode .notif-badge{ box-shadow:0 0 0 2px #fff; }
 .my-order-row .mo-body{ flex:1; min-width:0; }
 .my-order-row .moc{ font-weight:800; font-size:13px; }
 .my-order-row .mol{ font-size:12px; color:var(--muted,rgba(255,255,255,.7)); margin-top:3px; }
+.notice-body-preview{
+  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;
+  overflow:hidden; white-space:pre-wrap; word-break:break-word;
+}
 .mo-status-icon{
   flex:0 0 auto; width:34px; height:34px; border-radius:12px;
   display:flex; align-items:center; justify-content:center; border:1px solid transparent;
@@ -5837,7 +5841,7 @@ body.light-mode .noti-menu-item:hover{ background:rgba(124,58,237,.08); }
 }
 @keyframes noticeCodeIn{ from{ opacity:0; transform:translateY(-8px) scale(.97); } to{ opacity:1; transform:none; } }
 .notice-code-title{ font-size:14px; font-weight:900; color:#fff; margin-bottom:6px; }
-.notice-code-body{ font-size:12.5px; line-height:1.55; color:#d6c9ff; word-break:break-word; }
+.notice-code-body{ font-size:12.5px; line-height:1.6; color:#d6c9ff; word-break:break-word; white-space:pre-wrap; max-height:46vh; overflow-y:auto; }
 .notice-code-actions{ display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; }
 .notice-code-btn{
   flex:1 1 auto; padding:9px 10px; border-radius:10px; border:none; cursor:pointer;
@@ -5899,7 +5903,7 @@ body.light-mode .notice-code-btn.ghost{ background:rgba(124,58,237,.08); color:v
       <h3 id="authModalTitle">Login</h3>
       <p class="auth-sub" id="authModalSub">Sign in to see your orders on any device.</p>
       <div class="auth-error" id="authError"></div>
-      <div class="auth-field">
+      <div class="auth-field" id="authEmailField">
         <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6 12 13 2 6"/><path d="M2 6h20v12H2z"/></svg></span>
         <input id="authEmail" type="email" placeholder="Email" autocomplete="username" />
       </div>
@@ -8844,6 +8848,7 @@ function renderAuthUI(){
   }
 }
 
+const authEmailField = document.getElementById("authEmailField");
 const authPasswordField = document.getElementById("authPasswordField");
 const authForgotRow = document.getElementById("authForgotRow");
 const authOtpField = document.getElementById("authOtpField");
@@ -8851,7 +8856,7 @@ const authNewPasswordField = document.getElementById("authNewPasswordField");
 const authOtp = document.getElementById("authOtp");
 const authNewPassword = document.getElementById("authNewPassword");
 
-function openAuthModal(mode){
+function openAuthModal(mode, pendingEmail){
   authMode = mode;
   authError.textContent = "";
   authEmail.value = "";
@@ -8859,8 +8864,29 @@ function openAuthModal(mode){
   authOtp.value = "";
   authNewPassword.value = "";
   const switchLink = () => document.getElementById("authSwitchLink")?.addEventListener("click", () => openAuthModal(
-    mode === "forgot-email" || mode === "forgot-otp" ? "login" : (mode === "login" ? "signup" : "login")
+    mode === "forgot-email" || mode === "forgot-otp" || mode === "signup-sent" ? "login" : (mode === "login" ? "signup" : "login")
   ));
+
+  if(mode === "signup-sent"){
+    // Used to close the modal and rely on a toast alone for this -- easy
+    // to miss (mobile, looked away, toast timed out) since it left no
+    // trace once gone. This is the one thing that MUST register: without
+    // opening that email, the account can't be used at all.
+    authEmailField.classList.add("hidden");
+    authPasswordField.classList.add("hidden");
+    authForgotRow.classList.add("hidden");
+    authOtpField.classList.add("hidden");
+    authNewPasswordField.classList.add("hidden");
+    document.getElementById("authModalTitle").textContent = "Check your email!";
+    document.getElementById("authModalSub").textContent = `We sent a confirmation link to ${pendingEmail || "your email"}. Open it, then come back and log in.`;
+    document.getElementById("authSubmitBtn").textContent = "Got it";
+    document.getElementById("authSwitchText").innerHTML = `<a id="authSwitchLink">Back to Login</a>`;
+    switchLink();
+    authModalBackdrop.classList.remove("hidden");
+    return;
+  }
+
+  authEmailField.classList.remove("hidden");
 
   if(mode === "forgot-email"){
     authPasswordField.classList.add("hidden");
@@ -8903,6 +8929,7 @@ document.getElementById("authCloseBtn")?.addEventListener("click", () => authMod
 authModalBackdrop?.addEventListener("click", (e) => { if(e.target === authModalBackdrop) authModalBackdrop.classList.add("hidden"); });
 
 document.getElementById("authSubmitBtn")?.addEventListener("click", async () => {
+  if(authMode === "signup-sent"){ authModalBackdrop.classList.add("hidden"); return; }
   if(!supabaseClient){ authError.textContent = "Backend not configured yet."; return; }
   authError.textContent = "";
 
@@ -8944,8 +8971,7 @@ document.getElementById("authSubmitBtn")?.addEventListener("click", async () => 
   const { data, error } = await action;
   if(error){ authError.textContent = error.message; return; }
   if(authMode === "signup" && !data.session){
-    authModalBackdrop.classList.add("hidden");
-    showToast("Account created — check your email to confirm, then log in.");
+    openAuthModal("signup-sent", email);
     return;
   }
   currentUser = data.user;
@@ -9138,7 +9164,11 @@ function showNoticeCodePopup(notification){
   if(!popup) return;
   document.getElementById("noticeCodeTitle").textContent = notification.title || "Notice";
   document.getElementById("noticeCodeBody").textContent = notification.body || "";
-  popup.dataset.code = (String(notification.body || "").match(/coupon code:\s*([A-Za-z0-9_-]+)/i) || [])[1] || "";
+  const code = (String(notification.body || "").match(/coupon code:\s*([A-Za-z0-9_-]+)/i) || [])[1] || "";
+  popup.dataset.code = code;
+  // Most notices are a plain announcement with nothing to copy (see the
+  // new Broadcast feature) -- only the coupon-gift kind has an actual code.
+  document.getElementById("noticeCodeCopyBtn")?.classList.toggle("hidden", !code);
   popup.classList.remove("hidden");
 }
 function hideNoticeCodePopup(){
@@ -9168,11 +9198,11 @@ myOrdersBackBtn?.addEventListener("click", () => {
 function noticeRowHtml(n){
   const unread = !n.read_at;
   return `
-    <div class="my-order-row" style="cursor:default;${unread ? "border-color:rgba(103,245,255,.5)" : ""}">
+    <div class="my-order-row notice-row" data-notice-id="${n.id}" style="${unread ? "border-color:rgba(103,245,255,.5)" : ""}">
       <span class="mo-status-icon approved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
       <div class="mo-body">
-        <div class="moc">${n.title}${unread ? '<span class="unread-badge">•</span>' : ""}</div>
-        <div class="mol">${n.body}</div>
+        <div class="moc">${escapePreviewText(n.title)}${unread ? '<span class="unread-badge">•</span>' : ""}</div>
+        <div class="mol notice-body-preview">${escapePreviewText(n.body)}</div>
         <div class="mol">${formatOrderDate(n.created_at)}</div>
       </div>
     </div>
@@ -9214,6 +9244,15 @@ async function openNoticeView(){
     noticeList.innerHTML = `<div class="chat-empty">No notifications yet.</div>`;
   } else {
     noticeList.innerHTML = data.map(noticeRowHtml).join("");
+    // Bodies can now run long (see Broadcast) so the list only shows a
+    // 2-line preview -- tap through to the same popup used for a fresh
+    // notice to read the rest.
+    noticeList.querySelectorAll(".notice-row").forEach(row => {
+      row.addEventListener("click", () => {
+        const n = data.find(x => String(x.id) === row.dataset.noticeId);
+        if(n) showNoticeCodePopup(n);
+      });
+    });
   }
   supabaseClient.rpc("mark_notifications_read").then(() => refreshNoticeBadge());
 }
