@@ -5550,9 +5550,42 @@ body.light-mode .acct-row-chevron{ color:var(--muted,#98a1ad); }
 body.light-mode .acct-row.danger .acct-row-icon{ background:#fee2e2; color:#dc2626; }
 body.light-mode .acct-row.danger .acct-row-value{ color:#dc2626; }
 
-.chat-messages{
+/* Support chat -- a single card (avatar + name + "manual, not a bot" status
+   in the header, bubbles below, pill input + round send button) instead of
+   a bare message list, so it reads like a real support widget even though
+   it's still a full-page view, not a floating overlay. */
+.chat-panel{
   width:min(560px,100%);
   margin:14px auto 0;
+  border-radius:22px;
+  overflow:hidden;
+  background:rgba(20,4,34,.55);
+  border:1px solid rgba(199,125,255,.28);
+  box-shadow:0 14px 34px rgba(0,0,0,.35);
+}
+.chat-panel-header{
+  display:flex; align-items:center; gap:10px;
+  padding:14px 16px;
+  background:linear-gradient(135deg,#7a35c7,#4c1480);
+  color:#fff;
+}
+.chat-panel-back{
+  flex:0 0 auto; width:30px; height:30px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.16); border:none; color:#fff; cursor:pointer;
+}
+.chat-panel-back svg{ width:16px; height:16px; }
+.chat-panel-avatar{
+  flex:0 0 auto; width:38px; height:38px; border-radius:50%;
+  background:#fff; display:flex; align-items:center; justify-content:center;
+  overflow:hidden; box-shadow:0 0 0 2px rgba(255,255,255,.35);
+}
+.chat-panel-avatar img{ width:100%; height:100%; object-fit:contain; padding:4px; }
+.chat-panel-info{ flex:1; min-width:0; }
+.chat-panel-name{ font-weight:800; font-size:14px; line-height:1.25; }
+.chat-panel-status{ display:flex; align-items:center; gap:5px; font-size:10.5px; color:rgba(255,255,255,.85); margin-top:2px; }
+.chat-status-dot{ width:7px; height:7px; border-radius:50%; background:#3ec98b; box-shadow:0 0 6px #3ec98b; flex:0 0 auto; }
+.chat-panel .chat-messages{
   min-height:280px;
   max-height:52vh;
   overflow-y:auto;
@@ -5560,9 +5593,7 @@ body.light-mode .acct-row.danger .acct-row-value{ color:#dc2626; }
   display:flex;
   flex-direction:column;
   gap:6px;
-  background:rgba(20,4,34,.45);
-  border:1px solid rgba(199,125,255,.18);
-  border-radius:var(--radius-md,16px);
+  background:rgba(0,0,0,.18);
 }
 .chat-empty{ margin:auto; font-size:12px; color:var(--muted,rgba(255,255,255,.6)); }
 .chat-bubble{
@@ -5593,18 +5624,36 @@ body.light-mode .acct-row.danger .acct-row-value{ color:#dc2626; }
 .chat-row .chat-bubble{ margin:0; }
 .chat-row-avatar{ width:24px; height:24px; font-size:10.5px; }
 .chat-row-avatar svg{ width:12px; height:12px; }
-.chat-input-row{
-  width:min(560px,100%);
-  margin:10px auto 0;
+.chat-row-avatar img{ width:100%; height:100%; object-fit:contain; border-radius:50%; padding:2px; }
+.chat-panel .chat-input-row{
+  margin:0;
+  padding:10px 12px 12px;
+  background:rgba(0,0,0,.14);
   display:flex;
   gap:8px;
 }
 .chat-input-row .input{ flex:1; border-radius:999px; }
 .chat-send-btn{
-  width:auto; padding:0 22px; border-radius:999px;
-  background:linear-gradient(135deg,#7a35c7,#b86bff); border:none;
+  flex:0 0 auto; width:40px; height:40px; padding:0; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#7a35c7,#b86bff); border:none; color:#fff; cursor:pointer;
 }
+.chat-send-btn svg{ width:17px; height:17px; }
 body.light-mode .chat-bubble.customer{ box-shadow:0 1px 2px rgba(122,53,199,.25); }
+body.light-mode .chat-panel{
+  background:linear-gradient(160deg,rgba(255,251,240,.95),rgba(233,215,255,.8));
+  border:2px solid rgba(212,168,67,.65);
+  box-shadow:0 0 0 4px rgba(168,124,224,.18), 0 18px 40px rgba(93,72,137,.20), inset 0 1px rgba(255,255,255,.85);
+}
+body.light-mode .chat-panel-header{
+  background:linear-gradient(135deg,#d4a843,#a87ce0);
+  color:#2c1f42;
+}
+body.light-mode .chat-panel-status{ color:rgba(44,31,66,.75); }
+body.light-mode .chat-panel-back{ background:rgba(255,255,255,.35); color:#2c1f42; }
+body.light-mode .chat-panel .chat-messages{ background:rgba(255,255,255,.35); }
+body.light-mode .chat-panel .chat-input-row{ background:rgba(255,255,255,.25); }
+body.light-mode .chat-bubble.admin{ background:rgba(255,255,255,.75); color:#372b52; border-color:rgba(212,168,67,.35); }
 
 .my-orders-btn{
   position:relative;
@@ -5685,7 +5734,6 @@ body.light-mode .mo-badge.rejected{ background:#ffe6ec; color:#c81e4d; border-co
   font-size:11px; line-height:1;
 }
 .chat-avatar svg{ width:10px; height:10px; }
-#chatSupportChip{ display:inline-flex; align-items:center; gap:6px; padding:5px 12px 5px 5px; }
 
 /* Light-theme readability -- the site defaults to body.light-mode, so
    every one of the blocks above (written for the dark theme) needs an
@@ -5732,16 +5780,7 @@ body.light-mode .status-step.done .status-step-dot{
   box-shadow:0 0 12px rgba(62,201,139,.40);
 }
 body.light-mode .status-step-line.done{ background:linear-gradient(90deg,#3ec98b,#7ee6b8); }
-body.light-mode .chat-messages{
-  background:#efeff2;
-  border-color:#e2e2e6;
-}
 body.light-mode .chat-empty{ color:var(--muted,#6b7686); }
-body.light-mode .chat-bubble.admin{
-  background:#e2e2e6;
-  color:var(--ink,#1f2937);
-  border:none;
-}
 body.light-mode .my-orders-btn{
   color:var(--ink,#1f2937);
   background:var(--surface,#fff);
@@ -6344,12 +6383,21 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 
     <div id="chatView" class="hidden order-chat-view">
       <div class="preview-shell">
-        <div class="dashboard-head"><button id="chatBackBtn" class="dashboard-back-btn" type="button">← Back</button><span class="dashboard-chip" id="chatSupportChip"><span class="chat-avatar">👾</span>GAMEPAY SUPPORT</span></div>
-        <div id="chatMessages" class="chat-messages"><div class="chat-empty">No messages yet.</div></div>
-        <form id="chatForm" class="chat-input-row">
-          <input id="chatInput" class="input" type="text" placeholder="Type a message…" autocomplete="off" />
-          <button type="submit" class="telegram-btn chat-send-btn">Send</button>
-        </form>
+        <div class="chat-panel">
+          <div class="chat-panel-header">
+            <button id="chatBackBtn" class="chat-panel-back" type="button" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <span class="chat-panel-avatar"><img id="chatHeaderLogo" alt="GamePay Hub" /></span>
+            <div class="chat-panel-info">
+              <div class="chat-panel-name">GamePay Hub Support</div>
+              <div class="chat-panel-status"><span class="chat-status-dot"></span>Admin ကိုယ်တိုင် စာပြန်ပါမယ် · Manual support</div>
+            </div>
+          </div>
+          <div id="chatMessages" class="chat-messages"><div class="chat-empty">No messages yet.</div></div>
+          <form id="chatForm" class="chat-input-row">
+            <input id="chatInput" class="input chat-input-pill" type="text" placeholder="Type a message…" autocomplete="off" />
+            <button type="submit" class="chat-send-btn" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9 22 2z"/></svg></button>
+          </form>
+        </div>
       </div>
     </div>
 
@@ -8695,6 +8743,12 @@ function showOrderStatusView(){
   window.scrollTo(0, 0);
 }
 
+// Reuses the header's own logo <img> src instead of re-embedding the same
+// (large, base64) image a second time just for the chat avatar.
+function siteLogoSrc(){
+  return document.querySelector(".compact-logo")?.getAttribute("src") || "";
+}
+
 function appendChatBubble(sender, body){
   const box = document.getElementById("chatMessages");
   if(box.querySelector(".chat-empty")) box.innerHTML = "";
@@ -8705,9 +8759,9 @@ function appendChatBubble(sender, body){
   avatar.className = "chat-row-avatar chat-avatar";
   const myStyle = getAvatarStyleId();
   avatar.innerHTML = isAdmin
-    ? "👾"
+    ? `<img src="${siteLogoSrc()}" alt="GamePay Hub" />`
     : (myStyle ? avatarStyleSvg(myStyle, 14) : (getDisplayName()[0]?.toUpperCase() || "?"));
-  if(!isAdmin) avatar.style.background = avatarGradient(getAvatarColorId());
+  avatar.style.background = isAdmin ? "#fff" : avatarGradient(getAvatarColorId());
   const bubble = document.createElement("div");
   bubble.className = "chat-bubble " + (isAdmin ? "admin" : "customer");
   bubble.textContent = body;
@@ -8723,6 +8777,7 @@ async function openChatView(){
   markCurrentOrderRead();
   hideAllOrderSubviews();
   document.getElementById("chatView").classList.remove("hidden");
+  document.getElementById("chatHeaderLogo").src = siteLogoSrc();
   const box = document.getElementById("chatMessages");
   box.innerHTML = "<div class='chat-empty'>Loading messages…</div>";
   if(!supabaseClient || !currentOrder) return;
@@ -8779,6 +8834,7 @@ async function openSupportMessageView(){
   hideAllOrderSubviews();
   orderView.classList.remove("hidden");
   document.getElementById("chatView").classList.remove("hidden");
+  document.getElementById("chatHeaderLogo").src = siteLogoSrc();
   const box = document.getElementById("chatMessages");
   window.scrollTo(0, 0);
 
