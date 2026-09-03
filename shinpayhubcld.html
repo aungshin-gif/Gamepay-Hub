@@ -244,6 +244,20 @@
   .modal-close{ float:right; cursor:pointer; font-size:20px; color:var(--muted); line-height:1; }
   .user-orders-list{ max-height:340px; overflow-y:auto; margin-top:8px; }
 
+  /* Native confirm()/alert() looked out of place next to everything else --
+     one small modal for confirmations, one toast for status messages. */
+  .admin-toast{
+    position:fixed; left:50%; bottom:26px; z-index:400;
+    transform:translateX(-50%) translateY(10px); opacity:0; pointer-events:none;
+    max-width:min(360px,calc(100vw - 32px)); padding:12px 16px; border-radius:12px;
+    background:#1f2333; color:#fff; font-size:13px; font-weight:700;
+    box-shadow:0 14px 32px rgba(0,0,0,.28);
+    transition:opacity .18s ease, transform .18s ease;
+  }
+  .admin-toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+  .admin-toast.hidden{ display:none; }
+  .admin-toast.error{ background:var(--bad); }
+
   /* ---------- Order detail "page" ---------- */
   .page-back-row{ margin-bottom:18px; }
   .page-back-btn{ background:#fff; color:var(--ink); border:1px solid var(--border-strong); padding:9px 14px; }
@@ -537,6 +551,19 @@
   </div>
 </div>
 
+<div id="adminConfirmModal" class="modal-backdrop hidden" style="align-items:center;">
+  <div class="modal-card" style="width:min(360px,100%);">
+    <div id="adminConfirmTitle" class="card-title" style="margin-bottom:8px;"></div>
+    <div id="adminConfirmMessage" style="font-size:13.5px;color:var(--muted);line-height:1.5;"></div>
+    <div style="display:flex;gap:10px;margin-top:18px;">
+      <button type="button" id="adminConfirmCancelBtn" class="ghost" style="flex:1;">Cancel</button>
+      <button type="button" id="adminConfirmOkBtn" style="flex:1;">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div id="adminToast" class="admin-toast hidden"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // Must match the same project as index.html's SUPABASE_URL / SUPABASE_ANON_KEY.
@@ -562,6 +589,48 @@ const ICON_ARCHIVE = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="
 const ICON_RESTORE = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>`;
 const ICON_GIFT = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7Z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7Z"/></svg>`;
 function randomCouponCode(){ return "GPH" + Math.random().toString(36).slice(2, 8).toUpperCase(); }
+
+let adminToastTimer = null;
+function showAdminToast(message, isError){
+  const el = document.getElementById("adminToast");
+  if(!el) return;
+  clearTimeout(adminToastTimer);
+  el.textContent = message;
+  el.classList.toggle("error", !!isError);
+  el.classList.remove("hidden");
+  requestAnimationFrame(() => el.classList.add("show"));
+  adminToastTimer = setTimeout(() => {
+    el.classList.remove("show");
+    setTimeout(() => el.classList.add("hidden"), 200);
+  }, 2600);
+}
+
+// Promise-based stand-in for window.confirm() so the prompt looks like the
+// rest of the dashboard instead of a native browser dialog.
+function showAdminConfirm(message, { title = "Are you sure?", confirmText = "Confirm" } = {}){
+  const modal = document.getElementById("adminConfirmModal");
+  document.getElementById("adminConfirmTitle").textContent = title;
+  document.getElementById("adminConfirmMessage").textContent = message;
+  const okBtn = document.getElementById("adminConfirmOkBtn");
+  const cancelBtn = document.getElementById("adminConfirmCancelBtn");
+  okBtn.textContent = confirmText;
+  modal.classList.remove("hidden");
+  return new Promise(resolve => {
+    const cleanup = (result) => {
+      modal.classList.add("hidden");
+      okBtn.removeEventListener("click", onOk);
+      cancelBtn.removeEventListener("click", onCancel);
+      modal.removeEventListener("click", onBackdrop);
+      resolve(result);
+    };
+    const onOk = () => cleanup(true);
+    const onCancel = () => cleanup(false);
+    const onBackdrop = (e) => { if(e.target === modal) cleanup(false); };
+    okBtn.addEventListener("click", onOk);
+    cancelBtn.addEventListener("click", onCancel);
+    modal.addEventListener("click", onBackdrop);
+  });
+}
 
 const loginView = document.getElementById("loginView");
 const dashboardView = document.getElementById("dashboardView");
@@ -885,7 +954,8 @@ document.getElementById("bulkArchiveBtn")?.addEventListener("click", async () =>
     msg.style.color = "var(--muted)";
     return;
   }
-  if(!confirm(`Archive ${targets.length} completed/rejected order(s)? You can still view them anytime via "Show archived".`)) return;
+  const ok = await showAdminConfirm(`Archive ${targets.length} completed/rejected order(s)? You can still view them anytime via "Show archived".`, { title: "Archive orders?", confirmText: "Archive" });
+  if(!ok) return;
   msg.textContent = "Archiving…";
   msg.style.color = "var(--muted)";
   const { error } = await sb.from("orders").update({ archived: true }).in("id", targets.map(o => o.id));
@@ -989,7 +1059,7 @@ async function showUserDetail(user){
     input.value = "";
     appendUserMsgBubble(msgBox, "admin", text);
     const { error: sendError } = await sb.from("support_messages").insert({ user_id: user.id, sender: "admin", body: text });
-    if(sendError){ alert("Send failed: " + sendError.message); return; }
+    if(sendError){ showAdminToast("Send failed: " + sendError.message, true); return; }
     sb.channel("support-" + user.id).send({ type: "broadcast", event: "new_message", payload: { sender: "admin", body: text } });
   });
 }
@@ -1111,9 +1181,11 @@ async function loadCoupons(){
   box.querySelectorAll(".coupon-delete-btn").forEach(btn => {
     btn.addEventListener("click", async (e) => {
       e.stopPropagation();
-      if(!confirm("Delete this coupon permanently?")) return;
+      const ok = await showAdminConfirm("Delete this coupon permanently?", { title: "Delete coupon?", confirmText: "Delete" });
+      if(!ok) return;
       const { error: delError } = await sb.rpc("admin_delete_coupon", { p_id: btn.dataset.id });
-      if(delError){ alert("Delete failed: " + delError.message); return; }
+      if(delError){ showAdminToast("Delete failed: " + delError.message, true); return; }
+      showAdminToast("Coupon deleted.");
       loadCoupons();
     });
   });
@@ -1275,7 +1347,7 @@ async function selectOrder(id){
 
 async function setStatus(order, status){
   const { error } = await sb.from("orders").update({ status, updated_at: new Date().toISOString() }).eq("id", order.id);
-  if(error){ alert("Update failed: " + error.message); return; }
+  if(error){ showAdminToast("Update failed: " + error.message, true); return; }
   order.status = status;
   sb.channel("order-" + order.access_token).send({ type: "broadcast", event: "status_update", payload: { status } });
   selectOrder(order.id);
@@ -1286,7 +1358,7 @@ async function setArchived(order, archived){
   // is never deleted, so nothing here can lose an order or its chat
   // history, unlike an actual DELETE.
   const { error } = await sb.from("orders").update({ archived }).eq("id", order.id);
-  if(error){ alert("Update failed: " + error.message); return; }
+  if(error){ showAdminToast("Update failed: " + error.message, true); return; }
   order.archived = archived;
   renderOrderList();
   selectOrder(order.id);
@@ -1335,7 +1407,7 @@ document.getElementById("chatForm").addEventListener("submit", async (e) => {
   if(!text || !order) return;
   input.value = "";
   const { error } = await sb.from("messages").insert({ order_id: order.id, sender: "admin", body: text });
-  if(error){ alert("Send failed: " + error.message); return; }
+  if(error){ showAdminToast("Send failed: " + error.message, true); return; }
   appendBubble("admin", text);
   sb.channel("order-" + order.access_token).send({ type: "broadcast", event: "new_message", payload: { sender: "admin", body: text } });
 });

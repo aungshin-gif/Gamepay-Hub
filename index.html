@@ -9094,10 +9094,19 @@ function positionNotiMenu(){
   notiMenu.style.top = (rect.bottom + 8) + "px";
   notiMenu.style.right = (window.innerWidth - rect.right) + "px";
 }
-notiBtn?.addEventListener("click", (e) => {
+notiBtn?.addEventListener("click", async (e) => {
   e.stopPropagation();
   if(!notiMenu) return;
   const opening = notiMenu.classList.contains("hidden");
+  // An unread notice (a gifted coupon, most often) is the one thing worth
+  // seeing in a single tap -- go straight to it instead of making the
+  // customer open the dropdown and then tap "Notice" separately to find
+  // the same thing.
+  if(opening && supabaseClient && currentUser && !document.getElementById("noticeBadge")?.classList.contains("hidden")){
+    const { data, error } = await supabaseClient.rpc("get_notifications");
+    const latestUnread = !error && data ? data.find(n => !n.read_at) : null;
+    if(latestUnread){ showNoticeCodePopup(latestUnread); return; }
+  }
   if(opening) positionNotiMenu();
   notiMenu.classList.toggle("hidden");
 });
