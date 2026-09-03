@@ -9297,6 +9297,7 @@ async function refreshNoticeBadge(){
   const badge = document.getElementById("noticeBadge");
   if(!badge || !supabaseClient || !currentUser){ badge?.classList.add("hidden"); refreshNotiTopBadge(); return; }
   const { data, error } = await supabaseClient.rpc("get_notifications");
+  if(error) console.error("get_notifications failed:", error);
   const unread = !error && data ? data.filter(n => !n.read_at).length : 0;
   if(unread > 0){ badge.textContent = String(unread); badge.classList.remove("hidden"); }
   else badge.classList.add("hidden");
@@ -9324,7 +9325,10 @@ async function openNoticeView(){
   }
   noticeList.innerHTML = `<div class="chat-empty">Loading…</div>`;
   const { data, error } = await supabaseClient.rpc("get_notifications");
-  if(error || !data || !data.length){
+  if(error){
+    console.error("get_notifications failed:", error);
+    noticeList.innerHTML = `<div class="chat-empty">Couldn't load notifications. Please try again.</div>`;
+  } else if(!data || !data.length){
     noticeList.innerHTML = `<div class="chat-empty">No notifications yet.</div>`;
   } else {
     noticeList.innerHTML = data.map(noticeRowHtml).join("");
