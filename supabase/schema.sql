@@ -322,7 +322,10 @@ begin
 
   if p_user_id is not null then
     insert into public.notifications(user_id, title, body)
-    values (p_user_id, 'You got a coupon!', 'Hey, Gamepay Hub give u coupon code, check in notification box.');
+    values (
+      p_user_id, 'You got a coupon!',
+      'GamePay Hub gave you a coupon code: ' || p_code || ' (worth ' || p_amount || ' Ks). Enter it at checkout to use it!'
+    );
   end if;
 end;
 $$;

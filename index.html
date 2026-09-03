@@ -5823,6 +5823,31 @@ body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
 body.light-mode .noti-menu{ background:#fff; border-color:var(--border,rgba(31,41,55,.16)); box-shadow:0 14px 34px rgba(20,20,43,.14); }
 body.light-mode .noti-menu-item{ color:var(--ink,#1f2937); }
 body.light-mode .noti-menu-item:hover{ background:rgba(124,58,237,.08); }
+
+/* Small "you got a code" popup, shown instead of navigating straight to the
+   full Notice list -- same fixed+body-reparented pattern as .noti-menu so
+   it isn't clipped by .compact-header's overflow:hidden either. */
+.notice-code-popup{ position:fixed; inset:0; z-index:10000; display:flex; align-items:flex-start; justify-content:center; padding-top:78px; background:rgba(8,6,18,.45); backdrop-filter:blur(2px); }
+.notice-code-popup.hidden{ display:none; }
+.notice-code-card{
+  width:min(320px,calc(100vw - 32px)); padding:16px; border-radius:16px;
+  background:rgba(18,14,38,.98); border:1px solid rgba(199,125,255,.35);
+  box-shadow:0 20px 44px rgba(0,0,0,.4);
+  animation:noticeCodeIn .28s cubic-bezier(.23,1,.32,1) both;
+}
+@keyframes noticeCodeIn{ from{ opacity:0; transform:translateY(-8px) scale(.97); } to{ opacity:1; transform:none; } }
+.notice-code-title{ font-size:14px; font-weight:900; color:#fff; margin-bottom:6px; }
+.notice-code-body{ font-size:12.5px; line-height:1.55; color:#d6c9ff; word-break:break-word; }
+.notice-code-actions{ display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; }
+.notice-code-btn{
+  flex:1 1 auto; padding:9px 10px; border-radius:10px; border:none; cursor:pointer;
+  font-size:11.5px; font-weight:800; background:linear-gradient(135deg,#7b2cff,#c24dff); color:#fff;
+}
+.notice-code-btn.ghost{ background:rgba(255,255,255,.08); color:#d6c9ff; }
+body.light-mode .notice-code-card{ background:#fff; border-color:var(--border,rgba(31,41,55,.16)); box-shadow:0 20px 44px rgba(20,20,43,.18); }
+body.light-mode .notice-code-title{ color:var(--ink,#1f2937); }
+body.light-mode .notice-code-body{ color:var(--muted,#4b5563); }
+body.light-mode .notice-code-btn.ghost{ background:rgba(124,58,237,.08); color:var(--ink,#1f2937); }
 </style>
 </head>
 <body class="light-mode">
@@ -5851,6 +5876,17 @@ body.light-mode .noti-menu-item:hover{ background:rgba(124,58,237,.08); }
             <span class="noti-menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
             <span class="noti-menu-label">Message</span>
           </button>
+        </div>
+      </div>
+      <div id="noticeCodePopup" class="notice-code-popup hidden" role="dialog" aria-label="New notice">
+        <div class="notice-code-card">
+          <div class="notice-code-title" id="noticeCodeTitle"></div>
+          <div class="notice-code-body" id="noticeCodeBody"></div>
+          <div class="notice-code-actions">
+            <button type="button" id="noticeCodeCopyBtn" class="notice-code-btn">Copy code</button>
+            <button type="button" id="noticeCodeViewAllBtn" class="notice-code-btn ghost">View all</button>
+            <button type="button" id="noticeCodeCloseBtn" class="notice-code-btn ghost">Close</button>
+          </div>
         </div>
       </div>
       <span class="compact-status"><i></i> ONLINE</span>
@@ -7337,6 +7373,12 @@ plans: [
     let currentOrder = null; // { id, access_token, order_code }
     let orderChannel = null; // realtime channel for the active order
     let currentUser = null; // Supabase Auth user, once logged in
+    // Every order's broadcast channel the customer has, keyed by access_token
+    // -- kept subscribed for as long as they're signed in (not just while
+    // that order's own status page happens to be open) so a "new message"
+    // or "status_update" event updates the Noti badge right away no matter
+    // where on the site they currently are.
+    let myOrderChannels = {};
 
     // Initial-letter avatars (no photo upload -- just a customer-picked
     // color), shared by the account page and the chat bubbles.
@@ -8017,6 +8059,12 @@ const sameProduct = currentProduct && currentProduct.id === product.id;
   if(slipInput) slipInput.value = "";
   slipPreview?.classList.add("hidden");
   if(slipPreview) slipPreview.innerHTML = "";
+  // A coupon applied on a previous product used to silently keep
+  // discounting whatever product/plan was opened next, since nothing
+  // ever cleared it on switching -- reset it along with everything else.
+  appliedCoupon = null;
+  if(couponInput) couponInput.value = "";
+  if(couponMsg){ couponMsg.textContent = ""; couponMsg.className = "coupon-msg"; }
 
   // Show a brief loading state, then reveal the plans page.
   showPageLoader(`Loading ${product.name} plans…`);
@@ -8504,27 +8552,49 @@ function markCurrentOrderRead(){
   supabaseClient.rpc("mark_customer_read", { p_token: currentOrder.access_token });
 }
 
-function subscribeToOrderUpdates(){
-  if(!supabaseClient || !currentOrder) return;
-  if(orderChannel) supabaseClient.removeChannel(orderChannel);
-  orderChannel = supabaseClient.channel("order-" + currentOrder.access_token);
-  orderChannel
-    .on("broadcast", { event: "status_update" }, (msg) => {
-      const watching = !document.getElementById("orderStatusView").classList.contains("hidden");
-      setOrderStatusUI(msg.payload.status);
-      if(!watching) bumpUnseenBadge();
+// Subscribes one order's broadcast channel exactly once and keeps it alive
+// -- called both for the order currently on screen and, up front, for every
+// order the signed-in customer has (see subscribeAllMyOrdersRealtime), so
+// admin replies/status changes reach the Noti badge instantly regardless of
+// which one (if any) is actually open right now.
+function ensureOrderChannel(order){
+  if(!supabaseClient || !order?.access_token) return null;
+  if(myOrderChannels[order.access_token]) return myOrderChannels[order.access_token];
+  const ch = supabaseClient.channel("order-" + order.access_token);
+  ch.on("broadcast", { event: "status_update" }, (msg) => {
+      const isActive = currentOrder?.access_token === order.access_token;
+      const watching = isActive && !document.getElementById("orderStatusView").classList.contains("hidden");
+      if(watching) setOrderStatusUI(msg.payload.status);
+      else bumpUnseenBadge();
     })
     .on("broadcast", { event: "new_message" }, (msg) => {
-      if(msg.payload.sender === "admin"){
-        if(!document.getElementById("chatView").classList.contains("hidden")){
-          appendChatBubble("admin", msg.payload.body);
-        } else {
-          showToast("New message from support");
-          bumpUnseenBadge();
-        }
+      if(msg.payload.sender !== "admin") return;
+      const isActive = currentOrder?.access_token === order.access_token;
+      const watchingChat = isActive && !document.getElementById("chatView").classList.contains("hidden");
+      if(watchingChat){
+        appendChatBubble("admin", msg.payload.body);
+      } else {
+        showToast("New message from support");
+        bumpUnseenBadge();
       }
     })
     .subscribe();
+  myOrderChannels[order.access_token] = ch;
+  return ch;
+}
+
+function subscribeToOrderUpdates(){
+  if(!supabaseClient || !currentOrder) return;
+  orderChannel = ensureOrderChannel(currentOrder);
+}
+
+// Called once the customer is known (login or session restore) so every
+// one of their orders is already listened to before they ever open one.
+async function subscribeAllMyOrdersRealtime(){
+  if(!supabaseClient || !currentUser) return;
+  const { data, error } = await supabaseClient.from("orders").select("id, access_token");
+  if(error || !data) return;
+  data.forEach(o => ensureOrderChannel(o));
 }
 
 function renderStatusDetails(order){
@@ -8600,10 +8670,17 @@ async function openChatView(){
 
 function subscribeSupportRealtime(){
   if(!supabaseClient || !currentUser) return;
-  if(supportChannel) supabaseClient.removeChannel(supportChannel);
+  if(supportChannel) return; // already subscribed -- kept alive for the whole session, not just while the Message view is open
   supportChannel = supabaseClient.channel("support-" + currentUser.id);
   supportChannel.on("broadcast", { event: "new_message" }, (msg) => {
-    if(msg.payload.sender === "admin") appendChatBubble("admin", msg.payload.body);
+    if(msg.payload.sender !== "admin") return;
+    const watching = chatMode === "support" && !document.getElementById("chatView").classList.contains("hidden");
+    if(watching){
+      appendChatBubble("admin", msg.payload.body);
+    } else {
+      showToast("New message from support");
+      bumpUnseenBadge();
+    }
   }).subscribe();
 }
 
@@ -8757,6 +8834,8 @@ function renderAuthUI(){
     authHeaderActions.innerHTML = `<button id="myAccountBtn" class="auth-btn" type="button">${ICONS.user}${getDisplayName()}</button>`;
     document.getElementById("myAccountBtn")?.addEventListener("click", openAccountView);
     refreshNoticeBadge();
+    subscribeAllMyOrdersRealtime();
+    subscribeSupportRealtime();
   } else {
     authHeaderActions.innerHTML = `<button id="loginBtn" class="auth-btn" type="button">Login</button><button id="getStartedBtn" class="auth-btn" type="button">Get Started</button>`;
     document.getElementById("loginBtn")?.addEventListener("click", () => openAuthModal("login"));
@@ -8970,6 +9049,10 @@ async function openMyOrdersView(){
       o._unread = (byOrder[o.id] || []).filter(m => !since || new Date(m.created_at) > since).length;
     });
     renderMyOrdersRows(rows);
+    // Catches any order placed after the login-time subscription (e.g.
+    // earlier this same session) that wouldn't be in myOrderChannels yet --
+    // ensureOrderChannel() is a no-op for ones already subscribed.
+    rows.forEach(o => ensureOrderChannel(o));
     return;
   }
 
@@ -8996,6 +9079,8 @@ const notiMenu = document.getElementById("notiMenu");
 // position/z-index it had. Moving it out to be a direct child of <body>
 // removes it from that ancestor chain entirely.
 if(notiMenu && notiMenu.parentElement !== document.body) document.body.appendChild(notiMenu);
+const noticeCodePopup = document.getElementById("noticeCodePopup");
+if(noticeCodePopup && noticeCodePopup.parentElement !== document.body) document.body.appendChild(noticeCodePopup);
 function refreshNotiTopBadge(){
   const top = document.getElementById("notiBtnBadge");
   if(!top) return;
@@ -9026,7 +9111,41 @@ document.addEventListener("click", (e) => {
   // both.
   if(!e.target.closest("#notiDropdownWrap") && !e.target.closest("#notiMenu")) notiMenu.classList.add("hidden");
 });
-document.getElementById("notiMenuNotice")?.addEventListener("click", () => { notiMenu?.classList.add("hidden"); openNoticeView(); });
+// Tapping "Notice" used to jump straight to the full notice list -- which
+// buried whatever the admin just gifted a page-navigation away. If there's
+// an unread one, surface it immediately in a small popup instead (title +
+// body, which now actually contains the coupon code -- see schema.sql's
+// admin_create_coupon), with a one-tap copy and a link to the full list.
+document.getElementById("notiMenuNotice")?.addEventListener("click", async () => {
+  notiMenu?.classList.add("hidden");
+  if(!supabaseClient || !currentUser){ openNoticeView(); return; }
+  const { data, error } = await supabaseClient.rpc("get_notifications");
+  const latestUnread = !error && data ? data.find(n => !n.read_at) : null;
+  if(latestUnread) showNoticeCodePopup(latestUnread);
+  else openNoticeView();
+});
+function showNoticeCodePopup(notification){
+  const popup = document.getElementById("noticeCodePopup");
+  if(!popup) return;
+  document.getElementById("noticeCodeTitle").textContent = notification.title || "Notice";
+  document.getElementById("noticeCodeBody").textContent = notification.body || "";
+  popup.dataset.code = (String(notification.body || "").match(/coupon code:\s*([A-Za-z0-9_-]+)/i) || [])[1] || "";
+  popup.classList.remove("hidden");
+}
+function hideNoticeCodePopup(){
+  document.getElementById("noticeCodePopup")?.classList.add("hidden");
+  supabaseClient?.rpc("mark_notifications_read").then(() => refreshNoticeBadge());
+}
+document.getElementById("noticeCodeCloseBtn")?.addEventListener("click", hideNoticeCodePopup);
+document.getElementById("noticeCodePopup")?.addEventListener("click", (e) => { if(e.target.id === "noticeCodePopup") hideNoticeCodePopup(); });
+document.getElementById("noticeCodeViewAllBtn")?.addEventListener("click", () => { hideNoticeCodePopup(); openNoticeView(); });
+document.getElementById("noticeCodeCopyBtn")?.addEventListener("click", () => {
+  const code = document.getElementById("noticeCodePopup")?.dataset.code;
+  if(!code){ showToast("No code found in this notice"); return; }
+  const done = () => showToast("Code copied: " + code);
+  if(navigator.clipboard?.writeText) navigator.clipboard.writeText(code).then(done).catch(done);
+  else done();
+});
 document.getElementById("notiMenuOrders")?.addEventListener("click", () => { notiMenu?.classList.add("hidden"); openMyOrdersView(); });
 document.getElementById("notiMenuMessage")?.addEventListener("click", () => { notiMenu?.classList.add("hidden"); openSupportMessageView(); });
 
@@ -9245,6 +9364,12 @@ document.getElementById("accountLogoutBtn")?.addEventListener("click", async () 
   if(!supabaseClient) return;
   await supabaseClient.auth.signOut();
   currentUser = null;
+  // So a different account signing in next resubscribes fresh instead of
+  // silently reusing (or skipping past, via the "already subscribed" guard)
+  // the previous customer's channels.
+  Object.values(myOrderChannels).forEach(ch => supabaseClient.removeChannel(ch));
+  myOrderChannels = {};
+  if(supportChannel){ supabaseClient.removeChannel(supportChannel); supportChannel = null; }
   renderAuthUI();
   document.getElementById("accountView").classList.add("hidden");
   document.body.classList.remove("order-mode");
