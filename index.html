@@ -5264,6 +5264,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="max"]       { --tier:#7A1B44; --tier-2:#C2366F; --tier-ink:#FFEDF4; }
 #orderView .plan-option[data-tier="pro"]       { --tier:#1E3A8A; --tier-2:#3B63C9; --tier-ink:#EDF2FF; }
 #orderView .plan-option[data-tier="core"]      { --tier:#0F6E64; --tier-2:#22A399; --tier-ink:#E7FBF8; }
+#orderView .plan-option[data-tier="standard"]  { --tier:#3C4A66; --tier-2:#63799E; --tier-ink:#EEF3FB; }
 #orderView .plan-option[data-tier="plus"]      { --tier:#5B2AA8; --tier-2:#8A55DC; --tier-ink:#F4EDFF; }
 #orderView .plan-option[data-tier="team"]      { --tier:#0F5F7A; --tier-2:#2A93B5; --tier-ink:#E9F8FC; }
 #orderView .plan-option[data-tier="individual"]{ --tier:#37307A; --tier-2:#5F55B8; --tier-ink:#EFEDFF; }
@@ -6882,7 +6883,7 @@ subtitle: "Tap to see prices",
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "images.png",
+  icon: "github-copilot-icon.png",
   search: " GitHub copilot own mail",
   description: "💥 Full Warranty ပါ။\n✔️ Renewal ရပါတယ်။\n✔️ Own Mail ပိုပြေပါတယ်။\n🛍 Access is provided on your account.",
 plans: [
@@ -6898,7 +6899,7 @@ plans: [
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "replit-icon.svg",
+  icon: "Replit.png",
   search: "replit core pro coding agent own mail",
   description: "💥 Full Warranty ပါ။\n✔️ Own Mail ပိုပြေပါတယ်။\n🛍 Access is provided on your account.",
   plans: [
@@ -6913,7 +6914,7 @@ plans: [
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "manus-icon.svg",
+  icon: "Manus.jpeg",
   search: "manus ai agent standard customizable credits own mail",
   description: "💥 Full Warranty ပါ။\n✔️ Own Mail ပိုပြေပါတယ်။\n🔄 300 refresh credits everyday.\n🛍 Access is provided on your account.",
   plans: [
@@ -8327,7 +8328,7 @@ planName = plan.label ? plan.label : planName.replace(/\b(private|share|own[- ]?
 const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
 const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
   team:"Team", education:"Education", individual:"Individual", family:"Family",
-  pro:"Pro", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core"};
+  pro:"Pro", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core", standard:"Standard"};
 const tierChipFor = t => t ? `<span class="plan-tier-chip">${TIER_LABEL[t] || t}</span>` : "";
 // How the account is delivered. Explicit plan.type wins; otherwise infer.
 const typeOf = p => p.type || (p.ownMail ? "Own Mail"
@@ -8353,6 +8354,7 @@ el.className += accessClass;
     /\bfamily\b/.test(tierSource)                            ? "family" :
     /\bpro\b/.test(tierSource)                               ? "pro" :
     /\bcore\b/.test(tierSource)                              ? "core" :
+    /\bstandard\b/.test(tierSource)                          ? "standard" :
     /\bplus\b/.test(tierSource)                              ? "plus" :
     /\bgo\b/.test(tierSource)                                ? "go" :
     /\blink\b/.test(tierSource)                              ? "link" :
