@@ -3498,6 +3498,18 @@ body.light-mode .intro-splash::before,
   width:280px; height:280px;
   background:radial-gradient(circle,rgba(212,168,67,.22),rgba(168,124,224,.16) 46%,transparent 72%) !important;
 }
+/* A thin conic-gradient ring spinning around the badge -- reads as "loading"
+   without borrowing the page-loader's expanding-ping motion, so the two
+   don't feel like the same effect recycled twice. */
+.intro-ring{ position:relative; width:78px; height:78px; display:grid; place-items:center; }
+.intro-ring::before{
+  content:""; position:absolute; inset:0; border-radius:50%;
+  background:conic-gradient(from 0deg,transparent 0deg,rgba(212,168,67,.95) 55deg,transparent 130deg,rgba(168,124,224,.9) 235deg,transparent 320deg);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));
+  mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));
+  animation:introRingSpin 1.5s linear infinite;
+}
+@keyframes introRingSpin{ to{ transform:rotate(360deg); } }
 body.light-mode .intro-logo,
 .intro-logo{
   color:transparent !important;
@@ -5672,6 +5684,29 @@ body.light-mode .notif-badge{ box-shadow:0 0 0 2px #fff; }
 .my-order-row .mo-body{ flex:1; min-width:0; }
 .my-order-row .moc{ font-weight:800; font-size:13px; }
 .my-order-row .mol{ font-size:12px; color:var(--muted,rgba(255,255,255,.7)); margin-top:3px; }
+/* Skeleton shimmer for list loading (My Orders / Notices) -- a moving
+   gradient over placeholder shapes instead of bare "Loading…" text, and a
+   different loading language than the intro splash's ring or the page
+   loader's radar ping so they don't all read as one recycled effect. */
+.skeleton-row{
+  display:flex; align-items:center; gap:12px; padding:13px 15px;
+  border-radius:14px; border:1px solid rgba(199,125,255,.14); background:rgba(255,255,255,.04);
+}
+.skeleton-icon{ width:34px; height:34px; border-radius:12px; flex:0 0 auto; }
+.skeleton-lines{ flex:1; display:flex; flex-direction:column; gap:7px; }
+.skeleton-line{ height:10px; border-radius:5px; }
+.skeleton-icon,.skeleton-line{
+  background:linear-gradient(90deg,rgba(150,140,180,.14) 25%,rgba(150,140,180,.30) 37%,rgba(150,140,180,.14) 63%);
+  background-size:400% 100%;
+  animation:skeletonShimmer 1.4s ease-in-out infinite;
+}
+@keyframes skeletonShimmer{ 0%{ background-position:100% 50%; } 100%{ background-position:0% 50%; } }
+body.light-mode .skeleton-row{ background:var(--surface,#fff); border-color:var(--border,rgba(31,41,55,.12)); }
+body.light-mode .skeleton-icon,body.light-mode .skeleton-line{
+  background:linear-gradient(90deg,rgba(0,0,0,.06) 25%,rgba(0,0,0,.12) 37%,rgba(0,0,0,.06) 63%);
+  background-size:400% 100%;
+}
+@media(prefers-reduced-motion:reduce){ .skeleton-icon,.skeleton-line{ animation:none !important; } }
 .notice-body-preview{
   display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2;
   overflow:hidden; white-space:pre-wrap; word-break:break-word;
@@ -5963,7 +5998,7 @@ body.light-mode .notice-code-btn.ghost{ background:rgba(124,58,237,.08); color:v
 </head>
 <body class="light-mode">
   <div class="neon-announcement" aria-label="Store announcement"><div class="neon-track"><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b><span>Premium digital products · Clear plans · Fast support</span><b>✦</b><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b></div></div>
-  <div class="intro-splash" aria-hidden="true"><div class="intro-logo"></div><div class="intro-title">GAMEPAY <span>HUB</span></div><div class="intro-label">PREMIUM DIGITAL MARKETPLACE</div></div>
+  <div class="intro-splash" aria-hidden="true"><div class="intro-ring"><div class="intro-logo"></div></div><div class="intro-title">GAMEPAY <span>HUB</span></div><div class="intro-label">PREMIUM DIGITAL MARKETPLACE</div></div>
   <canvas id="particles"></canvas>
 
   <div class="compact-header" aria-label="Store header">
@@ -9181,6 +9216,17 @@ const myOrdersList = document.getElementById("myOrdersList");
 function formatOrderDate(iso){
   try{ return new Date(iso).toLocaleString(); }catch(e){ return ""; }
 }
+function skeletonRows(n){
+  return Array.from({ length: n }).map(() => `
+    <div class="skeleton-row">
+      <span class="skeleton-icon"></span>
+      <div class="skeleton-lines">
+        <span class="skeleton-line" style="width:60%"></span>
+        <span class="skeleton-line" style="width:35%"></span>
+      </div>
+    </div>
+  `).join("");
+}
 
 const MO_STATUS_ICON = {
   pending: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
@@ -9247,7 +9293,7 @@ async function openMyOrdersView(){
   // myOrdersView lives inside #orderView, so the parent must be visible too.
   orderView.classList.remove("hidden");
   document.getElementById("myOrdersView").classList.remove("hidden");
-  myOrdersList.innerHTML = `<div class="chat-empty">Loading…</div>`;
+  myOrdersList.innerHTML = skeletonRows(4);
   window.scrollTo(0, 0);
 
   if(!supabaseClient){
@@ -9433,7 +9479,7 @@ async function openNoticeView(){
     noticeList.innerHTML = `<div class="chat-empty">Sign in to see your notifications.</div>`;
     return;
   }
-  noticeList.innerHTML = `<div class="chat-empty">Loading…</div>`;
+  noticeList.innerHTML = skeletonRows(3);
   const { data, error } = await supabaseClient.rpc("get_notifications");
   if(error){
     console.error("get_notifications failed:", error);
