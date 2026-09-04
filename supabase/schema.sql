@@ -374,14 +374,18 @@ grant execute on function public.admin_delete_coupon to authenticated;
 -- Admin: every registered user with an order count, for the dashboard's
 -- User List (auth.users isn't exposed to the API directly, same reason
 -- admin_search_users exists below).
+-- `meta` carries raw_user_meta_data (username, avatar_style, avatar_color)
+-- so the admin side can render the same avatar the customer picked for
+-- themselves instead of a generated placeholder.
+drop function if exists public.admin_list_users();
 create or replace function public.admin_list_users()
-returns table(id uuid, email text, created_at timestamptz, order_count bigint)
+returns table(id uuid, email text, created_at timestamptz, order_count bigint, meta jsonb)
 language sql security definer set search_path = public as $$
-  select u.id, u.email, u.created_at, count(o.id) as order_count
+  select u.id, u.email, u.created_at, count(o.id) as order_count, u.raw_user_meta_data
   from auth.users u
   left join public.orders o on o.user_id = u.id
   where public.is_admin()
-  group by u.id, u.email, u.created_at
+  group by u.id, u.email, u.created_at, u.raw_user_meta_data
   order by u.created_at desc;
 $$;
 grant execute on function public.admin_list_users to authenticated;
