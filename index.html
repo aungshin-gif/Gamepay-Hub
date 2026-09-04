@@ -5263,6 +5263,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="vip"]       { --tier:#6A4A08; --tier-2:#B98F1E; --tier-ink:#FFF6DF; }
 #orderView .plan-option[data-tier="max"]       { --tier:#7A1B44; --tier-2:#C2366F; --tier-ink:#FFEDF4; }
 #orderView .plan-option[data-tier="pro"]       { --tier:#1E3A8A; --tier-2:#3B63C9; --tier-ink:#EDF2FF; }
+#orderView .plan-option[data-tier="core"]      { --tier:#0F6E64; --tier-2:#22A399; --tier-ink:#E7FBF8; }
 #orderView .plan-option[data-tier="plus"]      { --tier:#5B2AA8; --tier-2:#8A55DC; --tier-ink:#F4EDFF; }
 #orderView .plan-option[data-tier="team"]      { --tier:#0F5F7A; --tier-2:#2A93B5; --tier-ink:#E9F8FC; }
 #orderView .plan-option[data-tier="individual"]{ --tier:#37307A; --tier-2:#5F55B8; --tier-ink:#EFEDFF; }
@@ -8311,7 +8312,7 @@ planName = plan.label ? plan.label : planName.replace(/\b(private|share|own[- ]?
 const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
 const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
   team:"Team", education:"Education", individual:"Individual", family:"Family",
-  pro:"Pro", plus:"Plus", go:"GO", link:"Link", basic:"Basic"};
+  pro:"Pro", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core"};
 const tierChipFor = t => t ? `<span class="plan-tier-chip">${TIER_LABEL[t] || t}</span>` : "";
 // How the account is delivered. Explicit plan.type wins; otherwise infer.
 const typeOf = p => p.type || (p.ownMail ? "Own Mail"
@@ -8336,6 +8337,7 @@ el.className += accessClass;
     /\bindividual\b/.test(tierSource)                        ? "individual" :
     /\bfamily\b/.test(tierSource)                            ? "family" :
     /\bpro\b/.test(tierSource)                               ? "pro" :
+    /\bcore\b/.test(tierSource)                              ? "core" :
     /\bplus\b/.test(tierSource)                              ? "plus" :
     /\bgo\b/.test(tierSource)                                ? "go" :
     /\blink\b/.test(tierSource)                              ? "link" :
