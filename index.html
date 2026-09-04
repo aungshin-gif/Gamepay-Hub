@@ -3527,33 +3527,53 @@ body.light-mode .lp-hero .lp-hero-copy,
   .lp-art svg{ max-height:180px; }
 }
 
-/* ---------- Intro splash: light and on-brand (was a near-black flash) ---------- */
-/* An earlier block paints this with var(--navy); outrank it. */
+/* ---------- Intro splash ----------
+   Replaces every earlier version of this (there were three, each painted
+   over the last -- a plain near-black flash, then a flat white one that
+   didn't match the site's actual golden+purple glass look at all). This is
+   the one and only .intro-splash definition now; nothing later overrides
+   it. */
 body.light-mode .intro-splash,
 .intro-splash{
-  background-color:#ffffff !important;
-  background-image:
-    radial-gradient(ellipse at 50% 40%,rgba(124,108,240,.18),transparent 58%),
-    linear-gradient(160deg,#ffffff,#f5f3ff 52%,#eefaff) !important;
+  background:
+    radial-gradient(circle at 50% 32%,rgba(212,168,67,.16),transparent 44%),
+    radial-gradient(circle at 50% 78%,rgba(168,124,224,.20),transparent 52%),
+    linear-gradient(165deg,#1c1330,#120b22 60%,#0d0818) !important;
 }
 body.light-mode .intro-splash::before,
 .intro-splash::before{
-  background:radial-gradient(circle,rgba(124,108,240,.22),transparent 68%) !important;
+  width:280px; height:280px;
+  background:radial-gradient(circle,rgba(212,168,67,.22),rgba(168,124,224,.16) 46%,transparent 72%) !important;
 }
 body.light-mode .intro-logo,
 .intro-logo{
-  color:#fff !important;
-  background:linear-gradient(135deg,#3a5bd9,#7145dd 52%,#b449c9) !important;
-  box-shadow:0 12px 30px rgba(58,91,217,.30) !important;
+  color:transparent !important;
+  background:radial-gradient(circle,rgba(255,255,255,.97),rgba(245,232,255,.9)) !important;
+  box-shadow:
+    0 0 0 2px rgba(212,168,67,.75),
+    0 0 0 7px rgba(168,124,224,.16),
+    0 14px 34px rgba(0,0,0,.40) !important;
+  overflow:hidden;
+}
+.intro-logo::after{
+  content:"G";
+  background:linear-gradient(135deg,#a87ce0,#d4a843 60%,#a87ce0);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+}
+.intro-logo::before{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.65) 50%,transparent 70%);
+  transform:translateX(-130%);
+  animation:introSheen 1.3s ease-out .55s both;
 }
 body.light-mode .intro-title,
-.intro-title{ color:#1c2434 !important; }
+.intro-title{ color:#f6f1ff !important; }
 .intro-title span{
-  background:linear-gradient(112deg,#3a5bd9,#9b53d8);
+  background:linear-gradient(112deg,#d4a843,#f3d888 50%,#d4a843);
   -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
 }
 body.light-mode .intro-label,
-.intro-label{ color:#7b8698 !important; }
+.intro-label{ color:rgba(230,220,250,.62) !important; }
 </style>
 
 <style id="compact-hero-real-logos">
@@ -5958,7 +5978,7 @@ body.light-mode .notice-code-btn.ghost{ background:rgba(124,58,237,.08); color:v
 </head>
 <body class="light-mode">
   <div class="neon-announcement" aria-label="Store announcement"><div class="neon-track"><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b><span>Premium digital products · Clear plans · Fast support</span><b>✦</b><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b></div></div>
-  <div class="intro-splash" aria-hidden="true"><div class="intro-logo">G</div><div class="intro-title">GAMEPAY <span>HUB</span></div><div class="intro-label">PREMIUM DIGITAL MARKETPLACE</div></div>
+  <div class="intro-splash" aria-hidden="true"><div class="intro-logo"></div><div class="intro-title">GAMEPAY <span>HUB</span></div><div class="intro-label">PREMIUM DIGITAL MARKETPLACE</div></div>
   <canvas id="particles"></canvas>
 
   <div class="compact-header" aria-label="Store header">
@@ -9812,11 +9832,10 @@ animateParticles();
 <script>
 (() => {
   const splash=document.querySelector(".intro-splash");
-  if(splash){const reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;if(reduce)splash.remove();else setTimeout(()=>splash.remove(),1750)}
+  if(splash){const reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;if(reduce)splash.remove();else setTimeout(()=>splash.remove(),1850)}
   document.querySelectorAll("img").forEach((img,i)=>{if(i>0){img.loading="lazy";img.decoding="async"}});
 })();
 </script>
-<script>setTimeout(()=>document.querySelector(".intro-splash")?.remove(),1900);</script>
 <div id="pageLoader" class="page-loader hidden" aria-hidden="true">
   <div class="page-loader-inner">
     <div class="page-loader-signal"><span></span><span></span><span></span><i></i></div>
