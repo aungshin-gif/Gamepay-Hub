@@ -5799,16 +5799,36 @@ body.light-mode .slip-upload-label{ border-color:var(--border-strong,rgba(31,41,
 }
 body.light-mode .auth-btn{ color:var(--ink,#1f2937); background:var(--surface,#fff); border-color:var(--border,rgba(31,41,55,.16)); }
 .auth-modal-backdrop{
-  position:fixed; inset:0; background:rgba(10,0,20,.6); z-index:200;
+  position:fixed; inset:0; background:rgba(10,0,20,.55); z-index:200;
   display:flex; align-items:center; justify-content:center; padding:20px;
+  backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px);
 }
 .auth-modal-backdrop.hidden{ display:none; }
+/* Glass card with a springy 3D pop-in -- was a flat opaque box that just
+   appeared; this frosts the backdrop behind it and gives the card a light
+   tilt-and-overshoot entrance instead. */
 .auth-modal{
-  width:min(360px,100%); background:var(--surface,#1f0838); color:var(--ink,#fff);
-  border-radius:20px; padding:24px 22px; border:1px solid rgba(224,180,255,.24);
-  box-shadow:0 20px 50px rgba(0,0,0,.4);
+  position:relative;
+  width:min(360px,100%); color:var(--ink,#fff);
+  border-radius:22px; padding:26px 22px; border:1.5px solid rgba(224,180,255,.30);
+  background:linear-gradient(160deg,rgba(48,14,72,.62),rgba(24,4,40,.68));
+  backdrop-filter:blur(22px) saturate(1.3); -webkit-backdrop-filter:blur(22px) saturate(1.3);
+  box-shadow:0 30px 70px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06) inset, 0 1px 0 rgba(255,255,255,.14) inset;
+  animation:authModalPop .55s cubic-bezier(.34,1.56,.64,1) both;
+  transform-style:preserve-3d;
 }
-body:not(.light-mode) .auth-modal{ background:linear-gradient(180deg,#2a083f,#1a0028); color:#fff; }
+@keyframes authModalPop{
+  0%{ opacity:0; transform:perspective(800px) translateY(26px) scale(.90) rotateX(9deg); }
+  100%{ opacity:1; transform:perspective(800px) translateY(0) scale(1) rotateX(0); }
+}
+@media(prefers-reduced-motion:reduce){ .auth-modal{ animation:none; } }
+body.light-mode .auth-modal{
+  background:linear-gradient(160deg,rgba(255,255,255,.82),rgba(240,228,255,.68));
+  border-color:rgba(212,168,67,.40);
+  box-shadow:0 30px 70px rgba(93,72,137,.24), 0 0 0 4px rgba(168,124,224,.10), inset 0 1px rgba(255,255,255,.9);
+  color:var(--ink,#1f2937);
+}
+body:not(.light-mode) .auth-modal{ color:#fff; }
 .auth-modal h3{ margin:0 0 4px; font-size:18px; }
 .auth-modal p.auth-sub{ font-size:12px; color:var(--muted,rgba(255,255,255,.7)); margin:0 0 16px; }
 
@@ -5843,12 +5863,19 @@ body.light-mode .auth-modal.celebrate{
   width:16px; height:16px; color:var(--muted,rgba(255,255,255,.5)); pointer-events:none;
 }
 .auth-modal input{
-  width:100%; padding:13px 14px 13px 40px; border-radius:11px; margin-bottom:0;
-  border:1.5px solid rgba(224,180,255,.28); background:rgba(0,0,0,.2); color:#fff; font-size:14px;
-  transition:border-color .15s, box-shadow .15s;
+  width:100%; padding:13px 14px 13px 40px; border-radius:13px; margin-bottom:0;
+  border:1.5px solid rgba(224,180,255,.28); background:rgba(0,0,0,.22); color:#fff; font-size:14px;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.25);
+  transition:border-color .18s, box-shadow .18s, transform .18s;
 }
-.auth-modal input:focus{ outline:none; border-color:#b86bff; box-shadow:0 0 0 3px rgba(184,107,255,.18); }
-body.light-mode .auth-modal input{ background:var(--surface-2,#f7f9fc); color:var(--ink,#1f2937); border-color:var(--border,rgba(31,41,55,.18)); }
+.auth-modal input:focus{
+  outline:none; border-color:#b86bff; transform:translateY(-1px);
+  box-shadow:0 0 0 3px rgba(184,107,255,.20), 0 6px 16px rgba(93,72,137,.22), inset 0 1px 3px rgba(0,0,0,.10);
+}
+body.light-mode .auth-modal input{
+  background:rgba(255,255,255,.65); color:var(--ink,#1f2937); border-color:rgba(212,168,67,.30);
+  box-shadow:inset 0 1px 3px rgba(93,72,137,.10), inset 0 -1px 0 rgba(255,255,255,.7);
+}
 body.light-mode .auth-field-icon{ color:var(--muted,#6b7686); }
 #authPasswordField input, #authNewPasswordField input{ padding-right:40px; }
 .auth-field-toggle{
@@ -5861,6 +5888,11 @@ body.light-mode .auth-field-icon{ color:var(--muted,#6b7686); }
 body.light-mode .auth-field-toggle{ color:var(--muted,#6b7686); }
 body.light-mode .auth-field-toggle:hover{ color:var(--ink,#1f2937); }
 .auth-error{ color:#ff9fc9; font-size:12px; min-height:16px; margin-bottom:6px; }
+/* Tactile press for the submit button -- lifts on hover, presses down on
+   click, instead of sitting flat like a static label. */
+.auth-modal #authSubmitBtn{ transition:transform .16s cubic-bezier(.34,1.56,.64,1), box-shadow .16s ease; }
+.auth-modal #authSubmitBtn:hover{ transform:translateY(-2px); box-shadow:0 10px 22px rgba(93,72,137,.28); }
+.auth-modal #authSubmitBtn:active{ transform:translateY(0) scale(.97); }
 .auth-forgot-row{ text-align:right; margin:-4px 0 12px; }
 .auth-forgot-row a{ color:#b86bff; font-size:11.5px; font-weight:700; cursor:pointer; }
 .auth-forgot-row.hidden{ display:none; }
@@ -5979,6 +6011,10 @@ body.light-mode .notice-code-btn.ghost{ background:rgba(124,58,237,.08); color:v
       <h3 id="authModalTitle">Login</h3>
       <p class="auth-sub" id="authModalSub">Sign in to see your orders on any device.</p>
       <div class="auth-error" id="authError"></div>
+      <div class="auth-field hidden" id="authUsernameField">
+        <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></span>
+        <input id="authUsername" type="text" placeholder="Username" autocomplete="nickname" />
+      </div>
       <div class="auth-field" id="authEmailField">
         <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6 12 13 2 6"/><path d="M2 6h20v12H2z"/></svg></span>
         <input id="authEmail" type="email" placeholder="Email" autocomplete="username" />
@@ -8991,6 +9027,8 @@ function renderAuthUI(){
   }
 }
 
+const authUsernameField = document.getElementById("authUsernameField");
+const authUsername = document.getElementById("authUsername");
 const authEmailField = document.getElementById("authEmailField");
 const authPasswordField = document.getElementById("authPasswordField");
 const authForgotRow = document.getElementById("authForgotRow");
@@ -9002,6 +9040,7 @@ const authNewPassword = document.getElementById("authNewPassword");
 function openAuthModal(mode, pendingEmail){
   authMode = mode;
   authError.textContent = "";
+  authUsername.value = "";
   authEmail.value = "";
   authPassword.value = "";
   authOtp.value = "";
@@ -9015,6 +9054,7 @@ function openAuthModal(mode, pendingEmail){
     // to miss (mobile, looked away, toast timed out) since it left no
     // trace once gone. This is the one thing that MUST register: without
     // opening that email, the account can't be used at all.
+    authUsernameField.classList.add("hidden");
     authEmailField.classList.add("hidden");
     authPasswordField.classList.add("hidden");
     authForgotRow.classList.add("hidden");
@@ -9034,6 +9074,7 @@ function openAuthModal(mode, pendingEmail){
   document.getElementById("authModalIcon")?.classList.add("hidden");
   document.querySelector(".auth-modal")?.classList.remove("celebrate");
   authEmailField.classList.remove("hidden");
+  authUsernameField.classList.add("hidden");
 
   if(mode === "forgot-email"){
     authPasswordField.classList.add("hidden");
@@ -9055,6 +9096,7 @@ function openAuthModal(mode, pendingEmail){
     document.getElementById("authSwitchText").innerHTML = `<a id="authSwitchLink">Back to Login</a>`;
   } else {
     const isLogin = mode === "login";
+    authUsernameField.classList.toggle("hidden", isLogin);
     authPasswordField.classList.remove("hidden");
     authForgotRow.classList.toggle("hidden", !isLogin);
     authOtpField.classList.add("hidden");
@@ -9112,9 +9154,14 @@ document.getElementById("authSubmitBtn")?.addEventListener("click", async () => 
   const email = authEmail.value.trim();
   const password = authPassword.value;
   if(!email || !password){ authError.textContent = "Please fill in both fields."; return; }
+  let username = "";
+  if(authMode === "signup"){
+    username = authUsername.value.trim().replace(/\s+/g, "");
+    if(!username){ authError.textContent = "Please choose a username."; return; }
+  }
   const action = authMode === "login"
     ? supabaseClient.auth.signInWithPassword({ email, password })
-    : supabaseClient.auth.signUp({ email, password });
+    : supabaseClient.auth.signUp({ email, password, options: { data: { username } } });
   const { data, error } = await action;
   if(error){ authError.textContent = error.message; return; }
   if(authMode === "signup" && !data.session){
