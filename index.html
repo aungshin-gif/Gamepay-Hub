@@ -8030,6 +8030,23 @@ function initProductPage(){
   if(loader && loader.parentElement !== document.body){
     document.body.appendChild(loader);
   }
+  // Same reason, different failure mode: #checkoutSection and #previewSection
+  // are meant to be full-viewport `position:fixed` overlays (see the
+  // order-dashboard-flow-final styles), but they live inside .panel, which
+  // has its own backdrop-filter -- and a backdrop-filter (like transform or
+  // filter) makes its element the containing block for fixed descendants.
+  // That silently re-anchors "fixed; inset:0" to .panel's own tall box
+  // instead of the viewport, so the checkout/review screens rendered far
+  // off-screen with the landing page bleeding through behind them, and
+  // scrolling appeared to do nothing. Re-parenting onto <body> sidesteps it.
+  const checkout = document.getElementById("checkoutSection");
+  if(checkout && checkout.parentElement !== document.body){
+    document.body.appendChild(checkout);
+  }
+  const preview = document.getElementById("previewSection");
+  if(preview && preview.parentElement !== document.body){
+    document.body.appendChild(preview);
+  }
   document.getElementById("productBackBtn")?.addEventListener("click", closeProductPage);
   document.getElementById("productChangePlanBtn")?.addEventListener("click", closeProductPage);
   document.getElementById("productContinueBtn")?.addEventListener("click", () => {
