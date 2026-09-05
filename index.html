@@ -5866,12 +5866,11 @@ body.light-mode .auth-btn{ color:var(--ink,#1f2937); background:var(--surface,#f
   backdrop-filter:blur(9px); -webkit-backdrop-filter:blur(9px);
 }
 .auth-modal-backdrop.hidden{ display:none; }
-/* Bright glass card with a springy 3D pop-in and a soft sunburst "glow ray"
-   accent behind it -- the first version leaned dark/murky (a semi-opaque
-   dark-purple fill glassed over an already-dark backdrop compounds into
-   dim, not "clear"), and used gold, which didn't fit this card. Now a
-   high-opacity bright card over a much lighter backdrop, with a
-   blue-violet glow instead of gold. */
+/* Bright glass card with a springy 3D pop-in and a thin animated glow that
+   traces the card's own border -- an earlier version put a giant spinning
+   sunburst disc behind the whole card (inset:-70px, border-radius:50%),
+   which read as messy and was distracting while typing in the fields.
+   This keeps the light confined to a slim ring right on the edge instead. */
 .auth-modal{
   position:relative;
   width:min(360px,100%); color:var(--ink,#1f2937);
@@ -5883,14 +5882,20 @@ body.light-mode .auth-btn{ color:var(--ink,#1f2937); background:var(--surface,#f
   transform-style:preserve-3d;
   isolation:isolate;
 }
+@property --auth-glow-angle{
+  syntax:'<angle>'; inherits:false; initial-value:0deg;
+}
 .auth-modal::before{
-  content:""; position:absolute; z-index:-1; inset:-70px; border-radius:50%;
-  background:repeating-conic-gradient(from 0deg,rgba(124,58,237,.16) 0deg 4deg,transparent 4deg 18deg);
-  filter:blur(3px);
-  animation:authGlowSpin 14s linear infinite;
+  content:""; position:absolute; inset:-2px; border-radius:24px; padding:2px;
+  background:conic-gradient(from var(--auth-glow-angle),
+    transparent 0deg, rgba(124,58,237,.9) 40deg, rgba(199,178,255,.95) 70deg,
+    rgba(124,58,237,.9) 100deg, transparent 150deg, transparent 360deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  animation:authBorderGlow 3.4s linear infinite;
   pointer-events:none;
 }
-@keyframes authGlowSpin{ to{ transform:rotate(360deg); } }
+@keyframes authBorderGlow{ to{ --auth-glow-angle:360deg; } }
 @keyframes authModalPop{
   0%{ opacity:0; transform:perspective(800px) translateY(26px) scale(.90) rotateX(9deg); }
   100%{ opacity:1; transform:perspective(800px) translateY(0) scale(1) rotateX(0); }
