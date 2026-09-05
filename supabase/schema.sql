@@ -522,6 +522,27 @@ drop policy if exists "admin manage stock overrides" on public.stock_overrides;
 create policy "admin manage stock overrides" on public.stock_overrides
   for all using (public.is_admin()) with check (public.is_admin());
 
+-- 10b. Product overrides ------------------------------------------------
+-- Same overlay idea as stock_overrides, but keyed by product_id alone
+-- (not product_id + plan_name) for flags that apply to the whole product
+-- card rather than one plan -- currently just "Hot", so admin can flag a
+-- trending product from the Stock list without a code deploy.
+create table if not exists public.product_overrides (
+  product_id text primary key,
+  hot boolean not null default false,
+  updated_at timestamptz not null default now(),
+  updated_by uuid references auth.users(id) on delete set null
+);
+alter table public.product_overrides enable row level security;
+
+drop policy if exists "anyone reads product overrides" on public.product_overrides;
+create policy "anyone reads product overrides" on public.product_overrides
+  for select using (true);
+
+drop policy if exists "admin manage product overrides" on public.product_overrides;
+create policy "admin manage product overrides" on public.product_overrides
+  for all using (public.is_admin()) with check (public.is_admin());
+
 -- 11. Dashboard access code -----------------------------------------
 -- A second lock in front of shinpayhubcld.html's login, entirely separate
 -- from Supabase Auth: checked before email/password are ever tried, so a
