@@ -8122,6 +8122,12 @@ if(document.readyState === "loading"){
           }
           plan.outOfStock = Boolean(row.out_of_stock);
           plan.lowStock = Boolean(row.low_stock);
+          // Warranty/Format/Note are optional overrides -- a blank value in
+          // the admin Stock list means "leave the catalog's own text alone",
+          // not "clear it", so only overwrite when admin actually set one.
+          if(row.warranty) plan.warranty = row.warranty;
+          if(row.format) plan.format = row.format;
+          if(row.note) plan.note = row.note;
         });
       });
     }
