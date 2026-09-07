@@ -8945,6 +8945,18 @@ function ensureOrderChannel(order){
       const watching = isActive && !document.getElementById("orderStatusView").classList.contains("hidden");
       if(watching) setOrderStatusUI(msg.payload.status);
       else bumpUnseenBadge();
+      // The My Orders list/stat tiles are a snapshot fetched once when that
+      // view opens -- without this, an order approved/rejected while the
+      // customer is sitting on that list (rather than the order's own status
+      // page) would keep showing its old status until they left and came back.
+      const row = myOrdersAllRows.find(r => r.access_token === order.access_token);
+      if(row){
+        row.status = msg.payload.status;
+        if(!document.getElementById("myOrdersView")?.classList.contains("hidden")){
+          renderMyOrdersStats(myOrdersAllRows);
+          renderMyOrdersListFiltered();
+        }
+      }
     })
     .on("broadcast", { event: "new_message" }, (msg) => {
       if(msg.payload.sender !== "admin") return;
@@ -9485,16 +9497,18 @@ const MO_STATUS_ICON = {
 function stripTrailingPrice(text){
   return String(text || "").replace(/\s*[–—-]?\s*[0-9][0-9,]*\s*(?:ks|ကျပ်)\s*$/i, "").trim();
 }
-// "Approved" (payment confirmed, being fulfilled) reads as still-in-progress
-// from a customer's point of view, so it counts toward Pending here rather
-// than getting a fifth tile of its own -- every order lands in exactly one
-// of Pending/Completed/Failed, and those three always add up to Total.
+// This app's orders only ever move pending -> approved or pending -> rejected
+// (admin has no separate "mark completed" step) -- "approved" already means
+// payment confirmed and the order fulfilled, i.e. done from the customer's
+// point of view, so it counts toward Completed here. "completed" is kept as
+// an alias in case that status is ever set directly. Every order lands in
+// exactly one of Pending/Completed/Failed, and those three always add up to Total.
 let myOrdersAllRows = [];
 let myOrdersStatusFilter = "all"; // "all" | "pending" | "completed" | "failed" -- tapping a stat tile sets this
 function statusMatchesFilter(status, filter){
   if(filter === "all") return true;
-  if(filter === "pending") return status === "pending" || status === "approved";
-  if(filter === "completed") return status === "completed";
+  if(filter === "pending") return status === "pending";
+  if(filter === "completed") return status === "approved" || status === "completed";
   if(filter === "failed") return status === "rejected";
   return true;
 }
@@ -9503,8 +9517,8 @@ function renderMyOrdersStats(rows){
   if(!statsEl) return;
   if(!rows.length){ statsEl.classList.add("hidden"); return; }
   const total = rows.length;
-  const pending = rows.filter(o => o.status === "pending" || o.status === "approved").length;
-  const completed = rows.filter(o => o.status === "completed").length;
+  const pending = rows.filter(o => o.status === "pending").length;
+  const completed = rows.filter(o => o.status === "approved" || o.status === "completed").length;
   const failed = rows.filter(o => o.status === "rejected").length;
   statsEl.classList.remove("hidden");
   statsEl.innerHTML = `
