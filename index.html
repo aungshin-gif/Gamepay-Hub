@@ -5742,6 +5742,18 @@ body.light-mode .mo-status-icon.rejected{ background:#ffe6ec; color:#c81e4d; bor
 body.light-mode .mo-badge.pending{ background:#fff3d6; color:#a15c00; border-color:#f0d090; }
 body.light-mode .mo-badge.approved, body.light-mode .mo-badge.completed{ background:#e2f5ea; color:#0f7a3f; border-color:#b7e6c9; }
 body.light-mode .mo-badge.rejected{ background:#ffe6ec; color:#c81e4d; border-color:#f3b7c6; }
+/* Summary counts above the order list -- same status colors as the row
+   badges above, so "3 Pending" and a pending row read as the same color
+   language instead of introducing a second palette. */
+.mo-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:16px 0; }
+@media(max-width:420px){ .mo-stats{ grid-template-columns:repeat(2,1fr); } }
+.mo-stat{ padding:12px 8px; border-radius:14px; text-align:center; border:1px solid; }
+.mo-stat-num{ display:block; font-size:19px; font-weight:900; line-height:1.15; }
+.mo-stat-label{ display:block; font-size:9px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; margin-top:3px; opacity:.85; }
+.mo-stat.total{ background:rgba(124,77,219,.08); border-color:rgba(124,77,219,.22); color:var(--violet,#7c4ddb); }
+.mo-stat.pending{ background:#fff3d6; border-color:#f0d090; color:#a15c00; }
+.mo-stat.completed{ background:#e2f5ea; border-color:#b7e6c9; color:#0f7a3f; }
+.mo-stat.failed{ background:#ffe6ec; border-color:#f3b7c6; color:#c81e4d; }
 .chat-avatar{
   flex:0 0 auto; width:18px; height:18px; border-radius:50%;
   background:linear-gradient(160deg,#7a35c7,#4c1480); display:flex; align-items:center; justify-content:center; color:#fff;
@@ -6468,6 +6480,7 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
     <div id="myOrdersView" class="hidden order-status-view">
       <div class="preview-shell">
         <div class="dashboard-head"><button id="myOrdersBackBtn" class="dashboard-back-btn" type="button">← Back to Store</button><span class="dashboard-chip">MY ORDERS</span></div>
+        <div id="myOrdersStats" class="mo-stats hidden"></div>
         <div id="myOrdersList" class="my-orders-list"><div class="chat-empty">Loading…</div></div>
       </div>
     </div>
@@ -8122,6 +8135,12 @@ if(document.readyState === "loading"){
           }
           plan.outOfStock = Boolean(row.out_of_stock);
           plan.lowStock = Boolean(row.low_stock);
+          // Warranty/Format/Note are optional overrides -- a blank value in
+          // the admin Stock list means "leave the catalog's own text alone",
+          // not "clear it", so only overwrite when admin actually set one.
+          if(row.warranty) plan.warranty = row.warranty;
+          if(row.format) plan.format = row.format;
+          if(row.note) plan.note = row.note;
         });
       });
     }
@@ -9331,7 +9350,28 @@ const MO_STATUS_ICON = {
 function stripTrailingPrice(text){
   return String(text || "").replace(/\s*[–—-]?\s*[0-9][0-9,]*\s*(?:ks|ကျပ်)\s*$/i, "").trim();
 }
+// "Approved" (payment confirmed, being fulfilled) reads as still-in-progress
+// from a customer's point of view, so it counts toward Pending here rather
+// than getting a fifth tile of its own -- every order lands in exactly one
+// of Pending/Completed/Failed, and those three always add up to Total.
+function renderMyOrdersStats(rows){
+  const statsEl = document.getElementById("myOrdersStats");
+  if(!statsEl) return;
+  if(!rows.length){ statsEl.classList.add("hidden"); return; }
+  const total = rows.length;
+  const pending = rows.filter(o => o.status === "pending" || o.status === "approved").length;
+  const completed = rows.filter(o => o.status === "completed").length;
+  const failed = rows.filter(o => o.status === "rejected").length;
+  statsEl.classList.remove("hidden");
+  statsEl.innerHTML = `
+    <div class="mo-stat total"><span class="mo-stat-num">${total}</span><span class="mo-stat-label">Total</span></div>
+    <div class="mo-stat pending"><span class="mo-stat-num">${pending}</span><span class="mo-stat-label">Pending</span></div>
+    <div class="mo-stat completed"><span class="mo-stat-num">${completed}</span><span class="mo-stat-label">Completed</span></div>
+    <div class="mo-stat failed"><span class="mo-stat-num">${failed}</span><span class="mo-stat-label">Failed</span></div>
+  `;
+}
 function renderMyOrdersRows(rows){
+  renderMyOrdersStats(rows);
   if(!rows.length){
     myOrdersList.innerHTML = `<div class="chat-empty">No orders yet. Place your first order from the store!</div>`;
     return;
@@ -9392,6 +9432,7 @@ async function openMyOrdersView(){
   orderView.classList.remove("hidden");
   document.getElementById("myOrdersView").classList.remove("hidden");
   myOrdersList.innerHTML = skeletonRows(4);
+  document.getElementById("myOrdersStats")?.classList.add("hidden");
   window.scrollTo(0, 0);
 
   if(!supabaseClient){

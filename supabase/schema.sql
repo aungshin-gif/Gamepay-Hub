@@ -510,6 +510,12 @@ create table if not exists public.stock_overrides (
   updated_by uuid references auth.users(id) on delete set null,
   primary key (product_id, plan_name)
 );
+-- Lets admin edit a plan's Warranty/Format/Note straight from the Stock
+-- list instead of needing a code deploy for every wording tweak -- null
+-- means "keep using whatever index.html's own catalog already says".
+alter table public.stock_overrides add column if not exists warranty text;
+alter table public.stock_overrides add column if not exists format text;
+alter table public.stock_overrides add column if not exists note text;
 alter table public.stock_overrides enable row level security;
 
 -- Anyone (including logged-out shoppers) needs to read this to see
