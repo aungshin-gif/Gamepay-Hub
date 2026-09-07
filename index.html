@@ -5230,9 +5230,10 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="individual"]{ --tier:#37307A; --tier-2:#5F55B8; --tier-ink:#EFEDFF; }
 #orderView .plan-option[data-tier="education"] { --tier:#155E45; --tier-2:#2E9B72; --tier-ink:#EAFBF3; }
 #orderView .plan-option[data-tier="family"]    { --tier:#8A4210; --tier-2:#C97A2A; --tier-ink:#FFF2E4; }
-#orderView .plan-option[data-tier="go"]        { --tier:#8A6A0E; --tier-2:#D4A843; --tier-ink:#FFF8E6; }
+#orderView .plan-option[data-tier="go"]        { --tier:#D4AF37; --tier-2:#F6DFA0; --tier-ink:#5C4310; }
 #orderView .plan-option[data-tier="link"]      { --tier:#0E5468; --tier-2:#2B8AA6; --tier-ink:#E9F7FB; }
 #orderView .plan-option[data-tier="basic"]     { --tier:#475569; --tier-2:#6B7A90; --tier-ink:#F1F4F9; }
+#orderView .plan-option[data-tier="4k"]        { --tier:#0B4F6C; --tier-2:#1C9FC6; --tier-ink:#E8FBFF; }
 
 /* ---------- the badge ---------- */
 #orderView .plan-tier-chip{
@@ -5253,6 +5254,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="premium"]  .plan-tier-chip::after,
 #orderView .plan-option[data-tier="vip"]      .plan-tier-chip::after,
 #orderView .plan-option[data-tier="go"]       .plan-tier-chip::after,
+#orderView .plan-option[data-tier="4k"]       .plan-tier-chip::after,
 #orderView .plan-option[data-tier="max"]      .plan-tier-chip::after{
   content:""; position:absolute; inset:0;
   background:linear-gradient(112deg,transparent 30%,rgba(255,255,255,.42) 48%,transparent 64%);
@@ -5295,6 +5297,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="premium"],
 #orderView .plan-option[data-tier="vip"],
 #orderView .plan-option[data-tier="go"],
+#orderView .plan-option[data-tier="4k"],
 #orderView .plan-option[data-tier="max"]{
   background-image:
     linear-gradient(180deg,var(--tier),var(--tier-2)),
@@ -5307,6 +5310,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="premium"].active,
 #orderView .plan-option[data-tier="vip"].active,
 #orderView .plan-option[data-tier="go"].active,
+#orderView .plan-option[data-tier="4k"].active,
 #orderView .plan-option[data-tier="max"].active{
   background-image:
     linear-gradient(180deg,var(--tier),var(--tier-2)),
@@ -6606,20 +6610,25 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
   iconType: "image",
   icon: "Untitled-design-2025-01-28T101702.381.png",
   search: "canva design pro",
+  warranty: "Full Warranty",
   description: "💥Premium Pro Private Planသည် Account ပေးမှာပါ။\n🔑 သည် own mailနဲ့သဘောတရားတူတူပါပဲ၊\n🔑 သည်ကိုယ်ပိုင်Canva accountထဲမှာ Redeemရုံပါပဲ",
   plans: [
     { name: "Canva Education – Own Mail – 1.5 Year – 5000 Ks",
       label: "Canva Education", type: "Own Mail", tier: "education",
-      duration: "1.5 Year", price: 5000, ownMail: true, bestSeller: true },
+      duration: "1.5 Year", price: 5000, ownMail: true, bestSeller: true,
+      format: "Own Mail", note: "This is an Education plan, so a few features may be locked and AI features aren't fully supported." },
     { name: "Canva Education – Code Redeem – 1.5 Years – 5000 Ks",
       label: "Canva Education", type: "Code Redeem", tier: "education",
-      duration: "1.5 Years", price: 5000 },
+      duration: "1.5 Years", price: 5000,
+      format: "Own Mail", note: "This is an Education plan, so a few features may be locked and AI features aren't fully supported." },
     { name: "Canva Business – Own Mail – 1 Month – 6000 Ks",
       label: "Canva Business", type: "Own Mail", tier: "business",
-      duration: "1 Month", price: 6000, ownMail: true },
+      duration: "1 Month", price: 6000, ownMail: true,
+      format: "Own Mail", note: "All premium features are unlocked, so you can make full use of the AI features too." },
     { name: "Canva Pro Individual – Private Acc – 1 Month – 7000 Ks",
       label: "Canva Pro Individual", type: "Private Acc", tier: "individual",
-      duration: "1 Month", price: 7000, access: "private" }
+      duration: "1 Month", price: 7000, access: "private",
+      format: "Mail & Password" }
   ]
       },
       {
@@ -6634,6 +6643,7 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
   search: "capcut pro edit video",
   note: "🚫 Renew မရ\n✅ Full Warranty",
   warranty: "Full Warranty",
+  format: "Mail & Password",
   description: "✔️ Full Warranty is included.\n🚫 Renewal is not available.\n🔐 Private and Share access are available as separate options.\n🛍 Select the account type you need before purchase.",
   plans: [
       { name: "CapCut Team – Private Acc – 7 Days – 2000 Ks",
@@ -6667,25 +6677,39 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
   plans: [
       { name: "Gemini AI Pro – Own Mail – 1 Month – 4000 Ks",
         label: "Gemini AI Pro", type: "Own Mail", tier: "pro",
-        duration: "1 Month", price: 4000, ownMail: true, bestSeller: true },
+        duration: "1 Month", price: 4000, ownMail: true, bestSeller: true,
+        warranty: "Full Warranty", format: "Own Mail",
+        note: "This is an Invite Plan -- heavy, nonstop use can hit the limit within minutes, but the chance of that happening stays low as long as you don't run extra codes or other heavy tools on it." },
       { name: "Gemini AI Pro – Own Mail – 2 Months – 7000 Ks",
         label: "Gemini AI Pro", type: "Own Mail", tier: "pro",
-        duration: "2 Months", price: 7000, ownMail: true },
+        duration: "2 Months", price: 7000, ownMail: true,
+        warranty: "Full Warranty", format: "Own Mail",
+        note: "This is an Invite Plan -- heavy, nonstop use can hit the limit within minutes, but the chance of that happening stays low as long as you don't run extra codes or other heavy tools on it." },
       { name: "Gemini AI Pro – Own Mail – 3 Months – 10000 Ks",
         label: "Gemini AI Pro", type: "Own Mail", tier: "pro",
-        duration: "3 Months", price: 10000, ownMail: true },
+        duration: "3 Months", price: 10000, ownMail: true,
+        warranty: "Full Warranty", format: "Own Mail",
+        note: "This is an Invite Plan -- heavy, nonstop use can hit the limit within minutes, but the chance of that happening stays low as long as you don't run extra codes or other heavy tools on it." },
       { name: "Gemini AI Pro – Own Mail – 4 Months – 12000 Ks",
         label: "Gemini AI Pro", type: "Own Mail", tier: "pro",
-        duration: "4 Months", price: 12000, ownMail: true },
+        duration: "4 Months", price: 12000, ownMail: true,
+        warranty: "Full Warranty", format: "Own Mail",
+        note: "This is an Invite Plan -- heavy, nonstop use can hit the limit within minutes, but the chance of that happening stays low as long as you don't run extra codes or other heavy tools on it." },
       { name: "Family Manager – Own Mail – 3 Months – 10000 Ks",
         label: "Family Manager", type: "Own Mail", tier: "family",
-        duration: "3 Months", price: 10000, ownMail: true },
+        duration: "3 Months", price: 10000, ownMail: true,
+        warranty: "Full Warranty", format: "Activate on your mail",
+        note: "This is a Head account, so generating AI videos works more smoothly. It comes with plenty of credit, so the chance of hitting the limit is low." },
       { name: "Family Manager – Own Mail – 12 Months – 15000 Ks",
         label: "Family Manager", type: "Own Mail", tier: "family",
-        duration: "12 Months", price: 15000, ownMail: true },
+        duration: "12 Months", price: 15000, ownMail: true,
+        warranty: "3 Months Warranty", format: "Activate on your mail",
+        note: "This is a Head account, so generating AI videos works more smoothly. It comes with plenty of credit, so the chance of hitting the limit is low." },
       { name: "Gemini Link – Own Mail – 1.5 Years – 8000 Ks",
         label: "Gemini Link", type: "Own Mail", tier: "link",
-        duration: "1.5 Years", price: 8000, ownMail: true }
+        duration: "1.5 Years", price: 8000, ownMail: true,
+        warranty: "No Warranty", format: "Activate on your mail",
+        note: "On older Gmail accounts this usually lasts at least 6 months, sometimes longer if you're lucky -- it behaves the same as a Head account." }
   ]
 },
       {
@@ -7037,10 +7061,10 @@ plans: [
   search: "netflix premium 4k ultra hd hdr",
   description: "🌈Head Accountတခုမှာ\n🌈5 Profileပါပါတယ်။",
   plans: [
-    { name: "🌈(1 Profile) -8000 Ks\n1 Month", price: 8000, bestSeller: true },
-    { name: "🌈(3 Profiles) - 19000 Ks\n1 Month", price: 19000 },
-    { name: "🌈(4 Profiles) - 25000 Ks\n1 Month", price: 25000 },
-    { name: "🌈(Head) - 38000 Ks\n1 Month", price: 38000 }
+    { name: "🌈(1 Profile) -8000 Ks\n1 Month", price: 8000, bestSeller: true, tier: "4k" },
+    { name: "🌈(3 Profiles) - 19000 Ks\n1 Month", price: 19000, tier: "4k" },
+    { name: "🌈(4 Profiles) - 25000 Ks\n1 Month", price: 25000, tier: "4k" },
+    { name: "🌈(Head) - 25000 Ks\n1 Month", price: 25000, tier: "4k" }
 
   ]
       },
@@ -7054,12 +7078,15 @@ plans: [
   iconType: "image",
   icon: "quality_restoration_20260510232104714.png",
   search: "spotify music premium individual family own mail",
-  note: "❗️ Individual Plan က သက်တမ်းတိုးမရပါ။\n✔️ Family ကတော့ သက်တမ်းတိုးရပါတယ်။\n🔼 Own mail လည်းရပါတယ်။\n🛍 ဒီဈေးတွေပါပဲ။",
+  warranty: "Free Replacement",
   description: "❗ Some options cannot be renewed.\n✔ Renewal is available only for eligible options.\n🔼 Own email may be available.\n🛍 Check the selected plan details before purchase.",
   plans: [
-    { name: "🔥 Individual Plan — 1 Month — 10000 Ks", price: 10000 },
-    { name: "🔥 Individual Plan — 2 Months — 15000 Ks", price: 15000 },
-    { name: "✨ Family Plan — 3 Months — 18000 Ks", price: 18000, bestSeller: true }
+    { name: "🔥 Individual Plan — 1 Month — 8000 Ks", price: 8000,
+      format: "Mail & Password", note: "Usually a ready-made private account, so it generally can't be renewed." },
+    { name: "🔥 Individual Plan — 2 Months — 14000 Ks", price: 14000,
+      format: "Mail & Password", note: "Usually a ready-made private account, so it generally can't be renewed." },
+    { name: "✨ Family Plan — 3 Months — 17000 Ks", price: 17000, bestSeller: true,
+      format: "Mail & Password or Your Own Mail", note: "Can be activated on your own mail and is usually renewable." }
   ]
 },
       {
@@ -8432,7 +8459,8 @@ planName = plan.label ? plan.label : planName.replace(/\b(private|share|own[- ]?
 const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
 const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
   team:"Team", education:"Education", individual:"Individual", family:"Family",
-  pro:"Pro", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core", standard:"Standard"};
+  pro:"Pro", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
+  "4k":"4K Premium"};
 const tierChipFor = t => t ? `<span class="plan-tier-chip">${TIER_LABEL[t] || t}</span>` : "";
 // How the account is delivered. Explicit plan.type wins; otherwise infer.
 const typeOf = p => p.type || (p.ownMail ? "Own Mail"
