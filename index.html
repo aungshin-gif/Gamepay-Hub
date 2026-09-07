@@ -9740,7 +9740,17 @@ document.getElementById("noticeCodeViewAllBtn")?.addEventListener("click", () =>
 document.getElementById("noticeCodeCopyBtn")?.addEventListener("click", () => {
   const code = document.getElementById("noticeCodePopup")?.dataset.code;
   if(!code){ showToast("No code found in this notice"); return; }
-  const done = () => showToast("Code copied: " + code);
+  // A toast alone was easy to miss with the popup itself right there under
+  // the thumb -- swap the button's own label/icon too, same "Copied" moment
+  // pqCopyBtn already gives for the payment-number copy button.
+  const done = () => {
+    showToast("Code copied: " + code);
+    const btn = document.getElementById("noticeCodeCopyBtn");
+    if(btn){
+      btn.innerHTML = ICONS.check + "Copied";
+      setTimeout(() => { if(btn) btn.innerHTML = "Copy code"; }, 1400);
+    }
+  };
   if(navigator.clipboard?.writeText) navigator.clipboard.writeText(code).then(done).catch(done);
   else done();
 });
