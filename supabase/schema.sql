@@ -445,6 +445,11 @@ grant execute on function public.mark_notifications_read to authenticated;
 -- create_order now accepts an optional coupon code. The discount is
 -- computed and the coupon marked used here -- never trust a client-sent
 -- discount, always re-derive it from the coupon row server-side.
+-- Also drop the 7-argument version created earlier in this file (with
+-- p_payment_slip_path as the last param) -- otherwise it sticks around
+-- as a second overload alongside the one below, and the unqualified
+-- "grant" further down fails with "function name is not unique".
+drop function if exists public.create_order(text, text, numeric, text, text, text, text);
 drop function if exists public.create_order(text, text, numeric, text, text, text, text, text);
 
 -- Also snapshots the plan's Warranty/Format/Note (as resolved on the
