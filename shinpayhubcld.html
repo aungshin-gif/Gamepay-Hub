@@ -323,9 +323,24 @@
      Format/Note. Now a proper card, one field per row, with its own
      Save/Discard footer -- Discard re-reads the last-saved values instead
      of reloading the whole list, so it's cheap to back out of a typo. */
-  .stock-product-group{ margin-bottom:20px; }
-  .stock-product-head{ display:flex; align-items:center; gap:9px; padding:8px 2px; font-weight:800; font-size:13.5px; color:var(--ink); }
+  /* Collapsed by default, like a storefront product card -- tap the head to
+     expand and see/edit its plans, instead of every plan for every product
+     rendering open at once (a very long scroll on a 40+ product catalog). */
+  .stock-product-group{
+    margin-bottom:12px; border:1px solid var(--border); border-radius:14px; background:var(--card);
+    overflow:hidden; box-shadow:var(--shadow-sm,none);
+  }
+  .stock-product-head{
+    display:flex; align-items:center; justify-content:space-between; gap:9px;
+    padding:14px 16px; font-weight:800; font-size:13.5px; color:var(--ink); cursor:pointer; user-select:none;
+  }
   .stock-product-head img{ width:26px; height:26px; border-radius:8px; object-fit:cover; flex:0 0 auto; background:#eef0f8; }
+  .stock-plan-count{ font-size:11px; font-weight:700; color:var(--muted-2); }
+  .stock-product-head-right{ display:flex; align-items:center; gap:10px; }
+  .stock-expand-chevron{ width:17px; height:17px; color:var(--muted-2); transition:transform .15s; flex:0 0 auto; }
+  .stock-product-group.expanded .stock-expand-chevron{ transform:rotate(180deg); }
+  .stock-product-plans{ display:none; padding:0 14px 14px; }
+  .stock-product-group.expanded .stock-product-plans{ display:block; }
   .stock-plan-card{
     padding:16px 18px; border-radius:14px; background:var(--card); border:1px solid var(--border);
     margin-bottom:12px; box-shadow:var(--shadow-sm,none);
@@ -1681,6 +1696,7 @@ let stockOverridesCache = {};
 let productOverridesCache = {}; // keyed by product_id -- currently just { hot }
 let stockRenderedRows = []; // parallel to the .stock-plan-row elements, in DOM order
 let stockActiveCategory = "All";
+let stockExpandedProducts = new Set(); // product ids currently expanded -- collapsed by default, same tap-to-open feel as the storefront's own product cards
 
 function stockRowKey(productId, planName){ return productId + "::" + planName; }
 
@@ -1735,25 +1751,45 @@ function renderStockList(){
   }
 
   stockRenderedRows = [];
+  // A search narrows straight to matching plans -- force those groups open
+  // so the result isn't hidden behind a collapsed head the search just found.
   list.innerHTML = groups.map(({ product, plans }) => {
     plans.forEach(plan => stockRenderedRows.push({ product, plan }));
     const isHot = !!productOverridesCache[product.id]?.hot;
+    const expanded = Boolean(q) || stockExpandedProducts.has(product.id);
     return `
-      <div class="stock-product-group">
+      <div class="stock-product-group ${expanded ? "expanded" : ""}" data-product-id="${product.id}">
         <div class="stock-product-head">
           <div class="stock-product-head-left">
             ${product.icon ? `<img src="${product.icon}" alt="" onerror="this.remove()">` : ""}
             <span>${product.name}</span>
+            <span class="stock-plan-count">${plans.length} plan${plans.length === 1 ? "" : "s"}</span>
           </div>
-          <span class="stock-hot-toggle ${isHot ? "on" : ""}" data-product-id="${product.id}">🔥 Hot</span>
+          <div class="stock-product-head-right">
+            <span class="stock-hot-toggle ${isHot ? "on" : ""}" data-product-id="${product.id}">🔥 Hot</span>
+            <svg class="icon stock-expand-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
         </div>
-        ${plans.map(plan => renderStockPlanRow(product, plan)).join("")}
+        <div class="stock-product-plans">
+          ${plans.map(plan => renderStockPlanRow(product, plan)).join("")}
+        </div>
       </div>
     `;
   }).join("");
 
   list.querySelectorAll(".stock-plan-card").forEach((rowEl, i) => wireStockPlanRow(rowEl, stockRenderedRows[i]));
   list.querySelectorAll(".stock-hot-toggle").forEach(toggle => wireStockHotToggle(toggle));
+  list.querySelectorAll(".stock-product-group").forEach(groupEl => {
+    const head = groupEl.querySelector(".stock-product-head");
+    head.addEventListener("click", (e) => {
+      if(e.target.closest(".stock-hot-toggle")) return;
+      const productId = groupEl.dataset.productId;
+      const nowExpanded = !groupEl.classList.contains("expanded");
+      groupEl.classList.toggle("expanded", nowExpanded);
+      if(nowExpanded) stockExpandedProducts.add(productId);
+      else stockExpandedProducts.delete(productId);
+    });
+  });
 }
 
 function wireStockHotToggle(toggleEl){
