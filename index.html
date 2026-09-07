@@ -1442,7 +1442,7 @@ body{background-color:#050812!important;background-image:radial-gradient(circle 
 .field.payment-field{position:relative!important}.pay-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:9px!important;width:100%!important;align-items:stretch!important}.pay-option{position:relative!important;min-width:0!important;min-height:72px!important;aspect-ratio:1!important;padding:7px 3px!important;border-radius:16px!important;display:grid!important;place-items:center!important;align-content:center!important;gap:5px!important;overflow:visible!important;background:linear-gradient(145deg,rgba(27,52,91,.72),rgba(7,14,30,.88))!important;border:1px solid rgba(86,243,255,.24)!important;color:#eaffff!important;box-shadow:0 12px 25px rgba(0,0,0,.26),inset 0 1px rgba(255,255,255,.10)!important;transition:transform .25s cubic-bezier(.23,1,.32,1),box-shadow .25s ease,border-color .2s ease!important}.pay-option:hover{transform:translateY(-4px) scale(1.03)!important;border-color:var(--cyan)!important;box-shadow:0 0 24px rgba(86,243,255,.28)!important}.pay-option.active{transform:translateY(-3px) scale(1.04)!important;background:linear-gradient(145deg,rgba(86,243,255,.27),rgba(35,120,255,.28))!important;border-color:#d8ffff!important;box-shadow:0 0 0 3px rgba(86,243,255,.14),0 0 30px rgba(86,243,255,.52)!important}.pay-option.active::after{content:"";position:absolute;left:15%;right:15%;bottom:-5px;height:3px;border-radius:99px;background:#dfffff;box-shadow:0 0 9px var(--cyan),0 0 20px var(--cyan)}.pay-logo{display:block!important;width:35px!important;height:35px!important;object-fit:contain!important;border-radius:9px!important;padding:2px!important;background:#fff!important;box-shadow:0 0 15px rgba(86,243,255,.34)!important;transition:transform .25s ease,box-shadow .25s ease!important}.pay-option:hover .pay-logo,.pay-option.active .pay-logo{transform:scale(1.1)!important;box-shadow:0 0 21px rgba(86,243,255,.74)!important}.pay-option span:last-child{font-size:9px!important;font-weight:900!important;white-space:nowrap!important;color:#eaffff!important}.pay-option.active span:last-child{color:#dfffff!important;text-shadow:0 0 9px rgba(86,243,255,.85)}
 .payment-quick-pop{position:absolute!important;left:50%!important;bottom:calc(100% + 12px)!important;z-index:100!important;width:min(260px,calc(100vw - 42px))!important;padding:11px 13px!important;border-radius:15px!important;color:#efffff!important;background:linear-gradient(145deg,rgba(17,42,77,.99),rgba(4,10,25,.99))!important;border:1px solid rgba(86,243,255,.75)!important;box-shadow:0 0 25px rgba(86,243,255,.40),0 16px 30px rgba(0,0,0,.42)!important;opacity:0!important;transform:translateX(-50%) translateY(6px) scale(.94)!important;pointer-events:none!important;transition:opacity .2s ease,transform .2s cubic-bezier(.23,1,.32,1)!important}.payment-quick-pop.show{opacity:1!important;transform:translateX(-50%) translateY(0) scale(1)!important;pointer-events:auto!important}.payment-quick-pop.hidden{display:none!important}.payment-quick-method{font-size:11px!important;color:#aaffff!important}.payment-quick-number{margin-top:3px!important;font-size:16px!important;font-weight:950!important;color:#fff!important;text-shadow:0 0 13px rgba(86,243,255,.62)}.payment-quick-name{margin-top:2px!important;color:#aeefff!important;font-size:11px!important}.payment-quick-hint{margin-top:6px!important;color:#7898b7!important;font-size:9px!important}
 .support-profile{display:flex;align-items:center;justify-content:center;gap:10px;margin:16px auto 4px}.support-avatar{display:block!important;width:52px!important;height:52px!important;border-radius:50%!important;object-fit:cover!important;border:2px solid rgba(86,243,255,.82)!important;box-shadow:0 0 20px rgba(86,243,255,.55)!important}.support-profile strong{display:block;color:#eaffff}.support-profile small{display:block;color:#8ca7bf;margin-top:3px}.support-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.support-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 12px;border-radius:12px;text-decoration:none;color:#eaffff!important;background:rgba(86,243,255,.08)!important;border:1px solid rgba(86,243,255,.35)!important}.support-btn span{color:#8fa8c0;font-size:10px}.whatsapp-support{border-color:rgba(37,211,102,.65)!important}
-.intro-splash{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;align-content:center;gap:10px;background:#ffffff;pointer-events:none;animation:introOut .6s cubic-bezier(.23,1,.32,1) 1.05s forwards}@keyframes introOut{to{opacity:0;visibility:hidden}}
+.intro-splash{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;align-content:center;gap:10px;background:#ffffff;pointer-events:none;animation:introOut .65s cubic-bezier(.23,1,.32,1) 1.05s forwards}@keyframes introOut{to{opacity:0;visibility:hidden;transform:scale(1.055);filter:blur(7px)}}
 @media(max-width:760px){.pay-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important}.pay-option{min-height:57px!important;padding:5px 1px!important;border-radius:13px!important}.pay-logo{width:28px!important;height:28px!important}.pay-option span:last-child{font-size:7px!important}.payment-quick-pop{width:min(235px,calc(100vw - 38px))!important}.support-avatar{width:48px!important;height:48px!important}}
 @media(prefers-reduced-motion:reduce){.intro-splash,.intro-splash::before,.intro-logo,.intro-title,.intro-label{animation:none!important}.intro-splash{display:none!important}.pay-option,.pay-logo,.payment-quick-pop{transition:none!important}}
 
@@ -3482,8 +3482,21 @@ body.light-mode .lp-hero .lp-hero-copy,
    instead of a fake letter badge, with a slim spinning accent ring. */
 .intro-splash{
   background:radial-gradient(circle at 50% 38%,rgba(124,77,219,.07),transparent 55%),#ffffff;
+  overflow:hidden;
 }
-.intro-ring{ position:relative; width:96px; height:96px; display:grid; place-items:center; }
+/* Two soft, slowly-drifting blobs behind everything else -- pure ambiance,
+   just enough depth that the splash doesn't read as a flat white card. */
+.intro-orb{
+  position:absolute; border-radius:50%; filter:blur(42px); pointer-events:none;
+  animation:introOrbDrift 6s ease-in-out infinite;
+}
+.intro-orb.a{ width:230px; height:230px; top:12%; left:10%; background:radial-gradient(circle,rgba(122,90,232,.30),transparent 70%); }
+.intro-orb.b{ width:270px; height:270px; bottom:10%; right:8%; background:radial-gradient(circle,rgba(74,120,240,.26),transparent 70%); animation-delay:1.6s; }
+@keyframes introOrbDrift{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(12px,-16px) scale(1.1); } }
+.intro-ring{
+  position:relative; width:96px; height:96px; display:grid; place-items:center;
+  border-radius:50%; animation:introHaloPulse 2s ease-in-out .5s infinite;
+}
 .intro-ring::before{
   content:""; position:absolute; inset:0; border-radius:50%;
   background:conic-gradient(from 0deg,transparent 0deg,rgba(58,91,217,.85) 55deg,transparent 130deg,rgba(155,83,216,.85) 235deg,transparent 320deg);
@@ -3492,17 +3505,21 @@ body.light-mode .lp-hero .lp-hero-copy,
   animation:introRingSpin 1.4s linear infinite;
 }
 @keyframes introRingSpin{ to{ transform:rotate(360deg); } }
+@keyframes introHaloPulse{
+  0%,100%{ box-shadow:0 0 0 0 rgba(124,77,219,.28); }
+  50%{ box-shadow:0 0 30px 8px rgba(124,77,219,.24); }
+}
 .intro-logo{
   position:relative; width:76px; height:76px; border-radius:22px; overflow:hidden;
   background:#fff;
   box-shadow:0 2px 10px rgba(20,28,46,.10), 0 14px 30px rgba(20,28,46,.08);
-  animation:introLogoPop .5s cubic-bezier(.34,1.56,.64,1) both;
+  animation:introLogoPop .55s cubic-bezier(.34,1.56,.64,1) both, introLogoBreathe 2.6s ease-in-out .65s infinite;
 }
 .intro-logo-img{ display:block; width:100%; height:100%; object-fit:cover; }
 .intro-title,.intro-label{ position:relative; }
 .intro-title{
   font-size:16px; font-weight:900; letter-spacing:3px; color:var(--ink,#141c2e);
-  animation:introText .5s ease-out .1s both;
+  animation:introText .55s ease-out .12s both;
 }
 .intro-title span{
   background:var(--grad-accent,linear-gradient(115deg,#3a5bd9,#6a54e0 52%,#9b53d8));
@@ -3510,10 +3527,11 @@ body.light-mode .lp-hero .lp-hero-copy,
 }
 .intro-label{
   font-size:8px; letter-spacing:2px; color:var(--muted,#68738a);
-  animation:introText .5s ease-out .18s both;
+  animation:introText .55s ease-out .2s both;
 }
-@keyframes introLogoPop{ from{ opacity:0; transform:scale(.82); } to{ opacity:1; transform:none; } }
-@keyframes introText{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+@keyframes introLogoPop{ from{ opacity:0; transform:scale(.72) rotate(-8deg); filter:blur(5px); } to{ opacity:1; transform:none; filter:blur(0); } }
+@keyframes introLogoBreathe{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.025); } }
+@keyframes introText{ from{ opacity:0; transform:translateY(9px); filter:blur(2.5px); } to{ opacity:1; transform:none; filter:blur(0); } }
 </style>
 
 <style id="compact-hero-real-logos">
@@ -6086,7 +6104,7 @@ body.light-mode .notice-code-btn.ghost{ background:rgba(124,58,237,.08); color:v
 </head>
 <body class="light-mode">
   <div class="neon-announcement" aria-label="Store announcement"><div class="neon-track"><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b><span>Premium digital products · Clear plans · Fast support</span><b>✦</b><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b></div></div>
-  <div class="intro-splash" aria-hidden="true"><div class="intro-ring"><div class="intro-logo"><img class="intro-logo-img" alt=""></div></div><div class="intro-title">GAMEPAY <span>HUB</span></div><div class="intro-label">PREMIUM DIGITAL MARKETPLACE</div></div>
+  <div class="intro-splash" aria-hidden="true"><div class="intro-orb a"></div><div class="intro-orb b"></div><div class="intro-ring"><div class="intro-logo"><img class="intro-logo-img" alt=""></div></div><div class="intro-title">GAMEPAY <span>HUB</span></div><div class="intro-label">PREMIUM DIGITAL MARKETPLACE</div></div>
   <canvas id="particles"></canvas>
 
   <div class="compact-header" aria-label="Store header">
