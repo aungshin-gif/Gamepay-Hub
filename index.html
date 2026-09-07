@@ -5666,7 +5666,12 @@ body.light-mode .notif-badge{ box-shadow:0 0 0 2px #fff; }
   gap:10px;
 }
 .my-order-row{
-  display:flex; align-items:center; gap:12px;
+  /* flex-start, not center: a long plan name used to force the icon and
+     amount to sit centered against however many lines .mo-body ended up
+     wrapping to, which read as "not lined up" whenever a plan name ran
+     long. Every row now anchors to its own top line no matter how tall
+     .mo-body gets. */
+  display:flex; align-items:flex-start; gap:12px;
   padding:13px 15px;
   border-radius:14px;
   border:1px solid rgba(199,125,255,.22);
@@ -5675,9 +5680,15 @@ body.light-mode .notif-badge{ box-shadow:0 0 0 2px #fff; }
   transition:.15s;
 }
 .my-order-row:hover{ background:rgba(255,255,255,.11); }
+.my-order-row .mo-status-icon{ margin-top:1px; }
 .my-order-row .mo-body{ flex:1; min-width:0; }
-.my-order-row .moc{ font-weight:800; font-size:13px; }
+.my-order-row .moc{ font-weight:800; font-size:13px; display:flex; align-items:center; flex-wrap:wrap; gap:2px; }
 .my-order-row .mol{ font-size:12px; color:var(--muted,rgba(255,255,255,.7)); margin-top:3px; }
+/* One line, ellipsized -- a long plan name used to wrap onto a second
+   line and make the row's height (and the icon/amount centered against
+   it) unpredictable from row to row. Full text is still one tap/hover
+   away via the title attribute. */
+.my-order-row .mol.mo-plan{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .my-order-row .mol.mo-date{ opacity:.75; }
 /* The amount used to be buried inline in the small-print subtitle
    (alongside a plan name that already had its own price in the text,
@@ -5686,8 +5697,9 @@ body.light-mode .notif-badge{ box-shadow:0 0 0 2px #fff; }
    each in its own place instead of one run-on line. */
 .my-order-row .mo-amount{
   flex:0 0 auto; font-weight:800; font-size:13px; color:var(--ink,#fff);
-  white-space:nowrap; margin-left:4px;
+  white-space:nowrap; margin-left:4px; margin-top:1px;
 }
+.my-order-row .mo-chevron{ margin-top:3px; }
 /* Skeleton shimmer for list loading (My Orders / Notices) -- a moving
    gradient over placeholder shapes instead of bare "Loading…" text, and a
    different loading language than the intro splash's ring or the page
@@ -5745,11 +5757,20 @@ body.light-mode .mo-badge.rejected{ background:#ffe6ec; color:#c81e4d; border-co
 /* Summary counts above the order list -- same status colors as the row
    badges above, so "3 Pending" and a pending row read as the same color
    language instead of introducing a second palette. */
-.mo-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:16px 0; }
+.mo-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin:12px 0; }
 @media(max-width:420px){ .mo-stats{ grid-template-columns:repeat(2,1fr); } }
-.mo-stat{ padding:12px 8px; border-radius:14px; text-align:center; border:1px solid; }
-.mo-stat-num{ display:block; font-size:19px; font-weight:900; line-height:1.15; }
-.mo-stat-label{ display:block; font-size:9px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; margin-top:3px; opacity:.85; }
+/* Tapping a tile filters the list below to that status -- Total clears
+   the filter. Kept compact (this used to be noticeably chunkier) since
+   it's a quick-glance summary row, not a set of headline numbers. */
+.mo-stat{
+  padding:8px 6px; border-radius:12px; text-align:center; border:1px solid;
+  cursor:pointer; user-select:none; transition:transform .12s ease, box-shadow .12s ease;
+  background:none;
+}
+.mo-stat:active{ transform:scale(.96); }
+.mo-stat.active{ box-shadow:0 0 0 2px currentColor inset; }
+.mo-stat-num{ display:block; font-size:15px; font-weight:900; line-height:1.15; }
+.mo-stat-label{ display:block; font-size:8px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; margin-top:2px; opacity:.85; }
 .mo-stat.total{ background:rgba(124,77,219,.08); border-color:rgba(124,77,219,.22); color:var(--violet,#7c4ddb); }
 .mo-stat.pending{ background:#fff3d6; border-color:#f0d090; color:#a15c00; }
 .mo-stat.completed{ background:#e2f5ea; border-color:#b7e6c9; color:#0f7a3f; }
@@ -9354,6 +9375,15 @@ function stripTrailingPrice(text){
 // from a customer's point of view, so it counts toward Pending here rather
 // than getting a fifth tile of its own -- every order lands in exactly one
 // of Pending/Completed/Failed, and those three always add up to Total.
+let myOrdersAllRows = [];
+let myOrdersStatusFilter = "all"; // "all" | "pending" | "completed" | "failed" -- tapping a stat tile sets this
+function statusMatchesFilter(status, filter){
+  if(filter === "all") return true;
+  if(filter === "pending") return status === "pending" || status === "approved";
+  if(filter === "completed") return status === "completed";
+  if(filter === "failed") return status === "rejected";
+  return true;
+}
 function renderMyOrdersStats(rows){
   const statsEl = document.getElementById("myOrdersStats");
   if(!statsEl) return;
@@ -9364,16 +9394,36 @@ function renderMyOrdersStats(rows){
   const failed = rows.filter(o => o.status === "rejected").length;
   statsEl.classList.remove("hidden");
   statsEl.innerHTML = `
-    <div class="mo-stat total"><span class="mo-stat-num">${total}</span><span class="mo-stat-label">Total</span></div>
-    <div class="mo-stat pending"><span class="mo-stat-num">${pending}</span><span class="mo-stat-label">Pending</span></div>
-    <div class="mo-stat completed"><span class="mo-stat-num">${completed}</span><span class="mo-stat-label">Completed</span></div>
-    <div class="mo-stat failed"><span class="mo-stat-num">${failed}</span><span class="mo-stat-label">Failed</span></div>
+    <div class="mo-stat total ${myOrdersStatusFilter === "all" ? "active" : ""}" data-filter="all"><span class="mo-stat-num">${total}</span><span class="mo-stat-label">Total</span></div>
+    <div class="mo-stat pending ${myOrdersStatusFilter === "pending" ? "active" : ""}" data-filter="pending"><span class="mo-stat-num">${pending}</span><span class="mo-stat-label">Pending</span></div>
+    <div class="mo-stat completed ${myOrdersStatusFilter === "completed" ? "active" : ""}" data-filter="completed"><span class="mo-stat-num">${completed}</span><span class="mo-stat-label">Completed</span></div>
+    <div class="mo-stat failed ${myOrdersStatusFilter === "failed" ? "active" : ""}" data-filter="failed"><span class="mo-stat-num">${failed}</span><span class="mo-stat-label">Failed</span></div>
   `;
+  // Tapping a tile filters the list below to just that status (tapping the
+  // one already active, or Total, clears the filter back to everything).
+  statsEl.querySelectorAll(".mo-stat").forEach(tile => {
+    tile.addEventListener("click", () => {
+      const filter = tile.dataset.filter;
+      myOrdersStatusFilter = (myOrdersStatusFilter === filter && filter !== "all") ? "all" : filter;
+      renderMyOrdersStats(rows);
+      renderMyOrdersListFiltered();
+    });
+  });
 }
 function renderMyOrdersRows(rows){
+  myOrdersAllRows = rows;
+  myOrdersStatusFilter = "all";
   renderMyOrdersStats(rows);
-  if(!rows.length){
+  renderMyOrdersListFiltered();
+}
+function renderMyOrdersListFiltered(){
+  const rows = myOrdersAllRows.filter(o => statusMatchesFilter(o.status, myOrdersStatusFilter));
+  if(!myOrdersAllRows.length){
     myOrdersList.innerHTML = `<div class="chat-empty">No orders yet. Place your first order from the store!</div>`;
+    return;
+  }
+  if(!rows.length){
+    myOrdersList.innerHTML = `<div class="chat-empty">No orders match this filter.</div>`;
     return;
   }
   myOrdersList.innerHTML = rows.map(o => `
@@ -9381,7 +9431,7 @@ function renderMyOrdersRows(rows){
       <span class="mo-status-icon ${o.status}">${MO_STATUS_ICON[o.status] || MO_STATUS_ICON.pending}</span>
       <div class="mo-body">
         <div class="moc">${o.order_code} <span class="mo-badge ${o.status}">${o.status.toUpperCase()}</span>${o._unread > 0 ? `<span class="unread-badge">${o._unread}</span>` : ""}</div>
-        <div class="mol">${o.product_name} · ${stripTrailingPrice(o.plan_name)}</div>
+        <div class="mol mo-plan" title="${escapePreviewText(o.product_name + " · " + stripTrailingPrice(o.plan_name))}">${o.product_name} · ${stripTrailingPrice(o.plan_name)}</div>
         <div class="mol mo-date">${formatOrderDate(o.created_at)}</div>
       </div>
       <div class="mo-amount">${formatKs(o.amount)}</div>
@@ -9390,7 +9440,7 @@ function renderMyOrdersRows(rows){
   `).join("");
   myOrdersList.querySelectorAll(".my-order-row").forEach(el => {
     el.addEventListener("click", () => {
-      const row = rows.find(r => r.access_token === el.dataset.token);
+      const row = myOrdersAllRows.find(r => r.access_token === el.dataset.token);
       if(!row) return;
       currentOrder = {
         id: row.id, access_token: row.access_token, order_code: row.order_code,
