@@ -40,6 +40,17 @@ alter table public.orders add column if not exists archived boolean not null def
 -- unread-message count instead of an in-memory one that forgets on reload.
 alter table public.orders add column if not exists admin_last_read_at timestamptz;
 alter table public.orders add column if not exists customer_last_read_at timestamptz;
+-- Snapshotted from the plan at the moment of purchase (not looked up live),
+-- so a later admin edit to the plan's own Warranty/Format/Note in the Stock
+-- list can never rewrite what an existing customer was actually promised.
+alter table public.orders add column if not exists plan_warranty text;
+alter table public.orders add column if not exists plan_format text;
+alter table public.orders add column if not exists plan_note text;
+-- Admin can end a finished order's conversation from their side; once set,
+-- send_customer_message (below) refuses any further customer replies. There
+-- is no "reopen" action -- ending a chat is meant to be final, matching a
+-- completed/finished order.
+alter table public.orders add column if not exists chat_closed boolean not null default false;
 
 -- 2. Chat messages, one thread per order -------------------------
 create table if not exists public.messages (
@@ -154,11 +165,16 @@ $$;
 create or replace function public.send_customer_message(p_token uuid, p_body text)
 returns void
 language plpgsql security definer set search_path = public as $$
-declare v_order_id uuid;
+declare v_order_id uuid; v_chat_closed boolean;
 begin
-  select id into v_order_id from public.orders where access_token = p_token;
+  select id, chat_closed into v_order_id, v_chat_closed from public.orders where access_token = p_token;
   if v_order_id is null then
     raise exception 'invalid order token';
+  end if;
+  -- Client-side already hides the input once ended; this is the real gate,
+  -- since a customer's browser is never trusted to enforce it on its own.
+  if v_chat_closed then
+    raise exception 'this conversation has ended';
   end if;
   insert into public.messages(order_id, sender, body) values (v_order_id, 'customer', p_body);
 end;
@@ -429,13 +445,20 @@ grant execute on function public.mark_notifications_read to authenticated;
 -- create_order now accepts an optional coupon code. The discount is
 -- computed and the coupon marked used here -- never trust a client-sent
 -- discount, always re-derive it from the coupon row server-side.
-drop function if exists public.create_order(text, text, numeric, text, text, text, text);
+drop function if exists public.create_order(text, text, numeric, text, text, text, text, text);
 
+-- Also snapshots the plan's Warranty/Format/Note (as resolved on the
+-- customer's screen at checkout, after any Stock-list overrides) onto the
+-- order row itself, so the order's own chat/detail view can show exactly
+-- what the customer was promised even if the plan's info changes later.
 create or replace function public.create_order(
   p_product_name text, p_plan_name text, p_amount numeric,
   p_payment_method text, p_account_info text, p_note text,
   p_payment_slip_path text default null,
-  p_coupon_code text default null
+  p_coupon_code text default null,
+  p_plan_warranty text default null,
+  p_plan_format text default null,
+  p_plan_note text default null
 ) returns table (id uuid, access_token uuid, order_code text)
 language plpgsql security definer set search_path = public as $$
 declare
@@ -453,9 +476,9 @@ begin
     end if;
   end if;
 
-  insert into public.orders(product_name, plan_name, amount, payment_method, account_info, note, order_code, payment_slip_path, user_id, coupon_code, discount_amount)
+  insert into public.orders(product_name, plan_name, amount, payment_method, account_info, note, order_code, payment_slip_path, user_id, coupon_code, discount_amount, plan_warranty, plan_format, plan_note)
   values (p_product_name, p_plan_name, p_amount - v_discount, p_payment_method, p_account_info, p_note, v_code, p_payment_slip_path, auth.uid(),
-          case when v_discount > 0 then p_coupon_code else null end, v_discount)
+          case when v_discount > 0 then p_coupon_code else null end, v_discount, p_plan_warranty, p_plan_format, p_plan_note)
   returning orders.id, orders.access_token into v_order_id, v_access_token;
 
   if v_discount > 0 then

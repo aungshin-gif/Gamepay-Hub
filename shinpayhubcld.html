@@ -211,6 +211,12 @@
   .msg-avatar svg{ width:11px; height:11px; }
   .chat-input-row{ display:flex; gap:8px; }
   .chat-input-row input{ margin-bottom:0; }
+  .chat-input-row.is-disabled{ opacity:.5; pointer-events:none; }
+  .chat-ended-banner{
+    text-align:center; font-size:12px; font-weight:700; color:var(--bad);
+    background:var(--bad-soft); border:1px solid #f3c6c6; border-radius:10px;
+    padding:8px 10px; margin-bottom:8px;
+  }
   .order-detail-table{ width:100%; border-collapse:collapse; font-size:12.5px; margin-bottom:14px; }
   .order-detail-table th{ text-align:left; color:var(--muted); font-weight:600; padding:6px 10px 6px 0; width:38%; vertical-align:top; white-space:nowrap; }
   .order-detail-table td{ color:var(--ink); padding:6px 0; border-bottom:1px solid var(--border); }
@@ -488,9 +494,13 @@
             <div class="order-actions" id="orderApproveRow"></div>
           </div>
           <div class="card chat-panel">
-            <div class="card-title"><span class="icon" style="font-size:16px;line-height:1;">👾</span>Chat</div>
+            <div class="card-title" style="justify-content:space-between;">
+              <span style="display:flex;align-items:center;gap:8px;"><span class="icon" style="font-size:16px;line-height:1;">👾</span>Chat</span>
+              <button type="button" id="endChatBtn" class="ghost" style="padding:6px 12px;font-size:11.5px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>End Chat</button>
+            </div>
             <div id="chatOrderStrip" class="chat-order-strip"></div>
             <div id="chatCustomerHeader"></div>
+            <div id="chatEndedBanner" class="chat-ended-banner hidden">This conversation has ended.</div>
             <div id="chatMessages" class="chat-messages"></div>
             <form id="chatForm" class="chat-input-row">
               <input id="chatInput" type="text" placeholder="Reply to customer…" autocomplete="off" />
@@ -1518,13 +1528,17 @@ async function selectOrder(id){
       <tr><th>Amount</th><td><b>${Number(order.amount).toLocaleString()} Ks</b></td></tr>
       <tr><th>Payment</th><td>${order.payment_method || "-"}</td></tr>
       <tr><th>Account/Email</th><td>${order.account_info || "-"}</td></tr>
-      <tr><th>Note</th><td>${order.note || "-"}</td></tr>
+      <tr><th>Customer Note</th><td>${order.note || "-"}</td></tr>
+      <tr><th>Plan Warranty</th><td>${order.plan_warranty || "-"}</td></tr>
+      <tr><th>Plan Format</th><td>${order.plan_format || "-"}</td></tr>
+      <tr><th>Plan Note</th><td style="white-space:pre-line;">${order.plan_note || "-"}</td></tr>
       <tr><th>Placed</th><td>${new Date(order.created_at).toLocaleString()}</td></tr>
       <tr><th>Payment Slip</th><td id="slipStatus">${order.payment_slip_path ? "Loading…" : "None attached"}</td></tr>
     </table>
   `;
   document.getElementById("chatOrderStrip").innerHTML =
     `<span>${order.order_code}</span><b>${Number(order.amount).toLocaleString()} Ks</b>${statusBadge(order.archived ? "archived" : order.status)}`;
+  updateChatEndedUI(order);
   renderChatCustomerHeader(order.user_id ? "Loading…" : (order.account_info || "this customer (guest)"));
   if(order.user_id){
     sb.rpc("admin_get_user_email", { p_user_id: order.user_id }).then(({ data, error }) => {
@@ -1559,6 +1573,38 @@ async function setStatus(order, status){
   order.status = status;
   sb.channel("order-" + order.access_token).send({ type: "broadcast", event: "status_update", payload: { status } });
   selectOrder(order.id);
+}
+
+// Reflects (and lets admin change) whether this order's chat is closed --
+// there is deliberately no "reopen" here, ending a chat is meant to be
+// final (see the schema.sql comment on orders.chat_closed).
+function updateChatEndedUI(order){
+  const banner = document.getElementById("chatEndedBanner");
+  const form = document.getElementById("chatForm");
+  const endBtn = document.getElementById("endChatBtn");
+  const closed = Boolean(order.chat_closed);
+  banner?.classList.toggle("hidden", !closed);
+  form?.classList.toggle("is-disabled", closed);
+  if(endBtn){
+    endBtn.disabled = closed;
+    endBtn.textContent = closed ? "Chat Ended" : "";
+    if(!closed){
+      endBtn.innerHTML = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>End Chat`;
+    }
+  }
+}
+
+async function endChat(order){
+  const ok = await showAdminConfirm(
+    "End this conversation? Neither you nor the customer will be able to send more messages here -- this can't be undone.",
+    { title: "End chat?", confirmText: "End Chat" }
+  );
+  if(!ok) return;
+  const { error } = await sb.from("orders").update({ chat_closed: true }).eq("id", order.id);
+  if(error){ showAdminToast("Could not end chat: " + error.message, true); return; }
+  order.chat_closed = true;
+  sb.channel("order-" + order.access_token).send({ type: "broadcast", event: "chat_closed", payload: {} });
+  updateChatEndedUI(order);
 }
 
 async function setArchived(order, archived){
@@ -1612,12 +1658,17 @@ document.getElementById("chatForm").addEventListener("submit", async (e) => {
   const input = document.getElementById("chatInput");
   const text = input.value.trim();
   const order = orders.find(o => o.id === selectedOrderId);
-  if(!text || !order) return;
+  if(!text || !order || order.chat_closed) return;
   input.value = "";
   const { error } = await sb.from("messages").insert({ order_id: order.id, sender: "admin", body: text });
   if(error){ showAdminToast("Send failed: " + error.message, true); return; }
   appendBubble("admin", text);
   sb.channel("order-" + order.access_token).send({ type: "broadcast", event: "new_message", payload: { sender: "admin", body: text } });
+});
+
+document.getElementById("endChatBtn")?.addEventListener("click", () => {
+  const order = orders.find(o => o.id === selectedOrderId);
+  if(order) endChat(order);
 });
 
 // ---------------------------------------------------------------------

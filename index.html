@@ -5566,6 +5566,44 @@ body.light-mode .acct-row.danger .acct-row-value{ color:#dc2626; }
 .chat-panel-name{ font-weight:800; font-size:14px; line-height:1.25; }
 .chat-panel-status{ display:flex; align-items:center; gap:5px; font-size:10.5px; color:rgba(255,255,255,.85); margin-top:2px; }
 .chat-status-dot{ width:7px; height:7px; border-radius:50%; background:#3ec98b; box-shadow:0 0 6px #3ec98b; flex:0 0 auto; }
+/* Order chat vs. Support chat used to share one identical panel design,
+   with only the JS-level chatMode variable telling them apart -- nothing
+   on screen did. This small corner tag is the one header difference;
+   the order-summary card below is the bigger one. */
+.chat-mode-tag{
+  flex:0 0 auto; align-self:flex-start; padding:4px 8px; border-radius:7px;
+  font-size:8.5px; font-weight:900; letter-spacing:.05em;
+  background:rgba(255,255,255,.22); color:inherit;
+}
+/* Order ID, date, product/plan, amount, warranty/format/note and status --
+   shown once, above the conversation, instead of repeated in every message
+   or left for the customer to scroll back to the order-status page for. */
+.chat-order-summary{
+  margin:0 14px 10px; padding:12px 14px; border-radius:14px;
+  background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.16);
+}
+.chat-order-summary-row{
+  display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+  padding:5px 0; font-size:12px;
+}
+.chat-order-summary-row + .chat-order-summary-row{ border-top:1px dashed rgba(255,255,255,.14); }
+.chat-order-summary-label{
+  flex:0 0 auto; font-size:9.5px; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
+  color:rgba(255,255,255,.6); padding-top:1px;
+}
+.chat-order-summary-value{ flex:1 1 auto; text-align:right; font-weight:700; white-space:pre-line; }
+body.light-mode .chat-order-summary{ background:rgba(255,255,255,.55); border-color:rgba(212,168,67,.35); }
+body.light-mode .chat-order-summary-label{ color:rgba(44,31,66,.55); }
+body.light-mode .chat-order-summary-row + .chat-order-summary-row{ border-top-color:rgba(44,31,66,.14); }
+/* Shown once admin ends the conversation -- the input row below is
+   disabled at the same time (see openChatView()/lockChatInput()). */
+.chat-closed-banner{
+  margin:0 14px 10px; padding:9px 12px; border-radius:12px; text-align:center;
+  font-size:11.5px; font-weight:700;
+  background:rgba(255,110,150,.14); color:#ff9fc9; border:1px solid rgba(255,110,150,.3);
+}
+body.light-mode .chat-closed-banner{ background:#ffe6ec; color:#c81e4d; border-color:#f3b7c6; }
+.chat-input-row.is-disabled{ opacity:.5; pointer-events:none; }
 .chat-panel .chat-messages{
   min-height:280px;
   max-height:52vh;
@@ -6485,11 +6523,16 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
             <button id="chatBackBtn" class="chat-panel-back" type="button" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg></button>
             <span class="chat-panel-avatar"><img id="chatHeaderLogo" alt="GamePay Hub" /></span>
             <div class="chat-panel-info">
-              <div class="chat-panel-name">GamePay Hub Support</div>
-              <div class="chat-panel-status"><span class="chat-status-dot"></span>Admin ကိုယ်တိုင် စာပြန်ပါမယ် · Manual support</div>
+              <div class="chat-panel-name" id="chatPanelName">GamePay Hub Support</div>
+              <div class="chat-panel-status" id="chatPanelStatus"><span class="chat-status-dot"></span>Admin ကိုယ်တိုင် စာပြန်ပါမယ် · Manual support</div>
             </div>
+            <span class="chat-mode-tag hidden" id="chatModeTag">ORDER CHAT</span>
           </div>
+          <!-- Order-mode only: the order's own details, shown once above the
+               conversation instead of mixed into it -- see openChatView(). -->
+          <div id="chatOrderSummary" class="chat-order-summary hidden"></div>
           <div id="chatMessages" class="chat-messages"><div class="chat-empty">No messages yet.</div></div>
+          <div id="chatClosedBanner" class="chat-closed-banner hidden">This conversation has ended.</div>
           <form id="chatForm" class="chat-input-row">
             <input id="chatInput" class="input chat-input-pill" type="text" placeholder="Type a message…" autocomplete="off" />
             <button type="submit" class="chat-send-btn" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9 22 2z"/></svg></button>
@@ -8771,7 +8814,13 @@ async function submitOrderToBackend(){
         p_account_info: accountInput.value.trim(),
         p_note: noteInput.value.trim(),
         p_payment_slip_path: slip.path,
-        p_coupon_code: appliedCoupon?.code || null
+        p_coupon_code: appliedCoupon?.code || null,
+        // Snapshot exactly what the customer saw for this plan right now
+        // (already merged with any Stock-list overrides), so a later edit
+        // to the plan's own info can never rewrite what was promised here.
+        p_plan_warranty: selectedPlan.warranty || null,
+        p_plan_format: selectedPlan.format || null,
+        p_plan_note: selectedPlan.note || null
       }),
       15000, "Saving the order timed out."
     ));
@@ -8788,7 +8837,11 @@ async function submitOrderToBackend(){
   currentOrder = {
     id: row.id, access_token: row.access_token, order_code: row.order_code,
     product_name: currentProduct.name, plan_name: selectedPlan.name,
-    amount: amount - discount, created_at: new Date().toISOString()
+    amount: amount - discount, created_at: new Date().toISOString(),
+    status: "pending", chat_closed: false,
+    plan_warranty: selectedPlan.warranty || null,
+    plan_format: selectedPlan.format || null,
+    plan_note: selectedPlan.note || null
   };
   localStorage.setItem("gph_last_order", JSON.stringify(currentOrder));
   appliedCoupon = null;
@@ -8833,6 +8886,7 @@ function setOrderStatusUI(status){
   const title = document.getElementById("statusTitle");
   const hint = document.getElementById("statusHint");
   const chatBtn = document.getElementById("openChatBtn");
+  if(currentOrder) currentOrder.status = status;
   updateStatusStepper(status);
   if(status === "approved" || status === "completed"){
     icon.innerHTML = STATUS_ICON_SVG.approved;
@@ -8840,10 +8894,14 @@ function setOrderStatusUI(status){
     hint.textContent = "Your order has been approved. Open the chat to share your account details with our team.";
     chatBtn.classList.remove("hidden");
   } else if(status === "rejected"){
+    // A rejected order has nothing left to hand over and no delivery to
+    // discuss, so the order-specific chat is not offered here at all --
+    // "Message" (the general, non-order support chat under the Noti menu)
+    // is still reachable for anything else the customer wants to ask.
     icon.innerHTML = STATUS_ICON_SVG.rejected;
-    title.textContent = "Order needs attention";
-    hint.textContent = "Please open the chat, we need to sort something out about this order.";
-    chatBtn.classList.remove("hidden");
+    title.textContent = "Order was rejected";
+    hint.textContent = "This order was rejected. If you have questions, reach us through Message in the Noti menu.";
+    chatBtn.classList.add("hidden");
   } else {
     icon.innerHTML = STATUS_ICON_SVG.pending;
     title.textContent = "Waiting for approval…";
@@ -8898,6 +8956,15 @@ function ensureOrderChannel(order){
         showToast("New message from support");
         bumpUnseenBadge();
       }
+    })
+    .on("broadcast", { event: "chat_closed" }, () => {
+      // Admin ended this order's conversation -- lock it immediately if
+      // it's the one currently on screen, so the customer can't keep
+      // typing into a conversation that no longer goes anywhere.
+      const isActive = currentOrder?.access_token === order.access_token;
+      if(isActive) currentOrder.chat_closed = true;
+      const watchingChat = isActive && chatMode === "order" && !document.getElementById("chatView").classList.contains("hidden");
+      if(watchingChat) lockChatInput(true);
     })
     .subscribe();
   myOrderChannels[order.access_token] = ch;
@@ -8977,6 +9044,35 @@ function appendChatBubble(sender, body){
   box.scrollTop = box.scrollHeight;
 }
 
+// Order ID, date, product/plan, amount, warranty/format/note and status --
+// shown once above the conversation instead of repeated in messages or
+// left back on the order-status page for the customer to scroll to.
+function renderChatOrderSummary(order){
+  const el = document.getElementById("chatOrderSummary");
+  if(!el || !order) return;
+  const rows = [
+    ["Order ID", order.order_code],
+    ["Date", order.created_at ? formatOrderDate(order.created_at) : null],
+    ["Product", order.product_name],
+    ["Plan", order.plan_name ? stripTrailingPrice(order.plan_name) : null],
+    ["Amount", order.amount != null ? formatKs(order.amount) : null],
+    ["Warranty", order.plan_warranty],
+    ["Format", order.plan_format],
+    ["Note", order.plan_note],
+    ["Status", order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : null]
+  ].filter(([, v]) => v);
+  el.innerHTML = rows.map(([label, value]) =>
+    `<div class="chat-order-summary-row"><span class="chat-order-summary-label">${label}</span><span class="chat-order-summary-value">${escapePreviewText(value)}</span></div>`
+  ).join("");
+  el.classList.remove("hidden");
+}
+// Disables sending once admin ends the conversation (see the admin
+// dashboard's "End Chat" button) -- the server-side check in
+// send_customer_message is the real gate, this is just the matching UI.
+function lockChatInput(locked){
+  document.getElementById("chatForm")?.classList.toggle("is-disabled", locked);
+  document.getElementById("chatClosedBanner")?.classList.toggle("hidden", !locked);
+}
 async function openChatView(){
   chatMode = "order";
   clearUnseenBadge();
@@ -8984,6 +9080,15 @@ async function openChatView(){
   hideAllOrderSubviews();
   document.getElementById("chatView").classList.remove("hidden");
   document.getElementById("chatHeaderLogo").src = siteLogoSrc();
+  document.getElementById("chatModeTag")?.classList.remove("hidden");
+  if(currentOrder){
+    const nameEl = document.getElementById("chatPanelName");
+    const statusEl = document.getElementById("chatPanelStatus");
+    if(nameEl) nameEl.textContent = currentOrder.product_name || "Order Chat";
+    if(statusEl) statusEl.innerHTML = `<span class="chat-status-dot"></span>Order ${escapePreviewText(currentOrder.order_code || "")}`;
+    renderChatOrderSummary(currentOrder);
+    lockChatInput(Boolean(currentOrder.chat_closed));
+  }
   const box = document.getElementById("chatMessages");
   box.innerHTML = "<div class='chat-empty'>Loading messages…</div>";
   if(!supabaseClient || !currentOrder) return;
@@ -9041,6 +9146,15 @@ async function openSupportMessageView(){
   orderView.classList.remove("hidden");
   document.getElementById("chatView").classList.remove("hidden");
   document.getElementById("chatHeaderLogo").src = siteLogoSrc();
+  // Support chat is never tied to one order and never gets "ended" --
+  // undo anything openChatView() (order mode) left switched on.
+  document.getElementById("chatModeTag")?.classList.add("hidden");
+  document.getElementById("chatOrderSummary")?.classList.add("hidden");
+  const nameEl = document.getElementById("chatPanelName");
+  const statusEl = document.getElementById("chatPanelStatus");
+  if(nameEl) nameEl.textContent = "GamePay Hub Support";
+  if(statusEl) statusEl.innerHTML = `<span class="chat-status-dot"></span>Admin ကိုယ်တိုင် စာပြန်ပါမယ် · Manual support`;
+  lockChatInput(false);
   const box = document.getElementById("chatMessages");
   window.scrollTo(0, 0);
 
@@ -9087,7 +9201,7 @@ document.getElementById("chatForm")?.addEventListener("submit", async (e) => {
     supportChannel?.send({ type: "broadcast", event: "new_message", payload: { sender: "customer", body: text } });
     return;
   }
-  if(!currentOrder) return;
+  if(!currentOrder || currentOrder.chat_closed) return;
   input.value = "";
   appendChatBubble("customer", text);
   await supabaseClient.rpc("send_customer_message", { p_token: currentOrder.access_token, p_body: text });
@@ -9445,7 +9559,9 @@ function renderMyOrdersListFiltered(){
       currentOrder = {
         id: row.id, access_token: row.access_token, order_code: row.order_code,
         product_name: row.product_name, plan_name: row.plan_name,
-        amount: row.amount, payment_method: row.payment_method, created_at: row.created_at
+        amount: row.amount, payment_method: row.payment_method, created_at: row.created_at,
+        status: row.status, chat_closed: Boolean(row.chat_closed),
+        plan_warranty: row.plan_warranty, plan_format: row.plan_format, plan_note: row.plan_note
       };
       document.body.classList.add("order-mode");
       catalogView.classList.add("hidden");
