@@ -7,6 +7,8 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
   />
+  <link rel="icon" href="favicon.webp" type="image/webp" />
+  <link rel="apple-touch-icon" href="favicon.webp" />
   <!-- GitHub Pages doesn't let this static file set its own HTTP response
        headers, and mobile Chrome in particular can hold onto an old cached
        copy of this page well past a deploy -- these tell it (and any CDN
@@ -22,6 +24,20 @@
   <meta property="og:title" content="GamePay Hub - Digital Products Store" />
   <meta property="og:description" content="AI, streaming, VPN and 180+ game top-ups — ordered in Burmese, paid with KBZPay or WavePay, and delivered by a real person the same day." />
   <meta property="og:image" content="https://gamepayhub.shop/og-image.png" />
+  <!-- Structured data: lets Google show our logo/description directly in
+       search results instead of guessing from page text. Pure metadata --
+       no effect on how the page looks or behaves. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "GamePay Hub",
+    "url": "https://gamepayhub.shop/",
+    "logo": "https://gamepayhub.shop/og-image.png",
+    "description": "AI, streaming, VPN and 180+ game top-ups — ordered in Burmese, paid with KBZPay or WavePay, and delivered by a real person the same day.",
+    "sameAs": ["https://t.me/gamepaydyet"]
+  }
+  </script>
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="GamePay Hub - Digital Products Store" />
   <meta name="twitter:description" content="AI, streaming, VPN and 180+ game top-ups — ordered in Burmese, paid with KBZPay or WavePay, and delivered by a real person the same day." />
