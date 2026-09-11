@@ -1032,7 +1032,8 @@ plans: [
       note: "Features\n✓ 3x Pro limits on Agent\n✓ Generous limits for Grok\n✓ Access to frontier models\n✓ MCPs, skills, and hooks\n✓ Cloud agents\n✓ Bugbot on usage-based billing\n✓ Access to Grok Bot"
     },
     {
-      name: "Cursor Ultra – Full Warranty – 1 Month – 920000 Ks",
+      name: "Cursor Ultra – 1 Month – 920000 Ks",
+      tier: "ultra",
       price: 920000, ownMail: true,
       duration: "1 Month",
       format: "On your Own mail",
@@ -1040,7 +1041,8 @@ plans: [
       note: "Features\n✓ 20x Pro limits on Agent\n✓ Generous limits for Grok\n✓ Access to frontier models\n✓ MCPs, skills, and hooks\n✓ Cloud agents\n✓ Bugbot on usage-based billing\n✓ Access to Grok Bot\n✓ Priority support"
     },
     {
-      name: "Cursor Ultra – No Warranty – 1 Month – 255000 Ks",
+      name: "Cursor Ultra – 1 Month – 255000 Ks",
+      tier: "ultra",
       price: 255000, ownMail: true,
       duration: "1 Month",
       format: "On your Own mail",
@@ -2700,7 +2702,7 @@ const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</s
 const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
   team:"Team", education:"Education", individual:"Individual", family:"Family",
   pro:"Pro", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
-  "4k":"4K Premium", gptpro:"Pro"};
+  "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra"};
 const tierChipFor = t => t ? `<span class="plan-tier-chip">${TIER_LABEL[t] || t}</span>` : "";
 // How the account is delivered. Explicit plan.type wins; otherwise infer.
 const typeOf = p => p.type || (p.ownMail ? "Own Mail"
@@ -2717,7 +2719,8 @@ el.className += accessClass;
   const tierSource = `${rawPlan} ${planName}`.toLowerCase();
   const tier = plan.tier || (
     /\bsvip\b|\bvip\b/.test(tierSource)                     ? "vip" :
-    /\bmax\b|\bultra\b|\bultimate\b/.test(tierSource)      ? "max" :
+    /\bmax\b|\bultimate\b/.test(tierSource)                ? "max" :
+    /\bultra\b/.test(tierSource)                             ? "ultra" :
     /\bpremium\b/.test(tierSource)                           ? "premium" :
     /\bbusiness\b|\benterprise\b/.test(tierSource)          ? "business" :
     /\bteam\b/.test(tierSource)                              ? "team" :
@@ -3920,36 +3923,96 @@ document.getElementById("notiMenuOrders")?.addEventListener("click", () => { not
 document.getElementById("notiMenuMessage")?.addEventListener("click", () => { notiMenu?.classList.add("hidden"); openSupportMessageView(); });
 
 // ---------------------------------------------------------------------
-// News: a read-only, Twitter/X-style feed of posts the admin writes from
-// the dashboard (see news_posts in schema.sql). No likes, no comments --
-// just headline, body, images, and when it was posted. Opens as a
-// full-screen overlay on top of whatever the customer was already doing,
-// so closing it just returns to that exact spot.
+// News: a read-only feed of posts the admin writes from the dashboard
+// (see news_posts in schema.sql). No likes, no comments -- just
+// headline, body, images, and when it was posted. Editorial layout
+// (a featured story up top, smaller article cards below) rather than a
+// plain stacked feed. Opens as a full-screen overlay on top of whatever
+// the customer was already doing, so closing it just returns to that
+// exact spot.
 // ---------------------------------------------------------------------
 let newsFeedLoaded = false;
-function newsPostCard(post){
-  const images = Array.isArray(post.images) ? post.images.slice(0, 8) : [];
-  const imagesHtml = images.length ? `
-    <div class="news-post-images" data-count="${images.length}">
-      ${images.map(url => `<div class="news-post-img-wrap"><img class="news-post-img" src="${url}" alt="" loading="lazy"></div>`).join("")}
+let newsPostsData = [];
+function newsWhenText(post){
+  const when = new Date(post.created_at);
+  return isNaN(when) ? "" : when.toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
+}
+// The primary image is shown at its natural proportions (never cropped)
+// so tall screenshots/collages -- very common in these posts -- are
+// never cut off. Extra images (2nd onward) are secondary, so a compact
+// cropped-square row is fine for those.
+function newsHeroImagesHtml(images){
+  if(!images.length) return "";
+  const [first, ...rest] = images;
+  const restHtml = rest.length ? `
+    <div class="news-hero-extra-images">
+      ${rest.map(url => `<img class="news-hero-extra-img" src="${url}" alt="" loading="lazy">`).join("")}
     </div>
   ` : "";
-  const when = new Date(post.created_at);
-  const whenText = isNaN(when) ? "" : when.toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
   return `
-    <article class="news-post-card">
-      <div class="news-post-head">
-        <div class="news-post-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/></svg></div>
-        <div class="news-post-head-text">
-          <div class="news-post-author">GamePay Hub</div>
-          <div class="news-post-time">${whenText}</div>
-        </div>
+    <div class="news-hero-images">
+      <img class="news-hero-img" src="${first}" alt="" loading="lazy">
+      ${restHtml}
+    </div>
+  `;
+}
+function newsHeroCard(post){
+  const images = Array.isArray(post.images) ? post.images.slice(0, 8) : [];
+  return `
+    <article class="news-hero-card">
+      ${newsHeroImagesHtml(images)}
+      <div class="news-hero-body">
+        <div class="news-post-meta"><span class="news-post-author">GamePay Hub</span><span class="news-post-dot">·</span><span class="news-post-time">${newsWhenText(post)}</span></div>
+        <h2 class="news-hero-title">${escapePreviewText(post.title)}</h2>
+        <div class="news-hero-text">${escapePreviewText(post.body)}</div>
       </div>
-      <div class="news-post-title">${escapePreviewText(post.title)}</div>
-      <div class="news-post-body">${escapePreviewText(post.body)}</div>
-      ${imagesHtml}
     </article>
   `;
+}
+function newsGridCard(post, idx){
+  const images = Array.isArray(post.images) ? post.images.slice(0, 8) : [];
+  const thumbHtml = images.length ? `<div class="news-grid-thumb-wrap"><img class="news-grid-thumb" src="${images[0]}" alt="" loading="lazy"></div>` : "";
+  return `
+    <article class="news-grid-card" data-idx="${idx}">
+      ${thumbHtml}
+      <div class="news-grid-card-body">
+        <div class="news-post-meta"><span class="news-post-time">${newsWhenText(post)}</span></div>
+        <h3 class="news-grid-title">${escapePreviewText(post.title)}</h3>
+        <div class="news-grid-excerpt">${escapePreviewText(post.body)}</div>
+        <button type="button" class="news-grid-readmore">Read more ▾</button>
+        <div class="news-grid-full hidden">
+          ${images.length > 1 ? `
+            <div class="news-post-images" data-count="${images.length}">
+              ${images.map(url => `<div class="news-post-img-wrap"><img class="news-post-img" src="${url}" alt="" loading="lazy"></div>`).join("")}
+            </div>
+          ` : ""}
+          <button type="button" class="news-grid-collapse">Show less ▲</button>
+        </div>
+      </div>
+    </article>
+  `;
+}
+function wireNewsGridExpand(container){
+  container.querySelectorAll(".news-grid-card").forEach(card => {
+    const excerpt = card.querySelector(".news-grid-excerpt");
+    const full = card.querySelector(".news-grid-full");
+    const readMoreBtn = card.querySelector(".news-grid-readmore");
+    const collapseBtn = card.querySelector(".news-grid-collapse");
+    const expand = () => {
+      excerpt?.classList.add("expanded");
+      readMoreBtn?.classList.add("hidden");
+      full?.classList.remove("hidden");
+    };
+    readMoreBtn?.addEventListener("click", expand);
+    excerpt?.addEventListener("click", expand);
+    collapseBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      excerpt?.classList.remove("expanded");
+      readMoreBtn?.classList.remove("hidden");
+      full?.classList.add("hidden");
+      card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  });
 }
 async function loadNewsFeed(){
   const list = document.getElementById("newsFeedList");
@@ -3959,7 +4022,11 @@ async function loadNewsFeed(){
   const { data, error } = await supabaseClient.from("news_posts").select("*").order("created_at", { ascending: false });
   if(error){ list.innerHTML = '<div class="news-feed-empty">Couldn\'t load News right now.</div>'; return; }
   if(!data || !data.length){ list.innerHTML = '<div class="news-feed-empty">No posts yet -- check back soon.</div>'; return; }
-  list.innerHTML = data.map(newsPostCard).join("");
+  newsPostsData = data;
+  const [featured, ...rest] = data;
+  const gridHtml = rest.length ? `<div class="news-grid">${rest.map(newsGridCard).join("")}</div>` : "";
+  list.innerHTML = newsHeroCard(featured) + gridHtml;
+  wireNewsGridExpand(list);
   newsFeedLoaded = true;
 }
 function openNewsFeed(){

@@ -5183,6 +5183,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="basic"]     { --tier:#475569; --tier-2:#6B7A90; --tier-ink:#F1F4F9; }
 #orderView .plan-option[data-tier="4k"]        { --tier:#0B4F6C; --tier-2:#1C9FC6; --tier-ink:#E8FBFF; }
 #orderView .plan-option[data-tier="gptpro"]    { --tier:#2A1B6B; --tier-2:#5B3FD6; --tier-ink:#F1EDFF; }
+#orderView .plan-option[data-tier="ultra"]     { --tier:#101018; --tier-2:#4F7DF3; --tier-ink:#EEF4FF; }
 
 /* ---------- the badge ---------- */
 #orderView .plan-tier-chip{
@@ -5205,6 +5206,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="go"]       .plan-tier-chip::after,
 #orderView .plan-option[data-tier="4k"]       .plan-tier-chip::after,
 #orderView .plan-option[data-tier="gptpro"]   .plan-tier-chip::after,
+#orderView .plan-option[data-tier="ultra"]    .plan-tier-chip::after,
 #orderView .plan-option[data-tier="max"]      .plan-tier-chip::after{
   content:""; position:absolute; inset:0;
   background:linear-gradient(112deg,transparent 30%,rgba(255,255,255,.42) 48%,transparent 64%);
@@ -5249,6 +5251,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="go"],
 #orderView .plan-option[data-tier="4k"],
 #orderView .plan-option[data-tier="gptpro"],
+#orderView .plan-option[data-tier="ultra"],
 #orderView .plan-option[data-tier="max"]{
   background-image:
     linear-gradient(180deg,var(--tier),var(--tier-2)),
@@ -5263,6 +5266,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="go"].active,
 #orderView .plan-option[data-tier="4k"].active,
 #orderView .plan-option[data-tier="gptpro"].active,
+#orderView .plan-option[data-tier="ultra"].active,
 #orderView .plan-option[data-tier="max"].active{
   background-image:
     linear-gradient(180deg,var(--tier),var(--tier-2)),
@@ -6068,23 +6072,28 @@ body.light-mode .checkout-hint{ color:#c81e4d; }
 .coupon-msg.error{ color:#ff9fc9; }
 body.light-mode .coupon-apply-btn{ background:var(--surface,#fff); color:var(--ink,#1f2937); border-color:var(--border,rgba(31,41,55,.18)); }
 
-/* ===== News feed (Twitter/X-style, read-only) ===== */
+/* ===== News feed (editorial: featured story + article grid, read-only) ===== */
 body.news-feed-open{ overflow:hidden; }
+/* Outer layer is a plain, non-scrolling fixed backdrop -- forcing its own
+   overflow:auto scroll on a position:fixed element is what let page
+   content underneath show through during scroll on some mobile browsers.
+   translateZ(0) forces its own compositing layer as extra insurance
+   against the same class of bug. Only the inner .news-feed-list scrolls. */
 .news-feed-overlay{
   position:fixed; inset:0; z-index:6000;
   background:var(--page-bg,#f6efe2);
   display:flex; flex-direction:column;
-  overflow-y:auto; -webkit-overflow-scrolling:touch;
+  overflow:hidden;
+  transform:translateZ(0); -webkit-transform:translateZ(0);
 }
 .news-feed-overlay.hidden{ display:none; }
 .news-feed-header{
-  position:sticky; top:0; z-index:2;
+  flex:0 0 auto;
   display:flex; align-items:center; gap:12px;
   padding:14px 16px; padding-top:calc(14px + env(safe-area-inset-top,0px));
   background:var(--surface,#fffdf8);
   border-bottom:1px solid var(--border,rgba(43,38,30,.12));
   box-shadow:var(--shadow-sm,0 2px 10px rgba(43,35,20,.07));
-  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
 }
 .news-feed-back{
   display:flex; align-items:center; justify-content:center;
@@ -6096,48 +6105,90 @@ body.news-feed-open{ overflow:hidden; }
 .news-feed-back svg{ width:18px; height:18px; }
 .news-feed-header-title{ font-size:17px; font-weight:900; color:var(--ink,#2b2621); }
 .news-feed-list{
-  width:min(600px,100%); margin:0 auto; padding:12px 12px 60px;
-  display:flex; flex-direction:column; gap:12px;
+  flex:1 1 auto; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  width:100%; padding:16px 16px 60px;
 }
 .news-feed-empty{ text-align:center; color:var(--muted,#786f63); font-size:13.5px; padding:60px 16px; }
-.news-post-card{
+.news-post-meta{ display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--muted,#786f63); }
+.news-post-author{ font-weight:800; color:var(--ink,#2b2621); }
+.news-post-dot{ opacity:.6; }
+
+/* ---- Featured story (most recent post) ---- */
+.news-hero-card{
+  max-width:760px; margin:0 auto 28px;
   background:var(--surface,#fffdf8); border:1px solid var(--border,rgba(43,38,30,.12));
-  border-radius:18px; padding:16px; box-shadow:var(--shadow-sm,0 2px 10px rgba(43,35,20,.07));
+  border-radius:20px; overflow:hidden; box-shadow:var(--shadow-md,0 10px 26px rgba(43,35,20,.10));
 }
-.news-post-head{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-.news-post-avatar{
-  width:36px; height:36px; border-radius:999px; flex:0 0 auto;
-  display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg,#7650b8,#9470d4); color:#fff;
+.news-hero-images{ background:var(--surface-2,#fbf6ec); }
+/* object-fit:contain (never cover) -- these are very often tall
+   screenshots/collages, and cropping to fill a box was cutting off
+   whatever was at the top or bottom. Letterboxing keeps the whole image
+   visible no matter its proportions. */
+.news-hero-img{ display:block; width:100%; max-height:520px; object-fit:contain; background:var(--surface-2,#fbf6ec); }
+.news-hero-extra-images{ display:flex; gap:6px; padding:6px; overflow-x:auto; background:var(--surface-2,#fbf6ec); }
+.news-hero-extra-img{ height:92px; width:auto; max-width:140px; object-fit:contain; border-radius:8px; background:var(--surface,#fffdf8); flex:0 0 auto; }
+.news-hero-body{ padding:20px; }
+.news-hero-title{ font-size:20px; font-weight:900; color:var(--ink,#2b2621); line-height:1.35; margin:8px 0 10px; }
+.news-hero-text{ font-size:14px; line-height:1.75; color:var(--ink-soft,#4a4038); white-space:pre-wrap; word-break:break-word; }
+
+/* ---- Article grid (older posts) ---- */
+.news-grid{
+  display:grid; gap:16px; max-width:960px; margin:0 auto;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
 }
-.news-post-avatar svg{ width:18px; height:18px; }
-.news-post-head-text{ min-width:0; }
-.news-post-author{ font-size:13.5px; font-weight:800; color:var(--ink,#2b2621); }
-.news-post-time{ font-size:11.5px; color:var(--muted,#786f63); }
-.news-post-title{ font-size:15.5px; font-weight:900; color:var(--ink,#2b2621); margin-bottom:6px; line-height:1.4; }
-.news-post-body{ font-size:13.5px; line-height:1.7; color:var(--ink-soft,#4a4038); white-space:pre-wrap; word-break:break-word; }
+.news-grid-card{
+  background:var(--surface,#fffdf8); border:1px solid var(--border,rgba(43,38,30,.12));
+  border-radius:16px; overflow:hidden; box-shadow:var(--shadow-sm,0 2px 10px rgba(43,35,20,.07));
+}
+.news-grid-thumb-wrap{
+  aspect-ratio:16/10; display:flex; align-items:center; justify-content:center;
+  background:var(--surface-2,#fbf6ec); overflow:hidden;
+}
+.news-grid-thumb{ width:100%; height:100%; object-fit:contain; display:block; }
+.news-grid-card-body{ padding:14px 16px 16px; }
+.news-grid-title{ font-size:14.5px; font-weight:900; color:var(--ink,#2b2621); line-height:1.4; margin:6px 0 6px; }
+.news-grid-excerpt{
+  font-size:13px; line-height:1.65; color:var(--ink-soft,#4a4038); white-space:pre-wrap; word-break:break-word;
+  cursor:pointer;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+}
+.news-grid-excerpt.expanded{ -webkit-line-clamp:unset; overflow:visible; cursor:auto; }
+.news-grid-readmore{
+  margin-top:6px; border:none; background:none; padding:0; cursor:pointer;
+  font-size:12.5px; font-weight:800; color:#7650b8;
+}
+.news-grid-full{ margin-top:10px; }
+.news-grid-collapse{
+  margin-top:10px; border:1px solid var(--border-strong,rgba(43,38,30,.20)); background:var(--surface-2,#fbf6ec);
+  color:var(--ink,#2b2621); border-radius:999px; padding:6px 14px; font-size:12px; font-weight:800; cursor:pointer;
+}
+/* Extra images on an expanded grid card, shown as a compact photo grid.
+   Cover-cropping here is fine (unlike the hero/thumbnail) -- these are
+   thumbnails of images the reader already saw in full via the thumbnail
+   or can tap through to individually; the grid just needs to look tidy. */
 .news-post-images{
-  display:grid; gap:4px; margin-top:12px; border-radius:14px; overflow:hidden;
+  display:grid; gap:4px; border-radius:12px; overflow:hidden;
   grid-template-columns:1fr;
 }
 .news-post-images[data-count="2"],
 .news-post-images[data-count="4"]{ grid-template-columns:1fr 1fr; }
 .news-post-images[data-count="5"],.news-post-images[data-count="6"],
 .news-post-images[data-count="7"],.news-post-images[data-count="8"]{ grid-template-columns:1fr 1fr 1fr; }
-.news-post-img-wrap{ aspect-ratio:1; overflow:hidden; background:var(--surface-2,#fbf6ec); }
+.news-post-img-wrap{ aspect-ratio:1; display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--surface-2,#fbf6ec); }
 .news-post-images[data-count="1"] .news-post-img-wrap{ aspect-ratio:16/10; }
-.news-post-img{ width:100%; height:100%; object-fit:cover; display:block; }
-/* 3 images: one tall image on the left, two stacked on the right -- needs
-   a fixed-aspect container (rather than per-item aspect-ratio) so the
-   spanning left item and the two stacked right items line up exactly. */
+.news-post-img{ max-width:100%; max-height:100%; object-fit:contain; display:block; }
 .news-post-images[data-count="3"]{
   grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; aspect-ratio:16/10;
 }
 .news-post-images[data-count="3"] .news-post-img-wrap{ aspect-ratio:auto; height:100%; }
 .news-post-images[data-count="3"] .news-post-img-wrap:first-child{ grid-row:1/3; }
+
 @media(max-width:480px){
   .news-feed-header{ padding:12px 14px; }
-  .news-feed-list{ padding:10px 8px 50px; }
-  .news-post-card{ border-radius:14px; padding:13px; }
+  .news-feed-list{ padding:12px 10px 50px; }
+  .news-hero-body{ padding:15px; }
+  .news-hero-title{ font-size:17px; }
+  .news-hero-img{ max-height:340px; }
+  .news-grid{ grid-template-columns:1fr; gap:12px; }
 }
 body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
