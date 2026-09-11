@@ -1743,26 +1743,6 @@ body.order-mode .compact-header{margin-bottom:6px!important}
 body.order-mode .order-view{display:block!important;visibility:visible!important;opacity:1!important}
 
 /* Final high-contrast dark card palette; declared after every legacy theme block. */
-body:not(.light-mode) .order-view .plan-option{
-  background:linear-gradient(145deg,#174c73 0%,#0d2d54 52%,#27205f 100%)!important;
-  border:1px solid #39eaff!important;
-  color:#f5ffff!important;
-  box-shadow:0 14px 30px rgba(0,0,0,.38),0 0 22px rgba(57,234,255,.24),inset 0 1px 0 rgba(255,255,255,.16)!important;
-}
-body:not(.light-mode) .order-view .plan-option.active{
-  background:linear-gradient(145deg,#207e9b 0%,#15529a 52%,#4a2e9d 100%)!important;
-  border-color:#e2ffff!important;
-  box-shadow:0 0 0 3px rgba(57,234,255,.20),0 0 38px rgba(57,234,255,.60),0 18px 36px rgba(0,0,0,.42)!important;
-}
-body:not(.light-mode) .order-view .plan-option:hover{border-color:#bfffff!important;box-shadow:0 0 32px rgba(57,234,255,.52),0 18px 38px rgba(0,0,0,.44)!important}
-body:not(.light-mode) .order-view .plan-field-label{color:#88f7ff!important}
-body:not(.light-mode) .order-view .plan-professional-name,
-body:not(.light-mode) .order-view .plan-secondary-line strong{color:#f5ffff!important}
-body:not(.light-mode) .order-view .plan-price-block strong{color:#70f6ff!important}
-body:not(.light-mode) .order-view .plan-watermark{opacity:.46!important;filter:drop-shadow(0 0 15px rgba(57,234,255,.58))!important}
-body:not(.light-mode) .order-view .private-plan .plan-watermark{opacity:.50!important}
-body:not(.light-mode) .order-view .share-plan .plan-watermark{opacity:.46!important;filter:drop-shadow(0 0 15px rgba(150,113,255,.70))!important}
-
 @media(max-width:640px){
   .order-view .panel{width:100%!important}
   .order-view .plan-option{min-height:136px!important}
@@ -2739,57 +2719,6 @@ body.preview-mode{ overflow:hidden !important; }
 }
 
 /* Dark theme */
-body:not(.light-mode) .product-crumb-back,
-body:not(.light-mode) .product-tag{ background:rgba(255,255,255,.05); border-color:rgba(141,163,231,.22); color:#eaffff; }
-body:not(.light-mode) .product-crumb-trail{ color:#7f93ad; }
-body:not(.light-mode) .product-crumb-trail b{ color:#dffcff; }
-body:not(.light-mode) .product-gallery,
-body:not(.light-mode) .product-buybox{
-  background:linear-gradient(145deg,rgba(20,34,66,.84),rgba(7,12,27,.90));
-  border-color:rgba(141,163,231,.20); box-shadow:0 14px 30px rgba(0,0,0,.28);
-}
-body:not(.light-mode) .product-details{
-  background:linear-gradient(160deg,rgba(46,33,12,.42),rgba(10,12,27,.90));
-  border-color:rgba(201,154,79,.30); border-left-color:#c99a4f;
-  box-shadow:0 14px 30px rgba(0,0,0,.28);
-}
-body:not(.light-mode) .product-details-head{ border-bottom-color:rgba(201,154,79,.32); }
-body:not(.light-mode) .product-details-logo{ background:rgba(255,255,255,.07); border-color:rgba(201,154,79,.26); }
-body:not(.light-mode) .product-details-title{ color:#f0d9a8; }
-body:not(.light-mode) .product-details-sub{ color:#b09a72; }
-body:not(.light-mode) .product-detail-row{ background:rgba(255,255,255,.04); border-color:rgba(201,154,79,.18); }
-body:not(.light-mode) .product-detail-row dt{ color:#e5c489; background:rgba(201,154,79,.18); }
-body:not(.light-mode) .product-gallery-main{ background:rgba(255,255,255,.05); border-color:rgba(141,163,231,.16); }
-body:not(.light-mode) .product-selected{ background:rgba(255,255,255,.05); border-color:rgba(141,163,231,.18); }
-body:not(.light-mode) .product-title,
-body:not(.light-mode) .product-selected-name{ color:#f3fbff; }
-body:not(.light-mode) .product-detail-row dd{ color:#f6ecd8; }
-body:not(.light-mode) .product-eyebrow{ color:#67f3ff; }
-body:not(.light-mode) .product-price{ -webkit-text-fill-color:#67f3ff; }
-body:not(.light-mode) .product-price-row{ border-color:rgba(141,163,231,.18); }
-body:not(.light-mode) .product-detail-row{ border-bottom-color:rgba(141,163,231,.14); }
-body:not(.light-mode) .product-detail-row dt,
-body:not(.light-mode) .product-price-label,
-body:not(.light-mode) .product-selected-label,
-body:not(.light-mode) .product-price-note,
-body:not(.light-mode) .product-assurances li{ color:#8497ad; }
-
-body:not(.light-mode) .pb-toggle{
-  background:linear-gradient(160deg,rgba(118,80,184,.16),rgba(10,12,27,.4));
-  border-color:rgba(148,112,212,.32); color:#f3fbff;
-}
-body:not(.light-mode) .pb-toggle-text small{ color:#a89bce; }
-body:not(.light-mode) .pb-chev{ color:#b7a8de; }
-body:not(.light-mode) .pb-inner{ background:rgba(255,255,255,.04); border-color:rgba(148,112,212,.22); }
-body:not(.light-mode) .pb-intro{ color:#dfe6ff; }
-body:not(.light-mode) .pb-section h5{ color:#f3fbff; }
-body:not(.light-mode) .pb-section p{ color:#a9b6d6; }
-body:not(.light-mode) .pb-section p b{ color:#f3fbff; }
-body:not(.light-mode) .pb-chip-label{ color:#8a7ab0; }
-body:not(.light-mode) .pb-chip.good{ background:rgba(63,207,156,.16); color:#6fe3ba; }
-body:not(.light-mode) .pb-chip.bad{ background:rgba(234,106,154,.16); color:#f090b3; }
-body:not(.light-mode) .product-secondary-btn{ background:rgba(255,255,255,.05); border-color:rgba(141,163,231,.22); color:#eaffff; }
-
 /* ---------- Page loader ---------- */
 .page-loader{
   position:fixed; inset:0; z-index:200; display:grid; place-items:center;
@@ -2827,12 +2756,6 @@ body:not(.light-mode) .product-secondary-btn{ background:rgba(255,255,255,.05); 
   font-size:11px; font-weight:800; letter-spacing:1.4px;
   text-transform:uppercase; color:#786f63;
 }
-body:not(.light-mode) .page-loader{ background:rgba(5,8,18,.92); }
-body:not(.light-mode) .page-loader-signal i{ background:#56f3ff; box-shadow:0 0 14px rgba(86,243,255,.7); }
-body:not(.light-mode) .page-loader-signal span{ border-color:rgba(86,243,255,.55); }
-body:not(.light-mode) .page-loader-track{ background:rgba(255,255,255,.10); }
-body:not(.light-mode) .page-loader-fill{ background:linear-gradient(90deg,#56f3ff,#8a6bff); box-shadow:0 0 12px rgba(86,243,255,.55); }
-body:not(.light-mode) .page-loader-text{ color:#8fa5ba; }
 /* The page loader used to hand off to whatever it revealed with a hard
    cut -- the spinner would fade out over the same beat the destination
    view just snapped in, so the "loading" never felt connected to what
@@ -2846,18 +2769,6 @@ body:not(.light-mode) .page-loader-text{ color:#8fa5ba; }
 @media(prefers-reduced-motion:reduce){
   #catalogShell:not(.hidden), #productPage:not(.hidden){ animation:none !important; }
 }
-body:not(.light-mode) .product-page{ background:#050812; background-image:linear-gradient(180deg,#060a18,#050812); }
-body:not(.light-mode) .product-page-head,
-body:not(.light-mode) .product-spec{
-  background:linear-gradient(145deg,rgba(20,34,66,.84),rgba(7,12,27,.90));
-  border-color:rgba(141,163,231,.20);
-}
-body:not(.light-mode) .product-page-title,
-body:not(.light-mode) .product-spec dd{ color:#f3fbff; }
-body:not(.light-mode) .product-page-plan,
-body:not(.light-mode) .product-spec dt{ color:#8497ad; }
-body:not(.light-mode) .product-page-price{ -webkit-text-fill-color:#67f3ff; }
-
 /* ---------- "Why Gamepay Hub" scroll-reveal ---------- */
 .reveal-up{ opacity:0; transform:translateY(16px); }
 .reveal-up.in-view{
@@ -2881,8 +2792,6 @@ body:not(.light-mode) .product-page-price{ -webkit-text-fill-color:#67f3ff; }
   margin-top:14px !important; padding-top:12px;
   border-top:1px solid rgba(43,38,30,.10);
 }
-body:not(.light-mode) .custom-box.show{ border-top-color:rgba(141,163,231,.18); }
-
 @media(prefers-reduced-motion:reduce){
   .order-view,#checkoutSection.order-dashboard-view,#previewSection.order-preview-view,
   .plan-option,.reveal-up,.reveal-up.in-view,.page-loader-signal span{ animation:none !important; }
@@ -5973,7 +5882,6 @@ body.light-mode .auth-btn{ color:var(--ink,#1f2937); background:var(--surface,#f
   100%{ opacity:1; transform:perspective(800px) translateY(0) scale(1) rotateX(0); }
 }
 @media(prefers-reduced-motion:reduce){ .auth-modal{ animation:none; } .auth-modal::before{ animation:none; } }
-body:not(.light-mode) .auth-modal{ color:#1f2937; }
 .auth-modal h3{ margin:0 0 4px; font-size:18px; }
 .auth-modal p.auth-sub{ font-size:12px; color:var(--muted,rgba(255,255,255,.7)); margin:0 0 16px; }
 
