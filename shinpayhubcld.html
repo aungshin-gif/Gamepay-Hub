@@ -8,7 +8,12 @@
 <meta http-equiv="Expires" content="0" />
 <title>Gamepay Hub — Admin</title>
 <link rel="icon" href="favicon.webp" type="image/webp" />
-  <link rel="stylesheet" href="admin.css">
+  <!-- The ?v= query string busts the browser's cache for this file --
+       GitHub Pages doesn't fingerprint asset URLs on its own, so without
+       this a browser that already has admin.css cached from a previous
+       visit keeps using the old one after a deploy (looks like the new
+       CSS "didn't take"). Bump the number any time admin.css changes. -->
+  <link rel="stylesheet" href="admin.css?v=1">
 
 </head>
 <body>

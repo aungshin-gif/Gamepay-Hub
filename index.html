@@ -54,7 +54,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;700;900&family=Archivo:wdth,wght@75..125,400..900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <!-- The ?v= query string busts the browser's cache for this file --
+       GitHub Pages doesn't fingerprint asset URLs on its own, so without
+       this a browser that already has styles.css cached from a previous
+       visit keeps using the old one after a deploy (looks like the new
+       CSS "didn't take"). Bump the number any time styles.css changes. -->
+  <link rel="stylesheet" href="styles.css?v=1">
 
 
 
