@@ -649,17 +649,53 @@
   search: "chatgpt openai ai",
   description: "✅ Official access options are available.\n✔️ Own Mail option includes Full Warranty.\n✔️ History remains available with the official option.\n🔄 Renewal is available for eligible official access.\n❗️ CGPT GO stock can change; preorder may be required when unavailable.",
   benefits: {
-    subtitle: "Go vs. Plus, side by side",
-    goLabel: "Go", plusLabel: "Plus",
+    subtitle: "Go, Plus and Pro, side by side",
+    tiers: [
+      { key: "go", label: "Go" },
+      { key: "plus", label: "Plus" },
+      { key: "pro5x", label: "Pro 5X" },
+      { key: "pro20x", label: "Pro 20X" }
+    ],
     rows: [
-      { label: "Models", go: "GPT-5.6 Luna (fast, instant-reply)", plus: "Luna + GPT-6 Astra (newest reasoning model)" },
-      { label: "Messages", go: "Unlimited chat · 160 advanced msgs/3h", plus: "Unlimited chat · higher advanced cap" },
-      { label: "File upload", go: "80 files / 3 hours", plus: "80 files / 3 hours" },
-      { label: "Image generation", go: "~20-50 images / day", plus: "Same system, higher effective limit" },
-      { label: "Deep Research", go: PB_NO, plus: PB_YES + " 25 / month" },
-      { label: "Sora video", go: PB_NO, plus: PB_YES },
-      { label: "Agent Mode", go: PB_NO, plus: PB_YES },
-      { label: "Custom GPTs, Memory, Projects", go: PB_YES, plus: PB_YES }
+      { icon: "brain", label: "Models", values: {
+        go: "GPT-5.6 Luna — the fast, instant-reply model",
+        plus: "Everything Go gets, plus GPT-6 Astra — OpenAI's newest reasoning model",
+        pro5x: "Full frontier lineup: GPT-6 Astra, GPT-5.6 Sol, GPT-5.6, GPT-5.4, o3-pro, o4-mini, Codex",
+        pro20x: "Same full lineup as Pro 5X — GPT-6 Astra, GPT-5.6 Sol, GPT-5.6, GPT-5.4, o3-pro, o4-mini, Codex"
+      }},
+      { icon: "chat", label: "Messages", values: {
+        go: "Unlimited regular chat · 160 advanced msgs / 3 hours",
+        plus: "Unlimited regular chat · higher advanced-mode allowance",
+        pro5x: "5× Plus's usage allowance across every model",
+        pro20x: "20× Plus's usage allowance — practically no cap for one person"
+      }},
+      { icon: "upload", label: "File upload", values: {
+        go: "80 files / 3 hours",
+        plus: "80 files / 3 hours",
+        pro5x: "5× Plus's allowance",
+        pro20x: "20× Plus's allowance"
+      }},
+      { icon: "image", label: "Image generation", values: {
+        go: "~20-50 images / day",
+        plus: "Same rolling system, higher effective limit",
+        pro5x: "5× Plus's allowance",
+        pro20x: "20× Plus's allowance"
+      }},
+      { icon: "brain", label: "Deep Research", values: {
+        go: PB_NO,
+        plus: PB_YES + " 25 / month",
+        pro5x: PB_YES + " well above Plus",
+        pro20x: PB_YES + " up to 250 / month"
+      }},
+      { icon: "image", label: "Sora video", values: {
+        go: PB_NO, plus: PB_YES, pro5x: PB_YES + " unlimited", pro20x: PB_YES + " unlimited"
+      }},
+      { icon: "zap", label: "Agent / Operator", values: {
+        go: PB_NO, plus: PB_YES + " Agent Mode", pro5x: PB_YES + " Operator, priority", pro20x: PB_YES + " Operator, priority"
+      }},
+      { icon: "chat", label: "Custom GPTs, Memory, Projects", values: {
+        go: PB_YES, plus: PB_YES, pro5x: PB_YES, pro20x: PB_YES
+      }}
     ]
   },
   plans: [
@@ -667,6 +703,8 @@
       { name: "🌌 CHATGPT PLUS Official – 80$ Plan – 1 Month – 90000 Ks", price: 90000, ownMail: true, bestSeller: true, warranty: "Full Warranty", format: "Own Mail", note: "✅ Renew ရပါတယ်။\n✅ Own Mail ပိုပြေပါတယ်။\n✅ History မပျက်ပါ။\n✅ Full Warranty" },
       { name: "✴️ CHATGPT PLUS – Private – 1 Month – 30000 Ks", price: 30000, warranty: "25 days warranty", format: "Private account", note: "✅ 25 days warranty\n✅ 2 devices better" },
       { name: "☄️ CGPT GO – 3 Months – Preorder", price: 27000, outOfStock: true },
+      { name: "🚀 ChatGPT Pro 5X – Own Mail – 1 Month – 450000 Ks", tier: "gptpro", price: 450000, ownMail: true, warranty: "Full Warranty", format: "Own Mail", note: "✅ 5× Plus usage across every model\n✅ Own Mail — activated on your own account\n✅ Full Warranty" },
+      { name: "👑 ChatGPT Pro 20X – Own Mail – 1 Month – 885000 Ks", tier: "gptpro", price: 885000, ownMail: true, warranty: "Full Warranty", format: "Own Mail", note: "✅ 20× Plus usage across every model\n✅ Own Mail — activated on your own account\n✅ Full Warranty" },
   ]
 },
       {
@@ -2107,17 +2145,21 @@ function renderProductBenefits(product){
   if(!data){ box.classList.add("hidden"); box.innerHTML = ""; return; }
   box.classList.remove("hidden");
 
-  // A straight side-by-side table -- every row answers "what does Go have,
-  // what does Plus have" in one glance, instead of separate paragraphs per
-  // plan that read as near-duplicates of each other.
-  const goLabel = data.goLabel || "Go";
-  const plusLabel = data.plusLabel || "Plus";
+  // Each comparison point gets an icon+heading, then its own small
+  // label:value table (one line per plan) -- this scales to any number of
+  // plans (2, 3, 4+) without adding columns, so a full model list or a
+  // longer line never gets squeezed into a narrow side-by-side column on
+  // a phone. That's what made the old wide table unreadable on mobile.
+  const tiers = data.tiers || [{ key: "go", label: "Go" }, { key: "plus", label: "Plus" }];
   const rows = (data.rows || []).map(r => `
-    <tr>
-      <th scope="row">${escapePreviewText(r.label)}</th>
-      <td>${r.go}</td>
-      <td>${r.plus}</td>
-    </tr>
+    <div class="pb-row">
+      <div class="pb-row-head"><span class="pb-icon">${ICONS[r.icon] || ICONS.zap}</span><h5>${escapePreviewText(r.label)}</h5></div>
+      <table class="pb-mini">
+        <tbody>
+          ${tiers.map(t => `<tr><th class="pb-mini-tier pb-t-${t.key}">${escapePreviewText(t.label)}</th><td>${r.values[t.key] ?? "—"}</td></tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
   `).join("");
 
   box.innerHTML = `
@@ -2129,12 +2171,7 @@ function renderProductBenefits(product){
     <div class="pb-panel" id="pbPanel" data-collapsed="true">
       <div class="pb-inner">
         ${data.intro ? `<p class="pb-intro">${escapePreviewText(data.intro)}</p>` : ""}
-        <div class="pb-table-wrap">
-          <table class="pb-table">
-            <thead><tr><th></th><th class="pb-col-go">${escapePreviewText(goLabel)}</th><th class="pb-col-plus">${escapePreviewText(plusLabel)}</th></tr></thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </div>
+        <div class="pb-rows">${rows}</div>
       </div>
     </div>
   `;
@@ -2607,7 +2644,7 @@ const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</s
 const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
   team:"Team", education:"Education", individual:"Individual", family:"Family",
   pro:"Pro", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
-  "4k":"4K Premium"};
+  "4k":"4K Premium", gptpro:"Pro"};
 const tierChipFor = t => t ? `<span class="plan-tier-chip">${TIER_LABEL[t] || t}</span>` : "";
 // How the account is delivered. Explicit plan.type wins; otherwise infer.
 const typeOf = p => p.type || (p.ownMail ? "Own Mail"
