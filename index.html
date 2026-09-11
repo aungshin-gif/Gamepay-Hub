@@ -752,6 +752,17 @@
   warranty: "Full Warranty",
   format: "Mail & Password",
   description: "✔️ Full Warranty is included.\n🚫 Renewal is not available.\n🔐 Private and Share access are available as separate options.\n🛍 Select the account type you need before purchase.",
+  benefits: {
+    subtitle: "Everything included with CapCut Pro",
+    tiers: [{ key: "team", label: "Team" }, { key: "individual", label: "Individual" }],
+    rows: [
+      { icon: "upload", label: "Export quality", values: "4K export up to 60fps with HDR, and every watermark removed — the free/standard tier caps resolution lower and keeps the watermark." },
+      { icon: "zap", label: "AI toolkit", values: "The full AI toolkit: camera tracking, vocal isolation, speaker-ID captions, AI voice effects, text-to-video, avatar generation, voice cloning, and bulk background removal — these run on credits rather than unlimited use." },
+      { icon: "image", label: "Templates & effects", values: "Every premium template, transition, text style and effect is unlocked." },
+      { icon: "chat", label: "Cloud storage", values: "About 1TB of cloud project storage included." },
+      { icon: "brain", label: "Credits", values: { team: "400-500 credits", individual: "1200-1500 credits" } }
+    ]
+  },
   plans: [
       { name: "CapCut Team – Private Acc – 7 Days – 2000 Ks",
         label: "CapCut Team", type: "Private Acc", tier: "team",
@@ -781,6 +792,17 @@
   icon: "file_00000000168071fa8d5d17512a7591b5.png",
   search: "gemini ai pro google ai",
   description: "✉️ Own Mail Invite includes Full Warranty and monthly renewal.\n👑 Family Manager access includes the warranty stated for the selected duration.\n🔗 Link access has No Warranty.\n🛍 Choose Own Mail, Family, or Link carefully before purchase.",
+  benefits: {
+    subtitle: "Everything included with Gemini AI Pro",
+    rows: [
+      { icon: "brain", label: "Models", values: "Gemini 3.1 Pro (flagship, 1M-token context window) for the hardest tasks, plus Gemini 3.8 Flash for quick everyday replies — both included." },
+      { icon: "image", label: "Video generation", values: "Veo 3.1 Lite, Google's video-generation model, included as a limited trial." },
+      { icon: "zap", label: "Deep Research", values: "Included — Gemini runs a multi-step research task on its own and reports back with sources." },
+      { icon: "chat", label: "Google AI Studio", values: "<b>Included</b> — Pro-tier model access in AI Studio, not just the Flash-only models the free tier is limited to." },
+      { icon: "image", label: "Google Flow", values: "<b>Included</b> — 10,000-25,000 monthly Flow credits for Google's AI video/story creative studio." },
+      { icon: "upload", label: "Everyday use", values: "Gemini built into Gmail, Docs and the rest of Workspace, plus 1,000 monthly AI credits and higher usage limits than the free tier." }
+    ]
+  },
   plans: [
       { name: "Gemini AI Pro – Own Mail – 1 Month – 4000 Ks",
         label: "Gemini AI Pro", type: "Own Mail", tier: "pro",
@@ -2151,16 +2173,21 @@ function renderProductBenefits(product){
   // longer line never gets squeezed into a narrow side-by-side column on
   // a phone. That's what made the old wide table unreadable on mobile.
   const tiers = data.tiers || [{ key: "go", label: "Go" }, { key: "plus", label: "Plus" }];
-  const rows = (data.rows || []).map(r => `
-    <div class="pb-row">
-      <div class="pb-row-head"><span class="pb-icon">${ICONS[r.icon] || ICONS.zap}</span><h5>${escapePreviewText(r.label)}</h5></div>
-      <table class="pb-mini">
-        <tbody>
-          ${tiers.map(t => `<tr><th class="pb-mini-tier pb-t-${t.key}">${escapePreviewText(t.label)}</th><td>${r.values[t.key] ?? "—"}</td></tr>`).join("")}
-        </tbody>
-      </table>
-    </div>
-  `).join("");
+  // A row's `values` is either one shared string (same for every plan --
+  // no point repeating it per tier) or an object keyed by tier for rows
+  // that actually differ, e.g. CapCut's identical Pro feature set but
+  // different credit ranges per plan.
+  const rows = (data.rows || []).map(r => {
+    const body = typeof r.values === "string"
+      ? `<p class="pb-row-text">${r.values}</p>`
+      : `<table class="pb-mini"><tbody>${tiers.map(t => `<tr><th class="pb-mini-tier pb-t-${t.key}">${escapePreviewText(t.label)}</th><td>${r.values[t.key] ?? "—"}</td></tr>`).join("")}</tbody></table>`;
+    return `
+      <div class="pb-row">
+        <div class="pb-row-head"><span class="pb-icon">${ICONS[r.icon] || ICONS.zap}</span><h5>${escapePreviewText(r.label)}</h5></div>
+        ${body}
+      </div>
+    `;
+  }).join("");
 
   box.innerHTML = `
     <button type="button" class="pb-toggle" aria-expanded="false" id="pbToggleBtn">
@@ -2825,6 +2852,11 @@ function renderPreviewTable(message){
     const key=lines[i].trim();
     if(labels[key]){
       let value=(lines[i+1]||"").trim().replace(/^➥\s*/,"");
+      // The Plan value repeats the price ("... - 1 Month - 27000 Ks"), which
+      // Total Amount already shows below -- that redundant price wrapped
+      // this one row onto two lines while every other row stayed one,
+      // reading as an uneven, ragged table.
+      if(key === "📄 Plan") value = stripTrailingPrice(value);
       if(value) rows.push(`<tr><th>${labels[key]}</th><td>${escapePreviewText(value)}</td></tr>`);
     }
   }
