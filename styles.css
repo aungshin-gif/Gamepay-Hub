@@ -6121,25 +6121,81 @@ body.news-feed-open{ overflow:hidden; }
   font-size:10px; font-weight:700; color:var(--muted,#786f63);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
-.news-feed-list{
+.news-feed-list, .news-detail{
   flex:1 1 auto; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
   width:100%; padding:16px 16px 60px;
 }
+.news-detail.hidden{ display:none; }
 .news-feed-empty{ text-align:center; color:var(--muted,#786f63); font-size:13.5px; padding:60px 16px; }
 .news-post-meta{ display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--muted,#786f63); }
 .news-post-author{ font-weight:800; color:var(--ink,#2b2621); }
 .news-post-dot{ opacity:.6; }
-
-/* ---- Featured story (most recent post) ---- */
-/* Flush, edge-to-edge -- a real news homepage's lead story isn't a
-   floating rounded/shadowed card, it just sits on the page. The
-   masthead above now carries the brand color, so the hero itself
-   doesn't need its own separate accent line competing for attention. */
-.news-hero-card{
-  max-width:760px; margin:0 auto 28px;
-  background:var(--surface,#fffdf8);
+/* A small solid-color category tag above the headline -- the "BREAKING
+   NEWS"-style masthead move real news sites (CNN especially) use, in
+   the site's own violet instead of CNN's red. Shared by preview and
+   detail views. */
+.news-hero-eyebrow{
+  display:inline-flex; align-items:center; gap:4px; margin-bottom:10px; padding:4px 10px 4px 8px; border-radius:3px;
+  background:#9470d4; color:#fff; font-size:10.5px; font-weight:900;
+  letter-spacing:.09em; text-transform:uppercase;
 }
-.news-hero-images{ background:var(--surface-2,#fbf6ec); }
+.news-hero-eyebrow svg{ width:11px; height:11px; flex:0 0 auto; }
+
+/* ---- List view: every post is a preview (thumbnail + headline +
+   excerpt), never full text -- tap one to read it. Both card types
+   share one clean, neutral bordered-card treatment (no colored accent
+   lines) so the boundary between image and text reads the same way
+   everywhere; the featured post is simply bigger. ---- */
+.news-hero-card, .news-grid-card{
+  cursor:pointer; background:var(--surface,#fffdf8);
+  border:1px solid var(--border,rgba(43,38,30,.12)); border-radius:14px; overflow:hidden;
+  transition:border-color .15s, box-shadow .15s;
+}
+.news-hero-card:active, .news-grid-card:active{ background:var(--surface-2,#fbf6ec); }
+.news-hero-card{ max-width:600px; margin:0 auto 20px; }
+.news-hero-thumb-wrap, .news-grid-thumb-wrap{
+  display:flex; align-items:center; justify-content:center;
+  background:var(--surface-2,#fbf6ec); overflow:hidden;
+}
+.news-hero-thumb-wrap{ aspect-ratio:16/10; }
+.news-grid-thumb-wrap{ aspect-ratio:16/9; }
+.news-hero-thumb, .news-grid-thumb{ width:100%; height:100%; object-fit:contain; display:block; }
+/* Tinted violet (the site's own brand color) rather than flat white,
+   so the featured post still reads as a "spotlight" pick, not just a
+   bigger version of the same plain card -- but the excerpt keeps this
+   compact instead of the wall of full body text it used to hold. */
+.news-hero-body{ padding:18px 20px 20px; background:linear-gradient(160deg,#1c1030,#2a1547 65%,#1c1030); }
+.news-hero-body .news-post-meta{ color:rgba(230,215,255,.65); margin-bottom:10px; }
+.news-hero-body .news-post-author{ color:#fff; }
+.news-hero-title{ font-size:20px; font-weight:900; letter-spacing:-.01em; color:#fff; line-height:1.3; margin:0 0 8px; }
+.news-hero-excerpt{
+  font-size:13.5px; line-height:1.65; color:rgba(240,232,255,.85); white-space:pre-wrap; word-break:break-word;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+}
+.news-section-label{
+  max-width:680px; margin:0 auto 14px; padding:8px 2px 0;
+  font-size:11.5px; font-weight:900; letter-spacing:.08em; text-transform:uppercase;
+  color:#7650b8; border-top:1px solid var(--border,rgba(43,38,30,.12));
+}
+.news-grid{ display:flex; flex-direction:column; gap:14px; max-width:680px; margin:0 auto; }
+.news-grid-card-body{ padding:14px 16px 16px; }
+.news-grid-title{ font-size:15px; font-weight:900; letter-spacing:-.005em; color:var(--ink,#2b2621); line-height:1.35; margin:0 0 4px; }
+.news-grid-excerpt{
+  margin-top:6px; font-size:13px; line-height:1.6; color:var(--ink-soft,#4a4038); white-space:pre-wrap; word-break:break-word;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+/* ---- Detail view: the full post -- every image at full size (never
+   cropped), complete body text, plain light background for comfortable
+   reading (a dark panel is fine for a two-line excerpt, not a full
+   article). Reached by tapping any preview; "Back to News" returns to
+   the list without closing the whole overlay. ---- */
+.news-detail-back{
+  display:inline-flex; align-items:center; gap:6px; margin-bottom:16px; padding:0; border:none; background:none;
+  color:var(--ink,#2b2621); font-size:13.5px; font-weight:800; cursor:pointer;
+}
+.news-detail-back svg{ width:16px; height:16px; }
+.news-hero-images{ background:var(--surface-2,#fbf6ec); border-radius:14px; overflow:hidden; }
 /* object-fit:contain (never cover) -- these are very often tall
    screenshots/collages, and cropping to fill a box was cutting off
    whatever was at the top or bottom. Letterboxing keeps the whole image
@@ -6147,100 +6203,16 @@ body.news-feed-open{ overflow:hidden; }
 .news-hero-img{ display:block; width:100%; max-height:520px; object-fit:contain; background:var(--surface-2,#fbf6ec); }
 .news-hero-extra-images{ display:flex; gap:6px; padding:6px; overflow-x:auto; background:var(--surface-2,#fbf6ec); }
 .news-hero-extra-img{ height:92px; width:auto; max-width:140px; object-fit:contain; border-radius:8px; background:var(--surface,#fffdf8); flex:0 0 auto; }
-/* A dark editorial panel behind the headline/body -- the high-contrast
-   "this is the big story" treatment real news homepages use, stacked
-   under the image (rather than beside it) since this feed is a narrow,
-   mobile-width column with no room for a side-by-side split. Tinted
-   violet (the site's own brand color) rather than flat neutral black,
-   so it reads as GamePay Hub rather than a generic dark panel. */
-.news-hero-body{ padding:22px 20px; background:linear-gradient(160deg,#1c1030,#2a1547 65%,#1c1030); }
-/* A small solid-color category tag above the headline -- the "BREAKING
-   NEWS"-style masthead move real news sites (CNN especially) use, in
-   the site's own violet instead of CNN's red. */
-.news-hero-eyebrow{
-  display:inline-flex; align-items:center; gap:4px; margin-bottom:10px; padding:4px 10px 4px 8px; border-radius:3px;
-  background:#9470d4; color:#fff; font-size:10.5px; font-weight:900;
-  letter-spacing:.09em; text-transform:uppercase;
-}
-.news-hero-eyebrow svg{ width:11px; height:11px; flex:0 0 auto; }
-.news-hero-body .news-post-meta{ color:rgba(230,215,255,.65); margin-bottom:12px; }
-.news-hero-body .news-post-author{ color:#fff; }
-.news-hero-title{ font-size:23px; font-weight:900; letter-spacing:-.01em; color:#fff; line-height:1.28; margin:0 0 10px; }
-.news-hero-text{ font-size:14px; line-height:1.75; color:rgba(240,232,255,.85); white-space:pre-wrap; word-break:break-word; }
-
-/* ---- Article grid (older posts) ---- */
-.news-section-label{
-  max-width:960px; margin:0 auto 14px; padding:0 2px;
-  font-size:11.5px; font-weight:900; letter-spacing:.08em; text-transform:uppercase;
-  color:#7650b8; border-top:2px solid #9470d4; padding-top:8px;
-}
-/* A flat list with thin dividers between stories -- not a grid of
-   boxed/shadowed cards -- is what actually reads as "news homepage"
-   rather than "app UI"; matches how NBC/MIT lay out their secondary
-   story lists. Each item's small gradient spine on the left keeps the
-   brand's own violet accent running through the whole list. */
-.news-grid{
-  display:flex; flex-direction:column;
-  max-width:680px; margin:0 auto;
-}
-.news-grid-card{
-  position:relative;
-  border-bottom:1px solid var(--border,rgba(43,38,30,.12));
-  padding:18px 0 18px 16px;
-}
-.news-grid-card::before{
-  content:""; position:absolute; left:0; top:18px; bottom:18px; width:3px; border-radius:2px;
-  background:linear-gradient(180deg,#7650b8,#9470d4);
-}
-.news-grid-card:last-child{ border-bottom:none; }
-.news-grid-thumb-wrap{
-  aspect-ratio:16/9; display:flex; align-items:center; justify-content:center;
-  background:var(--surface-2,#fbf6ec); overflow:hidden; margin-bottom:10px;
-}
-.news-grid-thumb{ width:100%; height:100%; object-fit:contain; display:block; }
-.news-grid-card-body{ padding:0; }
-.news-grid-title{ font-size:15px; font-weight:900; letter-spacing:-.005em; color:var(--ink,#2b2621); line-height:1.35; margin:6px 0 6px; }
-.news-grid-excerpt{
-  font-size:13px; line-height:1.65; color:var(--ink-soft,#4a4038); white-space:pre-wrap; word-break:break-word;
-  cursor:pointer;
-  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
-}
-.news-grid-excerpt.expanded{ -webkit-line-clamp:unset; overflow:visible; cursor:auto; }
-.news-grid-readmore{
-  margin-top:6px; border:none; background:none; padding:0; cursor:pointer;
-  font-size:12.5px; font-weight:800; color:#7650b8;
-}
-.news-grid-full{ margin-top:10px; }
-.news-grid-collapse{
-  margin-top:10px; border:1px solid var(--border-strong,rgba(43,38,30,.20)); background:var(--surface-2,#fbf6ec);
-  color:var(--ink,#2b2621); border-radius:999px; padding:6px 14px; font-size:12px; font-weight:800; cursor:pointer;
-}
-/* Extra images on an expanded grid card, shown as a compact photo grid.
-   Cover-cropping here is fine (unlike the hero/thumbnail) -- these are
-   thumbnails of images the reader already saw in full via the thumbnail
-   or can tap through to individually; the grid just needs to look tidy. */
-.news-post-images{
-  display:grid; gap:4px; border-radius:12px; overflow:hidden;
-  grid-template-columns:1fr;
-}
-.news-post-images[data-count="2"],
-.news-post-images[data-count="4"]{ grid-template-columns:1fr 1fr; }
-.news-post-images[data-count="5"],.news-post-images[data-count="6"],
-.news-post-images[data-count="7"],.news-post-images[data-count="8"]{ grid-template-columns:1fr 1fr 1fr; }
-.news-post-img-wrap{ aspect-ratio:1; display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--surface-2,#fbf6ec); }
-.news-post-images[data-count="1"] .news-post-img-wrap{ aspect-ratio:16/10; }
-.news-post-img{ max-width:100%; max-height:100%; object-fit:contain; display:block; }
-.news-post-images[data-count="3"]{
-  grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; aspect-ratio:16/10;
-}
-.news-post-images[data-count="3"] .news-post-img-wrap{ aspect-ratio:auto; height:100%; }
-.news-post-images[data-count="3"] .news-post-img-wrap:first-child{ grid-row:1/3; }
+.news-detail-body{ max-width:680px; margin:20px auto 0; }
+.news-detail-title{ font-size:22px; font-weight:900; letter-spacing:-.01em; color:var(--ink,#2b2621); line-height:1.3; margin:0 0 10px; }
+.news-detail-body .news-post-meta{ margin-bottom:16px; }
+.news-detail-text{ font-size:14.5px; line-height:1.8; color:var(--ink-soft,#4a4038); white-space:pre-wrap; word-break:break-word; }
 
 @media(max-width:480px){
   .news-feed-header{ padding:12px 14px; }
-  .news-feed-list{ padding:12px 10px 50px; }
-  .news-hero-body{ padding:15px; }
+  .news-feed-list, .news-detail{ padding:12px 10px 50px; }
   .news-hero-title{ font-size:17px; }
+  .news-detail-title{ font-size:19px; }
   .news-hero-img{ max-height:340px; }
 }
 body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
