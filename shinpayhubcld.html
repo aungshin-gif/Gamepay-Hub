@@ -56,6 +56,11 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
         Broadcast
       </div>
+      <div class="admin-nav-item" id="navMessagesBtn" data-view="messages">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        Messages
+        <span id="navMessagesBadge" class="unread-badge hidden">0</span>
+      </div>
       <div class="admin-nav-item" id="navNewsBtn" data-view="news">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/></svg>
         News
@@ -297,6 +302,21 @@
         </div>
       </div>
 
+      <div id="messagesView" class="hidden">
+        <div class="top-row">
+          <div>
+            <h1>Messages</h1>
+            <div class="sub">Customer support chat -- separate from the per-order chat on each order's own page.</div>
+          </div>
+        </div>
+        <div class="messages-shell" id="messagesShell">
+          <div class="messages-list" id="messagesList"><div class="empty-note">Loading…</div></div>
+          <div class="messages-thread" id="messagesThread">
+            <div class="empty-note">Select a conversation to view it.</div>
+          </div>
+        </div>
+      </div>
+
       <div id="newsView" class="hidden">
         <div class="top-row">
           <div>
@@ -442,6 +462,7 @@ const usersView = document.getElementById("usersView");
 const couponsView = document.getElementById("couponsView");
 const stockView = document.getElementById("stockView");
 const broadcastView = document.getElementById("broadcastView");
+const messagesView = document.getElementById("messagesView");
 const newsView = document.getElementById("newsView");
 const navHomeBtn = document.getElementById("navHomeBtn");
 const navSettingsBtn = document.getElementById("navSettingsBtn");
@@ -449,10 +470,11 @@ const navUsersBtn = document.getElementById("navUsersBtn");
 const navCouponsBtn = document.getElementById("navCouponsBtn");
 const navStockBtn = document.getElementById("navStockBtn");
 const navBroadcastBtn = document.getElementById("navBroadcastBtn");
+const navMessagesBtn = document.getElementById("navMessagesBtn");
 const navNewsBtn = document.getElementById("navNewsBtn");
 
-const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView, stockView, broadcastView, newsView];
-const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn, navStockBtn, navBroadcastBtn, navNewsBtn];
+const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView, stockView, broadcastView, messagesView, newsView];
+const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn, navStockBtn, navBroadcastBtn, navMessagesBtn, navNewsBtn];
 
 function showDashboardHome(){
   ALL_VIEWS.forEach(v => v.classList.add("hidden"));
@@ -505,6 +527,13 @@ function showNewsView(){
   navNewsBtn.classList.add("active");
   loadNewsPosts();
 }
+function showMessagesView(){
+  ALL_VIEWS.forEach(v => v.classList.add("hidden"));
+  ALL_NAV_BTNS.forEach(b => b.classList.remove("active"));
+  messagesView.classList.remove("hidden");
+  navMessagesBtn.classList.add("active");
+  loadMessagesInbox();
+}
 navHomeBtn.addEventListener("click", showDashboardHome);
 navSettingsBtn.addEventListener("click", showSettingsView);
 navUsersBtn.addEventListener("click", showUsersView);
@@ -512,6 +541,7 @@ navCouponsBtn.addEventListener("click", showCouponsView);
 navStockBtn.addEventListener("click", showStockView);
 navBroadcastBtn.addEventListener("click", showBroadcastView);
 navNewsBtn.addEventListener("click", showNewsView);
+navMessagesBtn.addEventListener("click", showMessagesView);
 document.getElementById("orderDetailBackBtn").addEventListener("click", showDashboardHome);
 
 let orders = [];
@@ -567,6 +597,7 @@ async function checkAdminAndEnter(){
   dashboardView.classList.remove("hidden");
   showDashboardHome();
   loadOrders();
+  loadMessagesInbox();
   subscribeRealtime();
 }
 
@@ -896,6 +927,7 @@ async function showUserDetail(user){
     const { error: sendError } = await sb.from("support_messages").insert({ user_id: user.id, sender: "admin", body: text });
     if(sendError){ showAdminToast("Send failed: " + sendError.message, true); return; }
     sb.channel("support-" + user.id).send({ type: "broadcast", event: "new_message", payload: { sender: "admin", body: text } });
+    loadMessagesInbox(); // keep the Messages inbox/badge in sync with a reply sent from here
   });
 }
 
@@ -927,6 +959,144 @@ async function loadUserMessages(userId, container){
   } else {
     container.innerHTML = "<div class='empty-note'>No messages yet.</div>";
   }
+}
+
+// ---------------------------------------------------------------------
+// Messages inbox: every support_messages conversation in one place,
+// Messenger-style (a conversation list plus the open thread), with an
+// unread badge on the nav item -- support chat previously had no way
+// for the admin to even notice a customer had written in, short of
+// opening that exact customer's row on the Users tab.
+// support_messages has no per-conversation "last read" column of its
+// own (unlike orders.admin_last_read_at), so support_read_state gives
+// it one; unread = customer messages newer than that timestamp.
+// ---------------------------------------------------------------------
+let messagesConvos = [];
+let selectedMessageUserId = null;
+
+function refreshMessagesBadge(){
+  const badge = document.getElementById("navMessagesBadge");
+  if(!badge) return;
+  const total = messagesConvos.reduce((sum, c) => sum + c.unread, 0);
+  if(total > 0){ badge.textContent = total > 99 ? "99+" : String(total); badge.classList.remove("hidden"); }
+  else badge.classList.add("hidden");
+}
+
+async function loadMessagesInbox(){
+  if(!usersCache.length){
+    const { data: u } = await sb.rpc("admin_list_users");
+    usersCache = u || usersCache;
+  }
+  const [{ data: msgs, error }, { data: readRows }] = await Promise.all([
+    sb.from("support_messages").select("*").order("created_at", { ascending: true }),
+    sb.from("support_read_state").select("*"),
+  ]);
+  if(error){ messagesConvos = []; refreshMessagesBadge(); return; }
+
+  const readByUser = {};
+  (readRows || []).forEach(r => { readByUser[r.user_id] = r.admin_last_read_at; });
+
+  const byUser = {};
+  (msgs || []).forEach(m => { (byUser[m.user_id] ||= []).push(m); });
+
+  messagesConvos = Object.keys(byUser).map(userId => {
+    const thread = byUser[userId];
+    const since = readByUser[userId] ? new Date(readByUser[userId]) : null;
+    const unread = thread.filter(m => m.sender === "customer" && (!since || new Date(m.created_at) > since)).length;
+    return { userId, thread, last: thread[thread.length - 1], unread };
+  }).sort((a, b) => new Date(b.last.created_at) - new Date(a.last.created_at));
+
+  renderMessagesList();
+  refreshMessagesBadge();
+  // Realtime keeps the badge/list fresh, but if this exact conversation
+  // is already open, also refresh its thread in place.
+  if(selectedMessageUserId && byUser[selectedMessageUserId]) renderMessageThreadBox();
+}
+
+function messagesUserInfo(userId){
+  const u = usersCache.find(u => u.id === userId);
+  return u || { id: userId, email: "", meta: {} };
+}
+
+function renderMessagesList(){
+  const list = document.getElementById("messagesList");
+  if(!list) return;
+  if(!messagesConvos.length){ list.innerHTML = '<div class="empty-note">No messages yet.</div>'; return; }
+  list.innerHTML = messagesConvos.map(c => {
+    const u = messagesUserInfo(c.userId);
+    const snippetPrefix = c.last.sender === "admin" ? "You: " : "";
+    return `
+      <div class="message-convo-row ${c.unread ? "unread" : ""} ${c.userId === selectedMessageUserId ? "active" : ""}" data-user-id="${c.userId}">
+        ${userAvatarHtml(u)}
+        <div class="or-main">
+          <div class="message-convo-name">${escapeHtml(userDisplayHandle(u))}</div>
+          <div class="message-convo-snippet">${escapeHtml(snippetPrefix + c.last.body)}</div>
+        </div>
+        <div class="message-convo-meta">
+          ${new Date(c.last.created_at).toLocaleDateString()}
+          ${c.unread ? `<span class="unread-badge">${c.unread}</span>` : ""}
+        </div>
+      </div>
+    `;
+  }).join("");
+  list.querySelectorAll(".message-convo-row").forEach(row => {
+    row.addEventListener("click", () => openMessageThread(row.dataset.userId));
+  });
+}
+
+function renderMessageThreadBox(){
+  const convo = messagesConvos.find(c => c.userId === selectedMessageUserId);
+  const box = document.getElementById("messagesThreadBox");
+  if(!convo || !box) return;
+  box.innerHTML = "";
+  convo.thread.forEach(m => appendUserMsgBubble(box, m.sender, m.body));
+}
+
+async function openMessageThread(userId){
+  selectedMessageUserId = userId;
+  document.getElementById("messagesShell")?.classList.add("thread-open");
+  const convo = messagesConvos.find(c => c.userId === userId);
+  if(!convo) return;
+
+  const u = messagesUserInfo(userId);
+  const thread = document.getElementById("messagesThread");
+  thread.innerHTML = `
+    <button type="button" class="ghost messages-thread-back" id="messagesThreadBackBtn">← Back</button>
+    <div class="messages-thread-header">${escapeHtml(userDisplayHandle(u))}${u.email ? ` <span style="color:var(--muted);font-weight:600;">(${escapeHtml(u.email)})</span>` : ""}</div>
+    <div class="chat-messages" id="messagesThreadBox"></div>
+    <form id="messagesThreadForm" class="chat-input-row">
+      <input id="messagesThreadInput" type="text" placeholder="Reply to this customer…" autocomplete="off" />
+      <button type="submit"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+    </form>
+  `;
+  document.getElementById("messagesThreadBackBtn")?.addEventListener("click", () => {
+    document.getElementById("messagesShell")?.classList.remove("thread-open");
+  });
+  renderMessageThreadBox();
+
+  document.getElementById("messagesThreadForm")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const input = document.getElementById("messagesThreadInput");
+    const text = input.value.trim();
+    if(!text) return;
+    input.value = "";
+    const box = document.getElementById("messagesThreadBox");
+    appendUserMsgBubble(box, "admin", text);
+    const { error } = await sb.from("support_messages").insert({ user_id: userId, sender: "admin", body: text });
+    if(error){ showAdminToast("Send failed: " + error.message, true); return; }
+    sb.channel("support-" + userId).send({ type: "broadcast", event: "new_message", payload: { sender: "admin", body: text } });
+    loadMessagesInbox();
+  });
+
+  // Mark read immediately (both the visible badge and the row's own
+  // highlight) rather than waiting on a round trip -- mirrors
+  // selectOrder()'s optimistic pattern for the per-order chat.
+  if(convo.unread){
+    convo.unread = 0;
+    renderMessagesList();
+    refreshMessagesBadge();
+  }
+  await sb.from("support_read_state").upsert({ user_id: userId, admin_last_read_at: new Date().toISOString() });
 }
 
 /* ---------- Users tab: full registered-user list with order counts ---------- */
@@ -1137,6 +1307,17 @@ function subscribeRealtime(){
   sb.channel("admin-messages")
     .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, (payload) => {
       if(payload.new?.sender === "customer") loadOrders();
+    })
+    .subscribe();
+  // Support chat (a separate table from per-order "messages") had no
+  // notification path at all -- an admin could go the whole day never
+  // knowing a customer had written in, since the only place to see it
+  // was clicking into that exact customer's row on the Users tab. This
+  // keeps the Messages nav badge (and the open inbox, if it's the
+  // current view) live regardless of which tab the admin is looking at.
+  sb.channel("admin-support-messages")
+    .on("postgres_changes", { event: "INSERT", schema: "public", table: "support_messages" }, (payload) => {
+      if(payload.new?.sender === "customer") loadMessagesInbox();
     })
     .subscribe();
 }
