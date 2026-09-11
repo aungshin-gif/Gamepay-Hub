@@ -119,16 +119,25 @@ create policy "customer read own messages" on public.messages
 -- access_token (the customer's private order link).
 
 -- Postgres treats a changed argument list as a distinct overload rather
--- than replacing it, so an older 6-argument version of this function
--- (from before payment slips existed) would otherwise stick around and
--- make every call to "create_order" ambiguous. Drop it explicitly first.
--- Also drop the later 8-argument version (with a coupon code, defined
--- further down in this file) -- otherwise re-running this whole script on
--- a database that already has it leaves two overloads alive at once for
--- the moment this block recreates the 7-argument one, and the "grant"
--- right below fails with "function name is not unique".
-drop function if exists public.create_order(text, text, numeric, text, text, text);
-drop function if exists public.create_order(text, text, numeric, text, text, text, text, text);
+-- than replacing it, so an older version of this function from before
+-- payment slips (or any other since-changed argument list) existed would
+-- otherwise stick around and make every call to "create_order" ambiguous.
+-- This project's create_order signature has changed several times across
+-- sessions, so rather than track every historical argument list by hand
+-- (which has already gone stale once -- see the "function name is not
+-- unique" error re-running this on a database with an older, untracked
+-- overload still in it), drop every existing overload of it dynamically.
+do $$
+declare r record;
+begin
+  for r in
+    select p.oid::regprocedure::text as sig
+    from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.proname = 'create_order'
+  loop
+    execute format('drop function if exists %s', r.sig);
+  end loop;
+end $$;
 
 create or replace function public.create_order(
   p_product_name text, p_plan_name text, p_amount numeric,
@@ -445,12 +454,22 @@ grant execute on function public.mark_notifications_read to authenticated;
 -- create_order now accepts an optional coupon code. The discount is
 -- computed and the coupon marked used here -- never trust a client-sent
 -- discount, always re-derive it from the coupon row server-side.
--- Also drop the 7-argument version created earlier in this file (with
--- p_payment_slip_path as the last param) -- otherwise it sticks around
--- as a second overload alongside the one below, and the unqualified
--- "grant" further down fails with "function name is not unique".
-drop function if exists public.create_order(text, text, numeric, text, text, text, text);
-drop function if exists public.create_order(text, text, numeric, text, text, text, text, text);
+-- Drop every existing overload again (see the dynamic drop above) --
+-- the 7-argument version created earlier in this same file run would
+-- otherwise stick around as a second overload alongside the one below,
+-- and the unqualified "grant" further down fails with "function name is
+-- not unique".
+do $$
+declare r record;
+begin
+  for r in
+    select p.oid::regprocedure::text as sig
+    from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.proname = 'create_order'
+  loop
+    execute format('drop function if exists %s', r.sig);
+  end loop;
+end $$;
 
 -- Also snapshots the plan's Warranty/Format/Note (as resolved on the
 -- customer's screen at checkout, after any Stock-list overrides) onto the
@@ -625,6 +644,51 @@ begin
 end;
 $$;
 grant execute on function public.set_admin_gate_code to authenticated;
+
+-- ---------------------------------------------------------------------
+-- News: admin-authored posts shown on the storefront, Twitter/X-feed
+-- style. Read-only for customers by design (no likes/comments), fully
+-- admin-managed. The bucket is public -- news images are meant to be
+-- seen by anyone browsing the site, logged in or not, same as the
+-- product catalog's own images.
+-- ---------------------------------------------------------------------
+create table if not exists public.news_posts (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  body text not null,
+  images text[] not null default '{}',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  created_by uuid references auth.users(id) on delete set null
+);
+alter table public.news_posts enable row level security;
+
+drop policy if exists "anyone can read news" on public.news_posts;
+create policy "anyone can read news" on public.news_posts
+  for select using (true);
+
+drop policy if exists "admin manage news" on public.news_posts;
+create policy "admin manage news" on public.news_posts
+  for all using (public.is_admin()) with check (public.is_admin());
+
+insert into storage.buckets (id, name, public)
+values ('news-images', 'news-images', true)
+on conflict (id) do nothing;
+
+drop policy if exists "anyone can view news images" on storage.objects;
+create policy "anyone can view news images" on storage.objects
+  for select to anon, authenticated
+  using (bucket_id = 'news-images');
+
+drop policy if exists "admin can upload news images" on storage.objects;
+create policy "admin can upload news images" on storage.objects
+  for insert to authenticated
+  with check (bucket_id = 'news-images' and public.is_admin());
+
+drop policy if exists "admin can delete news images" on storage.objects;
+create policy "admin can delete news images" on storage.objects
+  for delete to authenticated
+  using (bucket_id = 'news-images' and public.is_admin());
 
 -- ============================================================
 -- One-time setup after running this file:
