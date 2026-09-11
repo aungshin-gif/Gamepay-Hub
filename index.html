@@ -644,6 +644,18 @@
   icon: "chatgpt-icon.png",
   search: "chatgpt openai ai",
   description: "✅ Official access options are available.\n✔️ Own Mail option includes Full Warranty.\n✔️ History remains available with the official option.\n🔄 Renewal is available for eligible official access.\n❗️ CGPT GO stock can change; preorder may be required when unavailable.",
+  benefits: {
+    subtitle: "What you get with Plus vs. Go",
+    sections: [
+      { icon: "zap", title: "Go, in one line", html: "Not as capable as Plus, but genuinely enough for everyday, daily-use chatting." },
+      { icon: "chat", title: "Messages", html: "Regular chat is <b>unlimited on every plan</b> as of Aug 2026. The advanced/reasoning mode Go includes is capped at <b>160 messages / 3 hours</b> — plenty for exam revision or study sessions." },
+      { icon: "upload", title: "File upload", html: "Up to <b>80 files per 3 hours</b> — far above the free plan's 3-a-day. Hit the cap and it resets on its own after the window passes." },
+      { icon: "image", title: "Image generation", html: "No fixed official cap — typically around <b>20-50 images a day</b> in practice. Limit refills on a rolling basis, not a hard reset." },
+      { icon: "brain", title: "Thinking & Deep Research", html: "This is where Go is noticeably weaker: it runs the fast Instant model, not the Thinking/reasoning one, and <b>Deep Research isn't included at all</b>. If deep, multi-step research is your main use, Plus is the one to get." }
+    ],
+    included: ["Custom GPTs", "Memory", "Projects", "Data analysis"],
+    excluded: ["Deep Research", "Sora video", "Agent Mode"]
+  },
   plans: [
       { name: "👐 CGPT GO Official – 8$ Plan – 1 Month – 27000 Ks", price: 27000, ownMail: true, warranty: "Full Warranty", format: "Own Mail", note: "✅ Renew ရပါတယ်။\n✅ Own Mail ပိုပြေပါတယ်။\n✅ History မပျက်ပါ။\n✅ Full Warranty" },
       { name: "🌌 CHATGPT PLUS Official – 80$ Plan – 1 Month – 90000 Ks", price: 90000, ownMail: true, bestSeller: true, warranty: "Full Warranty", format: "Own Mail", note: "✅ Renew ရပါတယ်။\n✅ Own Mail ပိုပြေပါတယ်။\n✅ History မပျက်ပါ။\n✅ Full Warranty" },
@@ -1710,7 +1722,13 @@ plans: [
       check: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>`,
       user: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
       eyeOpen: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>`,
-      eyeOff: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.8 21.8 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a21.8 21.8 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+      eyeOff: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.8 21.8 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a21.8 21.8 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`,
+      // Product Benefits section icons (no btn-icon class -- sized by their own wrapper, not inline text)
+      zap: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>`,
+      chat: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.4 8.4 0 0 1-8.9 8.4 8.6 8.6 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1 9.6-11.9 8.5 8.5 0 0 1 6.5 6.6z"/></svg>`,
+      upload: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.44 11.05l-9.19 9.19a5.5 5.5 0 0 1-7.78-7.78l9.2-9.19a3.67 3.67 0 0 1 5.18 5.19l-9.2 9.19a1.83 1.83 0 0 1-2.59-2.59l8.49-8.48"/></svg>`,
+      image: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>`,
+      brain: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9.5 2a6.5 6.5 0 0 0-4.7 11 3.5 3.5 0 0 0 1.2 6.5h9a3.5 3.5 0 0 0 1.2-6.5A6.5 6.5 0 0 0 9.5 2Z"/><path d="M9.5 22v-3"/></svg>`
     };
     // Wires a show/hide eye button next to a password field. Shared by
     // login/signup, the forgot-password reset step, and account settings.
@@ -2066,6 +2084,68 @@ function fillProductPage(){
     const durMatch = cleanPlan.match(/(\d+\s*(?:day|days|week|weeks|month|months|year|years))/i);
     document.getElementById("specDuration").textContent =
       plan.duration || (durMatch ? durMatch[1] : "—");
+  }
+
+  renderProductBenefits(currentProduct);
+}
+
+// "Product Benefits" -- an optional, richer writeup than Warranty/Format/
+// Note (feature breakdowns, plan comparisons). Collapsed by default so it
+// never lengthens the page for a customer who's already decided; the panel
+// grows to its own natural size when opened rather than a fixed guess, so
+// a longer writeup is never clipped (see togglePBPanel).
+function renderProductBenefits(product){
+  const box = document.getElementById("productBenefits");
+  if(!box) return;
+  const data = product?.benefits;
+  if(!data){ box.classList.add("hidden"); box.innerHTML = ""; return; }
+  box.classList.remove("hidden");
+
+  const sections = (data.sections || []).map(s => `
+    <div class="pb-section">
+      <span class="pb-icon">${ICONS[s.icon] || ICONS.zap}</span>
+      <div><h5>${escapePreviewText(s.title)}</h5><p>${s.html}</p></div>
+    </div>
+  `).join("");
+
+  const chipRow = (label, items, cls) => (items && items.length) ? `
+    <h5 class="pb-chip-label">${escapePreviewText(label)}</h5>
+    <div class="pb-chip-row">${items.map(t => `<span class="pb-chip ${cls}">${cls === "good" ? ICONS.check : ICONS.x}${escapePreviewText(t)}</span>`).join("")}</div>
+  ` : "";
+
+  box.innerHTML = `
+    <button type="button" class="pb-toggle" aria-expanded="false" id="pbToggleBtn">
+      <span class="pb-toggle-icon">${ICONS.zap}</span>
+      <span class="pb-toggle-text"><strong>Product Benefits</strong><small>${escapePreviewText(data.subtitle || "What you get with this product")}</small></span>
+      <svg class="pb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="pb-panel" id="pbPanel" data-collapsed="true">
+      <div class="pb-inner">
+        ${data.intro ? `<p class="pb-intro">${escapePreviewText(data.intro)}</p>` : ""}
+        <div class="pb-sections">${sections}</div>
+        ${chipRow("Also includes", data.included, "good")}
+        ${chipRow("Not included", data.excluded, "bad")}
+      </div>
+    </div>
+  `;
+  document.getElementById("pbToggleBtn").addEventListener("click", function(){ togglePBPanel(this); });
+}
+
+function togglePBPanel(btn){
+  const panel = document.getElementById("pbPanel");
+  if(!panel) return;
+  const open = btn.getAttribute("aria-expanded") === "true";
+  btn.setAttribute("aria-expanded", String(!open));
+  if(open){
+    panel.style.maxHeight = panel.scrollHeight + "px";
+    requestAnimationFrame(() => { panel.dataset.collapsed = "true"; });
+  } else {
+    panel.dataset.collapsed = "false";
+    panel.style.maxHeight = panel.scrollHeight + "px";
+    panel.addEventListener("transitionend", function done(){
+      panel.style.maxHeight = "none";
+      panel.removeEventListener("transitionend", done);
+    });
   }
 }
 
@@ -4238,6 +4318,8 @@ animateParticles();
                 <div class="product-detail-row"><dt>Format</dt><dd id="specFormat">—</dd></div>
               </dl>
             </div>
+
+            <div class="product-benefits hidden" id="productBenefits"></div>
 
             <div class="product-selected">
               <span class="product-selected-label">Selected plan</span>
