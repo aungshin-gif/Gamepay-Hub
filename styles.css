@@ -4724,21 +4724,26 @@ body.preview-mode .page{
 .products .card .buy-now-btn:hover{ filter:brightness(1.09) !important; }
 .products .card .buy-now-btn:active{ transform:none !important; filter:brightness(.93) !important; }
 
-/* ---------- columns: three across on a phone, as on desktop ---------- */
+/* ---------- columns: two across on a phone ----------
+   Three columns squeezed every card down to ~117px on a typical 390px
+   phone -- logo, name, price and the Buy Now button all fighting for the
+   same cramped strip, badges overlapping the icon. Two columns gives each
+   card roughly the same room the 561-860px 3-column layout already gets,
+   so it can use close to that same comfortable sizing instead of a
+   separately-shrunk set of overrides. */
 @media(max-width:560px){
-  .products{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:8px !important; }
-  .products .pc-stage{ padding:13px 6px 11px; }
-  .products .pc-stage .icon-wrap{ width:42px !important; height:42px !important; padding:7px !important; border-radius:12px !important; }
-  .products .pc-body{ padding:8px 6px 9px; }
-  .products .pc-name{ font-size:10.5px; }
-  .products .price-from strong{ font-size:13.5px; }
-  .products .card .buy-now-btn{ padding:9px 4px !important; font-size:8.5px !important; letter-spacing:.08em !important; }
+  .products{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:11px !important; }
+  .products .pc-stage{ padding:16px 10px 13px; }
+  .products .pc-stage .icon-wrap{ width:50px !important; height:50px !important; padding:8px !important; }
+  .products .pc-body{ padding:10px 10px 11px; }
+  .products .pc-name{ font-size:12.5px; }
+  .products .price-from strong{ font-size:15px; }
+  .products .card .buy-now-btn{ padding:10px 6px !important; font-size:9.5px !important; }
 }
 @media(max-width:380px){
-  .products{ gap:6px !important; }
-  .products .pc-name{ font-size:9.5px; }
-  .products .pc-cat{ font-size:7px; letter-spacing:.1em; }
-  .products .price-from strong{ font-size:12.5px; }
+  .products{ gap:9px !important; }
+  .products .pc-name{ font-size:11.5px; }
+  .products .price-from strong{ font-size:14px; }
 }
 
 /* wider screens can afford a bigger logo and larger type */
