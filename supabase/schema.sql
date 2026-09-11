@@ -540,6 +540,20 @@ drop policy if exists "admin manage support messages" on public.support_messages
 create policy "admin manage support messages" on public.support_messages
   for all using (public.is_admin()) with check (public.is_admin());
 
+-- support_messages has no natural "one row per conversation" to hang an
+-- admin_last_read_at on the way orders does -- this table gives it one,
+-- so the admin's Messages inbox can compute unread counts/badges the
+-- same way the per-order chat already does it.
+create table if not exists public.support_read_state (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  admin_last_read_at timestamptz
+);
+alter table public.support_read_state enable row level security;
+
+drop policy if exists "admin manage support read state" on public.support_read_state;
+create policy "admin manage support read state" on public.support_read_state
+  for all using (public.is_admin()) with check (public.is_admin());
+
 -- 10. Stock overrides -------------------------------------------------
 -- The product/plan catalog itself is still the static list baked into
 -- index.html (no schema for it), so this is a thin overlay: for any
@@ -704,7 +718,9 @@ create policy "admin can delete news images" on storage.objects
 --    select id from auth.users where email = 'you@example.com';
 --
 -- 3. Enable Realtime for the tables: Database -> Replication ->
---    turn on "orders" and "messages" so shinpayhubcld.html gets live updates.
+--    turn on "orders", "messages", and "support_messages" so
+--    shinpayhubcld.html gets live updates (including the Messages
+--    inbox's unread badge).
 --
 -- 4. Customer login (email/password) works out of the box once this
 --    file has run — no extra dashboard step needed for that. If you
