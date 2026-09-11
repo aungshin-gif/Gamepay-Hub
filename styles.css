@@ -6127,11 +6127,22 @@ body.news-feed-open{ overflow:hidden; }
 .news-hero-img{ display:block; width:100%; max-height:520px; object-fit:contain; background:var(--surface-2,#fbf6ec); }
 .news-hero-extra-images{ display:flex; gap:6px; padding:6px; overflow-x:auto; background:var(--surface-2,#fbf6ec); }
 .news-hero-extra-img{ height:92px; width:auto; max-width:140px; object-fit:contain; border-radius:8px; background:var(--surface,#fffdf8); flex:0 0 auto; }
-.news-hero-body{ padding:20px; }
-.news-hero-title{ font-size:20px; font-weight:900; color:var(--ink,#2b2621); line-height:1.35; margin:8px 0 10px; }
-.news-hero-text{ font-size:14px; line-height:1.75; color:var(--ink-soft,#4a4038); white-space:pre-wrap; word-break:break-word; }
+/* A dark editorial panel behind the headline/body -- the high-contrast
+   "this is the big story" treatment real news homepages use, stacked
+   under the image (rather than beside it) since this feed is a narrow,
+   mobile-width column with no room for a side-by-side split. */
+.news-hero-body{ padding:22px 20px; background:#14141c; }
+.news-hero-body .news-post-meta{ color:rgba(255,255,255,.6); }
+.news-hero-body .news-post-author{ color:#fff; }
+.news-hero-title{ font-size:20px; font-weight:900; color:#fff; line-height:1.35; margin:8px 0 10px; }
+.news-hero-text{ font-size:14px; line-height:1.75; color:rgba(255,255,255,.82); white-space:pre-wrap; word-break:break-word; }
 
 /* ---- Article grid (older posts) ---- */
+.news-section-label{
+  max-width:960px; margin:0 auto 14px; padding:0 2px;
+  font-size:11.5px; font-weight:900; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--muted,#786f63); border-top:2px solid var(--ink,#2b2621); padding-top:8px;
+}
 .news-grid{
   display:grid; gap:16px; max-width:960px; margin:0 auto;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));

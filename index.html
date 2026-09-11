@@ -4024,7 +4024,7 @@ async function loadNewsFeed(){
   if(!data || !data.length){ list.innerHTML = '<div class="news-feed-empty">No posts yet -- check back soon.</div>'; return; }
   newsPostsData = data;
   const [featured, ...rest] = data;
-  const gridHtml = rest.length ? `<div class="news-grid">${rest.map(newsGridCard).join("")}</div>` : "";
+  const gridHtml = rest.length ? `<div class="news-section-label">More News</div><div class="news-grid">${rest.map(newsGridCard).join("")}</div>` : "";
   list.innerHTML = newsHeroCard(featured) + gridHtml;
   wireNewsGridExpand(list);
   newsFeedLoaded = true;
