@@ -148,8 +148,15 @@
       <button id="newsFeedBackBtn" class="news-feed-back" type="button" aria-label="Close News">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
       </button>
-      <div class="news-feed-header-title">News</div>
+      <div class="news-feed-brand">
+        <img id="newsFeedLogo" class="news-feed-logo" alt="" />
+        <div>
+          <div class="news-feed-wordmark">GamePay Hub <span>News</span></div>
+          <div class="news-feed-tagline">Digital Premium, Games &amp; International Wallet Store</div>
+        </div>
+      </div>
     </div>
+    <script>document.getElementById("newsFeedLogo").src=document.querySelector(".compact-logo").src;</script>
     <div class="news-feed-list" id="newsFeedList">
       <div class="news-feed-empty">Loading…</div>
     </div>
@@ -3976,7 +3983,7 @@ function newsHeroCard(post){
     <article class="news-hero-card">
       ${newsHeroImagesHtml(images)}
       <div class="news-hero-body">
-        <span class="news-hero-eyebrow">News</span>
+        <span class="news-hero-eyebrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>News</span>
         <h2 class="news-hero-title">${escapePreviewText(post.title)}</h2>
         <div class="news-post-meta"><span class="news-post-author">GamePay Hub</span><span class="news-post-dot">·</span><span class="news-post-time">${newsWhenText(post)}</span></div>
         <div class="news-hero-text">${escapePreviewText(post.body)}</div>

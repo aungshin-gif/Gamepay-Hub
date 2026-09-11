@@ -6103,7 +6103,24 @@ body.news-feed-open{ overflow:hidden; }
 }
 .news-feed-back:hover{ background:var(--border,rgba(43,38,30,.12)); }
 .news-feed-back svg{ width:18px; height:18px; }
-.news-feed-header-title{ font-size:17px; font-weight:900; color:var(--ink,#2b2621); }
+/* Masthead: the site's own logo + a two-tone wordmark + a one-line
+   tagline -- reads as a branded news outlet header (CNN/NBC-style)
+   rather than a generic "News" label, while staying compact (single
+   row, small type) so it doesn't eat into reading space. */
+.news-feed-brand{ display:flex; align-items:center; gap:9px; min-width:0; }
+.news-feed-logo{ width:26px; height:26px; border-radius:7px; flex:0 0 auto; }
+.news-feed-wordmark{
+  font-size:15.5px; font-weight:900; color:var(--ink,#2b2621); line-height:1.2;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.news-feed-wordmark span{
+  background:linear-gradient(135deg,#7650b8,#9470d4);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+}
+.news-feed-tagline{
+  font-size:10px; font-weight:700; color:var(--muted,#786f63);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
 .news-feed-list{
   flex:1 1 auto; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
   width:100%; padding:16px 16px 60px;
@@ -6115,17 +6132,12 @@ body.news-feed-open{ overflow:hidden; }
 
 /* ---- Featured story (most recent post) ---- */
 /* Flush, edge-to-edge -- a real news homepage's lead story isn't a
-   floating rounded/shadowed card, it just sits on the page. A thin
-   gradient accent bar on top keeps it tied to the site's own brand
-   color instead of reading as plain/generic. */
+   floating rounded/shadowed card, it just sits on the page. The
+   masthead above now carries the brand color, so the hero itself
+   doesn't need its own separate accent line competing for attention. */
 .news-hero-card{
-  position:relative; padding-top:4px;
   max-width:760px; margin:0 auto 28px;
   background:var(--surface,#fffdf8);
-}
-.news-hero-card::before{
-  content:""; position:absolute; top:0; left:0; right:0; height:4px;
-  background:linear-gradient(90deg,#7650b8,#9470d4,#7650b8);
 }
 .news-hero-images{ background:var(--surface-2,#fbf6ec); }
 /* object-fit:contain (never cover) -- these are very often tall
@@ -6146,10 +6158,11 @@ body.news-feed-open{ overflow:hidden; }
    NEWS"-style masthead move real news sites (CNN especially) use, in
    the site's own violet instead of CNN's red. */
 .news-hero-eyebrow{
-  display:inline-block; margin-bottom:10px; padding:4px 10px; border-radius:3px;
+  display:inline-flex; align-items:center; gap:4px; margin-bottom:10px; padding:4px 10px 4px 8px; border-radius:3px;
   background:#9470d4; color:#fff; font-size:10.5px; font-weight:900;
   letter-spacing:.09em; text-transform:uppercase;
 }
+.news-hero-eyebrow svg{ width:11px; height:11px; flex:0 0 auto; }
 .news-hero-body .news-post-meta{ color:rgba(230,215,255,.65); margin-bottom:12px; }
 .news-hero-body .news-post-author{ color:#fff; }
 .news-hero-title{ font-size:23px; font-weight:900; letter-spacing:-.01em; color:#fff; line-height:1.28; margin:0 0 10px; }
