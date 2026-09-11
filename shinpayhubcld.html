@@ -51,6 +51,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
         Broadcast
       </div>
+      <div class="admin-nav-item" id="navNewsBtn" data-view="news">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/></svg>
+        News
+      </div>
       <div class="admin-nav-item" id="navSettingsBtn" data-view="settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
         Settings
@@ -288,6 +292,32 @@
         </div>
       </div>
 
+      <div id="newsView" class="hidden">
+        <div class="top-row">
+          <div>
+            <h1>News</h1>
+            <div class="sub">Posts shown on the storefront's News feed. Read-only for customers -- no likes or comments, just what you publish here.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title" id="newsFormTitle"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/></svg>New Post</div>
+          <input id="newsTitleInput" type="text" placeholder="Headline" maxlength="140" />
+          <textarea id="newsBodyInput" class="broadcast-textarea" placeholder="Write the post here. Line breaks are kept exactly as you type them."></textarea>
+          <div class="news-field-label">Images <span id="newsImageCount">(0/8)</span></div>
+          <div id="newsImageGrid" class="news-image-grid"></div>
+          <input id="newsImageInput" type="file" accept="image/*" multiple style="margin-top:6px;" />
+          <div style="display:flex;gap:10px;margin-top:14px;">
+            <button id="newsPublishBtn" type="button" style="flex:1;">Publish</button>
+            <button id="newsCancelEditBtn" type="button" class="ghost hidden">Cancel edit</button>
+          </div>
+          <div id="newsFormMsg" style="font-size:12.5px;margin-top:8px;color:var(--muted);"></div>
+        </div>
+        <div class="card" style="margin-top:16px;">
+          <div class="card-title">Published Posts</div>
+          <div id="newsPostsList"><div class="empty-note">Loading…</div></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -407,15 +437,17 @@ const usersView = document.getElementById("usersView");
 const couponsView = document.getElementById("couponsView");
 const stockView = document.getElementById("stockView");
 const broadcastView = document.getElementById("broadcastView");
+const newsView = document.getElementById("newsView");
 const navHomeBtn = document.getElementById("navHomeBtn");
 const navSettingsBtn = document.getElementById("navSettingsBtn");
 const navUsersBtn = document.getElementById("navUsersBtn");
 const navCouponsBtn = document.getElementById("navCouponsBtn");
 const navStockBtn = document.getElementById("navStockBtn");
 const navBroadcastBtn = document.getElementById("navBroadcastBtn");
+const navNewsBtn = document.getElementById("navNewsBtn");
 
-const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView, stockView, broadcastView];
-const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn, navStockBtn, navBroadcastBtn];
+const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView, stockView, broadcastView, newsView];
+const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn, navStockBtn, navBroadcastBtn, navNewsBtn];
 
 function showDashboardHome(){
   ALL_VIEWS.forEach(v => v.classList.add("hidden"));
@@ -461,12 +493,20 @@ function showBroadcastView(){
   broadcastView.classList.remove("hidden");
   navBroadcastBtn.classList.add("active");
 }
+function showNewsView(){
+  ALL_VIEWS.forEach(v => v.classList.add("hidden"));
+  ALL_NAV_BTNS.forEach(b => b.classList.remove("active"));
+  newsView.classList.remove("hidden");
+  navNewsBtn.classList.add("active");
+  loadNewsPosts();
+}
 navHomeBtn.addEventListener("click", showDashboardHome);
 navSettingsBtn.addEventListener("click", showSettingsView);
 navUsersBtn.addEventListener("click", showUsersView);
 navCouponsBtn.addEventListener("click", showCouponsView);
 navStockBtn.addEventListener("click", showStockView);
 navBroadcastBtn.addEventListener("click", showBroadcastView);
+navNewsBtn.addEventListener("click", showNewsView);
 document.getElementById("orderDetailBackBtn").addEventListener("click", showDashboardHome);
 
 let orders = [];
@@ -1566,6 +1606,159 @@ document.getElementById("broadcastSendBtn")?.addEventListener("click", async () 
   titleInput.value = ""; bodyInput.value = "";
   renderBroadcastPreview();
 });
+
+// ---------------------------------------------------------------------
+// News: admin-authored posts shown on the storefront's Twitter/X-style
+// feed. Read-only for customers by design (no likes/comments), so this
+// is the only place posts get created, edited, or removed.
+// ---------------------------------------------------------------------
+let newsImageFiles = []; // File objects for newly-picked images, staged for upload
+let newsExistingImages = []; // already-uploaded public URLs (when editing a post)
+let newsEditingId = null; // null = creating a new post
+let newsPostsCache = [];
+
+function renderNewsImageGrid(){
+  const grid = document.getElementById("newsImageGrid");
+  const count = document.getElementById("newsImageCount");
+  const total = newsExistingImages.length + newsImageFiles.length;
+  count.textContent = `(${total}/8)`;
+  const existingThumbs = newsExistingImages.map((url, i) => `
+    <div class="news-image-thumb"><img src="${url}" alt=""><button type="button" class="news-image-remove" data-kind="existing" data-idx="${i}">${ICON_X}</button></div>
+  `);
+  const newThumbs = newsImageFiles.map((file, i) => `
+    <div class="news-image-thumb"><img src="${URL.createObjectURL(file)}" alt=""><button type="button" class="news-image-remove" data-kind="new" data-idx="${i}">${ICON_X}</button></div>
+  `);
+  grid.innerHTML = existingThumbs.join("") + newThumbs.join("");
+  grid.querySelectorAll(".news-image-remove").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = Number(btn.dataset.idx);
+      if(btn.dataset.kind === "existing") newsExistingImages.splice(idx, 1);
+      else newsImageFiles.splice(idx, 1);
+      renderNewsImageGrid();
+    });
+  });
+}
+
+document.getElementById("newsImageInput")?.addEventListener("change", (e) => {
+  const files = Array.from(e.target.files || []);
+  const room = 8 - (newsExistingImages.length + newsImageFiles.length);
+  if(room <= 0){
+    showAdminToast("Already at 8 images -- remove one first.", true);
+    e.target.value = "";
+    return;
+  }
+  newsImageFiles.push(...files.slice(0, room));
+  if(files.length > room) showAdminToast(`Only ${room} more image(s) fit -- kept the first ${room}.`, true);
+  e.target.value = "";
+  renderNewsImageGrid();
+});
+
+function resetNewsForm(){
+  newsEditingId = null;
+  newsImageFiles = [];
+  newsExistingImages = [];
+  document.getElementById("newsTitleInput").value = "";
+  document.getElementById("newsBodyInput").value = "";
+  document.getElementById("newsPublishBtn").textContent = "Publish";
+  document.getElementById("newsCancelEditBtn").classList.add("hidden");
+  document.getElementById("newsFormMsg").textContent = "";
+  renderNewsImageGrid();
+}
+document.getElementById("newsCancelEditBtn")?.addEventListener("click", resetNewsForm);
+
+document.getElementById("newsPublishBtn")?.addEventListener("click", async () => {
+  const titleInput = document.getElementById("newsTitleInput");
+  const bodyInput = document.getElementById("newsBodyInput");
+  const msg = document.getElementById("newsFormMsg");
+  const title = titleInput.value.trim();
+  const body = bodyInput.value.trim();
+  if(!title || !body){ msg.textContent = "Headline and post text are both required."; msg.style.color = "var(--bad)"; return; }
+
+  const btn = document.getElementById("newsPublishBtn");
+  btn.disabled = true;
+  msg.textContent = "Publishing…"; msg.style.color = "var(--muted)";
+
+  try {
+    const uploadedUrls = [];
+    for(const file of newsImageFiles){
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `${crypto.randomUUID()}.${ext}`;
+      const { error: upErr } = await sb.storage.from("news-images").upload(path, file);
+      if(upErr) throw upErr;
+      const { data: pub } = sb.storage.from("news-images").getPublicUrl(path);
+      uploadedUrls.push(pub.publicUrl);
+    }
+    const images = [...newsExistingImages, ...uploadedUrls];
+
+    if(newsEditingId){
+      const { error } = await sb.from("news_posts").update({ title, body, images, updated_at: new Date().toISOString() }).eq("id", newsEditingId);
+      if(error) throw error;
+      showAdminToast("Post updated.");
+    } else {
+      const { data: { user } } = await sb.auth.getUser();
+      const { error } = await sb.from("news_posts").insert({ title, body, images, created_by: user?.id || null });
+      if(error) throw error;
+      showAdminToast("Post published.");
+    }
+    resetNewsForm();
+    loadNewsPosts();
+  } catch(err){
+    msg.textContent = err.message || "Something went wrong.";
+    msg.style.color = "var(--bad)";
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+async function loadNewsPosts(){
+  const list = document.getElementById("newsPostsList");
+  list.innerHTML = '<div class="empty-note">Loading…</div>';
+  const { data, error } = await sb.from("news_posts").select("*").order("created_at", { ascending: false });
+  if(error){ list.innerHTML = `<div class="empty-note">${error.message}</div>`; return; }
+  newsPostsCache = data || [];
+  if(!newsPostsCache.length){ list.innerHTML = '<div class="empty-note">No posts yet.</div>'; return; }
+  list.innerHTML = newsPostsCache.map(p => `
+    <div class="news-post-row" data-id="${p.id}">
+      ${p.images?.[0] ? `<img class="news-post-thumb" src="${p.images[0]}" alt="">` : `<div class="news-post-thumb news-post-thumb-empty"></div>`}
+      <div class="news-post-row-body">
+        <div class="news-post-row-title">${escapeHtml(p.title)}</div>
+        <div class="news-post-row-meta">${new Date(p.created_at).toLocaleString()} · ${p.images?.length || 0} image${(p.images?.length||0)===1?"":"s"}</div>
+      </div>
+      <div class="news-post-row-actions">
+        <button type="button" class="ghost news-edit-btn" data-id="${p.id}">Edit</button>
+        <button type="button" class="danger news-delete-btn" data-id="${p.id}">Delete</button>
+      </div>
+    </div>
+  `).join("");
+  list.querySelectorAll(".news-edit-btn").forEach(btn => btn.addEventListener("click", () => editNewsPost(btn.dataset.id)));
+  list.querySelectorAll(".news-delete-btn").forEach(btn => btn.addEventListener("click", () => deleteNewsPost(btn.dataset.id)));
+}
+
+function editNewsPost(id){
+  const post = newsPostsCache.find(p => p.id === id);
+  if(!post) return;
+  newsEditingId = id;
+  newsImageFiles = [];
+  newsExistingImages = [...(post.images || [])];
+  document.getElementById("newsTitleInput").value = post.title;
+  document.getElementById("newsBodyInput").value = post.body;
+  document.getElementById("newsPublishBtn").textContent = "Update";
+  document.getElementById("newsCancelEditBtn").classList.remove("hidden");
+  renderNewsImageGrid();
+  document.getElementById("newsFormMsg").textContent = "";
+  document.getElementById("newsTitleInput").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+async function deleteNewsPost(id){
+  const post = newsPostsCache.find(p => p.id === id);
+  const ok = await showAdminConfirm(`Delete "${post?.title || "this post"}"? This can't be undone.`, { title: "Delete post?", confirmText: "Delete" });
+  if(!ok) return;
+  const { error } = await sb.from("news_posts").delete().eq("id", id);
+  if(error){ showAdminToast("Could not delete: " + error.message, true); return; }
+  showAdminToast("Post deleted.");
+  if(newsEditingId === id) resetNewsForm();
+  loadNewsPosts();
+}
 
 // Stay signed in across refreshes.
 (async () => {

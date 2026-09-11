@@ -626,6 +626,51 @@ end;
 $$;
 grant execute on function public.set_admin_gate_code to authenticated;
 
+-- ---------------------------------------------------------------------
+-- News: admin-authored posts shown on the storefront, Twitter/X-feed
+-- style. Read-only for customers by design (no likes/comments), fully
+-- admin-managed. The bucket is public -- news images are meant to be
+-- seen by anyone browsing the site, logged in or not, same as the
+-- product catalog's own images.
+-- ---------------------------------------------------------------------
+create table if not exists public.news_posts (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  body text not null,
+  images text[] not null default '{}',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  created_by uuid references auth.users(id) on delete set null
+);
+alter table public.news_posts enable row level security;
+
+drop policy if exists "anyone can read news" on public.news_posts;
+create policy "anyone can read news" on public.news_posts
+  for select using (true);
+
+drop policy if exists "admin manage news" on public.news_posts;
+create policy "admin manage news" on public.news_posts
+  for all using (public.is_admin()) with check (public.is_admin());
+
+insert into storage.buckets (id, name, public)
+values ('news-images', 'news-images', true)
+on conflict (id) do nothing;
+
+drop policy if exists "anyone can view news images" on storage.objects;
+create policy "anyone can view news images" on storage.objects
+  for select to anon, authenticated
+  using (bucket_id = 'news-images');
+
+drop policy if exists "admin can upload news images" on storage.objects;
+create policy "admin can upload news images" on storage.objects
+  for insert to authenticated
+  with check (bucket_id = 'news-images' and public.is_admin());
+
+drop policy if exists "admin can delete news images" on storage.objects;
+create policy "admin can delete news images" on storage.objects
+  for delete to authenticated
+  using (bucket_id = 'news-images' and public.is_admin());
+
 -- ============================================================
 -- One-time setup after running this file:
 -- 1. Create your own admin login: Authentication -> Users -> Add user
