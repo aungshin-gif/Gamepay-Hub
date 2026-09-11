@@ -6142,9 +6142,17 @@ body.news-feed-open{ overflow:hidden; }
    violet (the site's own brand color) rather than flat neutral black,
    so it reads as GamePay Hub rather than a generic dark panel. */
 .news-hero-body{ padding:22px 20px; background:linear-gradient(160deg,#1c1030,#2a1547 65%,#1c1030); }
-.news-hero-body .news-post-meta{ color:rgba(230,215,255,.65); }
+/* A small solid-color category tag above the headline -- the "BREAKING
+   NEWS"-style masthead move real news sites (CNN especially) use, in
+   the site's own violet instead of CNN's red. */
+.news-hero-eyebrow{
+  display:inline-block; margin-bottom:10px; padding:4px 10px; border-radius:3px;
+  background:#9470d4; color:#fff; font-size:10.5px; font-weight:900;
+  letter-spacing:.09em; text-transform:uppercase;
+}
+.news-hero-body .news-post-meta{ color:rgba(230,215,255,.65); margin-bottom:12px; }
 .news-hero-body .news-post-author{ color:#fff; }
-.news-hero-title{ font-size:20px; font-weight:900; color:#fff; line-height:1.35; margin:8px 0 10px; }
+.news-hero-title{ font-size:23px; font-weight:900; letter-spacing:-.01em; color:#fff; line-height:1.28; margin:0 0 10px; }
 .news-hero-text{ font-size:14px; line-height:1.75; color:rgba(240,232,255,.85); white-space:pre-wrap; word-break:break-word; }
 
 /* ---- Article grid (older posts) ---- */
@@ -6178,7 +6186,7 @@ body.news-feed-open{ overflow:hidden; }
 }
 .news-grid-thumb{ width:100%; height:100%; object-fit:contain; display:block; }
 .news-grid-card-body{ padding:0; }
-.news-grid-title{ font-size:14.5px; font-weight:900; color:var(--ink,#2b2621); line-height:1.4; margin:6px 0 6px; }
+.news-grid-title{ font-size:15px; font-weight:900; letter-spacing:-.005em; color:var(--ink,#2b2621); line-height:1.35; margin:6px 0 6px; }
 .news-grid-excerpt{
   font-size:13px; line-height:1.65; color:var(--ink-soft,#4a4038); white-space:pre-wrap; word-break:break-word;
   cursor:pointer;

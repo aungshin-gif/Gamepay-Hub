@@ -3940,7 +3940,16 @@ let newsFeedLoaded = false;
 let newsPostsData = [];
 function newsWhenText(post){
   const when = new Date(post.created_at);
-  return isNaN(when) ? "" : when.toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
+  if(isNaN(when)) return "";
+  const seconds = Math.floor((Date.now() - when.getTime()) / 1000);
+  if(seconds < 60) return "Just now";
+  const minutes = Math.floor(seconds / 60);
+  if(minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if(hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if(days < 7) return `${days}d ago`;
+  return when.toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
 }
 // The primary image is shown at its natural proportions (never cropped)
 // so tall screenshots/collages -- very common in these posts -- are
@@ -3967,8 +3976,9 @@ function newsHeroCard(post){
     <article class="news-hero-card">
       ${newsHeroImagesHtml(images)}
       <div class="news-hero-body">
-        <div class="news-post-meta"><span class="news-post-author">GamePay Hub</span><span class="news-post-dot">·</span><span class="news-post-time">${newsWhenText(post)}</span></div>
+        <span class="news-hero-eyebrow">News</span>
         <h2 class="news-hero-title">${escapePreviewText(post.title)}</h2>
+        <div class="news-post-meta"><span class="news-post-author">GamePay Hub</span><span class="news-post-dot">·</span><span class="news-post-time">${newsWhenText(post)}</span></div>
         <div class="news-hero-text">${escapePreviewText(post.body)}</div>
       </div>
     </article>
