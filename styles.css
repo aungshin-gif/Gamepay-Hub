@@ -2685,21 +2685,41 @@ body.preview-mode{ overflow:hidden !important; }
 }
 .pb-intro{ margin:0 0 13px; font-size:12.5px; line-height:1.6; color:#40372c; }
 
-/* A straight Go-vs-Plus comparison table -- every row answers "what does
-   Go have, what does Plus have" side by side in one glance, instead of
-   prose paragraphs that read as near-duplicates of each other. */
-.pb-table-wrap{ overflow-x:auto; }
-.pb-table{ width:100%; border-collapse:collapse; font-size:11.5px; }
-.pb-table th,.pb-table td{ padding:9px 6px; text-align:left; border-bottom:1px solid rgba(118,80,184,.12); vertical-align:top; }
-.pb-table tbody tr:last-child th,.pb-table tbody tr:last-child td{ border-bottom:0; }
-.pb-table thead th{ font-size:9.5px; font-weight:900; letter-spacing:.05em; text-transform:uppercase; color:#9c8fbd; }
-.pb-table thead th.pb-col-go{ color:#6a5c94; }
-.pb-table thead th.pb-col-plus{ color:#7650b8; }
-.pb-table tbody th{ font-weight:750; color:#5a4f78; width:24%; font-size:11px; }
-.pb-table td{ color:#241a44; line-height:1.5; }
+/* Each comparison point is its own icon+heading block, then a small
+   label:value table -- one full-width line per plan. This is what makes a
+   full model list (or any long line) readable on a phone: nothing is
+   squeezed into a narrow side-by-side column, and it scales to any number
+   of plans by adding rows, not columns. */
+.pb-rows{ display:flex; flex-direction:column; gap:16px; }
+.pb-row + .pb-row{ padding-top:16px; border-top:1px solid rgba(118,80,184,.12); }
+.pb-row-head{ display:flex; align-items:center; gap:9px; margin-bottom:8px; }
+.pb-icon{
+  flex:0 0 auto; width:26px; height:26px; border-radius:9px;
+  display:grid; place-items:center; background:linear-gradient(135deg,#7650b8,#9470d4); color:#fff;
+}
+.pb-icon svg{ width:14px; height:14px; }
+.pb-row-head h5{ margin:0; font-size:12.5px; font-weight:800; color:#241a44; }
+
+.pb-mini{ width:100%; border-collapse:collapse; font-size:11.5px; }
+.pb-mini td,.pb-mini th{ padding:4px 0; vertical-align:top; text-align:left; }
+.pb-mini-tier{
+  width:64px; flex:0 0 auto; font-weight:800; font-size:9.5px; letter-spacing:.02em;
+  padding-right:8px !important; white-space:nowrap;
+}
+.pb-mini td{ color:#3a3355; line-height:1.55; }
+.pb-t-go{ color:#6a6280; }
+.pb-t-plus{ color:#7650b8; }
+.pb-t-pro5x{ color:#4a3a9e; }
+.pb-t-pro20x{ color:#8a6520; }
+
 .pb-yn{ display:inline-flex; width:17px; height:17px; border-radius:50%; align-items:center; justify-content:center; font-size:10px; font-weight:900; }
 .pb-yn.yes{ background:rgba(47,158,116,.14); color:#1f7d54; }
 .pb-yn.no{ background:rgba(192,53,107,.12); color:#a12a58; }
+
+@media(max-width:400px){
+  .pb-mini-tier{ width:52px; font-size:9px; }
+  .pb-mini{ font-size:11px; }
+}
 
 @media(max-width:820px){
   .product-hero{ grid-template-columns:1fr; gap:14px; }
@@ -5160,6 +5180,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="link"]      { --tier:#0E5468; --tier-2:#2B8AA6; --tier-ink:#E9F7FB; }
 #orderView .plan-option[data-tier="basic"]     { --tier:#475569; --tier-2:#6B7A90; --tier-ink:#F1F4F9; }
 #orderView .plan-option[data-tier="4k"]        { --tier:#0B4F6C; --tier-2:#1C9FC6; --tier-ink:#E8FBFF; }
+#orderView .plan-option[data-tier="gptpro"]    { --tier:#2A1B6B; --tier-2:#5B3FD6; --tier-ink:#F1EDFF; }
 
 /* ---------- the badge ---------- */
 #orderView .plan-tier-chip{
@@ -5181,6 +5202,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="vip"]      .plan-tier-chip::after,
 #orderView .plan-option[data-tier="go"]       .plan-tier-chip::after,
 #orderView .plan-option[data-tier="4k"]       .plan-tier-chip::after,
+#orderView .plan-option[data-tier="gptpro"]   .plan-tier-chip::after,
 #orderView .plan-option[data-tier="max"]      .plan-tier-chip::after{
   content:""; position:absolute; inset:0;
   background:linear-gradient(112deg,transparent 30%,rgba(255,255,255,.42) 48%,transparent 64%);
@@ -5224,6 +5246,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="vip"],
 #orderView .plan-option[data-tier="go"],
 #orderView .plan-option[data-tier="4k"],
+#orderView .plan-option[data-tier="gptpro"],
 #orderView .plan-option[data-tier="max"]{
   background-image:
     linear-gradient(180deg,var(--tier),var(--tier-2)),
@@ -5237,6 +5260,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="vip"].active,
 #orderView .plan-option[data-tier="go"].active,
 #orderView .plan-option[data-tier="4k"].active,
+#orderView .plan-option[data-tier="gptpro"].active,
 #orderView .plan-option[data-tier="max"].active{
   background-image:
     linear-gradient(180deg,var(--tier),var(--tier-2)),
