@@ -2674,6 +2674,58 @@ body.preview-mode{ overflow:hidden !important; }
 }
 .product-detail-row dd{ margin:0; font-size:14px; font-weight:750; color:#40372c; line-height:1.5; overflow-wrap:anywhere; }
 
+/* ---------- Product Benefits: collapsible feature/comparison box ----------
+   Sits right under the Warranty/Format/Note card. Collapsed by default so
+   it never lengthens the page for someone who's already decided -- see
+   togglePBPanel() in the script for why the panel's height always comes
+   from its own real content instead of a guessed number. */
+.product-benefits{ margin-top:14px; }
+.product-benefits.hidden{ display:none !important; }
+.pb-toggle{
+  width:100%; display:flex; align-items:center; gap:12px; text-align:left;
+  padding:14px 16px; border-radius:16px; border:1px solid rgba(118,80,184,.22);
+  background:linear-gradient(160deg,#faf8ff,#f2edfd); cursor:pointer; font:inherit; color:#241a44;
+}
+.pb-toggle-icon{
+  flex:0 0 auto; width:32px; height:32px; border-radius:10px; display:grid; place-items:center;
+  background:linear-gradient(135deg,#7650b8,#9470d4); color:#fff; box-shadow:0 4px 10px rgba(94,67,155,.28);
+}
+.pb-toggle-icon svg{ width:16px; height:16px; }
+.pb-toggle-text{ flex:1 1 auto; min-width:0; }
+.pb-toggle-text strong{ display:block; font-size:13.5px; font-weight:850; }
+.pb-toggle-text small{ display:block; margin-top:2px; font-size:11px; color:#786a9c; }
+.pb-chev{ width:17px; height:17px; flex:0 0 auto; color:#8a7ab0; transition:transform .2s ease; }
+.pb-toggle[aria-expanded="true"] .pb-chev{ transform:rotate(180deg); }
+
+.pb-panel{ overflow:hidden; transition:max-height .28s ease; }
+.pb-panel[data-collapsed="true"]{ max-height:0 !important; }
+.pb-inner{
+  margin-top:8px; padding:16px 16px 17px; border-radius:16px;
+  background:#fff; border:1px solid rgba(118,80,184,.16);
+}
+.pb-intro{ margin:0 0 13px; font-size:12.5px; line-height:1.6; color:#40372c; }
+
+.pb-sections{ display:flex; flex-direction:column; gap:13px; }
+.pb-section{ display:flex; gap:11px; }
+.pb-icon{
+  flex:0 0 auto; width:28px; height:28px; border-radius:9px; margin-top:1px;
+  display:grid; place-items:center; background:linear-gradient(135deg,#7650b8,#9470d4); color:#fff;
+}
+.pb-icon svg{ width:15px; height:15px; }
+.pb-section h5{ margin:0 0 3px; font-size:12.5px; font-weight:800; color:#241a44; }
+.pb-section p{ margin:0; font-size:12px; line-height:1.6; color:#5a4f78; }
+.pb-section p b{ color:#241a44; font-weight:800; }
+
+.pb-chip-label{ margin:15px 0 7px; font-size:10px; font-weight:900; letter-spacing:.06em; text-transform:uppercase; color:#9c8fbd; }
+.pb-chip-row{ display:flex; flex-wrap:wrap; gap:6px; }
+.pb-chip{
+  display:inline-flex; align-items:center; gap:4px; font-size:10.5px; font-weight:700;
+  padding:5px 10px; border-radius:999px;
+}
+.pb-chip svg{ width:10px; height:10px; }
+.pb-chip.good{ background:rgba(47,158,116,.12); color:#1f7d54; }
+.pb-chip.bad{ background:rgba(192,53,107,.10); color:#a12a58; }
+
 @media(max-width:820px){
   .product-hero{ grid-template-columns:1fr; gap:14px; }
   .product-gallery{ padding:18px; }
@@ -2682,6 +2734,8 @@ body.preview-mode{ overflow:hidden !important; }
   .product-details{ padding:16px 15px 18px; margin-top:14px; }
   .product-detail-rows{ grid-template-columns:1fr; gap:8px; }
   .product-price{ font-size:26px; }
+  .pb-toggle{ padding:12px 13px; }
+  .pb-inner{ padding:13px 13px 14px; }
 }
 
 /* Dark theme */
@@ -2719,6 +2773,21 @@ body:not(.light-mode) .product-price-label,
 body:not(.light-mode) .product-selected-label,
 body:not(.light-mode) .product-price-note,
 body:not(.light-mode) .product-assurances li{ color:#8497ad; }
+
+body:not(.light-mode) .pb-toggle{
+  background:linear-gradient(160deg,rgba(118,80,184,.16),rgba(10,12,27,.4));
+  border-color:rgba(148,112,212,.32); color:#f3fbff;
+}
+body:not(.light-mode) .pb-toggle-text small{ color:#a89bce; }
+body:not(.light-mode) .pb-chev{ color:#b7a8de; }
+body:not(.light-mode) .pb-inner{ background:rgba(255,255,255,.04); border-color:rgba(148,112,212,.22); }
+body:not(.light-mode) .pb-intro{ color:#dfe6ff; }
+body:not(.light-mode) .pb-section h5{ color:#f3fbff; }
+body:not(.light-mode) .pb-section p{ color:#a9b6d6; }
+body:not(.light-mode) .pb-section p b{ color:#f3fbff; }
+body:not(.light-mode) .pb-chip-label{ color:#8a7ab0; }
+body:not(.light-mode) .pb-chip.good{ background:rgba(63,207,156,.16); color:#6fe3ba; }
+body:not(.light-mode) .pb-chip.bad{ background:rgba(234,106,154,.16); color:#f090b3; }
 body:not(.light-mode) .product-secondary-btn{ background:rgba(255,255,255,.05); border-color:rgba(141,163,231,.22); color:#eaffff; }
 
 /* ---------- Page loader ---------- */
