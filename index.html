@@ -160,6 +160,7 @@
     <div class="news-feed-list" id="newsFeedList">
       <div class="news-feed-empty">Loading…</div>
     </div>
+    <div class="news-detail hidden" id="newsDetailView"></div>
   </div>
 
   <div id="authModalBackdrop" class="auth-modal-backdrop hidden">
@@ -3958,10 +3959,17 @@ function newsWhenText(post){
   if(days < 7) return `${days}d ago`;
   return when.toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
 }
+const NEWS_EYEBROW = `<span class="news-hero-eyebrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>News</span>`;
+function newsPostMetaHtml(post, withAuthor){
+  const author = withAuthor ? `<span class="news-post-author">GamePay Hub</span><span class="news-post-dot">·</span>` : "";
+  return `<div class="news-post-meta">${author}<span class="news-post-time">${newsWhenText(post)}</span></div>`;
+}
 // The primary image is shown at its natural proportions (never cropped)
 // so tall screenshots/collages -- very common in these posts -- are
 // never cut off. Extra images (2nd onward) are secondary, so a compact
-// cropped-square row is fine for those.
+// cropped-square row is fine for those. Used on the detail view only --
+// list previews use a single cropped thumbnail, same as any news site's
+// overview page (the full images are what you get by opening the post).
 function newsHeroImagesHtml(images){
   if(!images.length) return "";
   const [first, ...rest] = images;
@@ -3977,64 +3985,76 @@ function newsHeroImagesHtml(images){
     </div>
   `;
 }
-function newsHeroCard(post){
+// List view: every post -- featured one included -- is a preview only
+// (thumbnail + headline + a clamped excerpt), never the full text. The
+// point of the list is to see what's out there at a glance; opening a
+// post is what gets you the details. The featured post just gets a
+// bigger thumbnail and headline, same as any news homepage's lead story.
+function newsHeroPreview(post){
   const images = Array.isArray(post.images) ? post.images.slice(0, 8) : [];
+  const thumbHtml = images.length ? `<div class="news-hero-thumb-wrap"><img class="news-hero-thumb" src="${images[0]}" alt="" loading="lazy"></div>` : "";
   return `
-    <article class="news-hero-card">
-      ${newsHeroImagesHtml(images)}
+    <article class="news-hero-card" data-post-id="${post.id}">
+      ${thumbHtml}
       <div class="news-hero-body">
-        <span class="news-hero-eyebrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>News</span>
+        ${NEWS_EYEBROW}
         <h2 class="news-hero-title">${escapePreviewText(post.title)}</h2>
-        <div class="news-post-meta"><span class="news-post-author">GamePay Hub</span><span class="news-post-dot">·</span><span class="news-post-time">${newsWhenText(post)}</span></div>
-        <div class="news-hero-text">${escapePreviewText(post.body)}</div>
+        ${newsPostMetaHtml(post, true)}
+        <div class="news-hero-excerpt">${escapePreviewText(post.body)}</div>
       </div>
     </article>
   `;
 }
-function newsGridCard(post, idx){
+function newsGridPreview(post){
   const images = Array.isArray(post.images) ? post.images.slice(0, 8) : [];
   const thumbHtml = images.length ? `<div class="news-grid-thumb-wrap"><img class="news-grid-thumb" src="${images[0]}" alt="" loading="lazy"></div>` : "";
   return `
-    <article class="news-grid-card" data-idx="${idx}">
+    <article class="news-grid-card" data-post-id="${post.id}">
       ${thumbHtml}
       <div class="news-grid-card-body">
-        <div class="news-post-meta"><span class="news-post-time">${newsWhenText(post)}</span></div>
         <h3 class="news-grid-title">${escapePreviewText(post.title)}</h3>
+        ${newsPostMetaHtml(post, false)}
         <div class="news-grid-excerpt">${escapePreviewText(post.body)}</div>
-        <button type="button" class="news-grid-readmore">Read more ▾</button>
-        <div class="news-grid-full hidden">
-          ${images.length > 1 ? `
-            <div class="news-post-images" data-count="${images.length}">
-              ${images.map(url => `<div class="news-post-img-wrap"><img class="news-post-img" src="${url}" alt="" loading="lazy"></div>`).join("")}
-            </div>
-          ` : ""}
-          <button type="button" class="news-grid-collapse">Show less ▲</button>
-        </div>
       </div>
     </article>
   `;
 }
-function wireNewsGridExpand(container){
-  container.querySelectorAll(".news-grid-card").forEach(card => {
-    const excerpt = card.querySelector(".news-grid-excerpt");
-    const full = card.querySelector(".news-grid-full");
-    const readMoreBtn = card.querySelector(".news-grid-readmore");
-    const collapseBtn = card.querySelector(".news-grid-collapse");
-    const expand = () => {
-      excerpt?.classList.add("expanded");
-      readMoreBtn?.classList.add("hidden");
-      full?.classList.remove("hidden");
-    };
-    readMoreBtn?.addEventListener("click", expand);
-    excerpt?.addEventListener("click", expand);
-    collapseBtn?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      excerpt?.classList.remove("expanded");
-      readMoreBtn?.classList.remove("hidden");
-      full?.classList.add("hidden");
-      card.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    });
+// Detail view: the full thing -- every image at full size (never
+// cropped), the complete body text. Reachable by tapping any preview.
+function newsDetailHtml(post){
+  const images = Array.isArray(post.images) ? post.images.slice(0, 8) : [];
+  return `
+    <button type="button" class="news-detail-back" id="newsDetailBackBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to News
+    </button>
+    ${newsHeroImagesHtml(images)}
+    <div class="news-detail-body">
+      ${NEWS_EYEBROW}
+      <h1 class="news-detail-title">${escapePreviewText(post.title)}</h1>
+      ${newsPostMetaHtml(post, true)}
+      <div class="news-detail-text">${escapePreviewText(post.body)}</div>
+    </div>
+  `;
+}
+function wireNewsCardClicks(container){
+  container.querySelectorAll("[data-post-id]").forEach(card => {
+    card.addEventListener("click", () => openNewsDetail(card.dataset.postId));
   });
+}
+function openNewsDetail(postId){
+  const post = newsPostsData.find(p => String(p.id) === String(postId));
+  if(!post) return;
+  const detail = document.getElementById("newsDetailView");
+  detail.innerHTML = newsDetailHtml(post);
+  detail.classList.remove("hidden");
+  document.getElementById("newsFeedList").classList.add("hidden");
+  detail.scrollTop = 0;
+  document.getElementById("newsDetailBackBtn")?.addEventListener("click", closeNewsDetail);
+}
+function closeNewsDetail(){
+  document.getElementById("newsDetailView")?.classList.add("hidden");
+  document.getElementById("newsFeedList")?.classList.remove("hidden");
 }
 async function loadNewsFeed(){
   const list = document.getElementById("newsFeedList");
@@ -4046,14 +4066,15 @@ async function loadNewsFeed(){
   if(!data || !data.length){ list.innerHTML = '<div class="news-feed-empty">No posts yet -- check back soon.</div>'; return; }
   newsPostsData = data;
   const [featured, ...rest] = data;
-  const gridHtml = rest.length ? `<div class="news-section-label">More News</div><div class="news-grid">${rest.map(newsGridCard).join("")}</div>` : "";
-  list.innerHTML = newsHeroCard(featured) + gridHtml;
-  wireNewsGridExpand(list);
+  const gridHtml = rest.length ? `<div class="news-section-label">More News</div><div class="news-grid">${rest.map(newsGridPreview).join("")}</div>` : "";
+  list.innerHTML = newsHeroPreview(featured) + gridHtml;
+  wireNewsCardClicks(list);
   newsFeedLoaded = true;
 }
 function openNewsFeed(){
   document.getElementById("newsFeedView")?.classList.remove("hidden");
   document.body.classList.add("news-feed-open");
+  closeNewsDetail();
   loadNewsFeed();
 }
 function closeNewsFeed(){
