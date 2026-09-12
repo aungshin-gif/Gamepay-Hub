@@ -4044,8 +4044,12 @@ body.light-mode .lp-hero, .lp-hero{
 }
 
 /* ---------- the scene ---------- */
+/* Taller than the old clamp(230px,32vw,392px) -- the hero carousel now
+   shows full promotional posters (portrait, dense with text/logos)
+   instead of a small floating collage, and needs the room to stay
+   legible rather than being squeezed down. */
 .lp-hero .lp-scene{
-  position:relative; width:100%; height:clamp(230px,32vw,392px);
+  position:relative; width:100%; height:clamp(280px,54vw,460px);
   margin:0 0 -46px; pointer-events:none; user-select:none;
 }
 .lp-hero .lp-hills{ position:absolute; inset:auto 0 0; width:100%; height:100%; display:block; }
@@ -4112,25 +4116,25 @@ body.light-mode .lp-hero, .lp-hero{
    inconsistent sizes and read as unpolished rather than "store". One
    consistent image category, cross-fading on a timer, reads calmer and
    more like an actual storefront. */
+/* The three posters are dense, text-heavy promotional graphics (app
+   grids, gift-card art, CTAs baked into the image) at a fixed
+   1122x1402 ratio -- sized to that exact ratio and shown with
+   object-fit:contain so nothing is ever cropped off (a lesson learned
+   the hard way with the News feature's images: cropping an
+   infographic loses the actual content, not just some empty margin). */
 .lp-hero .lp-hero-carousel{
-  position:absolute; left:50%; top:4%; transform:translateX(-50%);
-  width:clamp(220px,34vw,360px); aspect-ratio:4/3;
-  border-radius:22px; overflow:hidden;
+  position:absolute; left:50%; top:2%; transform:translateX(-50%);
+  height:94%; aspect-ratio:1122/1402;
+  border-radius:16px; overflow:hidden;
   background:linear-gradient(155deg,#FFFFFF,#F1EAFC);
   box-shadow:0 22px 48px rgba(70,44,132,.28);
 }
 .lp-hero .lp-hero-slide{
   position:absolute; inset:0; margin:0; opacity:0; transition:opacity .7s ease;
-  display:flex; align-items:flex-end; justify-content:center;
 }
 .lp-hero .lp-hero-slide.is-active{ opacity:1; }
 .lp-hero .lp-hero-slide img{
-  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;
-}
-.lp-hero .lp-hero-slide figcaption{
-  position:relative; z-index:1; margin:0 0 12px; padding:6px 16px; border-radius:999px;
-  background:rgba(20,10,40,.72); color:#fff; font-size:12px; font-weight:800; letter-spacing:.02em;
-  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+  width:100%; height:100%; object-fit:contain; display:block;
 }
 .lp-hero .lp-hero-dots{
   position:absolute; left:50%; bottom:-20px; transform:translateX(-50%);
@@ -4142,8 +4146,7 @@ body.light-mode .lp-hero, .lp-hero{
 }
 .lp-hero .lp-hero-dot.is-active{ background:#7C5FC0; transform:scale(1.25); }
 @media(max-width:640px){
-  .lp-hero .lp-hero-carousel{ width:clamp(150px,42vw,210px); top:6%; border-radius:16px; }
-  .lp-hero .lp-hero-slide figcaption{ font-size:10px; padding:4px 11px; margin-bottom:8px; }
+  .lp-hero .lp-hero-carousel{ top:2%; border-radius:12px; }
 }
 
 /* ---------- clouds rolling across the base of the scene ---------- */
@@ -4215,7 +4218,7 @@ body.light-mode .lp-hero .lp-cta-ghost{
 /* ---------- phones: fewer objects, tighter scene ---------- */
 @media(max-width:760px){
   body.light-mode .lp-hero, .lp-hero{ padding:22px 0 66px !important; border-radius:24px !important; }
-  .lp-hero .lp-scene{ height:clamp(196px,52vw,236px); margin-bottom:-30px; }
+  .lp-hero .lp-scene{ height:clamp(300px,86vw,420px); margin-bottom:-30px; }
   .lp-hero .lp-hero-photo{ width:clamp(104px,29vw,132px); top:8%; padding:6px; border-radius:17px; }
   .lp-hero .lp-hero-photo img{ border-radius:12px; }
   /* keep six objects so the scene reads without crowding the photo */
@@ -5077,8 +5080,7 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
 
 /* ---------- 2. every hero logo shows on a phone ---------- */
 @media(max-width:760px){
-  .lp-hero .lp-scene{ height:clamp(268px,72vw,320px) !important; margin-bottom:-30px !important; }
-  .lp-hero .lp-hero-photo{ width:clamp(96px,26vw,120px) !important; top:5% !important; }
+  .lp-hero .lp-scene{ height:clamp(300px,86vw,420px) !important; margin-bottom:-30px !important; }
 
   /* nothing is hidden any more */
   .lp-hero .orb-canva, .lp-hero .orb-capcut, .lp-hero .orb-perp, .lp-hero .orb-yt,
