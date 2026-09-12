@@ -4148,6 +4148,16 @@ body.light-mode .lp-hero, .lp-hero{
 @media(max-width:640px){
   .lp-hero .lp-hero-carousel{ top:2%; border-radius:12px; }
 }
+/* On desktop the scene is much wider than it is tall, so a box kept at
+   the poster's own tall 1122:1402 ratio ends up small and square-ish
+   in the middle of a lot of empty space either side of it. Widen the
+   box itself on desktop -- object-fit:contain still shows the whole
+   poster uncropped, just letterboxed a little smaller within a wider
+   frame that actually fills the space. Mobile keeps the tighter ratio
+   from the base rule, since that's already the right fit there. */
+@media(min-width:761px){
+  .lp-hero .lp-hero-carousel{ aspect-ratio:3/2; }
+}
 
 /* ---------- clouds rolling across the base of the scene ---------- */
 .lp-hero .lp-clouds{ position:absolute; inset:auto 0 -8px; height:27%; }
