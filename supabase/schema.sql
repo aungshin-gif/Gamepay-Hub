@@ -577,6 +577,9 @@ create table if not exists public.stock_overrides (
 alter table public.stock_overrides add column if not exists warranty text;
 alter table public.stock_overrides add column if not exists format text;
 alter table public.stock_overrides add column if not exists note text;
+-- Percent off this plan's price (0-95), admin-set from the Stock list.
+-- Null/0 means no discount -- the storefront keeps charging plain price.
+alter table public.stock_overrides add column if not exists discount_percent numeric;
 alter table public.stock_overrides enable row level security;
 
 -- Anyone (including logged-out shoppers) needs to read this to see

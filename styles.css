@@ -6386,3 +6386,20 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 }
 .lp-hero .lp-hero-browse:hover{ background:#171523 !important; transform:translateY(-1px); }
 .lp-hero .lp-hero-browse span{ margin-left:2px; }
+
+/* ===== discount system: badges, struck-through price, hero "On sale" strip ===== */
+/* Green "savings" tone, distinct from HOT's orange -- same green already
+   used for the discount badge in the plan selector (#orderView), so the
+   color means the same thing everywhere it shows up. */
+.products .pc-flag.pc-flag-discount{
+  background:linear-gradient(140deg,#2FBE8C,#1F9E74);
+}
+.products .price-from .price-original{
+  font-size:9px; font-weight:800; color:#A29CBA;
+  text-decoration:line-through; text-decoration-thickness:1.4px; text-decoration-color:#c9c3de;
+}
+#orderView .plan-option .plan-price-original{
+  display:block; font-size:11px; font-weight:700; color:var(--muted-2,#8a8398);
+  text-decoration:line-through; text-decoration-thickness:1.4px;
+}
+.lp-discount-section{ margin-top:22px; }
