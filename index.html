@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=6">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -315,6 +315,12 @@
           <div class="lp-hot" aria-label="Hot products">
             <div class="lp-hot-track products" id="lpHotTrack"></div>
           </div>
+          <div class="lp-discount-section hidden" id="lpDiscountSection">
+            <span class="lp-hot-label">&#127991;&#65039; On sale</span>
+            <div class="lp-hot">
+              <div class="lp-hot-track products" id="lpDiscountTrack"></div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -373,7 +379,6 @@
     <div id="catalogShell" class="catalog-shell hidden">
       <div class="products-head">
         <button id="backToLandingBtn" class="product-crumb-back" type="button">← Back to home</button>
-        <h2>All products</h2>
       </div>
       <div id="catalogView" class="catalog-view">
         <div class="search-wrap">
@@ -2357,15 +2362,29 @@ if(document.readyState === "loading"){
       return `${Number(n).toLocaleString()} Ks`;
     }
 
+    function getCheapestPlan(product){
+      const priced = product.plans.filter(p => Number(p.price) > 0);
+      if(!priced.length) return null;
+      return priced.reduce((a, b) => Number(a.price) <= Number(b.price) ? a : b);
+    }
     function getCheapestPrice(product){
-      const priced = product.plans.map(p => Number(p.price || 0)).filter(v => v > 0);
-      return priced.length ? Math.min(...priced) : 0;
+      const plan = getCheapestPlan(product);
+      return plan ? Number(plan.price) : 0;
     }
 
     // Admin-editable price/stock overlay on top of the static catalog above.
     // A plan the admin has never touched keeps using the catalog's own
     // price/outOfStock exactly as before -- only rows present in
     // public.stock_overrides change anything here.
+    //
+    // discount_percent (0-95, admin-set) applies on top of whatever price
+    // this plan would otherwise have (the catalog's own, or an override).
+    // plan.price always ends up as the actual chargeable amount -- every
+    // existing cart/checkout calculation elsewhere already just reads
+    // plan.price, so none of that had to change. Only plan.originalPrice +
+    // plan.discountPercent are new, and only present at all when a real
+    // discount is active, for the few places that show a struck-through
+    // "before" price next to a "-30%" badge.
     function applyStockOverrides(rows){
       if(!rows || !rows.length) return;
       const byKey = new Map();
@@ -2374,17 +2393,33 @@ if(document.readyState === "loading"){
         product.plans.forEach(plan => {
           const row = byKey.get(`${product.id}::${plan.name}`);
           if(!row) return;
+          // Captured once, before any override/discount math touches
+          // plan.price -- re-applying overrides (e.g. a second data load)
+          // must always discount from the real catalog price, never from
+          // a previous call's already-discounted plan.price.
+          if(plan._catalogPrice == null) plan._catalogPrice = Number(plan.price) || 0;
+          let basePrice = plan._catalogPrice;
           if(row.price != null){
-            const newPrice = Number(row.price);
-            if(newPrice > 0 && newPrice !== Number(plan.price)){
-              // The plan card, and the final order message, both display the
-              // price digits embedded in plan.name -- not plan.price -- so
-              // that text has to be kept in sync too, not just the number.
-              const priceMatch = plan.name.match(/([0-9][0-9,]*)\s*(ks|ကျပ်)/i);
-              if(priceMatch) plan.name = plan.name.replace(priceMatch[0], `${newPrice} ${priceMatch[2]}`);
-              plan.price = newPrice;
-            }
+            const overridePrice = Number(row.price);
+            if(overridePrice > 0) basePrice = overridePrice;
           }
+          const pct = Number(row.discount_percent) > 0 ? Math.min(95, Number(row.discount_percent)) : 0;
+          const finalPrice = pct > 0 ? Math.round(basePrice * (1 - pct / 100)) : basePrice;
+          if(finalPrice > 0 && finalPrice !== Number(plan.price)){
+            // The plan card, and the final order message, both display the
+            // price digits embedded in plan.name -- not plan.price -- so
+            // that text has to be kept in sync too, not just the number.
+            const priceMatch = plan.name.match(/([0-9][0-9,]*)\s*(ks|ကျပ်)/i);
+            if(priceMatch) plan.name = plan.name.replace(priceMatch[0], `${finalPrice} ${priceMatch[2]}`);
+          }
+          if(pct > 0){
+            plan.originalPrice = basePrice;
+            plan.discountPercent = pct;
+          } else {
+            delete plan.originalPrice;
+            delete plan.discountPercent;
+          }
+          plan.price = finalPrice;
           plan.outOfStock = Boolean(row.out_of_stock);
           plan.lowStock = Boolean(row.low_stock);
           // Warranty/Format/Note are optional overrides -- a blank value in
@@ -2404,6 +2439,8 @@ if(document.readyState === "loading"){
         if(error || !data || !data.length) return;
         applyStockOverrides(data);
         renderProducts();
+        renderHotProducts();
+        renderDiscountedProducts();
         if(currentProduct) renderOrder();
       }catch(err){
         console.error("Stock override fetch failed:", err);
@@ -2432,6 +2469,7 @@ if(document.readyState === "loading"){
         applyProductOverrides(data);
         renderProducts();
         renderHotProducts();
+        renderDiscountedProducts();
       }catch(err){
         console.error("Product override fetch failed:", err);
       }
@@ -2478,7 +2516,9 @@ if(document.readyState === "loading"){
     function buildProductCard(product, onSelect){
       const card = document.createElement("div");
       card.className = "card";
-      const startPrice = getCheapestPrice(product);
+      const cheapestPlan = getCheapestPlan(product);
+      const startPrice = cheapestPlan ? Number(cheapestPlan.price) : 0;
+      const discountPct = cheapestPlan?.discountPercent || 0;
       const allOut = product.plans.every(p=>p.outOfStock);
       const anyOut = product.plans.some(p=>p.outOfStock);
       const statusClass = allOut ? "status-coming" : (anyOut ? "status-limited" : "status-available");
@@ -2486,13 +2526,16 @@ if(document.readyState === "loading"){
       const priceNum = startPrice > 0 ? formatKs(startPrice).replace(/\s*Ks$/,"") : "";
       const planCount = product.plans.length;
       card.dataset.cat = product.category || "Other";
+      const flagHtml = product.top
+        ? '<span class="pc-flag" title="Popular">HOT</span>'
+        : (discountPct ? `<span class="pc-flag pc-flag-discount" title="Discount">-${discountPct}%</span>` : '');
       card.innerHTML = `
-  ${product.top ? '<span class="pc-flag" title="Popular">HOT</span>' : ''}
+  ${flagHtml}
   <div class="pc-stage"><div class="icon-wrap">${renderIcon(product)}</div></div>
   <div class="pc-body">
     <span class="pc-cat">${product.category || "Store"}</span>
     <h3 class="pc-name">${product.name}</h3>
-    <p class="price-from">${priceNum ? `<small>From</small><strong>${priceNum}</strong><em>Ks</em>` : `<strong class="pc-ask">Ask us</strong>`}</p>
+    <p class="price-from">${priceNum ? `${discountPct ? `<s class="price-original">${formatKs(cheapestPlan.originalPrice)}</s>` : `<small>From</small>`}<strong>${priceNum}</strong><em>Ks</em>` : `<strong class="pc-ask">Ask us</strong>`}</p>
     <span class="pc-plans"><i class="pc-dot ${statusClass}"></i>${planCount} plan${planCount === 1 ? "" : "s"}</span>
   </div>
   <button class="buy-now-btn" type="button"><span>Buy now</span></button>
@@ -2528,6 +2571,24 @@ if(document.readyState === "loading"){
       if(!hot.length) return;
       const frag = document.createDocumentFragment();
       hot.concat(hot).forEach(product => frag.appendChild(buildProductCard(product, openHotProduct)));
+      track.appendChild(frag);
+    }
+
+    // Same ticker mechanism as Hot Products, but for products whose cheapest
+    // plan currently carries an admin-set discount (see applyStockOverrides).
+    // Empty until an admin actually discounts something, so -- unlike Hot
+    // Products, which always has entries -- the whole section (label
+    // included) hides itself rather than showing an empty strip.
+    function renderDiscountedProducts(){
+      const section = document.getElementById("lpDiscountSection");
+      const track = document.getElementById("lpDiscountTrack");
+      if(!section || !track) return;
+      track.innerHTML = "";
+      const discounted = products.filter(product => !product.isGuide && getCheapestPlan(product)?.discountPercent > 0);
+      section.classList.toggle("hidden", !discounted.length);
+      if(!discounted.length) return;
+      const frag = document.createDocumentFragment();
+      discounted.concat(discounted).forEach(product => frag.appendChild(buildProductCard(product, openHotProduct)));
       track.appendChild(frag);
     }
     function hidePaymentQuick(){
@@ -2735,7 +2796,7 @@ planList.style.display = plansOpen ? "grid" : "none";
   "plan-option" +
   (index === currentPlanIndex ? " active" : "") +
   (plan.bestSeller ? " best-seller" : "") +
-  (plan.discount ? " discount" : "") +
+  (plan.discount || plan.discountPercent ? " discount" : "") +
   (plan.outOfStock ? " out-stock" : "") +
   (!plan.outOfStock && plan.lowStock ? " low-stock" : "");
 
@@ -2793,9 +2854,9 @@ el.className += accessClass;
 el.innerHTML = `
   ${watermark}
   ${plan.outOfStock ? '<span class="out-stock-badge">⛔ Out of Stock</span>' : (plan.lowStock ? '<span class="low-stock-badge">⚠️ Low Stock</span>' : '')}
-  ${plan.discount ? '<span class="discount-badge">💸 Discount</span>' : ''}
+  ${(plan.discount || plan.discountPercent) ? `<span class="discount-badge">💸 ${plan.discountPercent ? "-" + plan.discountPercent + "%" : "Discount"}</span>` : ''}
   ${plan.bestSeller ? '<span class="best-seller-badge">🔥 Best Seller</span>' : ''}
-  <div class="plan-professional"><div class="plan-primary-line"><span class="plan-field-label">Plan</span><strong class="plan-professional-name">${planName}</strong><span class="plan-chip-row">${tierChipFor(tier)}${typeOf(plan) ? "" : ownMailLabel}</span></div><div class="plan-type-line">${typeOf(plan) ? `<span class="plan-field-label">Type</span><strong class="plan-type-value">${typeOf(plan)}</strong>` : ""}</div><div class="plan-secondary-line${plan.noDuration ? " no-duration" : ""}">${plan.noDuration ? "" : `<div><span class="plan-field-label">Duration</span><strong>${durationText}</strong></div>`}<div class="plan-price-block"><span class="plan-field-label">Price</span><strong>${priceText}</strong></div></div></div>
+  <div class="plan-professional"><div class="plan-primary-line"><span class="plan-field-label">Plan</span><strong class="plan-professional-name">${planName}</strong><span class="plan-chip-row">${tierChipFor(tier)}${typeOf(plan) ? "" : ownMailLabel}</span></div><div class="plan-type-line">${typeOf(plan) ? `<span class="plan-field-label">Type</span><strong class="plan-type-value">${typeOf(plan)}</strong>` : ""}</div><div class="plan-secondary-line${plan.noDuration ? " no-duration" : ""}">${plan.noDuration ? "" : `<div><span class="plan-field-label">Duration</span><strong>${durationText}</strong></div>`}<div class="plan-price-block"><span class="plan-field-label">Price</span>${plan.discountPercent ? `<s class="plan-price-original">${formatKs(plan.originalPrice)}</s>` : ''}<strong>${priceText}</strong></div></div></div>
 `;
 if(plan.outOfStock){
   el.onclick = null;
@@ -4480,6 +4541,7 @@ orderBtn.addEventListener("click", submitOrder);
 renderCategories();
 renderProducts();
 renderHotProducts();
+renderDiscountedProducts();
 renderPayments();
 loadStockOverrides();
 loadProductOverrides();

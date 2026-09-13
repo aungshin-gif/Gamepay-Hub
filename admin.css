@@ -339,8 +339,7 @@
   }
   .stock-plan-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
   .stock-plan-name{ font-size:13px; font-weight:700; flex:1 1 240px; min-width:0; line-height:1.4; }
-  .stock-plan-top-right{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-  .stock-plan-top-right input[type="number"]{ width:110px; margin-bottom:0; }
+  .stock-status-chips{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
   .stock-custom-price{ font-size:11.5px; color:var(--muted-2); font-style:italic; }
   .stock-chip{
     display:inline-flex; align-items:center; gap:5px; padding:7px 11px; border-radius:999px;
@@ -350,6 +349,23 @@
   .stock-chip.on.out{ background:var(--bad-soft); border-color:#f3c6c6; color:var(--bad); }
   .stock-chip.on.low{ background:#fff3d6; border-color:#f0d68a; color:#96720a; }
   .stock-chip.on.hot{ background:#ffe4d1; border-color:#ffb787; color:#c2410c; }
+  /* Price / Discount % / Now price -- a live calculator, all three boxes
+     the same clearly-labeled style as Warranty/Format/Note below, in their
+     own row so pricing reads as one clear group instead of the old price
+     input sitting inline with the stock-status chips. */
+  .stock-plan-pricing{
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:12px;
+  }
+  @media(max-width:620px){ .stock-plan-pricing{ grid-template-columns:1fr 1fr; } }
+  .stock-now-price-field{
+    padding:9px 12px; border-radius:9px; border:1px solid var(--border-strong); background:#fbfbfe;
+    display:flex; flex-direction:column; justify-content:center;
+  }
+  .stock-now-price-value{ font-size:14px; font-weight:800; color:var(--ink); }
+  .stock-now-price-field.has-discount{
+    background:#EAFBF4; border-color:#a8e6cc;
+  }
+  .stock-now-price-field.has-discount .stock-now-price-value{ color:#1F9E74; }
   /* One clearly-labeled box per detail, laid out in its own row instead of
      everything squeezed onto one line -- Warranty/Format share a row on
      wide screens, Note always gets the full width it needs to be readable. */
@@ -362,11 +378,11 @@
     font-size:10.5px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--muted-2);
   }
   .stock-field-label .icon{ width:13px; height:13px; color:var(--accent); }
-  .stock-field input[type="text"], .stock-field textarea{
+  .stock-field input[type="text"], .stock-field input[type="number"], .stock-field textarea{
     width:100%; padding:9px 12px; border-radius:9px; border:1px solid var(--border-strong);
     background:#fbfbfe; color:var(--ink); font-size:12.5px; font-family:inherit; margin-bottom:0;
   }
-  .stock-field input[type="text"]:focus, .stock-field textarea:focus{ background:#fff; }
+  .stock-field input[type="text"]:focus, .stock-field input[type="number"]:focus, .stock-field textarea:focus{ background:#fff; }
   .stock-note-input{ min-height:76px; line-height:1.6; resize:vertical; }
   .stock-field-hint{ font-size:10.5px; color:var(--muted-2); margin-top:5px; }
   .stock-plan-actions{

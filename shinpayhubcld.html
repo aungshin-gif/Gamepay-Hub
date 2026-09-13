@@ -13,7 +13,7 @@
        this a browser that already has admin.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time admin.css changes. -->
-  <link rel="stylesheet" href="admin.css?v=1">
+  <link rel="stylesheet" href="admin.css?v=2">
 
 </head>
 <body>
@@ -394,6 +394,8 @@ const ICON_GIFT = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="cur
 const ICON_SHIELD = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>`;
 const ICON_TAG = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L2.83 12.83a2 2 0 0 1 0-2.83L10 3a2 2 0 0 1 1.41-.59H19a2 2 0 0 1 2 2v7.59a2 2 0 0 1-.41 1.41Z"/><circle cx="15.5" cy="8.5" r="1.5"/></svg>`;
 const ICON_NOTE = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>`;
+const ICON_PRICE = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1.4 1.1-2.5 2.5-2.5s2.5.7 2.5 2c0 2-5 1.5-5 4 0 1.3 1.1 2 2.5 2s2.5-1.1 2.5-2.5"/></svg>`;
+const ICON_PERCENT = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>`;
 function randomCouponCode(){ return "GPH" + Math.random().toString(36).slice(2, 8).toUpperCase(); }
 function escapeHtml(value){
   return String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
@@ -1635,30 +1637,53 @@ function cleanNoteLines(text){
   return lines.join("\n");
 }
 
+// Now price is just price * (1 - pct/100), rounded to a whole Ks -- shared
+// by the row's live-updating preview and the initial render below it.
+function computeNowPrice(price, pct){
+  const p = Number(price) || 0;
+  const d = Math.min(95, Math.max(0, Number(pct) || 0));
+  return d > 0 ? Math.round(p * (1 - d / 100)) : p;
+}
+
 function renderStockPlanRow(product, plan){
   const key = stockRowKey(product.id, plan.name);
   const override = stockOverridesCache[key];
   const outOfStock = override ? override.out_of_stock : plan.outOfStock;
   const lowStock = override ? override.low_stock : false;
   const priceVal = override && override.price != null ? override.price : plan.price;
+  const discountVal = override?.discount_percent || "";
   const warrantyVal = override?.warranty || "";
   const formatVal = override?.format || "";
   const noteVal = override?.note || "";
   const warrantyPlaceholder = `Current: ${plan.warranty || "not set"}`;
   const formatPlaceholder = `Current: ${plan.format || "not set"}`;
   const notePlaceholder = plan.note ? `Current:\n${plan.note}` : "Shown to customers on this plan's detail page";
+  const nowPrice = computeNowPrice(priceVal, discountVal);
   return `
     <div class="stock-plan-card">
       <div class="stock-plan-top">
         <div class="stock-plan-name">${escapeHtml(plan.name)}</div>
-        <div class="stock-plan-top-right">
-          ${plan.custom
-            ? `<span class="stock-custom-price">Custom pricing</span>`
-            : `<input type="number" min="0" class="stock-price-input" value="${priceVal != null ? priceVal : ""}" placeholder="Price (Ks)">`}
+        <div class="stock-status-chips">
           <span class="stock-chip out ${outOfStock ? "on" : ""}" data-field="out_of_stock">${ICON_X} Out of Stock</span>
           <span class="stock-chip low ${lowStock ? "on" : ""}" data-field="low_stock">⚠️ Low Stock</span>
         </div>
       </div>
+      ${plan.custom ? `<div class="stock-plan-pricing"><span class="stock-custom-price">Custom pricing -- no fixed price to discount</span></div>` : `
+      <div class="stock-plan-pricing">
+        <label class="stock-field stock-price-field">
+          <span class="stock-field-label">${ICON_PRICE}Price</span>
+          <input type="number" min="0" class="stock-price-input" value="${priceVal != null ? priceVal : ""}" placeholder="Price (Ks)">
+        </label>
+        <label class="stock-field stock-price-field">
+          <span class="stock-field-label">${ICON_PERCENT}Discount %</span>
+          <input type="number" min="0" max="95" class="stock-discount-input" value="${discountVal}" placeholder="0">
+        </label>
+        <div class="stock-field stock-now-price-field ${discountVal ? "has-discount" : ""}">
+          <span class="stock-field-label">🏷️ Now price</span>
+          <strong class="stock-now-price-value">${nowPrice.toLocaleString()} Ks</strong>
+        </div>
+      </div>
+      `}
       <div class="stock-detail-fields">
         <label class="stock-field">
           <span class="stock-field-label">${ICON_SHIELD}Warranty</span>
@@ -1687,6 +1712,9 @@ function wireStockPlanRow(rowEl, { product, plan }){
   const outChip = rowEl.querySelector('.stock-chip.out');
   const lowChip = rowEl.querySelector('.stock-chip.low');
   const priceInput = rowEl.querySelector('.stock-price-input');
+  const discountInput = rowEl.querySelector('.stock-discount-input');
+  const nowPriceField = rowEl.querySelector('.stock-now-price-field');
+  const nowPriceValue = rowEl.querySelector('.stock-now-price-value');
   const warrantyInput = rowEl.querySelector('.stock-warranty-input');
   const formatInput = rowEl.querySelector('.stock-format-input');
   const noteInput = rowEl.querySelector('.stock-note-input');
@@ -1697,6 +1725,18 @@ function wireStockPlanRow(rowEl, { product, plan }){
   outChip?.addEventListener("click", () => outChip.classList.toggle("on"));
   lowChip?.addEventListener("click", () => lowChip.classList.toggle("on"));
 
+  // Recomputes as you type, in either field -- a calculator, not just a
+  // static readout, so admin sees "Now price" update live before saving.
+  function refreshNowPrice(){
+    if(!nowPriceValue) return;
+    const pct = Number(discountInput?.value) || 0;
+    const now = computeNowPrice(priceInput?.value, pct);
+    nowPriceValue.textContent = now.toLocaleString() + " Ks";
+    nowPriceField?.classList.toggle("has-discount", pct > 0);
+  }
+  priceInput?.addEventListener("input", refreshNowPrice);
+  discountInput?.addEventListener("input", refreshNowPrice);
+
   // Discard re-reads the last-saved override (or the catalog default, if
   // this plan has never been overridden) instead of reloading the whole
   // Stock list -- cheap to back out of a typo without losing your place.
@@ -1704,11 +1744,13 @@ function wireStockPlanRow(rowEl, { product, plan }){
     const key = stockRowKey(product.id, plan.name);
     const override = stockOverridesCache[key];
     if(priceInput) priceInput.value = override && override.price != null ? override.price : (plan.price ?? "");
+    if(discountInput) discountInput.value = override?.discount_percent || "";
     outChip?.classList.toggle("on", override ? Boolean(override.out_of_stock) : Boolean(plan.outOfStock));
     lowChip?.classList.toggle("on", override ? Boolean(override.low_stock) : false);
     warrantyInput.value = override?.warranty || "";
     formatInput.value = override?.format || "";
     noteInput.value = override?.note || "";
+    refreshNowPrice();
     msgEl.classList.remove("error");
     msgEl.textContent = "Discarded";
     setTimeout(() => { if(msgEl.textContent === "Discarded") msgEl.textContent = ""; }, 1500);
@@ -1720,6 +1762,7 @@ function wireStockPlanRow(rowEl, { product, plan }){
       product_id: product.id,
       plan_name: plan.name,
       price: priceInput ? (priceInput.value === "" ? null : Number(priceInput.value)) : null,
+      discount_percent: discountInput ? (discountInput.value === "" ? null : Math.min(95, Math.max(0, Number(discountInput.value)))) : null,
       out_of_stock: outChip.classList.contains("on"),
       low_stock: lowChip.classList.contains("on"),
       warranty: warrantyInput.value.trim() || null,
@@ -1728,6 +1771,7 @@ function wireStockPlanRow(rowEl, { product, plan }){
       updated_at: new Date().toISOString(),
     };
     noteInput.value = row.note || "";
+    if(discountInput && row.discount_percent != null) discountInput.value = row.discount_percent;
     saveBtn.disabled = true;
     msgEl.classList.remove("error");
     msgEl.textContent = "";
@@ -1737,6 +1781,7 @@ function wireStockPlanRow(rowEl, { product, plan }){
     saveBtn.disabled = false;
     if(error){ msgEl.classList.add("error"); msgEl.textContent = "Failed: " + error.message; return; }
     stockOverridesCache[key] = row;
+    refreshNowPrice();
     msgEl.textContent = "Saved";
     setTimeout(() => { if(msgEl.textContent === "Saved") msgEl.textContent = ""; }, 2000);
   });
