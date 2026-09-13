@@ -6351,7 +6351,14 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
   gap:14px !important; width:max-content;
   animation:lpHotScroll 52s linear infinite;
 }
-.lp-hero .lp-hot:hover .lp-hot-track{ animation-play-state:paused; }
+/* Pause-on-hover only for real pointers -- on touch, tapping a card
+   triggers :hover with no matching "leave" event, so the strip would
+   pause on the first tap and never resume (this is exactly the "presses
+   one, stops, then pressing another doesn't move it again" bug: it
+   never restarts because :hover is still "on" from the very first tap). */
+@media(hover:hover) and (pointer:fine){
+  .lp-hero .lp-hot:hover .lp-hot-track{ animation-play-state:paused; }
+}
 @keyframes lpHotScroll{
   from{ transform:translateX(0); }
   to{ transform:translateX(-50%); }

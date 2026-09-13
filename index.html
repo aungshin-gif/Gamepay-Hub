@@ -59,7 +59,13 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
+  <!-- The hero's first carousel slide is above the fold and the page's
+       largest image -- preloading it (on top of loading="eager" +
+       fetchpriority="high" on the <img> itself) means the browser starts
+       fetching it immediately instead of only discovering it once it
+       finishes parsing the body. -->
+  <link rel="preload" as="image" href="hero-digital-premium.jpg" fetchpriority="high">
 
 
 
@@ -284,13 +290,13 @@
           <div class="lp-stage">
             <div class="lp-hero-carousel" id="lpHeroCarousel">
               <figure class="lp-hero-slide is-active" data-slide="0">
-                <img src="hero-digital-premium.png" alt="Digital Premium Store" loading="eager" decoding="async">
+                <img src="hero-digital-premium.jpg" alt="Digital Premium Store" loading="eager" decoding="async" fetchpriority="high">
               </figure>
               <figure class="lp-hero-slide" data-slide="1">
-                <img src="hero-games.png" alt="Game Top Up Store" loading="lazy" decoding="async">
+                <img src="hero-channel-join.jpg" alt="Join the Gamepay Hub Telegram channel" loading="lazy" decoding="async">
               </figure>
               <figure class="lp-hero-slide" data-slide="2">
-                <img src="hero-giftcard.png" alt="Gift Card Marketplace" loading="lazy" decoding="async">
+                <img src="hero-giftcard.jpg" alt="Gift Card Marketplace" loading="lazy" decoding="async">
               </figure>
               <div class="lp-hero-dots">
                 <span class="lp-hero-dot is-active" data-dot="0"></span>
