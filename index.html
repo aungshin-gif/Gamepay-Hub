@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=8">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -2621,7 +2621,7 @@ if(document.readyState === "loading"){
 
     function buildDiscountPlanCard({ product, plan }, onSelect){
       const card = document.createElement("div");
-      card.className = "card";
+      card.className = "card discount-poster";
       const tierLabel = TIER_LABEL[planTier(plan)] || "";
       const priceNum = formatKs(plan.price).replace(/\s*Ks$/, "");
       card.dataset.cat = product.category || "Other";
@@ -2633,11 +2633,8 @@ if(document.readyState === "loading"){
     <h3 class="pc-name">${product.name}</h3>
     <p class="price-from"><s class="price-original">${formatKs(plan.originalPrice)}</s><strong>${priceNum}</strong><em>Ks</em></p>
   </div>
-  <button class="buy-now-btn" type="button"><span>Buy now</span></button>
 `;
       card.onclick = () => onSelect(product, plan);
-      const buyBtn = card.querySelector(".buy-now-btn");
-      buyBtn.onclick = (event) => { event.stopPropagation(); onSelect(product, plan); showToast(`${product.name} added to order`); };
       return card;
     }
 

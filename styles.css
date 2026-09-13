@@ -6405,3 +6405,19 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
   text-decoration:line-through; text-decoration-thickness:1.4px;
 }
 .catalog-discount-section{ margin:4px 0 18px; }
+
+/* ===== discount-poster-card ===== */
+/* The "On sale" strip is a promo poster, not a mini storefront -- no Buy
+   Now bar, tighter footprint so it reads as a quick glance, not a card
+   the shopper has to shop from. Clicking the whole tile still opens it. */
+.lp-hot-track .discount-poster{
+  flex:0 0 128px !important; width:128px !important; max-width:128px !important;
+}
+.discount-poster .pc-stage{ padding:14px 8px 10px; }
+.discount-poster .pc-stage .icon-wrap{ width:44px !important; height:44px !important; }
+.discount-poster .pc-body{ padding:8px 8px 12px; gap:1px; text-align:center; }
+.discount-poster .pc-cat{ font-size:7px; }
+.discount-poster .pc-name{ font-size:10px; }
+.discount-poster .price-from{ margin-top:5px !important; flex-wrap:wrap; justify-content:center; }
+.discount-poster .price-from strong{ font-size:13px; }
+.discount-poster .price-from .price-original{ font-size:7.5px; }
