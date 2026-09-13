@@ -1746,6 +1746,14 @@ body.order-mode .order-view{margin-top:8px!important}
 body.order-mode .catalog-shell{display:none!important;visibility:hidden!important;height:0!important;overflow:hidden!important;margin:0!important;padding:0!important}
 body.order-mode .compact-header{margin-bottom:6px!important}
 body.order-mode .order-view{display:block!important;visibility:visible!important;opacity:1!important}
+/* Account/Notice/My Orders/Message are meant to read as standalone pages,
+   the same way News and the Noti hub already do (those cover the header
+   entirely, being full-screen overlays) -- unlike them these four are
+   normal in-flow content, so the header has to be hidden explicitly
+   instead of just being painted over. Scoped to its own class rather
+   than the broader order-mode, which also covers the product/checkout
+   flow where the header should stay reachable. */
+body.hub-page-mode .compact-header{display:none!important}
 
 /* Final high-contrast dark card palette; declared after every legacy theme block. */
 @media(max-width:640px){

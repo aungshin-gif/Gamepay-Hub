@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=14">
+  <link rel="stylesheet" href="styles.css?v=15">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -2147,6 +2147,7 @@ function returnFromNotiSubview(){
   }
 }
 function returnToStoreHome(){
+  document.body.classList.remove("hub-page-mode");
   if(cameFromLanding){
     cameFromLanding = false;
     showLandingPage();
@@ -3592,7 +3593,7 @@ async function openSupportMessageView(){
   cameFromLanding = !landingShell.classList.contains("hidden");
   landingShell.classList.add("hidden");
   catalogShell.classList.remove("hidden");
-  document.body.classList.add("products-mode", "order-mode");
+  document.body.classList.add("products-mode", "order-mode", "hub-page-mode");
   document.body.classList.remove("preview-mode", "dashboard-mode");
   document.documentElement.classList.remove("dashboard-mode");
   catalogView.classList.add("hidden");
@@ -4045,7 +4046,7 @@ async function openMyOrdersView(){
   landingShell.classList.add("hidden");
   catalogShell.classList.remove("hidden");
   document.body.classList.add("products-mode");
-  document.body.classList.add("order-mode");
+  document.body.classList.add("order-mode", "hub-page-mode");
   document.body.classList.remove("preview-mode", "dashboard-mode");
   document.documentElement.classList.remove("dashboard-mode");
   catalogView.classList.add("hidden");
@@ -4108,7 +4109,10 @@ function refreshNotiTopBadge(){
 }
 // Noti used to be a small dropdown menu; it's now a full page (same
 // overlay pattern as News) listing Notice/My Orders/Message as rows.
-function openNotiHub(){ document.getElementById("notiHubView")?.classList.remove("hidden"); }
+function openNotiHub(){
+  document.body.classList.remove("hub-page-mode");
+  document.getElementById("notiHubView")?.classList.remove("hidden");
+}
 function closeNotiHub(){ document.getElementById("notiHubView")?.classList.add("hidden"); }
 notiBtn?.addEventListener("click", async (e) => {
   e.stopPropagation();
@@ -4366,7 +4370,7 @@ async function openNoticeView(){
   landingShell.classList.add("hidden");
   catalogShell.classList.remove("hidden");
   document.body.classList.add("products-mode");
-  document.body.classList.add("order-mode");
+  document.body.classList.add("order-mode", "hub-page-mode");
   document.body.classList.remove("preview-mode", "dashboard-mode");
   document.documentElement.classList.remove("dashboard-mode");
   catalogView.classList.add("hidden");
@@ -4492,7 +4496,7 @@ async function openAccountView(){
   cameFromLanding = !landingShell.classList.contains("hidden");
   landingShell.classList.add("hidden");
   catalogShell.classList.remove("hidden");
-  document.body.classList.add("products-mode", "order-mode");
+  document.body.classList.add("products-mode", "order-mode", "hub-page-mode");
   document.body.classList.remove("preview-mode", "dashboard-mode");
   document.documentElement.classList.remove("dashboard-mode");
   catalogView.classList.add("hidden");
