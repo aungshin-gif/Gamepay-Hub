@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=4">
 
 
 
@@ -297,6 +297,7 @@
                 <span class="lp-hero-dot" data-dot="1"></span>
                 <span class="lp-hero-dot" data-dot="2"></span>
               </div>
+              <button type="button" class="lp-hero-browse" id="lpHeroBrowseBtn">Browse <span>&rarr;</span></button>
             </div>
           </div>
 
@@ -306,7 +307,7 @@
           <h1 class="lp-wordmark lp-wordmark-hidden">GAMEPAY&nbsp;HUB &mdash; The digital store of</h1>
           <span class="lp-hot-label">&#128293; Hot products</span>
           <div class="lp-hot" aria-label="Hot products">
-            <div class="lp-hot-track" id="lpHotTrack"></div>
+            <div class="lp-hot-track products" id="lpHotTrack"></div>
           </div>
         </div>
       </section>
@@ -2086,6 +2087,7 @@ function returnToStoreHome(){
   }
 }
 document.getElementById("seeDetailsBtn")?.addEventListener("click", showProductsPage);
+document.getElementById("lpHeroBrowseBtn")?.addEventListener("click", showProductsPage);
 document.getElementById("backToLandingBtn")?.addEventListener("click", showLandingPage);
 
 // Tapping a card in the hero's Hot Products strip jumps straight into that
@@ -2461,29 +2463,24 @@ if(document.readyState === "loading"){
       return `<img src="${product.icon}" alt="${product.name}" loading="lazy" decoding="async">`;
     }
 
-    function renderProducts(){
-      productsEl.innerHTML = "";
-      const filtered = getFilteredProducts().filter(product => !product.isGuide);
-      if(!filtered.length){
-        productsEl.innerHTML = `<div class="empty-state"><strong>No products found</strong><span>Try another keyword or category.</span><br><button type="button" id="clearSearchBtn">Clear search</button></div>`;
-        document.getElementById("clearSearchBtn")?.addEventListener("click",()=>{searchInput.value="";activeCategory="All";renderCategories();renderProducts();});
-        return;
-      }
-      filtered.forEach(product => {
-        const card = document.createElement("div");
-        card.className = "card";
-        const startPrice = getCheapestPrice(product);
-        const priceLabel = startPrice > 0 ? `From ${formatKs(startPrice)}` : "Contact for price";
-        const allOut = product.plans.every(p=>p.outOfStock);
-        const anyOut = product.plans.some(p=>p.outOfStock);
-        const statusText = allOut ? "Coming Soon" : (anyOut ? "Limited" : "Available");
-        const statusClass = allOut ? "status-coming" : (anyOut ? "status-limited" : "status-available");
-        const featureText = product.top ? "Popular" : (/new/i.test(String(product.badge || "")) ? "New" : (/best|value/i.test(String(product.badge || "")) ? "Best Value" : ""));
-        // Price split so the number can carry the weight and the unit stays quiet.
-        const priceNum  = startPrice > 0 ? formatKs(startPrice).replace(/\s*Ks$/,"") : "";
-        const planCount = product.plans.length;
-        card.dataset.cat = product.category || "Other";
-        card.innerHTML = `
+    // Shared by the catalog grid and the hero's Hot Products strip, so the
+    // strip shows the exact same card -- HOT flag, stock dot, price, Buy
+    // now button -- as the real catalog, not a simplified stand-in.
+    // onSelect gets called both by the card itself and by its Buy now
+    // button, since the two callers need different navigation (the catalog
+    // is already open; the hero strip has to reveal it first).
+    function buildProductCard(product, onSelect){
+      const card = document.createElement("div");
+      card.className = "card";
+      const startPrice = getCheapestPrice(product);
+      const allOut = product.plans.every(p=>p.outOfStock);
+      const anyOut = product.plans.some(p=>p.outOfStock);
+      const statusClass = allOut ? "status-coming" : (anyOut ? "status-limited" : "status-available");
+      // Price split so the number can carry the weight and the unit stays quiet.
+      const priceNum = startPrice > 0 ? formatKs(startPrice).replace(/\s*Ks$/,"") : "";
+      const planCount = product.plans.length;
+      card.dataset.cat = product.category || "Other";
+      card.innerHTML = `
   ${product.top ? '<span class="pc-flag" title="Popular">HOT</span>' : ''}
   <div class="pc-stage"><div class="icon-wrap">${renderIcon(product)}</div></div>
   <div class="pc-body">
@@ -2494,37 +2491,38 @@ if(document.readyState === "loading"){
   </div>
   <button class="buy-now-btn" type="button"><span>Buy now</span></button>
 `;
-        card.onclick = () => openOrder(product);
-        const buyBtn = card.querySelector(".buy-now-btn");
-        buyBtn.onclick = (event) => { event.stopPropagation(); openOrder(product); showToast(`${product.name} added to order`); };
-        productsEl.appendChild(card);
-      });
+      card.onclick = () => onSelect(product);
+      const buyBtn = card.querySelector(".buy-now-btn");
+      buyBtn.onclick = (event) => { event.stopPropagation(); onSelect(product); showToast(`${product.name} added to order`); };
+      return card;
     }
 
-    // Hero's auto-scrolling "Hot products" strip -- the track's content is
-    // duplicated once so an infinite linear translateX(-50%) loop is
+    function renderProducts(){
+      productsEl.innerHTML = "";
+      const filtered = getFilteredProducts().filter(product => !product.isGuide);
+      if(!filtered.length){
+        productsEl.innerHTML = `<div class="empty-state"><strong>No products found</strong><span>Try another keyword or category.</span><br><button type="button" id="clearSearchBtn">Clear search</button></div>`;
+        document.getElementById("clearSearchBtn")?.addEventListener("click",()=>{searchInput.value="";activeCategory="All";renderCategories();renderProducts();});
+        return;
+      }
+      filtered.forEach(product => productsEl.appendChild(buildProductCard(product, openOrder)));
+    }
+
+    // Hero's auto-scrolling "Hot products" strip -- built from the exact
+    // same real hot (top:true) catalog products as the shop grid, using the
+    // same card markup (via buildProductCard) so it reads as a genuine
+    // product strip rather than a simplified preview. The track's content
+    // is duplicated once so an infinite linear translateX(-50%) loop is
     // seamless (the second copy lines up exactly where the first started).
     function renderHotProducts(){
       const track = document.getElementById("lpHotTrack");
       if(!track) return;
+      track.innerHTML = "";
       const hot = products.filter(product => product.top && !product.isGuide);
-      if(!hot.length){ track.innerHTML = ""; return; }
-      const cardHtml = product => {
-        const startPrice = getCheapestPrice(product);
-        const priceNum = startPrice > 0 ? formatKs(startPrice).replace(/\s*Ks$/, "") : "";
-        return `<div class="lp-hot-card">
-    <div class="lp-hot-icon">${renderIcon(product)}</div>
-    <div class="lp-hot-info">
-      <span class="lp-hot-name">${product.name}</span>
-      <span class="lp-hot-price">${priceNum ? `From <strong>${priceNum}</strong> Ks` : "Ask us"}</span>
-    </div>
-  </div>`;
-      };
-      const html = hot.map(cardHtml).join("");
-      track.innerHTML = html + html;
-      track.querySelectorAll(".lp-hot-card").forEach((card, i) => {
-        card.addEventListener("click", () => openHotProduct(hot[i % hot.length]));
-      });
+      if(!hot.length) return;
+      const frag = document.createDocumentFragment();
+      hot.concat(hot).forEach(product => frag.appendChild(buildProductCard(product, openHotProduct)));
+      track.appendChild(frag);
     }
     function hidePaymentQuick(){
       paymentQuickPop.classList.remove("show");

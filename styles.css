@@ -4128,10 +4128,13 @@ body.light-mode .lp-hero, .lp-hero{
    the News feature's images: cropping an infographic loses the actual
    content, not just some empty margin). Sized by width and centered,
    since a landscape banner scales with the available width, not the
-   scene's height. */
+   scene's height. The 480px cap keeps the resulting 16:9 height inside
+   the scene's own height budget at wide viewports -- a wider cap once
+   made the box taller than the scene, so it overflowed into the Hot
+   Products strip below and the carousel dots ended up hidden under it. */
 .lp-hero .lp-hero-carousel{
   position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  width:min(92%,680px); aspect-ratio:16/9;
+  width:min(92%,480px); aspect-ratio:16/9;
   border-radius:16px; overflow:hidden;
   background:linear-gradient(155deg,#FFFFFF,#F1EAFC);
   box-shadow:0 22px 48px rgba(70,44,132,.28);
@@ -4143,15 +4146,21 @@ body.light-mode .lp-hero, .lp-hero{
 .lp-hero .lp-hero-slide img{
   width:100%; height:100%; object-fit:contain; display:block;
 }
+/* Overlaid on the image itself, inside the carousel's own box -- a
+   bottom:-20px placement here used to sit outside the box, which the
+   carousel's overflow:hidden silently clipped away (invisible AND
+   unclickable, unnoticed since the auto-rotate timer alone made the
+   carousel still look like it worked). */
 .lp-hero .lp-hero-dots{
-  position:absolute; left:50%; bottom:-20px; transform:translateX(-50%);
-  display:flex; gap:6px; z-index:2;
+  position:absolute; left:50%; bottom:10px; transform:translateX(-50%);
+  display:flex; gap:6px; z-index:3;
 }
 .lp-hero .lp-hero-dot{
-  width:7px; height:7px; border-radius:50%; background:rgba(124,95,192,.3);
+  width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.55);
+  box-shadow:0 1px 3px rgba(0,0,0,.35);
   transition:background .25s, transform .25s; cursor:pointer; border:none; padding:0;
 }
-.lp-hero .lp-hero-dot.is-active{ background:#7C5FC0; transform:scale(1.25); }
+.lp-hero .lp-hero-dot.is-active{ background:#fff; transform:scale(1.3); }
 @media(max-width:640px){
   .lp-hero .lp-hero-carousel{ border-radius:12px; }
 }
@@ -6333,35 +6342,40 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
   mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
 }
-.lp-hero .lp-hot-track{
-  display:flex; gap:12px; width:max-content;
-  animation:lpHotScroll 34s linear infinite;
+/* .lp-hot-track also carries the real .products class so every card inside
+   gets the exact same catalog styling (HOT flag, stock dot, price, Buy now
+   button) for free -- this just overrides the grid it normally lives in
+   with a single auto-scrolling row of fixed-width cards. */
+.lp-hero .lp-hot-track.products{
+  display:flex !important; flex-wrap:nowrap !important;
+  gap:14px !important; width:max-content;
+  animation:lpHotScroll 52s linear infinite;
 }
 .lp-hero .lp-hot:hover .lp-hot-track{ animation-play-state:paused; }
 @keyframes lpHotScroll{
   from{ transform:translateX(0); }
   to{ transform:translateX(-50%); }
 }
-.lp-hero .lp-hot-card{
-  display:flex; align-items:center; gap:10px; flex:0 0 auto;
-  width:180px; padding:10px 12px; border-radius:14px;
-  background:#fff; border:1px solid rgba(36,28,60,.09);
-  box-shadow:0 4px 12px rgba(58,40,110,.08); cursor:pointer;
-  transition:transform .15s ease, box-shadow .15s ease;
+.lp-hero .lp-hot-track .card{
+  flex:0 0 190px; width:190px; max-width:190px;
 }
-.lp-hero .lp-hot-card:hover{ transform:translateY(-2px); box-shadow:0 8px 18px rgba(58,40,110,.14); }
-.lp-hero .lp-hot-icon{
-  width:38px; height:38px; flex:0 0 38px; border-radius:10px;
-  overflow:hidden; display:grid; place-items:center; background:#F5F2FB;
-}
-.lp-hero .lp-hot-icon img{ width:100%; height:100%; object-fit:contain; }
-.lp-hero .lp-hot-info{ min-width:0; display:flex; flex-direction:column; gap:2px; }
-.lp-hero .lp-hot-name{
-  font-size:12px; font-weight:800; color:#241C3C;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-.lp-hero .lp-hot-price{ font-size:11px; font-weight:700; color:#6B54A8; }
-.lp-hero .lp-hot-price strong{ color:#241C3C; }
 @media(prefers-reduced-motion:reduce){
   .lp-hero .lp-hot-track{ animation:none; }
 }
+
+/* The scene disables pointer-events for its decorative SVG background, but
+   that inherits down into the carousel too -- re-enable it there so the
+   dots and the Browse button are actually clickable (they worked in
+   automated tests only because those bypass real pointer hit-testing). */
+.lp-hero .lp-hero-carousel{ pointer-events:auto; }
+.lp-hero .lp-hero-browse{
+  position:absolute; left:10px; bottom:10px; z-index:3;
+  padding:6px 13px; border-radius:999px; border:none; cursor:pointer;
+  background:rgba(23,21,35,.85) !important; color:#fff !important;
+  font-size:11px; font-weight:800; letter-spacing:.01em;
+  box-shadow:0 4px 10px rgba(0,0,0,.22);
+  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+  transition:background .15s ease, transform .15s ease;
+}
+.lp-hero .lp-hero-browse:hover{ background:#171523 !important; transform:translateY(-1px); }
+.lp-hero .lp-hero-browse span{ margin-left:2px; }
