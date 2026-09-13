@@ -6312,3 +6312,13 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
   .lp-paybar .pay-mark{ width:50px !important; height:36px !important; }
   .lp-paybar .pay-mark.pay-wide{ width:58px !important; }
 }
+
+/* The carousel banners already carry the Gamepay Hub logo and "Digital
+   Premium Store" branding, so the big "The digital store of GAMEPAY HUB"
+   headline underneath just repeats it. Keep the h1 for SEO/screen readers
+   but drop it out of the visual layout entirely. */
+.lp-hero .lp-wordmark-hidden{
+  position:absolute !important; width:1px !important; height:1px !important;
+  padding:0 !important; margin:-1px !important; overflow:hidden !important;
+  clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important;
+}
