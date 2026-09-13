@@ -6406,22 +6406,36 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 }
 .catalog-discount-section{ margin:4px 0 18px; }
 
-/* ===== discount-poster-card ===== */
-/* The "On sale" strip is a promo poster, not a mini storefront -- no Buy
-   Now bar, and a narrow, upright silhouette (like an actual poster) instead
-   of the squarish catalog-card proportions. Clicking the whole tile still
-   opens it. */
-.lp-hot-track .discount-poster{
-  flex:0 0 104px !important; width:104px !important; max-width:104px !important;
+/* ===== discount-row-card ===== */
+/* A short, wide strip instead of a tall poster: logo+name on the left,
+   plan badge/price/discount stacked on the right, so the "On sale" row
+   stays low without wasting vertical space. Clicking the whole tile
+   still opens that exact plan. */
+.lp-hot-track .discount-row{
+  flex:0 0 208px !important; width:208px !important; max-width:208px !important;
+  display:flex !important; flex-direction:row !important; align-items:center !important;
+  gap:10px; padding:11px 13px !important;
 }
-.discount-poster .pc-stage{ padding:22px 6px 16px; }
-.discount-poster .pc-stage .icon-wrap{ width:40px !important; height:40px !important; }
-.discount-poster .pc-body{ padding:10px 6px 18px; gap:3px; text-align:center; }
-.discount-poster .pc-cat{ font-size:6.5px; }
-.discount-poster .pc-name{ font-size:9.5px; line-height:1.3; }
-.discount-poster .price-from{
-  margin-top:6px !important; flex-direction:column !important; gap:1px !important;
+.discount-row .disc-row-left{
+  display:flex; align-items:center; gap:8px; min-width:0; flex:1 1 auto;
 }
-.discount-poster .price-from .price-now{ display:flex; align-items:baseline; gap:2px; }
-.discount-poster .price-from strong{ font-size:12.5px; }
-.discount-poster .price-from .price-original{ font-size:7px; }
+.discount-row .disc-row-left .icon-wrap{
+  width:36px !important; height:36px !important; margin:0 !important; flex:0 0 auto;
+}
+.discount-row .pc-name{
+  margin:0; font-size:10.5px; font-weight:800; line-height:1.2;
+  color:#1B1636; text-align:left;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.discount-row .disc-row-right{
+  display:flex; flex-direction:column; align-items:flex-end; gap:3px;
+  flex:0 0 auto; text-align:right;
+}
+.discount-row .disc-plan-badge{
+  font-size:7.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--pc); background:color-mix(in srgb, var(--pc) 12%, #fff); white-space:nowrap;
+  padding:2px 7px; border-radius:999px;
+}
+.discount-row .price-from{ margin:0 !important; }
+.discount-row .price-from strong{ font-size:13px; }
+.discount-row .pc-flag.pc-flag-discount{ position:static; }

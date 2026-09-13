@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles.css?v=10">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -2621,17 +2621,19 @@ if(document.readyState === "loading"){
 
     function buildDiscountPlanCard({ product, plan }, onSelect){
       const card = document.createElement("div");
-      card.className = "card discount-poster";
-      const tierLabel = TIER_LABEL[planTier(plan)] || "";
+      card.className = "card discount-row";
+      const tierLabel = TIER_LABEL[planTier(plan)] || product.category || "Store";
       const priceNum = formatKs(plan.price).replace(/\s*Ks$/, "");
       card.dataset.cat = product.category || "Other";
       card.innerHTML = `
-  <span class="pc-flag pc-flag-discount" title="Discount">-${plan.discountPercent}%</span>
-  <div class="pc-stage"><div class="icon-wrap">${renderIcon(product)}</div></div>
-  <div class="pc-body">
-    <span class="pc-cat">${product.category || "Store"}${tierLabel ? ` · ${tierLabel}` : ""}</span>
+  <div class="disc-row-left">
+    <div class="icon-wrap">${renderIcon(product)}</div>
     <h3 class="pc-name">${product.name}</h3>
-    <p class="price-from"><s class="price-original">${formatKs(plan.originalPrice)}</s><span class="price-now"><strong>${priceNum}</strong><em>Ks</em></span></p>
+  </div>
+  <div class="disc-row-right">
+    <span class="disc-plan-badge">${tierLabel}</span>
+    <p class="price-from"><strong>${priceNum}</strong><em>Ks</em></p>
+    <span class="pc-flag pc-flag-discount" title="Discount">-${plan.discountPercent}%</span>
   </div>
 `;
       card.onclick = () => onSelect(product, plan);
