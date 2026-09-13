@@ -1131,7 +1131,14 @@ const CUSTOMER_AVATAR_STYLES = {
   fox: `<polygon points="6,9 9,3 10,8"/><polygon points="18,9 15,3 14,8"/><circle cx="9.5" cy="14" r="1.2"/><circle cx="14.5" cy="14" r="1.2"/><polygon points="11,16.5 13,16.5 12,18"/>`,
   bear: `<circle cx="6.5" cy="6.5" r="2.4"/><circle cx="17.5" cy="6.5" r="2.4"/><circle cx="9.3" cy="13.5" r="1.3"/><circle cx="14.7" cy="13.5" r="1.3"/><ellipse cx="12" cy="16.5" rx="2" ry="1.4"/>`,
   alien: `<circle cx="8" cy="5" r="1"/><circle cx="16" cy="5" r="1"/><line x1="8" y1="6" x2="8" y2="7.5" stroke-width="1.3"/><line x1="16" y1="6" x2="16" y2="7.5" stroke-width="1.3"/><path d="M6 8.5a6 5.5 0 0 1 12 0v5.5a1.8 1.8 0 0 1-1.8 1.8h-.7v1.7h-1.6v-1.7h-1.8v1.7h-1.6v-1.7h-.7A1.8 1.8 0 0 1 6 14Z"/><circle cx="9.3" cy="10.5" r="1.2" fill="rgba(0,0,0,.32)"/><circle cx="14.7" cy="10.5" r="1.2" fill="rgba(0,0,0,.32)"/>`,
-  hero: `<line x1="12" y1="2" x2="12" y2="5" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="1.6" r="1.3"/><path d="M5 10.3c0-1.1 3.1-2.3 7-2.3s7 1.2 7 2.3v2.2c0 .75-.55 1.35-1.28 1.45-1.75.28-3.72.45-5.72.45s-3.97-.17-5.72-.45A1.47 1.47 0 0 1 5 12.5Z"/><circle cx="9" cy="11.4" r="1" fill="rgba(0,0,0,.38)"/><circle cx="15" cy="11.4" r="1" fill="rgba(0,0,0,.38)"/><path d="M8.3 17c1.3 1 6.1 1 7.4 0" fill="none" stroke-width="1.6" stroke-linecap="round"/>`
+  hero: `<line x1="12" y1="2" x2="12" y2="5" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="1.6" r="1.3"/><path d="M5 10.3c0-1.1 3.1-2.3 7-2.3s7 1.2 7 2.3v2.2c0 .75-.55 1.35-1.28 1.45-1.75.28-3.72.45-5.72.45s-3.97-.17-5.72-.45A1.47 1.47 0 0 1 5 12.5Z"/><circle cx="9" cy="11.4" r="1" fill="rgba(0,0,0,.38)"/><circle cx="15" cy="11.4" r="1" fill="rgba(0,0,0,.38)"/><path d="M8.3 17c1.3 1 6.1 1 7.4 0" fill="none" stroke-width="1.6" stroke-linecap="round"/>`,
+  cursor: `<path d="M5 3.5 18.5 10l-5.7 1.3L15 17l-2.3 1-2.6-5.7-3.6 4z"/>`
+};
+// Mirrors index.html's AVATAR_IMAGE_STYLES -- real brand-logo files instead
+// of drawn shapes, for the AI-tool avatar options.
+const CUSTOMER_AVATAR_IMAGE_STYLES = {
+  claude: "claude_logo_3ec57d87f2.svg", chatgpt: "chatgpt-icon.png", gemini: "gemini-sparkle-icon.png",
+  manus: "Manus.jpeg", grok: "grok-icon.webp", copilot: "github-copilot-icon.png"
 };
 function userDisplayHandle(u){
   const uname = u.meta?.username;
@@ -1139,6 +1146,10 @@ function userDisplayHandle(u){
 }
 function userAvatarHtml(u){
   const style = u.meta?.avatar_style;
+  const img = CUSTOMER_AVATAR_IMAGE_STYLES[style];
+  if(img){
+    return `<span class="row-avatar user-avatar" style="background:#fff"><img src="${img}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></span>`;
+  }
   const shape = CUSTOMER_AVATAR_STYLES[style];
   if(!shape){
     return `<span class="row-avatar" style="background:${avatarGradientFor(u.email)}">${(u.email[0] || "?").toUpperCase()}</span>`;
