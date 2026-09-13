@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=9">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -2631,7 +2631,7 @@ if(document.readyState === "loading"){
   <div class="pc-body">
     <span class="pc-cat">${product.category || "Store"}${tierLabel ? ` · ${tierLabel}` : ""}</span>
     <h3 class="pc-name">${product.name}</h3>
-    <p class="price-from"><s class="price-original">${formatKs(plan.originalPrice)}</s><strong>${priceNum}</strong><em>Ks</em></p>
+    <p class="price-from"><s class="price-original">${formatKs(plan.originalPrice)}</s><span class="price-now"><strong>${priceNum}</strong><em>Ks</em></span></p>
   </div>
 `;
       card.onclick = () => onSelect(product, plan);
