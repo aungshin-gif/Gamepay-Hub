@@ -4050,13 +4050,12 @@ body.light-mode .lp-hero, .lp-hero{
 }
 
 /* ---------- the scene ---------- */
-/* Taller than the old clamp(230px,32vw,392px) -- the hero carousel now
-   shows full promotional posters (portrait, dense with text/logos)
-   instead of a small floating collage, and needs the room to stay
-   legible rather than being squeezed down. */
+/* The hero carousel shows full promotional banners (16:9 landscape,
+   dense with text/logos) instead of a small floating collage -- the
+   scene just needs to be tall enough to frame that banner. */
 .lp-hero .lp-scene{
-  position:relative; width:100%; height:clamp(280px,54vw,460px);
-  margin:0 0 -46px; pointer-events:none; user-select:none;
+  position:relative; width:100%; height:clamp(200px,38vw,320px);
+  margin:0 0 -20px; pointer-events:none; user-select:none;
 }
 .lp-hero .lp-hills{ position:absolute; inset:auto 0 0; width:100%; height:100%; display:block; }
 .lp-hero .lp-stage{ position:absolute; inset:0; }
@@ -4122,15 +4121,17 @@ body.light-mode .lp-hero, .lp-hero{
    inconsistent sizes and read as unpolished rather than "store". One
    consistent image category, cross-fading on a timer, reads calmer and
    more like an actual storefront. */
-/* The three posters are dense, text-heavy promotional graphics (app
-   grids, gift-card art, CTAs baked into the image) at a fixed
-   1122x1402 ratio -- sized to that exact ratio and shown with
-   object-fit:contain so nothing is ever cropped off (a lesson learned
-   the hard way with the News feature's images: cropping an
-   infographic loses the actual content, not just some empty margin). */
+/* The three banners are dense, text-heavy promotional graphics (app
+   grids, gift-card art, CTAs baked into the image) at a fixed 16:9
+   ratio -- sized to that exact ratio and shown with object-fit:contain
+   so nothing is ever cropped off (a lesson learned the hard way with
+   the News feature's images: cropping an infographic loses the actual
+   content, not just some empty margin). Sized by width and centered,
+   since a landscape banner scales with the available width, not the
+   scene's height. */
 .lp-hero .lp-hero-carousel{
-  position:absolute; left:50%; top:2%; transform:translateX(-50%);
-  height:94%; aspect-ratio:1122/1402;
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:min(92%,680px); aspect-ratio:16/9;
   border-radius:16px; overflow:hidden;
   background:linear-gradient(155deg,#FFFFFF,#F1EAFC);
   box-shadow:0 22px 48px rgba(70,44,132,.28);
@@ -4152,17 +4153,7 @@ body.light-mode .lp-hero, .lp-hero{
 }
 .lp-hero .lp-hero-dot.is-active{ background:#7C5FC0; transform:scale(1.25); }
 @media(max-width:640px){
-  .lp-hero .lp-hero-carousel{ top:2%; border-radius:12px; }
-}
-/* On desktop the scene is much wider than it is tall, so a box kept at
-   the poster's own tall 1122:1402 ratio ends up small and square-ish
-   in the middle of a lot of empty space either side of it. Widen the
-   box itself on desktop -- object-fit:contain still shows the whole
-   poster uncropped, just letterboxed a little smaller within a wider
-   frame that actually fills the space. Mobile keeps the tighter ratio
-   from the base rule, since that's already the right fit there. */
-@media(min-width:761px){
-  .lp-hero .lp-hero-carousel{ aspect-ratio:3/2; }
+  .lp-hero .lp-hero-carousel{ border-radius:12px; }
 }
 
 /* ---------- clouds rolling across the base of the scene ---------- */
@@ -4234,7 +4225,7 @@ body.light-mode .lp-hero .lp-cta-ghost{
 /* ---------- phones: fewer objects, tighter scene ---------- */
 @media(max-width:760px){
   body.light-mode .lp-hero, .lp-hero{ padding:22px 0 66px !important; border-radius:24px !important; }
-  .lp-hero .lp-scene{ height:clamp(300px,86vw,420px); margin-bottom:-30px; }
+  .lp-hero .lp-scene{ height:clamp(180px,58vw,260px); margin-bottom:-16px; }
   .lp-hero .lp-hero-photo{ width:clamp(104px,29vw,132px); top:8%; padding:6px; border-radius:17px; }
   .lp-hero .lp-hero-photo img{ border-radius:12px; }
   /* keep six objects so the scene reads without crowding the photo */
@@ -5096,7 +5087,7 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
 
 /* ---------- 2. every hero logo shows on a phone ---------- */
 @media(max-width:760px){
-  .lp-hero .lp-scene{ height:clamp(300px,86vw,420px) !important; margin-bottom:-30px !important; }
+  .lp-hero .lp-scene{ height:clamp(180px,58vw,260px) !important; margin-bottom:-16px !important; }
 
   /* nothing is hidden any more */
   .lp-hero .orb-canva, .lp-hero .orb-capcut, .lp-hero .orb-perp, .lp-hero .orb-yt,
@@ -6274,3 +6265,50 @@ body.news-feed-open{ overflow:hidden; }
   .news-hero-img{ max-height:340px; }
 }
 body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
+
+/* ===== professional-polish: payment trust bar + why-choose icons ===== */
+/* Real icon glyphs instead of tiny text-badge abbreviations ("EDU",
+   "PAY", "LIVE"), sized up so they read as actual feature icons. */
+.store-info-icon{ flex:0 0 46px !important; height:46px !important; border-radius:14px !important; }
+.store-info-icon svg{ width:22px; height:22px; }
+.store-info-card{
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.store-info-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 24px rgba(58,40,110,.12);
+}
+
+/* A small trust caption above the payment badges, and the two badge
+   groups sit side by side on desktop instead of stacking in a narrow
+   right-hand column with lots of empty space next to it. */
+.lp-paybar-heading{
+  display:flex; align-items:center; gap:6px;
+  width:100%; margin:0 0 2px;
+  font-size:10.5px; font-weight:800; letter-spacing:.02em;
+  color:#4B3B78;
+}
+.lp-paybar-heading svg{ width:14px; height:14px; flex:0 0 14px; }
+.lp-paybar .pay-mark{ transition:transform .15s ease, box-shadow .15s ease; }
+.lp-paybar .pay-mark:hover{ transform:translateY(-2px); box-shadow:0 6px 14px rgba(58,40,110,.16) !important; }
+
+@media(min-width:981px){
+  .lp-brandstrip{ grid-template-columns:auto minmax(0,1fr) !important; }
+  .lp-paybar{
+    grid-column:1 / -1 !important;
+    display:flex !important; flex-wrap:wrap !important;
+    align-items:center !important; gap:10px 28px !important;
+    justify-items:initial !important;
+    margin-top:14px !important; padding-top:14px !important;
+    border-top:1px solid rgba(36,28,60,.08) !important;
+  }
+  .lp-paybar-heading{ width:auto; flex:1 0 100%; margin-bottom:4px; }
+  .lp-paygroup{ display:flex !important; align-items:center !important; gap:10px !important; }
+  .lp-paygroup-sell{
+    width:auto !important; padding-top:0 !important; border-top:none !important;
+    padding-left:24px !important; border-left:1px solid rgba(36,28,60,.09) !important;
+  }
+  .lp-paybar .lp-brand-label{ white-space:nowrap; }
+  .lp-paybar .pay-mark{ width:50px !important; height:36px !important; }
+  .lp-paybar .pay-mark.pay-wide{ width:58px !important; }
+}
