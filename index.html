@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=15">
+  <link rel="stylesheet" href="styles.css?v=16">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -2996,7 +2996,7 @@ el.className += accessClass;
 el.innerHTML = `
   ${watermark}
   ${plan.outOfStock ? '<span class="out-stock-badge">⛔ Out of Stock</span>' : (plan.lowStock ? '<span class="low-stock-badge">⚠️ Low Stock</span>' : '')}
-  ${(plan.discount || plan.discountPercent) ? `<span class="discount-badge">💸 ${plan.discountPercent ? "-" + plan.discountPercent + "%" : "Discount"}</span>` : ''}
+  ${(plan.discount || plan.discountPercent) ? `<span class="discount-badge"><svg class="discount-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8Z"/><circle cx="7" cy="7" r=".6" fill="currentColor"/></svg>${plan.discountPercent ? "-" + plan.discountPercent + "%" : "Discount"}</span>` : ''}
   ${plan.bestSeller ? '<span class="best-seller-badge">🔥 Best Seller</span>' : ''}
   <div class="plan-professional"><div class="plan-primary-line"><span class="plan-field-label">Plan</span><strong class="plan-professional-name">${planName}</strong><span class="plan-chip-row">${tierChipFor(tier)}${typeOf(plan) ? "" : ownMailLabel}</span></div><div class="plan-type-line">${typeOf(plan) ? `<span class="plan-field-label">Type</span><strong class="plan-type-value">${typeOf(plan)}</strong>` : ""}</div><div class="plan-secondary-line${plan.noDuration ? " no-duration" : ""}">${plan.noDuration ? "" : `<div><span class="plan-field-label">Duration</span><strong>${durationText}</strong></div>`}<div class="plan-price-block"><span class="plan-field-label">Price</span>${plan.discountPercent ? `<s class="plan-price-original">${formatKs(plan.originalPrice)}</s>` : ''}<strong>${priceText}</strong></div></div></div>
 `;

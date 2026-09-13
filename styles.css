@@ -4944,9 +4944,19 @@ body.preview-mode .page{
   font-size:8.5px !important; font-weight:900 !important; letter-spacing:.04em !important;
   color:#fff !important; border:0 !important; z-index:3 !important;
   box-shadow:0 3px 8px rgba(90,60,10,.26) !important;
+  display:inline-flex !important; align-items:center !important; gap:3px !important;
 }
 #orderView .plan-option .best-seller-badge{ background:linear-gradient(140deg,#F7A72A,#E4780F) !important; }
-#orderView .plan-option .discount-badge{ background:linear-gradient(140deg,#2FBE8C,#1F9E74) !important; }
+/* A discounted plan can also be flagged Best Seller -- both badges shared
+   the same top-right corner before, so the Best Seller ribbon (rendered
+   after in the markup) silently painted over the discount one every time
+   a plan had both. Discount now takes the top-left corner instead so
+   neither ever hides the other. */
+#orderView .plan-option .discount-badge{
+  background:linear-gradient(140deg,#2FBE8C,#1F9E74) !important;
+  left:11px !important; right:auto !important;
+}
+.discount-badge-icon{ width:9px !important; height:9px !important; flex:0 0 auto; }
 #orderView .plan-option .out-stock-badge{
   background:#9A94B2 !important; box-shadow:0 3px 8px rgba(60,50,90,.22) !important;
 }
