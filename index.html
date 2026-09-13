@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
 
 
 
@@ -300,17 +300,13 @@
             </div>
           </div>
 
-          <div class="lp-clouds">
-            <i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i>
-          </div>
         </div>
 
         <div class="lp-headline">
           <h1 class="lp-wordmark lp-wordmark-hidden">GAMEPAY&nbsp;HUB &mdash; The digital store of</h1>
-          <p class="lp-blurb">AI, streaming, VPN and 180+ game top-ups &mdash; ordered in Burmese, paid with KBZPay or WavePay, and delivered by a real person the same day. Clear plans, verified payment, direct support.</p>
-          <div class="lp-actions">
-            <button id="seeDetailsBtn" class="lp-cta" type="button">Browse products <span>&rarr;</span></button>
-            <a class="lp-cta lp-cta-ghost" href="https://t.me/gamepaydyet" target="_blank" rel="noopener">Telegram channel &#8599;</a>
+          <span class="lp-hot-label">&#128293; Hot products</span>
+          <div class="lp-hot" aria-label="Hot products">
+            <div class="lp-hot-track" id="lpHotTrack"></div>
           </div>
         </div>
       </section>
@@ -2092,6 +2088,20 @@ function returnToStoreHome(){
 document.getElementById("seeDetailsBtn")?.addEventListener("click", showProductsPage);
 document.getElementById("backToLandingBtn")?.addEventListener("click", showLandingPage);
 
+// Tapping a card in the hero's Hot Products strip jumps straight into that
+// product's plan screen, the same place "Buy now" on the catalog grid goes --
+// skips the products-grid detour since the card already picked the product.
+function openHotProduct(product){
+  document.body.classList.remove("order-mode");
+  catalogView?.classList.remove("hidden");
+  landingShell.classList.add("hidden");
+  catalogShell.classList.remove("hidden");
+  document.body.classList.add("products-mode");
+  cameFromLanding = true;
+  window.scrollTo(0, 0);
+  openOrder(product);
+}
+
 /* ---------- Dedicated product page ----------
    The overlay markup lives at the end of <body>, after this script,
    so every lookup here has to be lazy. */
@@ -2413,6 +2423,7 @@ if(document.readyState === "loading"){
         if(error || !data || !data.length) return;
         applyProductOverrides(data);
         renderProducts();
+        renderHotProducts();
       }catch(err){
         console.error("Product override fetch failed:", err);
       }
@@ -2487,6 +2498,32 @@ if(document.readyState === "loading"){
         const buyBtn = card.querySelector(".buy-now-btn");
         buyBtn.onclick = (event) => { event.stopPropagation(); openOrder(product); showToast(`${product.name} added to order`); };
         productsEl.appendChild(card);
+      });
+    }
+
+    // Hero's auto-scrolling "Hot products" strip -- the track's content is
+    // duplicated once so an infinite linear translateX(-50%) loop is
+    // seamless (the second copy lines up exactly where the first started).
+    function renderHotProducts(){
+      const track = document.getElementById("lpHotTrack");
+      if(!track) return;
+      const hot = products.filter(product => product.top && !product.isGuide);
+      if(!hot.length){ track.innerHTML = ""; return; }
+      const cardHtml = product => {
+        const startPrice = getCheapestPrice(product);
+        const priceNum = startPrice > 0 ? formatKs(startPrice).replace(/\s*Ks$/, "") : "";
+        return `<div class="lp-hot-card">
+    <div class="lp-hot-icon">${renderIcon(product)}</div>
+    <div class="lp-hot-info">
+      <span class="lp-hot-name">${product.name}</span>
+      <span class="lp-hot-price">${priceNum ? `From <strong>${priceNum}</strong> Ks` : "Ask us"}</span>
+    </div>
+  </div>`;
+      };
+      const html = hot.map(cardHtml).join("");
+      track.innerHTML = html + html;
+      track.querySelectorAll(".lp-hot-card").forEach((card, i) => {
+        card.addEventListener("click", () => openHotProduct(hot[i % hot.length]));
       });
     }
     function hidePaymentQuick(){
@@ -4438,6 +4475,7 @@ orderBtn.addEventListener("click", submitOrder);
 
 renderCategories();
 renderProducts();
+renderHotProducts();
 renderPayments();
 loadStockOverrides();
 loadProductOverrides();
