@@ -6332,12 +6332,14 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
   clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important;
 }
 
-/* ===== hero hot-products ticker (replaces headline text + CTA buttons) ===== */
-.lp-hero .lp-hot-label{
+/* ===== auto-scrolling ticker (Hot Products in the hero, Discount strip on
+   the catalog page) -- not scoped to .lp-hero since a second one now lives
+   outside it, on the products page. ===== */
+.lp-hot-label{
   display:block; margin:0 0 10px; font-size:11px; font-weight:800;
   letter-spacing:.02em; color:#6B54A8; text-align:center;
 }
-.lp-hero .lp-hot{
+.lp-hot{
   position:relative; width:100%; overflow:hidden;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
   mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
@@ -6346,7 +6348,7 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
    gets the exact same catalog styling (HOT flag, stock dot, price, Buy now
    button) for free -- this just overrides the grid it normally lives in
    with a single auto-scrolling row of fixed-width cards. */
-.lp-hero .lp-hot-track.products{
+.lp-hot-track.products{
   display:flex !important; flex-wrap:nowrap !important;
   gap:14px !important; width:max-content;
   animation:lpHotScroll 52s linear infinite;
@@ -6357,17 +6359,17 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
    one, stops, then pressing another doesn't move it again" bug: it
    never restarts because :hover is still "on" from the very first tap). */
 @media(hover:hover) and (pointer:fine){
-  .lp-hero .lp-hot:hover .lp-hot-track{ animation-play-state:paused; }
+  .lp-hot:hover .lp-hot-track{ animation-play-state:paused; }
 }
 @keyframes lpHotScroll{
   from{ transform:translateX(0); }
   to{ transform:translateX(-50%); }
 }
-.lp-hero .lp-hot-track .card{
+.lp-hot-track .card{
   flex:0 0 190px; width:190px; max-width:190px;
 }
 @media(prefers-reduced-motion:reduce){
-  .lp-hero .lp-hot-track{ animation:none; }
+  .lp-hot-track{ animation:none; }
 }
 
 /* The scene disables pointer-events for its decorative SVG background, but
@@ -6402,4 +6404,4 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
   display:block; font-size:11px; font-weight:700; color:var(--muted-2,#8a8398);
   text-decoration:line-through; text-decoration-thickness:1.4px;
 }
-.lp-discount-section{ margin-top:22px; }
+.catalog-discount-section{ margin:4px 0 18px; }
