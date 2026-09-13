@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=7">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -315,12 +315,6 @@
           <div class="lp-hot" aria-label="Hot products">
             <div class="lp-hot-track products" id="lpHotTrack"></div>
           </div>
-          <div class="lp-discount-section hidden" id="lpDiscountSection">
-            <span class="lp-hot-label">&#127991;&#65039; On sale</span>
-            <div class="lp-hot">
-              <div class="lp-hot-track products" id="lpDiscountTrack"></div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -379,6 +373,12 @@
     <div id="catalogShell" class="catalog-shell hidden">
       <div class="products-head">
         <button id="backToLandingBtn" class="product-crumb-back" type="button">← Back to home</button>
+      </div>
+      <div class="catalog-discount-section hidden" id="catalogDiscountSection">
+        <span class="lp-hot-label">&#127991;&#65039; On sale</span>
+        <div class="lp-hot">
+          <div class="lp-hot-track products" id="catalogDiscountTrack"></div>
+        </div>
       </div>
       <div id="catalogView" class="catalog-view">
         <div class="search-wrap">
@@ -2440,7 +2440,7 @@ if(document.readyState === "loading"){
         applyStockOverrides(data);
         renderProducts();
         renderHotProducts();
-        renderDiscountedProducts();
+        renderCatalogDiscounts();
         if(currentProduct) renderOrder();
       }catch(err){
         console.error("Stock override fetch failed:", err);
@@ -2469,7 +2469,7 @@ if(document.readyState === "loading"){
         applyProductOverrides(data);
         renderProducts();
         renderHotProducts();
-        renderDiscountedProducts();
+        renderCatalogDiscounts();
       }catch(err){
         console.error("Product override fetch failed:", err);
       }
@@ -2574,21 +2574,101 @@ if(document.readyState === "loading"){
       track.appendChild(frag);
     }
 
-    // Same ticker mechanism as Hot Products, but for products whose cheapest
-    // plan currently carries an admin-set discount (see applyStockOverrides).
-    // Empty until an admin actually discounts something, so -- unlike Hot
-    // Products, which always has entries -- the whole section (label
+    // Shared with the plan-option selector's own tier chip (renderOrder) --
+    // a plan may name its own tier; otherwise it's read off the plan's name.
+    const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
+      team:"Team", education:"Education", individual:"Individual", family:"Family",
+      pro:"Pro", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
+      "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra"};
+    function planTier(plan){
+      if(plan.tier) return plan.tier;
+      const tierSource = `${plan.name || ""} ${plan.label || ""}`.toLowerCase();
+      return (
+        /\bsvip\b|\bvip\b/.test(tierSource)                    ? "vip" :
+        /\bmax\b|\bultimate\b/.test(tierSource)                ? "max" :
+        /\bultra\b/.test(tierSource)                           ? "ultra" :
+        /\bpremium\b/.test(tierSource)                         ? "premium" :
+        /\bbusiness\b|\benterprise\b/.test(tierSource)         ? "business" :
+        /\bteam\b/.test(tierSource)                            ? "team" :
+        /\beducation\b|\bstudent\b|\bedu\b/.test(tierSource)   ? "education" :
+        /\bindividual\b/.test(tierSource)                      ? "individual" :
+        /\bfamily\b/.test(tierSource)                          ? "family" :
+        /\bpro\b/.test(tierSource)                             ? "pro" :
+        /\bcore\b/.test(tierSource)                            ? "core" :
+        /\bstandard\b/.test(tierSource)                        ? "standard" :
+        /\bplus\b/.test(tierSource)                            ? "plus" :
+        /\bgo\b/.test(tierSource)                               ? "go" :
+        /\blink\b/.test(tierSource)                            ? "link" :
+        /\bbasic\b|\blite\b|\bmini\b/.test(tierSource)         ? "basic" : ""
+      );
+    }
+
+    // Every discounted plan across the whole catalog, not just the cheapest
+    // plan per product -- a product can have several plans and only one of
+    // them discounted, so this shows each discounted plan as its own card
+    // (product name + which plan, e.g. "ChatGPT · GO"), not one aggregate
+    // card per product.
+    function getDiscountedPlans(){
+      const list = [];
+      products.forEach(product => {
+        if(product.isGuide) return;
+        product.plans.forEach(plan => {
+          if(plan.discountPercent > 0 && !plan.outOfStock) list.push({ product, plan });
+        });
+      });
+      return list;
+    }
+
+    function buildDiscountPlanCard({ product, plan }, onSelect){
+      const card = document.createElement("div");
+      card.className = "card";
+      const tierLabel = TIER_LABEL[planTier(plan)] || "";
+      const priceNum = formatKs(plan.price).replace(/\s*Ks$/, "");
+      card.dataset.cat = product.category || "Other";
+      card.innerHTML = `
+  <span class="pc-flag pc-flag-discount" title="Discount">-${plan.discountPercent}%</span>
+  <div class="pc-stage"><div class="icon-wrap">${renderIcon(product)}</div></div>
+  <div class="pc-body">
+    <span class="pc-cat">${product.category || "Store"}${tierLabel ? ` · ${tierLabel}` : ""}</span>
+    <h3 class="pc-name">${product.name}</h3>
+    <p class="price-from"><s class="price-original">${formatKs(plan.originalPrice)}</s><strong>${priceNum}</strong><em>Ks</em></p>
+  </div>
+  <button class="buy-now-btn" type="button"><span>Buy now</span></button>
+`;
+      card.onclick = () => onSelect(product, plan);
+      const buyBtn = card.querySelector(".buy-now-btn");
+      buyBtn.onclick = (event) => { event.stopPropagation(); onSelect(product, plan); showToast(`${product.name} added to order`); };
+      return card;
+    }
+
+    // Catalog is already open wherever this strip lives, so opening a
+    // discounted plan just needs openOrder() (same as any other catalog
+    // card) plus pinning the selection to the specific plan the card
+    // advertised -- openOrder alone would pick the remembered/first
+    // in-stock plan instead, which might not be the discounted one.
+    function openDiscountPlan(product, plan){
+      openOrder(product);
+      const planIndex = product.plans.indexOf(plan);
+      if(planIndex >= 0){
+        currentPlanIndex = planIndex;
+        selectedPlanByProduct.set(product.id, planIndex);
+      }
+    }
+
+    // Same ticker mechanism as Hot Products, but lives on the catalog page
+    // next to "Back to home" rather than the landing page -- empty until an
+    // admin actually discounts something, so the whole section (label
     // included) hides itself rather than showing an empty strip.
-    function renderDiscountedProducts(){
-      const section = document.getElementById("lpDiscountSection");
-      const track = document.getElementById("lpDiscountTrack");
+    function renderCatalogDiscounts(){
+      const section = document.getElementById("catalogDiscountSection");
+      const track = document.getElementById("catalogDiscountTrack");
       if(!section || !track) return;
       track.innerHTML = "";
-      const discounted = products.filter(product => !product.isGuide && getCheapestPlan(product)?.discountPercent > 0);
+      const discounted = getDiscountedPlans();
       section.classList.toggle("hidden", !discounted.length);
       if(!discounted.length) return;
       const frag = document.createDocumentFragment();
-      discounted.concat(discounted).forEach(product => frag.appendChild(buildProductCard(product, openHotProduct)));
+      discounted.concat(discounted).forEach(entry => frag.appendChild(buildDiscountPlanCard(entry, openDiscountPlan)));
       track.appendChild(frag);
     }
     function hidePaymentQuick(){
@@ -4541,7 +4621,7 @@ orderBtn.addEventListener("click", submitOrder);
 renderCategories();
 renderProducts();
 renderHotProducts();
-renderDiscountedProducts();
+renderCatalogDiscounts();
 renderPayments();
 loadStockOverrides();
 loadProductOverrides();
