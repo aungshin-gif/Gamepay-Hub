@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=12">
+  <link rel="stylesheet" href="styles.css?v=13">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -114,25 +114,7 @@
     <script>document.querySelector(".intro-logo-img").src=document.querySelector(".compact-logo").src;</script>
     <div class="compact-header-right">
       <button id="newsFeedBtn" class="my-orders-btn" type="button" aria-label="News"><svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/></svg>News</button>
-      <div class="noti-dropdown-wrap" id="notiDropdownWrap">
-        <button id="notiBtn" class="my-orders-btn" type="button" aria-label="Notifications"><svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>Noti<span id="notiBtnBadge" class="notif-badge hidden">1</span></button>
-        <div id="notiMenu" class="noti-menu hidden">
-          <button type="button" class="noti-menu-item" id="notiMenuNotice">
-            <span class="noti-menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
-            <span class="noti-menu-label">Notice</span>
-            <span id="noticeBadge" class="notif-badge hidden">1</span>
-          </button>
-          <button type="button" class="noti-menu-item" id="notiMenuOrders">
-            <span class="noti-menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg></span>
-            <span class="noti-menu-label">My Orders</span>
-            <span id="myOrdersBadge" class="notif-badge hidden">1</span>
-          </button>
-          <button type="button" class="noti-menu-item" id="notiMenuMessage">
-            <span class="noti-menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
-            <span class="noti-menu-label">Message</span>
-          </button>
-        </div>
-      </div>
+      <button id="notiBtn" class="my-orders-btn" type="button" aria-label="Notifications"><svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>Noti<span id="notiBtnBadge" class="notif-badge hidden">1</span></button>
       <div class="auth-header-actions" id="authHeaderActions"></div>
       <div id="noticeCodePopup" class="notice-code-popup hidden" role="dialog" aria-label="New notice">
         <div class="notice-code-card">
@@ -167,6 +149,41 @@
       <div class="news-feed-empty">Loading…</div>
     </div>
     <div class="news-detail hidden" id="newsDetailView"></div>
+  </div>
+
+  <div id="notiHubView" class="news-feed-overlay hidden" role="dialog" aria-label="Notifications">
+    <div class="news-feed-header">
+      <button id="notiHubBackBtn" class="news-feed-back" type="button" aria-label="Close Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      </button>
+      <div class="news-feed-brand">
+        <img id="notiHubLogo" class="news-feed-logo" alt="" />
+        <div>
+          <div class="news-feed-wordmark">GamePay Hub <span>Notifications</span></div>
+          <div class="news-feed-tagline">Notice, orders &amp; support messages</div>
+        </div>
+      </div>
+    </div>
+    <script>document.getElementById("notiHubLogo").src=document.querySelector(".compact-logo").src;</script>
+    <div class="news-feed-list noti-hub-list">
+      <button type="button" class="noti-hub-row" id="notiMenuNotice">
+        <span class="noti-hub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+        <span class="noti-hub-text"><strong>Notice</strong><small>Announcements &amp; coupon codes</small></span>
+        <span id="noticeBadge" class="notif-badge hidden">1</span>
+        <svg class="noti-hub-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 5 16 12 9 19"/></svg>
+      </button>
+      <button type="button" class="noti-hub-row" id="notiMenuOrders">
+        <span class="noti-hub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg></span>
+        <span class="noti-hub-text"><strong>My Orders</strong><small>Track and manage your purchases</small></span>
+        <span id="myOrdersBadge" class="notif-badge hidden">1</span>
+        <svg class="noti-hub-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 5 16 12 9 19"/></svg>
+      </button>
+      <button type="button" class="noti-hub-row" id="notiMenuMessage">
+        <span class="noti-hub-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
+        <span class="noti-hub-text"><strong>Message</strong><small>Chat with support</small></span>
+        <svg class="noti-hub-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 5 16 12 9 19"/></svg>
+      </button>
+    </div>
   </div>
 
   <div id="authModalBackdrop" class="auth-modal-backdrop hidden">
@@ -1824,14 +1841,39 @@ plans: [
       alien: `<circle cx="8" cy="5" r="1"/><circle cx="16" cy="5" r="1"/><line x1="8" y1="6" x2="8" y2="7.5" stroke-width="1.3"/><line x1="16" y1="6" x2="16" y2="7.5" stroke-width="1.3"/><path d="M6 8.5a6 5.5 0 0 1 12 0v5.5a1.8 1.8 0 0 1-1.8 1.8h-.7v1.7h-1.6v-1.7h-1.8v1.7h-1.6v-1.7h-.7A1.8 1.8 0 0 1 6 14Z"/><circle cx="9.3" cy="10.5" r="1.2" fill="rgba(0,0,0,.32)"/><circle cx="14.7" cy="10.5" r="1.2" fill="rgba(0,0,0,.32)"/>`,
       // A bold masked "hero" face -- own original geometry (antenna, visor
       // band, grin), not a recreation of any studio's character.
-      hero: `<line x1="12" y1="2" x2="12" y2="5" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="1.6" r="1.3"/><path d="M5 10.3c0-1.1 3.1-2.3 7-2.3s7 1.2 7 2.3v2.2c0 .75-.55 1.35-1.28 1.45-1.75.28-3.72.45-5.72.45s-3.97-.17-5.72-.45A1.47 1.47 0 0 1 5 12.5Z"/><circle cx="9" cy="11.4" r="1" fill="rgba(0,0,0,.38)"/><circle cx="15" cy="11.4" r="1" fill="rgba(0,0,0,.38)"/><path d="M8.3 17c1.3 1 6.1 1 7.4 0" fill="none" stroke-width="1.6" stroke-linecap="round"/>`
+      hero: `<line x1="12" y1="2" x2="12" y2="5" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="1.6" r="1.3"/><path d="M5 10.3c0-1.1 3.1-2.3 7-2.3s7 1.2 7 2.3v2.2c0 .75-.55 1.35-1.28 1.45-1.75.28-3.72.45-5.72.45s-3.97-.17-5.72-.45A1.47 1.47 0 0 1 5 12.5Z"/><circle cx="9" cy="11.4" r="1" fill="rgba(0,0,0,.38)"/><circle cx="15" cy="11.4" r="1" fill="rgba(0,0,0,.38)"/><path d="M8.3 17c1.3 1 6.1 1 7.4 0" fill="none" stroke-width="1.6" stroke-linecap="round"/>`,
+      // A plain arrow-pointer glyph for the "Cursor" avatar -- no matching
+      // logo asset exists locally, so this stays a drawn shape like the
+      // styles above instead of an <img>.
+      cursor: `<path d="M5 3.5 18.5 10l-5.7 1.3L15 17l-2.3 1-2.6-5.7-3.6 4z"/>`
+    };
+    // AI-tool avatars: real brand marks, rendered as <img> instead of the
+    // inline-shape path the styles above use. gemini-sparkle-icon.png is a
+    // cropped version of the sparkle mark in Google-Gemini-AI.webp (that
+    // file is the wordmark lockup, unusable as a round avatar as-is).
+    const AVATAR_IMAGE_STYLES = {
+      claude: "claude_logo_3ec57d87f2.svg",
+      chatgpt: "chatgpt-icon.png",
+      gemini: "gemini-sparkle-icon.png",
+      manus: "Manus.jpeg",
+      grok: "grok-icon.webp",
+      copilot: "github-copilot-icon.png"
     };
     function getAvatarStyleId(){
       const id = currentUser?.user_metadata?.avatar_style;
-      return AVATAR_STYLES[id] ? id : null;
+      return (AVATAR_STYLES[id] || AVATAR_IMAGE_STYLES[id]) ? id : null;
     }
     function avatarStyleSvg(styleId, sizePx){
       return `<svg viewBox="0 0 24 24" fill="#fff" stroke="#fff" style="width:${sizePx}px;height:${sizePx}px;flex:0 0 auto;">${AVATAR_STYLES[styleId]}</svg>`;
+    }
+    // Shared render path for both kinds of avatar: a real logo image for
+    // the AI-tool styles, the drawn cartoon shapes for everything else.
+    function renderAvatarIcon(styleId, sizePx){
+      const img = AVATAR_IMAGE_STYLES[styleId];
+      if(img){
+        return `<img src="${img}" alt="" style="width:${sizePx}px;height:${sizePx}px;flex:0 0 auto;border-radius:50%;object-fit:cover;background:#fff;">`;
+      }
+      return avatarStyleSvg(styleId, sizePx);
     }
     // Small inline-SVG icon set, used instead of emoji for a cleaner look.
     const ICONS = {
@@ -3427,7 +3469,7 @@ function appendChatBubble(sender, body){
   const myStyle = getAvatarStyleId();
   avatar.innerHTML = isAdmin
     ? `<img src="${siteLogoSrc()}" alt="GamePay Hub" />`
-    : (myStyle ? avatarStyleSvg(myStyle, 14) : (getDisplayName()[0]?.toUpperCase() || "?"));
+    : (myStyle ? renderAvatarIcon(myStyle, 14) : (getDisplayName()[0]?.toUpperCase() || "?"));
   avatar.style.background = isAdmin ? "#fff" : avatarGradient(getAvatarColorId());
   const bubble = document.createElement("div");
   bubble.className = "chat-bubble " + (isAdmin ? "admin" : "customer");
@@ -4037,15 +4079,6 @@ async function openMyOrdersView(){
 }
 
 const notiBtn = document.getElementById("notiBtn");
-const notiMenu = document.getElementById("notiMenu");
-// .compact-header has overflow:hidden for its own decorative background,
-// and its entrance animation leaves a residual (identity) transform on it
-// even after finishing -- any transform, even a no-op one, makes an
-// ancestor the containing block for position:fixed children, so the menu
-// was still being clipped by that overflow:hidden no matter what
-// position/z-index it had. Moving it out to be a direct child of <body>
-// removes it from that ancestor chain entirely.
-if(notiMenu && notiMenu.parentElement !== document.body) document.body.appendChild(notiMenu);
 const noticeCodePopup = document.getElementById("noticeCodePopup");
 if(noticeCodePopup && noticeCodePopup.parentElement !== document.body) document.body.appendChild(noticeCodePopup);
 function refreshNotiTopBadge(){
@@ -4055,45 +4088,31 @@ function refreshNotiTopBadge(){
   const ordersOn = !document.getElementById("myOrdersBadge")?.classList.contains("hidden");
   if(noticeOn || ordersOn) top.classList.remove("hidden"); else top.classList.add("hidden");
 }
-function positionNotiMenu(){
-  if(!notiBtn || !notiMenu) return;
-  const rect = notiBtn.getBoundingClientRect();
-  notiMenu.style.top = (rect.bottom + 8) + "px";
-  notiMenu.style.right = (window.innerWidth - rect.right) + "px";
-}
+// Noti used to be a small dropdown menu; it's now a full page (same
+// overlay pattern as News) listing Notice/My Orders/Message as rows.
+function openNotiHub(){ document.getElementById("notiHubView")?.classList.remove("hidden"); }
+function closeNotiHub(){ document.getElementById("notiHubView")?.classList.add("hidden"); }
 notiBtn?.addEventListener("click", async (e) => {
   e.stopPropagation();
-  if(!notiMenu) return;
-  const opening = notiMenu.classList.contains("hidden");
   // An unread notice (a gifted coupon, most often) is the one thing worth
   // seeing in a single tap -- go straight to it instead of making the
-  // customer open the dropdown and then tap "Notice" separately to find
-  // the same thing.
-  if(opening && supabaseClient && currentUser && !document.getElementById("noticeBadge")?.classList.contains("hidden")){
+  // customer open the Notifications page and then tap "Notice" separately
+  // to find the same thing.
+  if(supabaseClient && currentUser && !document.getElementById("noticeBadge")?.classList.contains("hidden")){
     const { data, error } = await supabaseClient.rpc("get_notifications");
     const latestUnread = !error && data ? data.find(n => !n.read_at) : null;
     if(latestUnread){ showNoticeCodePopup(latestUnread); return; }
   }
-  if(opening) positionNotiMenu();
-  notiMenu.classList.toggle("hidden");
+  openNotiHub();
 });
-window.addEventListener("resize", () => {
-  if(notiMenu && !notiMenu.classList.contains("hidden")) positionNotiMenu();
-});
-document.addEventListener("click", (e) => {
-  if(!notiMenu || notiMenu.classList.contains("hidden")) return;
-  // notiMenu now lives directly under <body> (see above), so a click on
-  // one of its own items is no longer inside #notiDropdownWrap -- check
-  // both.
-  if(!e.target.closest("#notiDropdownWrap") && !e.target.closest("#notiMenu")) notiMenu.classList.add("hidden");
-});
+document.getElementById("notiHubBackBtn")?.addEventListener("click", closeNotiHub);
 // Tapping "Notice" used to jump straight to the full notice list -- which
 // buried whatever the admin just gifted a page-navigation away. If there's
 // an unread one, surface it immediately in a small popup instead (title +
 // body, which now actually contains the coupon code -- see schema.sql's
 // admin_create_coupon), with a one-tap copy and a link to the full list.
 document.getElementById("notiMenuNotice")?.addEventListener("click", async () => {
-  notiMenu?.classList.add("hidden");
+  closeNotiHub();
   if(!supabaseClient || !currentUser){ openNoticeView(); return; }
   const { data, error } = await supabaseClient.rpc("get_notifications");
   const latestUnread = !error && data ? data.find(n => !n.read_at) : null;
@@ -4136,8 +4155,8 @@ document.getElementById("noticeCodeCopyBtn")?.addEventListener("click", () => {
   if(navigator.clipboard?.writeText) navigator.clipboard.writeText(code).then(done).catch(done);
   else done();
 });
-document.getElementById("notiMenuOrders")?.addEventListener("click", () => { notiMenu?.classList.add("hidden"); openMyOrdersView(); });
-document.getElementById("notiMenuMessage")?.addEventListener("click", () => { notiMenu?.classList.add("hidden"); openSupportMessageView(); });
+document.getElementById("notiMenuOrders")?.addEventListener("click", () => { closeNotiHub(); openMyOrdersView(); });
+document.getElementById("notiMenuMessage")?.addEventListener("click", () => { closeNotiHub(); openSupportMessageView(); });
 
 // ---------------------------------------------------------------------
 // News: a read-only feed of posts the admin writes from the dashboard
@@ -4410,8 +4429,8 @@ function renderAvatarStylePicker(){
   const letter = getDisplayName()[0]?.toUpperCase() || "?";
   const options = [
     `<button type="button" class="acct-style-btn ${!active ? "active" : ""}" data-style="" style="background:${grad};" aria-label="Plain initial">${letter}</button>`,
-    ...Object.keys(AVATAR_STYLES).map(id => `
-      <button type="button" class="acct-style-btn ${id === active ? "active" : ""}" data-style="${id}" style="background:${grad};" aria-label="${id} avatar">${avatarStyleSvg(id, 19)}</button>
+    ...Object.keys({ ...AVATAR_STYLES, ...AVATAR_IMAGE_STYLES }).map(id => `
+      <button type="button" class="acct-style-btn ${id === active ? "active" : ""}" data-style="${id}" style="background:${grad};" aria-label="${id} avatar">${renderAvatarIcon(id, 19)}</button>
     `)
   ];
   box.innerHTML = options.join("");
@@ -4435,7 +4454,7 @@ function refreshAccountFields(){
   const username = getUsername();
   const avatarCircle = document.getElementById("acctAvatarCircle");
   const styleId = getAvatarStyleId();
-  avatarCircle.innerHTML = styleId ? avatarStyleSvg(styleId, 38) : (name[0]?.toUpperCase() || "?");
+  avatarCircle.innerHTML = styleId ? renderAvatarIcon(styleId, 38) : (name[0]?.toUpperCase() || "?");
   avatarCircle.style.background = avatarGradient(getAvatarColorId());
   document.getElementById("acctProfileName").textContent = name;
   document.getElementById("acctProfileHandle").textContent = "@" + username;

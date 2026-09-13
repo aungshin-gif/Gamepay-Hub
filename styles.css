@@ -6045,35 +6045,31 @@ body.light-mode .auth-field-toggle:hover{ color:var(--ink,#1f2937); }
 body.light-mode .status-icon-svg.pending{ color:#d97706; }
 body.light-mode .status-icon-svg.approved{ color:#16a34a; }
 body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
-.noti-dropdown-wrap{ position:relative; }
-/* Fixed, not absolute: .compact-header (the dropdown's ancestor) has
-   overflow:hidden !important for its own decorative background, which
-   was silently clipping this menu -- it opened (the class toggled fine)
-   but nothing was ever visible. Fixed positioning escapes that clip;
-   its top/right are set from the button's real position in JS on open. */
-.noti-menu{
-  position:fixed; z-index:9999;
-  width:220px; padding:7px; border-radius:14px;
-  background:rgba(18,14,38,.97); border:1px solid rgba(199,125,255,.28);
-  box-shadow:0 14px 34px rgba(0,0,0,.35);
+/* Noti hub: a full page (same .news-feed-overlay shell as News) listing
+   Notice/My Orders/Message as rows -- replaces the old dropdown menu. */
+.noti-hub-list{ display:flex; flex-direction:column; gap:10px; }
+.noti-hub-row{
+  display:flex; align-items:center; gap:12px; width:100%;
+  padding:14px; border-radius:16px; border:1px solid var(--border,rgba(43,38,30,.12));
+  background:var(--surface,#fffdf8); cursor:pointer; text-align:left;
+  transition:transform .15s ease, box-shadow .15s ease;
 }
-.noti-menu-item{
-  display:flex; align-items:center; gap:9px; width:100%;
-  padding:10px 10px; border-radius:10px; border:none; background:transparent;
-  color:#fff; font-size:12.5px; font-weight:800; cursor:pointer; text-align:left; transition:.15s;
+.noti-hub-row:hover{ transform:translateY(-2px); box-shadow:var(--shadow-sm,0 4px 14px rgba(43,35,20,.08)); }
+.noti-hub-icon{
+  display:flex; align-items:center; justify-content:center; flex:0 0 auto;
+  width:38px; height:38px; border-radius:12px; color:#7c3aed;
+  background:rgba(124,58,237,.10);
 }
-.noti-menu-item:hover{ background:rgba(255,255,255,.09); }
-.noti-menu-icon{ flex:0 0 auto; width:17px; height:17px; color:#c77dff; }
-.noti-menu-icon svg{ width:17px; height:17px; }
-.noti-menu-label{ flex:1; }
-.noti-menu-item .notif-badge{ position:static; margin-left:auto; }
-body.light-mode .noti-menu{ background:#fff; border-color:var(--border,rgba(31,41,55,.16)); box-shadow:0 14px 34px rgba(20,20,43,.14); }
-body.light-mode .noti-menu-item{ color:var(--ink,#1f2937); }
-body.light-mode .noti-menu-item:hover{ background:rgba(124,58,237,.08); }
+.noti-hub-icon svg{ width:19px; height:19px; }
+.noti-hub-text{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.noti-hub-text strong{ font-size:14px; font-weight:850; color:var(--ink,#2b2621); }
+.noti-hub-text small{ font-size:11.5px; font-weight:600; color:var(--muted,#786f63); }
+.noti-hub-row .notif-badge{ position:static; flex:0 0 auto; }
+.noti-hub-chevron{ width:16px; height:16px; color:var(--muted,#786f63); flex:0 0 auto; }
 
 /* Small "you got a code" popup, shown instead of navigating straight to the
-   full Notice list -- same fixed+body-reparented pattern as .noti-menu so
-   it isn't clipped by .compact-header's overflow:hidden either. */
+   full Notice list -- body-reparented (see the JS) so it isn't clipped by
+   .compact-header's overflow:hidden. */
 .notice-code-popup{ position:fixed; inset:0; z-index:10000; display:flex; align-items:flex-start; justify-content:center; padding-top:78px; background:rgba(8,6,18,.45); backdrop-filter:blur(2px); }
 .notice-code-popup.hidden{ display:none; }
 .notice-code-card{
