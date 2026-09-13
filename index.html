@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=10">
+  <link rel="stylesheet" href="styles.css?v=11">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -375,9 +375,11 @@
         <button id="backToLandingBtn" class="product-crumb-back" type="button">← Back to home</button>
       </div>
       <div class="catalog-discount-section hidden" id="catalogDiscountSection">
-        <span class="lp-hot-label">&#127991;&#65039; On sale</span>
-        <div class="lp-hot">
-          <div class="lp-hot-track products" id="catalogDiscountTrack"></div>
+        <div class="catalog-discount-panel">
+          <span class="catalog-discount-label"><span class="catalog-discount-icon">&#127991;&#65039;</span>On sale</span>
+          <div class="lp-hot">
+            <div class="lp-hot-track products" id="catalogDiscountTrack"></div>
+          </div>
         </div>
       </div>
       <div id="catalogView" class="catalog-view">

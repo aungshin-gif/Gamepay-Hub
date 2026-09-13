@@ -6406,6 +6406,26 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 }
 .catalog-discount-section{ margin:4px 0 18px; }
 
+/* The panel fills the full row width above the products grid (a proper
+   banner block, not bare floating cards with wasted space beside them),
+   and gives "On sale" a small gradient icon badge instead of a plain
+   inline emoji. */
+.catalog-discount-panel{
+  width:100%; padding:16px 16px 18px; border-radius:20px;
+  background:linear-gradient(155deg,#F7F5FE,#EFEAFC);
+  border:1px solid rgba(91,63,209,.10);
+}
+.catalog-discount-label{
+  display:inline-flex; align-items:center; gap:7px; margin:0 0 12px;
+  font-size:12px; font-weight:800; letter-spacing:.02em; color:#5B3FD1;
+}
+.catalog-discount-icon{
+  display:inline-grid; place-items:center;
+  width:22px; height:22px; border-radius:50%; font-size:11px;
+  background:linear-gradient(140deg,#8B6CF1,#5B3FD1);
+  box-shadow:0 3px 8px rgba(91,63,209,.28);
+}
+
 /* ===== discount-row-card ===== */
 /* A short, wide strip instead of a tall poster: logo+name on the left,
    plan badge/price/discount stacked on the right, so the "On sale" row
