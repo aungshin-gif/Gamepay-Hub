@@ -6404,27 +6404,47 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
   display:block; font-size:11px; font-weight:700; color:var(--muted-2,#8a8398);
   text-decoration:line-through; text-decoration-thickness:1.4px;
 }
-.catalog-discount-section{ margin:4px 0 18px; }
+/* Discount panel sits right above "Back to home" now, flush against it
+   (no gap -- the two read as one stacked header block) with the search
+   bar further below. */
+.catalog-discount-section{ margin:0 0 2px; }
+.products-head{ margin:0 0 14px; }
 
-/* The panel fills the full row width above the products grid (a proper
-   banner block, not bare floating cards with wasted space beside them),
-   and gives "On sale" a small gradient icon badge instead of a plain
-   inline emoji. */
+/* A dark "AI console" panel instead of the pale card -- glowing cyan/violet
+   blobs behind a glass gradient, so the on-sale strip reads as a distinct,
+   modern showcase rather than another plain white section. The white
+   discount-row cards keep floating on top unchanged, spotlighted by the
+   dark backdrop. */
 .catalog-discount-panel{
-  width:100%; padding:16px 16px 18px; border-radius:20px;
-  background:linear-gradient(155deg,#F7F5FE,#EFEAFC);
-  border:1px solid rgba(91,63,209,.10);
+  position:relative; overflow:hidden;
+  width:100%; padding:18px 16px 20px; border-radius:22px;
+  background:linear-gradient(150deg,#0B1130 0%,#131B4A 55%,#0D3A63 100%);
+  border:1px solid rgba(94,234,255,.20);
+  box-shadow:0 16px 34px rgba(8,14,42,.32), inset 0 1px rgba(255,255,255,.05);
+}
+.catalog-discount-panel::before{
+  content:""; position:absolute; top:-55%; right:-12%; width:60%; height:160%;
+  background:radial-gradient(circle, rgba(94,234,255,.22), transparent 68%);
+  pointer-events:none;
+}
+.catalog-discount-panel::after{
+  content:""; position:absolute; bottom:-60%; left:-10%; width:55%; height:150%;
+  background:radial-gradient(circle, rgba(139,108,241,.20), transparent 68%);
+  pointer-events:none;
 }
 .catalog-discount-label{
+  position:relative; z-index:1;
   display:inline-flex; align-items:center; gap:7px; margin:0 0 12px;
-  font-size:12px; font-weight:800; letter-spacing:.02em; color:#5B3FD1;
+  font-size:12px; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
+  color:#EAF6FF; text-shadow:0 0 12px rgba(94,234,255,.35);
 }
 .catalog-discount-icon{
   display:inline-grid; place-items:center;
   width:22px; height:22px; border-radius:50%; font-size:11px;
-  background:linear-gradient(140deg,#8B6CF1,#5B3FD1);
-  box-shadow:0 3px 8px rgba(91,63,209,.28);
+  background:linear-gradient(140deg,#5EEAFF,#7B5BEC);
+  box-shadow:0 0 14px rgba(94,234,255,.55), 0 3px 8px rgba(40,20,110,.35);
 }
+.catalog-discount-panel .lp-hot{ position:relative; z-index:1; }
 
 /* ===== discount-row-card ===== */
 /* A short, wide strip instead of a tall poster: logo+name on the left,
