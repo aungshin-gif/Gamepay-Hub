@@ -4055,7 +4055,7 @@ body.light-mode .lp-hero, .lp-hero{
    scene just needs to be tall enough to frame that banner. */
 .lp-hero .lp-scene{
   position:relative; width:100%; height:clamp(200px,38vw,320px);
-  margin:0 0 -20px; pointer-events:none; user-select:none;
+  margin:0 0 10px; pointer-events:none; user-select:none;
 }
 .lp-hero .lp-hills{ position:absolute; inset:auto 0 0; width:100%; height:100%; display:block; }
 .lp-hero .lp-stage{ position:absolute; inset:0; }
@@ -4225,7 +4225,7 @@ body.light-mode .lp-hero .lp-cta-ghost{
 /* ---------- phones: fewer objects, tighter scene ---------- */
 @media(max-width:760px){
   body.light-mode .lp-hero, .lp-hero{ padding:22px 0 24px !important; border-radius:24px !important; }
-  .lp-hero .lp-scene{ height:clamp(180px,58vw,260px); margin-bottom:-16px; }
+  .lp-hero .lp-scene{ height:clamp(180px,58vw,260px); margin-bottom:8px; }
   .lp-hero .lp-hero-photo{ width:clamp(104px,29vw,132px); top:8%; padding:6px; border-radius:17px; }
   .lp-hero .lp-hero-photo img{ border-radius:12px; }
   /* keep six objects so the scene reads without crowding the photo */
@@ -5087,7 +5087,7 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
 
 /* ---------- 2. every hero logo shows on a phone ---------- */
 @media(max-width:760px){
-  .lp-hero .lp-scene{ height:clamp(180px,58vw,260px) !important; margin-bottom:-16px !important; }
+  .lp-hero .lp-scene{ height:clamp(180px,58vw,260px) !important; margin-bottom:8px !important; }
 
   /* nothing is hidden any more */
   .lp-hero .orb-canva, .lp-hero .orb-capcut, .lp-hero .orb-perp, .lp-hero .orb-yt,
@@ -6321,4 +6321,47 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
   position:absolute !important; width:1px !important; height:1px !important;
   padding:0 !important; margin:-1px !important; overflow:hidden !important;
   clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important;
+}
+
+/* ===== hero hot-products ticker (replaces headline text + CTA buttons) ===== */
+.lp-hero .lp-hot-label{
+  display:block; margin:0 0 10px; font-size:11px; font-weight:800;
+  letter-spacing:.02em; color:#6B54A8; text-align:center;
+}
+.lp-hero .lp-hot{
+  position:relative; width:100%; overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+}
+.lp-hero .lp-hot-track{
+  display:flex; gap:12px; width:max-content;
+  animation:lpHotScroll 34s linear infinite;
+}
+.lp-hero .lp-hot:hover .lp-hot-track{ animation-play-state:paused; }
+@keyframes lpHotScroll{
+  from{ transform:translateX(0); }
+  to{ transform:translateX(-50%); }
+}
+.lp-hero .lp-hot-card{
+  display:flex; align-items:center; gap:10px; flex:0 0 auto;
+  width:180px; padding:10px 12px; border-radius:14px;
+  background:#fff; border:1px solid rgba(36,28,60,.09);
+  box-shadow:0 4px 12px rgba(58,40,110,.08); cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.lp-hero .lp-hot-card:hover{ transform:translateY(-2px); box-shadow:0 8px 18px rgba(58,40,110,.14); }
+.lp-hero .lp-hot-icon{
+  width:38px; height:38px; flex:0 0 38px; border-radius:10px;
+  overflow:hidden; display:grid; place-items:center; background:#F5F2FB;
+}
+.lp-hero .lp-hot-icon img{ width:100%; height:100%; object-fit:contain; }
+.lp-hero .lp-hot-info{ min-width:0; display:flex; flex-direction:column; gap:2px; }
+.lp-hero .lp-hot-name{
+  font-size:12px; font-weight:800; color:#241C3C;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.lp-hero .lp-hot-price{ font-size:11px; font-weight:700; color:#6B54A8; }
+.lp-hero .lp-hot-price strong{ color:#241C3C; }
+@media(prefers-reduced-motion:reduce){
+  .lp-hero .lp-hot-track{ animation:none; }
 }
