@@ -4224,7 +4224,7 @@ body.light-mode .lp-hero .lp-cta-ghost{
 
 /* ---------- phones: fewer objects, tighter scene ---------- */
 @media(max-width:760px){
-  body.light-mode .lp-hero, .lp-hero{ padding:22px 0 66px !important; border-radius:24px !important; }
+  body.light-mode .lp-hero, .lp-hero{ padding:22px 0 24px !important; border-radius:24px !important; }
   .lp-hero .lp-scene{ height:clamp(180px,58vw,260px); margin-bottom:-16px; }
   .lp-hero .lp-hero-photo{ width:clamp(104px,29vw,132px); top:8%; padding:6px; border-radius:17px; }
   .lp-hero .lp-hero-photo img{ border-radius:12px; }
