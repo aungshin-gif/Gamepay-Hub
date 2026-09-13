@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=14">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -2133,6 +2133,19 @@ function showLandingPage(){
 // remembers that case so the same buttons can restore the landing page
 // instead when that's genuinely where the visit started.
 let cameFromLanding = false;
+// Notice/My Orders/Message are also reachable from the Noti hub page now --
+// their own back buttons used to always go straight to the store, skipping
+// the hub they were opened from. This flag lets them return to the hub
+// instead when that's genuinely where the visit started.
+let cameFromNotiHub = false;
+function returnFromNotiSubview(){
+  if(cameFromNotiHub){
+    cameFromNotiHub = false;
+    openNotiHub();
+  } else {
+    returnToStoreHome();
+  }
+}
 function returnToStoreHome(){
   if(cameFromLanding){
     cameFromLanding = false;
@@ -2435,7 +2448,12 @@ if(document.readyState === "loading"){
       rows.forEach(r => byKey.set(`${r.product_id}::${r.plan_name}`, r));
       products.forEach(product => {
         product.plans.forEach(plan => {
-          const row = byKey.get(`${product.id}::${plan.name}`);
+          // Same idea as _catalogPrice below -- the lookup key must stay
+          // the plan's original name even after a discount rewrites
+          // plan.name to embed the new price, or a second apply (a
+          // realtime refresh, say) would silently miss this plan's row.
+          if(plan._catalogName == null) plan._catalogName = plan.name;
+          const row = byKey.get(`${product.id}::${plan._catalogName}`);
           if(!row) return;
           // Captured once, before any override/discount math touches
           // plan.price -- re-applying overrides (e.g. a second data load)
@@ -3619,7 +3637,7 @@ document.getElementById("chatBackBtn")?.addEventListener("click", () => {
   if(chatMode === "support"){
     orderView.classList.add("hidden");
     document.body.classList.remove("order-mode");
-    returnToStoreHome();
+    returnFromNotiSubview();
   } else {
     document.getElementById("orderStatusView").classList.remove("hidden");
   }
@@ -4094,6 +4112,9 @@ function openNotiHub(){ document.getElementById("notiHubView")?.classList.remove
 function closeNotiHub(){ document.getElementById("notiHubView")?.classList.add("hidden"); }
 notiBtn?.addEventListener("click", async (e) => {
   e.stopPropagation();
+  // Opened straight from the header, not from inside the hub -- any stale
+  // flag from an earlier hub visit must not leak into this one.
+  cameFromNotiHub = false;
   // An unread notice (a gifted coupon, most often) is the one thing worth
   // seeing in a single tap -- go straight to it instead of making the
   // customer open the Notifications page and then tap "Notice" separately
@@ -4113,6 +4134,7 @@ document.getElementById("notiHubBackBtn")?.addEventListener("click", closeNotiHu
 // admin_create_coupon), with a one-tap copy and a link to the full list.
 document.getElementById("notiMenuNotice")?.addEventListener("click", async () => {
   closeNotiHub();
+  cameFromNotiHub = true;
   if(!supabaseClient || !currentUser){ openNoticeView(); return; }
   const { data, error } = await supabaseClient.rpc("get_notifications");
   const latestUnread = !error && data ? data.find(n => !n.read_at) : null;
@@ -4155,8 +4177,8 @@ document.getElementById("noticeCodeCopyBtn")?.addEventListener("click", () => {
   if(navigator.clipboard?.writeText) navigator.clipboard.writeText(code).then(done).catch(done);
   else done();
 });
-document.getElementById("notiMenuOrders")?.addEventListener("click", () => { closeNotiHub(); openMyOrdersView(); });
-document.getElementById("notiMenuMessage")?.addEventListener("click", () => { closeNotiHub(); openSupportMessageView(); });
+document.getElementById("notiMenuOrders")?.addEventListener("click", () => { closeNotiHub(); cameFromNotiHub = true; openMyOrdersView(); });
+document.getElementById("notiMenuMessage")?.addEventListener("click", () => { closeNotiHub(); cameFromNotiHub = true; openSupportMessageView(); });
 
 // ---------------------------------------------------------------------
 // News: a read-only feed of posts the admin writes from the dashboard
@@ -4311,7 +4333,7 @@ myOrdersBackBtn?.addEventListener("click", () => {
   document.getElementById("myOrdersView").classList.add("hidden");
   document.body.classList.remove("order-mode");
   orderView.classList.add("hidden");
-  returnToStoreHome();
+  returnFromNotiSubview();
 });
 
 function noticeRowHtml(n){
@@ -4384,7 +4406,7 @@ document.getElementById("noticeBackBtn")?.addEventListener("click", () => {
   document.getElementById("noticeView").classList.add("hidden");
   document.body.classList.remove("order-mode");
   orderView.classList.add("hidden");
-  returnToStoreHome();
+  returnFromNotiSubview();
 });
 
 /* ================= My Account ================= */
@@ -4508,6 +4530,7 @@ document.getElementById("accountBackBtn")?.addEventListener("click", () => {
 
 document.getElementById("viewOrderHistoryBtn")?.addEventListener("click", () => {
   document.getElementById("accountView").classList.add("hidden");
+  cameFromNotiHub = false;
   openMyOrdersView();
 });
 
