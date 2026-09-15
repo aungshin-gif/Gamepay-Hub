@@ -844,7 +844,7 @@ document.getElementById("userSearchInput")?.addEventListener("input", async (e) 
   if(error){ box.innerHTML = `<div class="empty-note">${error.message}</div>`; return; }
   if(!data || !data.length){ box.innerHTML = `<div class="empty-note">No matching account.</div>`; return; }
   userSearchResultsCache = data;
-  box.innerHTML = data.map(u => `<div class="user-search-row" data-id="${u.id}"><span>${u.email}</span><span class="line">Joined ${new Date(u.created_at).toLocaleDateString()}</span></div>`).join("");
+  box.innerHTML = data.map(u => `<div class="user-search-row" data-id="${u.id}"><span>${escapeHtml(u.email)}</span><span class="line">Joined ${new Date(u.created_at).toLocaleDateString()}</span></div>`).join("");
   box.querySelectorAll(".user-search-row").forEach(el => {
     el.addEventListener("click", () => {
       const user = userSearchResultsCache.find(u => u.id === el.dataset.id);
@@ -878,7 +878,7 @@ async function showUserDetail(user){
       `).join("")
     : `<div class="empty-note">No orders yet.</div>`;
   userDetailContent.innerHTML = `
-    <div class="card-title" style="gap:10px;">${userAvatarHtml(user)}<div>${userDisplayHandle(user)}<div style="font-weight:600;font-size:12px;color:var(--muted);">${user.email}</div></div></div>
+    <div class="card-title" style="gap:10px;">${userAvatarHtml(user)}<div>${escapeHtml(userDisplayHandle(user))}<div style="font-weight:600;font-size:12px;color:var(--muted);">${escapeHtml(user.email)}</div></div></div>
     <table class="order-detail-table">
       <tr><th>Registered since</th><td>${new Date(user.created_at).toLocaleString()}</td></tr>
       <tr><th>Total orders</th><td>${list.length}</td></tr>
@@ -1163,8 +1163,8 @@ function renderUserRow(u){
     <div class="order-row" data-id="${u.id}">
       ${userAvatarHtml(u)}
       <div class="or-main">
-        <div class="or-code">${userDisplayHandle(u)}</div>
-        <div class="or-sub">${u.email}</div>
+        <div class="or-code">${escapeHtml(userDisplayHandle(u))}</div>
+        <div class="or-sub">${escapeHtml(u.email)}</div>
       </div>
       <span class="or-pill">${ICON_ORDERS_STAT}${Number(u.order_count).toLocaleString()} orders</span>
       <div class="or-meta">Joined ${new Date(u.created_at).toLocaleDateString()}</div>
