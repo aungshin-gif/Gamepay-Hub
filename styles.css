@@ -4061,7 +4061,7 @@ body.light-mode .lp-hero, .lp-hero{
    dense with text/logos) instead of a small floating collage -- the
    scene just needs to be tall enough to frame that banner. */
 .lp-hero .lp-scene{
-  position:relative; width:100%; height:clamp(200px,38vw,320px);
+  position:relative; width:100%; height:clamp(200px,38vw,360px);
   margin:0 0 10px; pointer-events:none; user-select:none;
 }
 .lp-hero .lp-hills{ position:absolute; inset:auto 0 0; width:100%; height:100%; display:block; }
@@ -4141,7 +4141,7 @@ body.light-mode .lp-hero, .lp-hero{
    Products strip below and the carousel dots ended up hidden under it. */
 .lp-hero .lp-hero-carousel{
   position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  width:min(92%,480px); aspect-ratio:16/9;
+  width:min(92%,620px); aspect-ratio:16/9;
   border-radius:16px; overflow:hidden;
   background:linear-gradient(155deg,#FFFFFF,#F1EAFC);
   box-shadow:0 22px 48px rgba(70,44,132,.28);
