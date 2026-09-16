@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=17">
+  <link rel="stylesheet" href="styles.css?v=18">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -429,6 +429,7 @@
             <button id="removeBtn" class="remove-btn">Remove</button>
           </div>
 
+          <div id="orderGallery" class="order-gallery hidden"></div>
           <button id="togglePlansBtn" class="plan-toggle">Hide Plan Selection</button>
           <div id="planFilters" class="plan-filters" aria-label="Plan filters"></div>
           <div id="planList" class="plan-list"></div>
@@ -681,7 +682,7 @@
     const TELEGRAM_USERNAME = "angsthtun";
 
 
-    const categories = ["All","AI & Productivity","Entertainment","VPN & Security","Creative Tools","Social & Services","More"];
+    const categories = ["All","AI & Productivity","Entertainment","VPN & Security","Creative Tools","Social & Services","Visacard","More"];
 
     // Short yes/no cell markup for Product Benefits comparison tables.
     const PB_YES = '<span class="pb-yn yes">✓</span>';
@@ -1849,6 +1850,33 @@ plans: [
       { name: "🔐 2 Months – Private – 28000 Ks", price: 28000, bestSeller: true },
   ]
 },
+      {
+  id: "ypt_wallet",
+  name: "YPT Wallet",
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "Visacard",
+  cardTagline: "Visacard / MasterCard",
+  iconType: "image",
+  icon: "images (6).png",
+  search: "ypt wallet visa master card virtual usd",
+  gallery: ["quality_restoration_20260916125208524.jpg", "quality_restoration_20260916125208390.jpg"],
+  description: "💥 Full Warranty ပါ။\n💳 Wallet + Visa/Master virtual card တွဲပါ။\n🔐 Private account (သို့) Own-mail ရွေးလို့ရပါတယ်။",
+  benefits: {
+    subtitle: "Everything included with YPT Wallet",
+    rows: [
+      { icon: "chat", label: "Wallet", values: "Deposit, Transfer, Send, Credit & Remit — all in one wallet" },
+      { icon: "image", label: "Virtual card", values: "A virtual USD Visa or Mastercard, ready for online payments" },
+      { icon: "zap", label: "Card controls", values: "View, Freeze/unfreeze, and manage card Operations & Settings anytime" },
+      { icon: "brain", label: "Assets", values: "Holds USDT and other supported assets alongside your card balance" },
+      { icon: "upload", label: "Works with", values: "Accepted for Google/Apple Pay style virtual-card top-ups" }
+    ]
+  },
+  plans: [
+    { name: "YPT Wallet – Wallet+One Visa or Master card – 180000 Ks", label: "Wallet + One Visa or Master card", price: 180000, tier: "premium", warranty: "Full Warranty", type: "Private Acc / Own Mail", format: "Private account/Own-mail",
+      note: "✅ Full Warranty" }
+  ]
+},
     ];
 
     const paymentMethods = ["KPay","Wave","AYA","UAB","Binance"];
@@ -2686,8 +2714,10 @@ if(document.readyState === "loading"){
   <div class="pc-body">
     <span class="pc-cat">${product.category || "Store"}</span>
     <h3 class="pc-name">${product.name}</h3>
+    ${product.cardTagline ? `<p class="pc-tagline">${product.cardTagline}</p>` : `
     <p class="price-from">${priceNum ? `${discountPct ? `<s class="price-original">${formatKs(cheapestPlan.originalPrice)}</s>` : `<small>From</small>`}<strong>${priceNum}</strong><em>Ks</em>` : `<strong class="pc-ask">Ask us</strong>`}</p>
     <span class="pc-plans"><i class="pc-dot ${statusClass}"></i>${planCount} plan${planCount === 1 ? "" : "s"}</span>
+    `}
   </div>
   <button class="buy-now-btn" type="button"><span>Buy now</span></button>
 `;
@@ -3004,6 +3034,18 @@ customHint.textContent = isInvalid
       }
 
       const amount = refreshCartSummary();
+
+      const galleryEl = document.getElementById("orderGallery");
+      if(galleryEl){
+        const shots = currentProduct.gallery;
+        if(shots && shots.length){
+          galleryEl.classList.remove("hidden");
+          galleryEl.innerHTML = shots.map(src => `<img src="${src}" alt="${currentProduct.name} preview" loading="lazy" decoding="async">`).join("");
+        } else {
+          galleryEl.classList.add("hidden");
+          galleryEl.innerHTML = "";
+        }
+      }
 
       togglePlansBtn.textContent = plansOpen ? "Hide Plan Selection" : "Choose Plan";
       planList.innerHTML = "";
