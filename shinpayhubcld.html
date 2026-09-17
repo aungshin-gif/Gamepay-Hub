@@ -1482,6 +1482,17 @@ async function setStatus(order, status, reason){
   order.status = status;
   if(status === "rejected") order.reject_reason = reason || null;
   sb.channel("order-" + order.access_token).send({ type: "broadcast", event: "status_update", payload: { status, reason: status === "rejected" ? (reason || null) : undefined } });
+  // The live broadcast above only reaches a customer whose browser happens
+  // to be open on this order right now -- a persisted row in
+  // "notifications" is what actually lights up their Noti bell later,
+  // same as a gifted coupon does. Guest orders have no user_id to notify.
+  if(order.user_id){
+    const title = status === "approved" ? "Order Approved" : status === "rejected" ? "Order Rejected" : "Order Update";
+    const body = status === "rejected"
+      ? (reason || "Your order was rejected.")
+      : `Your order for ${order.product_name} (${order.plan_name}) is now ${status}.`;
+    sb.from("notifications").insert({ user_id: order.user_id, title, body });
+  }
   selectOrder(order.id);
 }
 
