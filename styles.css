@@ -5449,6 +5449,22 @@ body.light-mode #checkoutSection .pay-option.active{
 .order-status-sub{ font-size:14px; color:var(--muted,rgba(255,255,255,.74)); margin-bottom:10px; }
 .order-status-sub b{ color:#fff; }
 .order-status-hint{ font-size:12px; color:var(--muted,rgba(255,255,255,.74)); line-height:1.5; margin-bottom:18px; }
+/* A rejected order's reason gets its own boxed callout (icon + text)
+   instead of running into the plain hint sentence below it -- the reason
+   is the one piece of information a rejected customer actually needs to
+   act on, so it reads as a distinct, professional notice, not filler. */
+.status-reason-box{
+  display:flex; align-items:flex-start; gap:10px; text-align:left;
+  width:min(500px,100%); margin:0 auto 16px; padding:13px 15px;
+  border-radius:14px; background:rgba(169,72,72,.14); border:1px solid rgba(255,143,174,.28);
+}
+.status-reason-box.hidden{ display:none; }
+.status-reason-icon{ flex:0 0 auto; width:20px; height:20px; color:#ff8fae; }
+.status-reason-icon svg{ width:20px; height:20px; }
+.status-reason-text{ font-size:13px; line-height:1.5; color:#ffd7e2; font-weight:600; }
+body.light-mode .status-reason-box{ background:rgba(220,38,38,.07); border-color:rgba(220,38,38,.22); }
+body.light-mode .status-reason-icon{ color:#dc2626; }
+body.light-mode .status-reason-text{ color:#7a2323; }
 #openChatBtn{ width:min(320px,100%); margin:0 auto; }
 /* Reuses the existing .order-preview-table look (see the Order Preview
    screen) so this reads as the same polished table, not a second style. */
