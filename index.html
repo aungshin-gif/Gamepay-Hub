@@ -7,8 +7,8 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
   />
-  <link rel="icon" href="favicon.webp" type="image/webp" />
-  <link rel="apple-touch-icon" href="favicon.webp" />
+  <link rel="icon" href="assets/favicon.webp" type="image/webp" />
+  <link rel="apple-touch-icon" href="assets/favicon.webp" />
   <!-- GitHub Pages doesn't let this static file set its own HTTP response
        headers, and mobile Chrome in particular can hold onto an old cached
        copy of this page well past a deploy -- these tell it (and any CDN
@@ -23,7 +23,7 @@
   <meta property="og:url" content="https://gamepayhub.shop/" />
   <meta property="og:title" content="GamePay Hub - Digital Products Store" />
   <meta property="og:description" content="AI, streaming, VPN and 180+ game top-ups — ordered in Burmese, paid with KBZPay or WavePay, and delivered by a real person the same day." />
-  <meta property="og:image" content="https://gamepayhub.shop/og-image.png" />
+  <meta property="og:image" content="https://gamepayhub.shop/assets/og-image.png" />
   <!-- Structured data: lets Google show our logo/description directly in
        search results instead of guessing from page text. Pure metadata --
        no effect on how the page looks or behaves. -->
@@ -33,7 +33,7 @@
     "@type": "Organization",
     "name": "GamePay Hub",
     "url": "https://gamepayhub.shop/",
-    "logo": "https://gamepayhub.shop/og-image.png",
+    "logo": "https://gamepayhub.shop/assets/og-image.png",
     "description": "AI, streaming, VPN and 180+ game top-ups — ordered in Burmese, paid with KBZPay or WavePay, and delivered by a real person the same day.",
     "sameAs": ["https://t.me/gamepaydyet"]
   }
@@ -41,7 +41,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="GamePay Hub - Digital Products Store" />
   <meta name="twitter:description" content="AI, streaming, VPN and 180+ game top-ups — ordered in Burmese, paid with KBZPay or WavePay, and delivered by a real person the same day." />
-  <meta name="twitter:image" content="https://gamepayhub.shop/og-image.png" />
+  <meta name="twitter:image" content="https://gamepayhub.shop/assets/og-image.png" />
   <!-- Warms up the connection to the Supabase JS CDN ahead of time -- the
        actual <script src> tag near the end of <body> is a page-parsing
        blocker (it has to run before any button's click listener attaches,
@@ -65,7 +65,7 @@
        fetchpriority="high" on the <img> itself) means the browser starts
        fetching it immediately instead of only discovering it once it
        finishes parsing the body. -->
-  <link rel="preload" as="image" href="hero-digital-premium.jpg" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/hero-digital-premium.jpg" fetchpriority="high">
 
 
 
@@ -307,13 +307,13 @@
           <div class="lp-stage">
             <div class="lp-hero-carousel" id="lpHeroCarousel">
               <figure class="lp-hero-slide is-active" data-slide="0">
-                <img src="hero-digital-premium.jpg" alt="Digital Premium Store" loading="eager" decoding="async" fetchpriority="high">
+                <img src="assets/hero-digital-premium.jpg" alt="Digital Premium Store" loading="eager" decoding="async" fetchpriority="high">
               </figure>
               <figure class="lp-hero-slide" data-slide="1">
-                <img src="hero-channel-join.jpg" alt="Join the Gamepay Hub Telegram channel" loading="lazy" decoding="async">
+                <img src="assets/hero-channel-join.jpg" alt="Join the Gamepay Hub Telegram channel" loading="lazy" decoding="async">
               </figure>
               <figure class="lp-hero-slide" data-slide="2">
-                <img src="hero-giftcard.jpg" alt="Gift Card Marketplace" loading="lazy" decoding="async">
+                <img src="assets/hero-giftcard.jpg" alt="Gift Card Marketplace" loading="lazy" decoding="async">
               </figure>
               <div class="lp-hero-dots">
                 <span class="lp-hero-dot is-active" data-dot="0"></span>
@@ -353,10 +353,10 @@
           <div class="lp-paygroup">
             <span class="lp-brand-label">Pay with</span>
             <div class="lp-pays">
-              <span class="pay-mark" title="KBZPay"><img src="unnamed.png" alt="KBZPay" loading="lazy" decoding="async"></span>
-              <span class="pay-mark" title="WavePay"><img src="unnamed (1).png" alt="WavePay" loading="lazy" decoding="async"></span>
-              <span class="pay-mark" title="AYA Pay"><img src="unnamed (2).png" alt="AYA Pay" loading="lazy" decoding="async"></span>
-              <span class="pay-mark" title="UABPay"><img src="uabpay-black.png" alt="UABPay" loading="lazy" decoding="async"></span>
+              <span class="pay-mark" title="KBZPay"><img src="assets/unnamed.png" alt="KBZPay" loading="lazy" decoding="async"></span>
+              <span class="pay-mark" title="WavePay"><img src="assets/unnamed (1).png" alt="WavePay" loading="lazy" decoding="async"></span>
+              <span class="pay-mark" title="AYA Pay"><img src="assets/unnamed (2).png" alt="AYA Pay" loading="lazy" decoding="async"></span>
+              <span class="pay-mark" title="UABPay"><img src="assets/uabpay-black.png" alt="UABPay" loading="lazy" decoding="async"></span>
               <span class="pay-mark" title="Binance"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjYuNjEgMTI2LjYxIj48cGF0aCBmaWxsPSIjRjNCQTJGIiBkPSJNMzguNzMgNTMuMiA2My4zIDI4LjYzbDI0LjU4IDI0LjU4IDE0LjMxLTE0LjNMNjMuMyAwIDI0LjQyIDM4Ljl6TTAgNjMuM2wxNC4zLTE0LjMxTDI4LjYzIDYzLjNsLTE0LjMxIDE0LjMxem0zOC43MyAxMC4xMUw2My4zIDk3Ljk4bDI0LjU4LTI0LjU4IDE0LjMyIDE0LjI5LS4wMS4wMkw2My4zIDEyNi42MSAyNC40MiA4Ny43MmwtLjAyLS4wMnpNOTguMzUgNjMuM2wxNC4zMS0xNC4zMSAxNC4zMSAxNC4zLTE0LjMxIDE0LjMyek03Ny44MyA2My4yOWguMDJMNjMuMyA0OC43NSA1Mi41NyA1OS40OGgtLjAwMWwtMS4yOSAxLjI4LTIuODcgMi44Ny0uMDEuMDIuMDEuMDJMNjMuMyA3Ny44NGwxNC41My0xNC41My4wMS0uMDF6Ii8+PC9zdmc+" alt="Binance" loading="lazy" decoding="async"></span>
             </div>
           </div>
@@ -665,8 +665,8 @@
     <footer class="site-footer">
       <div class="support-label">Need help? Contact support</div>
       <div class="support-actions">
-        <a class="support-btn whatsapp-support" href="https://wa.me/qr/PMHPHBAS33UHB1" target="_blank" rel="noopener"><img class="support-logo whatsapp-logo" src="images (2).jpeg" alt="WhatsApp logo"><span>WhatsApp<br><small>Chat with us</small></span></a>
-        <a class="support-btn telegram-support" href="https://t.me/angsthtun" target="_blank" rel="noopener"><img class="support-logo telegram-logo" src="telegram-logo-telegram-logo-transparent-telegram-icon-transparent-free-free-png.png" alt="Telegram logo"><span>Telegram<br><small>@angsthtun</small></span></a>
+        <a class="support-btn whatsapp-support" href="https://wa.me/qr/PMHPHBAS33UHB1" target="_blank" rel="noopener"><img class="support-logo whatsapp-logo" src="assets/images (2).jpeg" alt="WhatsApp logo"><span>WhatsApp<br><small>Chat with us</small></span></a>
+        <a class="support-btn telegram-support" href="https://t.me/angsthtun" target="_blank" rel="noopener"><img class="support-logo telegram-logo" src="assets/telegram-logo-telegram-logo-transparent-telegram-icon-transparent-free-free-png.png" alt="Telegram logo"><span>Telegram<br><small>@angsthtun</small></span></a>
       </div>
       <div class="footer-legal-links" style="text-align:center;font-size:11.5px;margin-top:14px;">
         <a href="terms.html" style="color:inherit;opacity:.7;text-decoration:none;">Terms of Service</a>
@@ -698,7 +698,7 @@
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "chatgpt-icon.png",
+  icon: "assets/chatgpt-icon.png",
   search: "chatgpt openai ai",
   description: "✅ Official access options are available.\n✔️ Own Mail option includes Full Warranty.\n✔️ History remains available with the official option.\n🔄 Renewal is available for eligible official access.\n❗️ CGPT GO stock can change; preorder may be required when unavailable.",
   benefits: {
@@ -768,7 +768,7 @@
   badge: "available",
   category: "Editing",
   iconType: "image",
-  icon: "Untitled-design-2025-01-28T101702.381.png",
+  icon: "assets/Untitled-design-2025-01-28T101702.381.png",
   search: "canva design pro",
   warranty: "Full Warranty",
   description: "💥Premium Pro Private Planသည် Account ပေးမှာပါ။\n🔑 သည် own mailနဲ့သဘောတရားတူတူပါပဲ၊\n🔑 သည်ကိုယ်ပိုင်Canva accountထဲမှာ Redeemရုံပါပဲ",
@@ -799,7 +799,7 @@
   badge: "available",
   category: "Editing",
   iconType: "image",
-  icon: "IMG_20260307_045206_183.jpg",
+  icon: "assets/IMG_20260307_045206_183.jpg",
   search: "capcut pro edit video",
   note: "🚫 Renew မရ\n✅ Full Warranty",
   warranty: "Full Warranty",
@@ -842,7 +842,7 @@
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "file_00000000168071fa8d5d17512a7591b5.png",
+  icon: "assets/file_00000000168071fa8d5d17512a7591b5.png",
   search: "gemini ai pro google ai",
   description: "✉️ Own Mail Invite includes Full Warranty and monthly renewal.\n👑 Family Manager access includes the warranty stated for the selected duration.\n🔗 Link access has No Warranty.\n🛍 Choose Own Mail, Family, or Link carefully before purchase.",
   benefits: {
@@ -902,7 +902,7 @@
   badge: "available",
   category: "Services",
   iconType: "image",
-  icon: "image.png",
+  icon: "assets/image.png",
   search: "zoom pro meeting video",
   description: "🔐 Private access is provided.\n🛍 Select the required duration before purchase.\n❗️Availability may change based on stock.",
   plans: [
@@ -919,7 +919,7 @@
   badge: "available",
   category: "Streaming",
   iconType: "image",
-  icon: "quality_restoration_20260510231859313.png",
+  icon: "assets/quality_restoration_20260510231859313.png",
   search: "hbo max premium streaming",
   description: "⚠️Each Profile 6000 ksဆိူတာက\n🌈Above 3 Pf ၀ယ်ရင်\n🥳1pfကို 6000 ksပဲကျမယ်ဆိုတယ့်‌သဘောပါ\n\n💥Headကတော့အတန်ဆုံးပါ။\n🌈1Pfကို 5000 ksပဲကျပါမယ်။",
 
@@ -937,7 +937,7 @@ subtitle: "Tap to see prices",
 badge: "available",
 category:"Editing",
 iconType: "image",
-icon: "IMG_20260307_042958_666.jpg",
+icon: "assets/IMG_20260307_042958_666.jpg",
 search: "picsart photo edit",
 description: "Private accountတွေပါ အာမခံပါတယ်။History/Projects အကုန် privateပါ။",
 plans: [
@@ -956,7 +956,7 @@ plans: [
   badge: "available",
   category: "VPN",
   iconType: "image",
-  icon: "file_00000000fc3c71fab87726fc991b3be0.png",
+  icon: "assets/file_00000000fc3c71fab87726fc991b3be0.png",
   search: "hma vpn android mac pc",
   note: "✔️ Android / Mac / PC ရပါတယ်။\n❌ iOS မရပါ။\n⚠️ Only one device can be used in Share.\n📊 8-9 Devices can be used in Private.",
   description: "✅ Android / Mac / PC အသုံးပြုနိုင်သည်။\n❌ iOS မရပါ။\n⚠️ Share plan တွင် device 1 ခုသာ အသုံးပြုနိုင်သည်။\n📊 Private plan တွင် devices 8–9 ခု အသုံးပြုနိုင်သည်.",
@@ -974,7 +974,7 @@ plans: [
   badge: "available",
   category: "VPN",
   iconType: "image",
-  icon: "ExpressVPN-logo.png",
+  icon: "assets/ExpressVPN-logo.png",
   search: "express vpn android mac pc ios",
   note: "✔️ Android / Mac / PC ရပါတယ်။\n✔️ iOS ရပါတယ်။\n🔐 All plans are same as private.",
   description: "✅ Android / Mac / PC / iOS အသုံးပြုနိုင်သည်။\n🔐 All plans use private-style access.\n🛍 Device count ကို plan အလိုက်ရွေးချယ်ပါ။",
@@ -1012,7 +1012,7 @@ plans: [
   badge: "available",
   category: "Editing",
   iconType: "image",
-  icon: "Adobe_Creative_Cloud_rainbow_icon.svg.png",
+  icon: "assets/Adobe_Creative_Cloud_rainbow_icon.svg.png",
   search: "adobe photoshop premiere creative cloud",
   description: "💫100% Private Account (My Mail)\n🔥 4000 Adobe credits\n💥 Renewed monthly method \n💥 Supports Mobile/PC/Mac",
   plans: [
@@ -1030,7 +1030,7 @@ plans: [
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "claude_logo_3ec57d87f2.svg",
+  icon: "assets/claude_logo_3ec57d87f2.svg",
   search: "claude ai pro max programming research own mail",
   note: "✅ Best For Programming\n✅ Full Warranty\n✅ Own Mail Type",
   warranty: "Full Warranty",
@@ -1049,7 +1049,7 @@ plans: [
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "images (1).png",
+  icon: "assets/images (1).png",
   search: "cursor ai pro plus ultra coding editor own mail",
   description: "✔️ Own Mail Type\n✔️ Best for coding with AI agents.\n✉️ Pro and Pro+ include Full Warranty.\n🔼 Ultra is available with Full Warranty or No Warranty -- pick carefully before purchase.",
   format: "On your Own mail",
@@ -1098,7 +1098,7 @@ plans: [
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "grok-icon.webp",
+  icon: "assets/grok-icon.webp",
   search: "grok ai super grok plus heavy",
   description: "💥 Full Warranty ပါ။\n✔️ Renewal ရပါတယ်။\n✔️ Own Mail ပိုပြေပါတယ်။\n🛍 Access is provided on your account.",
   plans: [
@@ -1115,7 +1115,7 @@ plans: [
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "perplexity-ai-icon.png",
+  icon: "assets/perplexity-ai-icon.png",
   search: "perplexity ai pro own mail",
   description: "💥 Full Warranty ပါ။\n✔️ Renewal ရပါတယ်။\n✔️ Own Mail ပိုပြေပါတယ်။\n🛍 Access is provided on your account.",
   plans: [
@@ -1129,7 +1129,7 @@ plans: [
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "images (5).jpeg",
+  icon: "assets/images (5).jpeg",
   search: "kling ai standard pro premier ultra credits",
   description: "✅ Can Renew, but not with this promotional price.\n✅ Own Mail Plan\n✅ Full Warranty\n🔥 Credit options are available separately.",
   plans: [
@@ -1165,7 +1165,7 @@ subtitle: "Tap to see prices",
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "github-copilot-icon.png",
+  icon: "assets/github-copilot-icon.png",
   search: " GitHub copilot own mail",
   description: "💥 Full Warranty ပါ။\n✔️ Renewal ရပါတယ်။\n✔️ Own Mail ပိုပြေပါတယ်။\n🛍 Access is provided on your account.",
 plans: [
@@ -1181,7 +1181,7 @@ plans: [
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "Replit.png",
+  icon: "assets/Replit.png",
   search: "replit core pro coding agent own mail",
   description: "💥 Full Warranty ပါ။\n✔️ Own Mail ပိုပြေပါတယ်။\n🛍 Access is provided on your account.",
   plans: [
@@ -1196,7 +1196,7 @@ plans: [
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "images (4).png",
+  icon: "assets/images (4).png",
   search: "railway hobby pro hosting deployment own account",
   description: "💥 Full Warranty ပါ။\n✔️ Access is provided on your own account.\n🔄 Can renew with this price.",
   benefits: {
@@ -1228,7 +1228,7 @@ plans: [
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "images (5).png",
+  icon: "assets/images (5).png",
   search: "quillbot premium paraphraser grammar own account",
   description: "💥 Full Warranty ပါ။\n✔️ Access is provided on your own account.\n🔄 Renewable at this same price.",
   benefits: {
@@ -1256,7 +1256,7 @@ plans: [
   badge: "available",
   category: "Services",
   iconType: "image",
-  icon: "images (3) (1).jpeg",
+  icon: "assets/images (3) (1).jpeg",
   search: "scribd premium ebooks audiobooks documents private account",
   description: "💥 Full Warranty ပါ။\n🔐 Private Account ဖြစ်ပါတယ်။\n🚫 Renew မရပါ။\n✉️ Own Mail လိုချင်ရင် message ပို့ပြီး order ခေါ်ပေးရပါမယ်။",
   benefits: {
@@ -1284,7 +1284,7 @@ plans: [
   badge: "available",
   category: "AI",
   iconType: "image",
-  icon: "Manus.jpeg",
+  icon: "assets/Manus.jpeg",
   search: "manus ai agent standard customizable credits own mail",
   description: "💥 Full Warranty ပါ။\n✔️ Own Mail ပိုပြေပါတယ်။\n🔄 300 refresh credits everyday.\n🛍 Access is provided on your account.",
   plans: [
@@ -1299,7 +1299,7 @@ plans: [
   badge: "available",
   category: "Social",
   iconType: "image",
-  icon: "twitter-new-logo-x-icon-design_1017-45424.jpg",
+  icon: "assets/twitter-new-logo-x-icon-design_1017-45424.jpg",
   search: "x twitter premium plus",
   description: "💥 Full Warranty ပါ။\n✔️ Access on your account.\n✔️ Premium features are included.",
   plans: [
@@ -1314,7 +1314,7 @@ plans: [
   badge: "available",
   category: "Social",
   iconType: "image",
-  icon: "images (2).jpeg",
+  icon: "assets/images (2).jpeg",
   search: "whatsapp plus",
   description: "✅ WhatsApp Plus access is provided.\n🛍 Select your required duration before purchase.",
   plans: [
@@ -1328,7 +1328,7 @@ plans: [
   badge: "available",
   category: "Social",
   iconType: "image",
-  icon: "images (2).jpeg",
+  icon: "assets/images (2).jpeg",
   search: "whatsapp accounts usa canada france number",
   description: "✅ Ready account numbers are available.\n🛍 Select the country number you need before purchase.",
   plans: [
@@ -1345,7 +1345,7 @@ plans: [
   badge: "available",
   category: "Video",
   iconType: "image",
-  icon: "netflix-icon.png",
+  icon: "assets/netflix-icon.png",
   search: "netflix premium 4k ultra hd hdr",
   description: "🌈Head Accountတခုမှာ\n🌈5 Profileပါပါတယ်။",
   plans: [
@@ -1364,7 +1364,7 @@ plans: [
   badge: "available",
   category: "Music",
   iconType: "image",
-  icon: "quality_restoration_20260510232104714.png",
+  icon: "assets/quality_restoration_20260510232104714.png",
   search: "spotify music premium individual family own mail",
   warranty: "Free Replacement",
   description: "❗ Some options cannot be renewed.\n✔ Renewal is available only for eligible options.\n🔼 Own email may be available.\n🛍 Check the selected plan details before purchase.",
@@ -1385,7 +1385,7 @@ plans: [
   badge: "available",
   category: "Music",
   iconType: "image",
-  icon: "tidal-logo-rounded-hd-free-png.png",
+  icon: "assets/tidal-logo-rounded-hd-free-png.png",
   search: "tidal music premium individual family own mail",
   note: "❗️ Individual Plan က သက်တမ်းတိုးမရပါ။\n✔️ Family ကတော့ သက်တမ်းတိုးရပါတယ်။\n🔼 Own mail လည်းရပါတယ်။\n🛍 ဒီဈေးတွေပါပဲ။",
   description: "❗ Some options cannot be renewed.\n✔ Renewal is available only for eligible options.\n🔼 Own email may be available.\n🛍 Check account access details before purchase.",
@@ -1403,7 +1403,7 @@ plans: [
   badge: "available",
   category: "Music",
   iconType: "image",
-  icon: "unnamed (1).jpg",
+  icon: "assets/unnamed (1).jpg",
   search: "youtube music ready made private own mail invite",
   note: "❌ သက်တမ်းတိုးမရပါ။\n✔️ Own mail ပါ။",
   description: "❌ 1 Month option cannot be renewed.\n✔ 3 Months Own Mail option can be renewed.\n❗ Availability may change.\n🛍 Choose a plan before purchase.",
@@ -1418,7 +1418,7 @@ plans: [
   badge: "available",
   category: "Music",
   iconType: "image",
-  icon: "488-3.jpg",
+  icon: "assets/488-3.jpg",
   search: "soundcloud go music private ready made account",
   note: "❌ သက်တမ်းတိုးမရပါ။\n✔️ Private Ready made Acc ပေးမှာပါ။",
   description: "❌ Renewal is not available.\n✔ A ready-made account will be delivered.\n🛍 Check access details after delivery.",
@@ -1433,7 +1433,7 @@ plans: [
   badge: "available",
   category: "Music",
   iconType: "image",
-  icon: "a.jpg",
+  icon: "assets/a.jpg",
   search: "qobuz music private ready made account",
   note: "❌ သက်တမ်းတိုးမရပါ။\n✔️ Private Ready made Acc ပေးမှာပါ။",
   description: "❌ Renewal is not available.\n✔ A ready-made account will be delivered.\n🛍 Check access details before purchase.",
@@ -1448,7 +1448,7 @@ plans: [
   badge: "available",
   category: "Music",
   iconType: "image",
-  icon: "apps.62962.14205055896346606.c235e3d6-fbce-45bb-9051-4be6c2ecba8f.png",
+  icon: "assets/apps.62962.14205055896346606.c235e3d6-fbce-45bb-9051-4be6c2ecba8f.png",
   search: "apple music android individual family own mail",
   note: "❗️ Individual Plan က သက်တမ်းတိုးမရပါ။\n✔️ Family ကတော့ သက်တမ်းတိုးရပါတယ်။\n🔼 Own mail လည်းရပါတယ်။\n🛍 ဒီဈေးတွေပါပဲ။",
   description: "❗ Some options cannot be renewed.\n✔ Renewal is available only for eligible options.\n🔼 Own email may be available.\n🛍 Confirm Android compatibility before purchase.",
@@ -1484,7 +1484,7 @@ subtitle: "Tap to see prices",
 badge: "available",
 category:"Video",
 iconType: "image",
-icon: "disney_1xun.3840.webp",
+icon: "assets/disney_1xun.3840.webp",
 search: "disney plus subscription",
 description:"",
 plans: [
@@ -1508,7 +1508,7 @@ subtitle: "Tap to see prices",
 badge: "available",
 category:"Video",
 iconType: "image",
-icon: "Prime-Video.webp",
+icon: "assets/Prime-Video.webp",
 search: "amazon prime video",
 description:"Private profiles and full-time warranty available.",
 plans: [
@@ -1523,7 +1523,7 @@ plans: [
   badge: "available",
   category: "Video",
   iconType: "image",
-  icon: "8bb1f032b24ebd0dc4eb601a22dc622f.jpg",
+  icon: "assets/8bb1f032b24ebd0dc4eb601a22dc622f.jpg",
   search: "bigo live diamonds recharge",
   description: "🎥 Bigo Live Diamonds ဝယ်ယူနိုင် | Live streaming support | Fast top-up service | Safe & reliable",
   plans: [
@@ -1548,7 +1548,7 @@ plans: [
   badge: "available",
   category: "Services",
   iconType: "image",
-  icon: "8379988-768x768.jpg",
+  icon: "assets/8379988-768x768.jpg",
   search: "facebook followers reactions views",
   description: "🌐Global Nameတွေပါ။\n🌐Global Data တွေပါ။",
   plans: [
@@ -1666,7 +1666,7 @@ plans: [
   badge: "available",
   category: "Services",
   iconType: "image",
-  icon: "1000_F_1535651940_vg2Yd6yUBMgpL49j6H9FTK7Y111hHCmk.jpg",
+  icon: "assets/1000_F_1535651940_vg2Yd6yUBMgpL49j6H9FTK7Y111hHCmk.jpg",
   search: "tiktok coins promote",
   minAmount: 100, // 👉 Minimum
   description: "🪙Coin မဝယ်သူများအတွက် Video Link ပေးရုံဖြင့် 1$ မှစ၍ Promote လုပ်နိုင်ပါသည်🔥",
@@ -1686,7 +1686,7 @@ subtitle: "Tap to see prices",
 badge: "available",
 category:"Editing",
 iconType: "image",
-icon: "41054661-1713936918042-110deb4aa0105.jpg",
+icon: "assets/41054661-1713936918042-110deb4aa0105.jpg",
 search: "wink video editor vip",
 description:"have only 1 stock for china region",
 plans: [
@@ -1703,7 +1703,7 @@ plans: [
   badge: "available",
   category: "Editing",
   iconType: "image",
-  icon: "FB_IMG_1774857673765.jpg",
+  icon: "assets/FB_IMG_1774857673765.jpg",
   search: "meitu vip svip beauty edit",
   descriptionPages: [
   {
@@ -1790,7 +1790,7 @@ plans: [
   badge: "available",
   category: "Services",
   iconType: "image",
-  icon: "duolingo-duo-owl-logo-2022.jpg",
+  icon: "assets/duolingo-duo-owl-logo-2022.jpg",
   search: "duolingo individual family own mail",
   description: "✅ Full Warranty\n✅ Own Mail\n🛍 Select the required account type before purchase.",
   plans: [
@@ -1806,7 +1806,7 @@ plans: [
   badge: "available",
   category: "VPN",
   iconType: "image",
-  icon: "NordVPN_Logo_square.svg (1).png",
+  icon: "assets/NordVPN_Logo_square.svg (1).png",
   search: "nord vpn android mac pc ios",
   note: "✔️ Android / Mac / PC ရပါတယ်။\n✔️ iOS ရပါတယ်။\n⚠️ Only one device can be used in Share.\n📊 8-9 Devices can be used in Private.",
   description: "✅ Android / Mac / PC / iOS အသုံးပြုနိုင်သည်။\n⚠️ Share plan တွင် device 1 ခုသာ အသုံးပြုနိုင်သည်။\n📊 Private plan တွင် devices 8–9 ခု အသုံးပြုနိုင်သည်.",
@@ -1825,7 +1825,7 @@ plans: [
   badge: "available",
   category: "VPN",
   iconType: "image",
-  icon: "unnamed (1).webp",
+  icon: "assets/unnamed (1).webp",
   search: "one vpn android mac pc",
   note: "✔️ Android / Mac / PC ရပါတယ်။\n❌ iOS မရပါ။\n⚠️ Only one device can be used in Share.\n📊 8-9 Devices can be used in Private.",
   description: "✅ Android / Mac / PC အသုံးပြုနိုင်သည်။\n❌ iOS မရပါ။\n⚠️ Share plan တွင် device 1 ခုသာ အသုံးပြုနိုင်သည်။\n📊 Private plan တွင် devices 8–9 ခု အသုံးပြုနိုင်သည်.",
@@ -1842,7 +1842,7 @@ plans: [
   badge: "available",
   category: "VPN",
   iconType: "image",
-  icon: "0E7JiQw5SPOUbKbn59GQ.png",
+  icon: "assets/0E7JiQw5SPOUbKbn59GQ.png",
   search: "surfshark vpn android mac pc ios",
   note: "✔️ Android / Mac / PC ရပါတယ်။\n✔️ iOS ရပါတယ်။\n⚠️ Only one device can be used in Share.\n📊 8-9 Devices can be used in Private.",
   description: "✅ Android / Mac / PC / iOS အသုံးပြုနိုင်သည်။\n⚠️ Share plan တွင် device 1 ခုသာ အသုံးပြုနိုင်သည်။\n📊 Private plan တွင် devices 8–9 ခု အသုံးပြုနိုင်သည်.",
@@ -1859,9 +1859,9 @@ plans: [
   category: "Visacard",
   cardTagline: "Visacard / MasterCard",
   iconType: "image",
-  icon: "ypt-wallet-logo.png",
+  icon: "assets/ypt-wallet-logo.png",
   search: "ypt wallet visa master card virtual usd",
-  gallery: ["quality_restoration_20260916125208524.jpg", "quality_restoration_20260916125208390.jpg"],
+  gallery: ["assets/quality_restoration_20260916125208524.jpg", "assets/quality_restoration_20260916125208390.jpg"],
   description: "💥 Full Warranty ပါ။\n💳 Wallet + Visa/Master virtual card တွဲပါ။\n🔐 Private account (သို့) Own-mail ရွေးလို့ရပါတယ်။",
   benefits: {
     subtitle: "Everything included with YPT Wallet",
@@ -1886,14 +1886,14 @@ plans: [
   category: "Visacard",
   cardTagline: "Visacard / MasterCard",
   iconType: "image",
-  icon: "images (6).png",
+  icon: "assets/images (6).png",
   search: "tevau wallet visa master card virtual usd",
-  galleryLeft: "quality_restoration_20260917204302468.jpg",
+  galleryLeft: "assets/quality_restoration_20260917204302468.jpg",
   galleryRight: [
-    "quality_restoration_20260917204302302.jpg",
-    "quality_restoration_20260917204302534.jpg",
-    "quality_restoration_20260917204302417.jpg",
-    "quality_restoration_20260917204302374.jpg"
+    "assets/quality_restoration_20260917204302302.jpg",
+    "assets/quality_restoration_20260917204302534.jpg",
+    "assets/quality_restoration_20260917204302417.jpg",
+    "assets/quality_restoration_20260917204302374.jpg"
   ],
   description: "💥 Full Warranty ပါ။\n💳 Wallet + Visacard တွဲပါ။\n🔐 Private account (သို့) Own-mail ရွေးလို့ရပါတယ်။",
   benefits: {
@@ -1915,11 +1915,11 @@ plans: [
 
     const paymentMethods = ["KPay","Wave","AYA","UAB","Binance"];
     const paymentMeta = {
-      KPay: {label:"KBZPay", logo:"unnamed.png"},
-      Wave: {label:"WavePay", logo:"unnamed (1).png"},
-      AYA: {label:"AYA Pay", logo:"unnamed (2).png"},
-      UAB: {label:"UABPay", logo:"uabpay-black.png"},
-      Binance: {label:"Binance", logo:"23.png"}
+      KPay: {label:"KBZPay", logo:"assets/unnamed.png"},
+      Wave: {label:"WavePay", logo:"assets/unnamed (1).png"},
+      AYA: {label:"AYA Pay", logo:"assets/unnamed (2).png"},
+      UAB: {label:"UABPay", logo:"assets/uabpay-black.png"},
+      Binance: {label:"Binance", logo:"assets/23.png"}
     };
     const paymentAccounts = {
   KPay: {
@@ -2002,12 +2002,12 @@ plans: [
     // cropped version of the sparkle mark in Google-Gemini-AI.webp (that
     // file is the wordmark lockup, unusable as a round avatar as-is).
     const AVATAR_IMAGE_STYLES = {
-      claude: "claude_logo_3ec57d87f2.svg",
-      chatgpt: "chatgpt-icon.png",
-      gemini: "gemini-sparkle-icon.png",
-      manus: "Manus.jpeg",
-      grok: "grok-icon.webp",
-      copilot: "github-copilot-icon.png"
+      claude: "assets/claude_logo_3ec57d87f2.svg",
+      chatgpt: "assets/chatgpt-icon.png",
+      gemini: "assets/gemini-sparkle-icon.png",
+      manus: "assets/Manus.jpeg",
+      grok: "assets/grok-icon.webp",
+      copilot: "assets/github-copilot-icon.png"
     };
     function getAvatarStyleId(){
       const id = currentUser?.user_metadata?.avatar_style;
