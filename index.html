@@ -536,6 +536,7 @@
             <div class="status-step" data-step="approved"><span class="status-step-dot">3</span><span class="status-step-label">Approved</span></div>
           </div>
           <div id="statusDetails" class="order-status-details"></div>
+          <div id="statusReasonBox" class="status-reason-box hidden"><span class="status-reason-icon" id="statusReasonIcon"></span><span class="status-reason-text" id="statusReasonText"></span></div>
           <div class="order-status-hint" id="statusHint">We're checking your payment. This page updates automatically — no need to refresh.</div>
           <button id="openChatBtn" class="telegram-btn hidden" type="button"><svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Open Chat</button>
         </div>
@@ -3525,12 +3526,14 @@ function setOrderStatusUI(status, reason){
   const title = document.getElementById("statusTitle");
   const hint = document.getElementById("statusHint");
   const chatBtn = document.getElementById("openChatBtn");
+  const reasonBox = document.getElementById("statusReasonBox");
   if(currentOrder){
     currentOrder.status = status;
     if(reason !== undefined) currentOrder.reject_reason = reason;
   }
   const rejectReason = reason !== undefined ? reason : currentOrder?.reject_reason;
   updateStatusStepper(status);
+  reasonBox.classList.add("hidden");
   if(status === "approved" || status === "completed"){
     icon.innerHTML = STATUS_ICON_SVG.approved;
     title.textContent = "Order Success!";
@@ -3543,9 +3546,12 @@ function setOrderStatusUI(status, reason){
     // is still reachable for anything else the customer wants to ask.
     icon.innerHTML = rejectedStatusIcon(rejectReason);
     title.textContent = "Order was rejected";
-    hint.textContent = rejectReason
-      ? `${rejectReason} If you have questions, reach us through Message in the Noti menu.`
-      : "This order was rejected. If you have questions, reach us through Message in the Noti menu.";
+    hint.textContent = "If you have questions, reach us through Message in the Noti menu.";
+    if(rejectReason){
+      document.getElementById("statusReasonIcon").innerHTML = rejectedStatusIcon(rejectReason);
+      document.getElementById("statusReasonText").textContent = rejectReason;
+      reasonBox.classList.remove("hidden");
+    }
     chatBtn.classList.add("hidden");
   } else {
     icon.innerHTML = STATUS_ICON_SVG.pending;
