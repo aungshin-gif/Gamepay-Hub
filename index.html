@@ -1858,7 +1858,7 @@ plans: [
   category: "Visacard",
   cardTagline: "Visacard / MasterCard",
   iconType: "image",
-  icon: "images (6).png",
+  icon: "ypt-wallet-logo.png",
   search: "ypt wallet visa master card virtual usd",
   gallery: ["quality_restoration_20260916125208524.jpg", "quality_restoration_20260916125208390.jpg"],
   description: "💥 Full Warranty ပါ။\n💳 Wallet + Visa/Master virtual card တွဲပါ။\n🔐 Private account (သို့) Own-mail ရွေးလို့ရပါတယ်။",
@@ -1884,8 +1884,8 @@ plans: [
   badge: "available",
   category: "Visacard",
   cardTagline: "Visacard / MasterCard",
-  iconType: "emoji",
-  icon: "💳",
+  iconType: "image",
+  icon: "images (6).png",
   search: "tevau wallet visa master card virtual usd",
   galleryLeft: "quality_restoration_20260917204302468.jpg",
   galleryRight: [
@@ -3480,8 +3480,20 @@ async function submitOrderToBackend(){
 const STATUS_ICON_SVG = {
   approved: `<svg class="status-icon-svg approved" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
   rejected: `<svg class="status-icon-svg rejected" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
-  pending: `<svg class="status-icon-svg pending" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`
+  pending: `<svg class="status-icon-svg pending" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+  rejectedStock: `<svg class="status-icon-svg rejected" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>`,
+  rejectedPayment: `<svg class="status-icon-svg rejected" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 2h16v20l-3-2-3 2-3-2-3 2-3-2-1 2Z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="12" y2="15"/></svg>`
 };
+// The reject reason's own wording tells us which icon reads best -- falls
+// back to the plain warning triangle for anything that doesn't match one
+// of the quick-select reasons (a custom-typed reason, or an older order
+// rejected before reasons existed).
+function rejectedStatusIcon(reason){
+  const text = String(reason || "").toLowerCase();
+  if(/stock|ကုန်/.test(text)) return STATUS_ICON_SVG.rejectedStock;
+  if(/payment|ss\b|screenshot/.test(text)) return STATUS_ICON_SVG.rejectedPayment;
+  return STATUS_ICON_SVG.rejected;
+}
 
 const STEP_CHECK_SVG = `<svg class="btn-icon" style="margin:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
 function updateStatusStepper(status){
@@ -3508,12 +3520,16 @@ function updateStatusStepper(status){
   }
 }
 
-function setOrderStatusUI(status){
+function setOrderStatusUI(status, reason){
   const icon = document.getElementById("statusIcon");
   const title = document.getElementById("statusTitle");
   const hint = document.getElementById("statusHint");
   const chatBtn = document.getElementById("openChatBtn");
-  if(currentOrder) currentOrder.status = status;
+  if(currentOrder){
+    currentOrder.status = status;
+    if(reason !== undefined) currentOrder.reject_reason = reason;
+  }
+  const rejectReason = reason !== undefined ? reason : currentOrder?.reject_reason;
   updateStatusStepper(status);
   if(status === "approved" || status === "completed"){
     icon.innerHTML = STATUS_ICON_SVG.approved;
@@ -3525,9 +3541,11 @@ function setOrderStatusUI(status){
     // discuss, so the order-specific chat is not offered here at all --
     // "Message" (the general, non-order support chat under the Noti menu)
     // is still reachable for anything else the customer wants to ask.
-    icon.innerHTML = STATUS_ICON_SVG.rejected;
+    icon.innerHTML = rejectedStatusIcon(rejectReason);
     title.textContent = "Order was rejected";
-    hint.textContent = "This order was rejected. If you have questions, reach us through Message in the Noti menu.";
+    hint.textContent = rejectReason
+      ? `${rejectReason} If you have questions, reach us through Message in the Noti menu.`
+      : "This order was rejected. If you have questions, reach us through Message in the Noti menu.";
     chatBtn.classList.add("hidden");
   } else {
     icon.innerHTML = STATUS_ICON_SVG.pending;
@@ -3570,7 +3588,7 @@ function ensureOrderChannel(order){
   ch.on("broadcast", { event: "status_update" }, (msg) => {
       const isActive = currentOrder?.access_token === order.access_token;
       const watching = isActive && !document.getElementById("orderStatusView").classList.contains("hidden");
-      if(watching) setOrderStatusUI(msg.payload.status);
+      if(watching) setOrderStatusUI(msg.payload.status, msg.payload.reason);
       else bumpUnseenBadge();
       // The My Orders list/stat tiles are a snapshot fetched once when that
       // view opens -- without this, an order approved/rejected while the
@@ -3579,6 +3597,7 @@ function ensureOrderChannel(order){
       const row = myOrdersAllRows.find(r => r.access_token === order.access_token);
       if(row){
         row.status = msg.payload.status;
+        row.reject_reason = msg.payload.reason;
         if(!document.getElementById("myOrdersView")?.classList.contains("hidden")){
           renderMyOrdersStats(myOrdersAllRows);
           renderMyOrdersListFiltered();
@@ -4225,7 +4244,8 @@ function renderMyOrdersListFiltered(){
         product_name: row.product_name, plan_name: row.plan_name,
         amount: row.amount, payment_method: row.payment_method, created_at: row.created_at,
         status: row.status, chat_closed: Boolean(row.chat_closed),
-        plan_warranty: row.plan_warranty, plan_format: row.plan_format, plan_note: row.plan_note
+        plan_warranty: row.plan_warranty, plan_format: row.plan_format, plan_note: row.plan_note,
+        reject_reason: row.reject_reason
       };
       document.body.classList.add("order-mode");
       catalogView.classList.add("hidden");
@@ -4234,7 +4254,7 @@ function renderMyOrdersListFiltered(){
       document.getElementById("orderStatusView").classList.remove("hidden");
       document.getElementById("statusOrderCode").textContent = row.order_code;
       renderStatusDetails(currentOrder);
-      setOrderStatusUI(row.status);
+      setOrderStatusUI(row.status, row.reject_reason);
       subscribeToOrderUpdates();
       window.scrollTo(0, 0);
     });

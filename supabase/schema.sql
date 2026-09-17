@@ -51,6 +51,10 @@ alter table public.orders add column if not exists plan_note text;
 -- is no "reopen" action -- ending a chat is meant to be final, matching a
 -- completed/finished order.
 alter table public.orders add column if not exists chat_closed boolean not null default false;
+-- Set by admin when rejecting an order (a preset reason like "out of
+-- stock" / "payment screenshot wrong", or a custom note) -- shown back to
+-- the customer on their order-status page instead of a generic message.
+alter table public.orders add column if not exists reject_reason text;
 
 -- 2. Chat messages, one thread per order -------------------------
 create table if not exists public.messages (
