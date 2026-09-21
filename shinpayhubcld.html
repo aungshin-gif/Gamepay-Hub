@@ -329,6 +329,17 @@
             <div class="sub">A customer refers a friend using their username as the code -- confirm each one by hand and choose the coupon amount to gift.</div>
           </div>
         </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="settings-row">
+            <div>
+              <div class="settings-label">Welcome coupon amount</div>
+              <div class="settings-sub">Instantly gifted to whoever signs up with a referral code. Doesn't affect the referrer's own reward, which you choose per-referral below.</div>
+            </div>
+            <input id="welcomeCouponAmountInput" type="number" min="0" step="1" style="width:110px;" />
+            <button id="welcomeCouponAmountSaveBtn" class="ghost">Save</button>
+          </div>
+          <div id="welcomeCouponAmountMsg" style="font-size:12.5px;margin-top:8px;color:var(--muted);"></div>
+        </div>
         <div id="referralsList" class="referrals-list"><div class="empty-note">Loading…</div></div>
       </div>
 
@@ -618,7 +629,22 @@ function showReferralsView(){
   referralsView.classList.remove("hidden");
   navReferralsBtn.classList.add("active");
   loadReferrals();
+  loadWelcomeCouponAmount();
 }
+
+async function loadWelcomeCouponAmount(){
+  const input = document.getElementById("welcomeCouponAmountInput");
+  const { data, error } = await sb.rpc("admin_get_welcome_coupon_amount");
+  if(!error && data != null) input.value = data;
+}
+document.getElementById("welcomeCouponAmountSaveBtn")?.addEventListener("click", async () => {
+  const input = document.getElementById("welcomeCouponAmountInput");
+  const msg = document.getElementById("welcomeCouponAmountMsg");
+  const amount = Number(input.value);
+  if(!amount || amount <= 0){ msg.textContent = "Enter a valid amount."; return; }
+  const { error } = await sb.rpc("admin_set_welcome_coupon_amount", { p_amount: amount });
+  msg.textContent = error ? "Could not save: " + error.message : "Saved!";
+});
 navHomeBtn.addEventListener("click", showDashboardHome);
 navSettingsBtn.addEventListener("click", showSettingsView);
 navUsersBtn.addEventListener("click", showUsersView);
@@ -1076,14 +1102,8 @@ async function uploadChatImage(file){
 // same source data as userAvatarHtml(), just sized for the 22px bubble chip
 // instead of a 38px list row.
 function customerBubbleAvatar(u){
-  const style = u?.meta?.avatar_style;
-  const img = CUSTOMER_AVATAR_IMAGE_STYLES[style];
-  if(img) return { background: "#fff", html: `<img src="${img}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` };
-  const shape = CUSTOMER_AVATAR_STYLES[style];
-  if(shape){
-    const colors = CUSTOMER_AVATAR_COLORS[u?.meta?.avatar_color] || CUSTOMER_AVATAR_COLORS.purple;
-    return { background: `linear-gradient(135deg,${colors[0]},${colors[1]})`, html: `<svg viewBox="0 0 24 24" fill="#fff" stroke="#fff" style="width:14px;height:14px;">${shape}</svg>` };
-  }
+  const url = u?.meta?.avatar_url;
+  if(url) return { background: "#fff", html: `<img src="${url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` };
   const email = u?.email || "";
   return { background: avatarGradientFor(email), html: (email[0] || "?").toUpperCase() };
 }
@@ -1304,46 +1324,19 @@ function avatarGradientFor(seed){
   return AVATAR_GRADIENTS[hash % AVATAR_GRADIENTS.length];
 }
 
-// Mirrors index.html's customer-side avatar picker exactly (same color
-// hexes, same icon shapes) so a user who picked one shows up identically
-// here instead of a separately-generated placeholder.
-const CUSTOMER_AVATAR_COLORS = {
-  purple: ["#7a35c7", "#b86bff"], blue: ["#2e6fd6", "#56d2ff"], green: ["#0f7a3f", "#3ec98b"],
-  orange: ["#e0a83c", "#ffcf6b"], pink: ["#a3218b", "#ff8fae"], teal: ["#0e8f8a", "#56f3d6"]
-};
-const CUSTOMER_AVATAR_STYLES = {
-  cat: `<polygon points="5,8 8,2 9.5,7"/><polygon points="19,8 16,2 14.5,7"/><circle cx="9" cy="13.5" r="1.4"/><circle cx="15" cy="13.5" r="1.4"/><path d="M10 17.5c.8.8 3.2.8 4 0" fill="none" stroke-width="1.6" stroke-linecap="round"/>`,
-  robot: `<rect x="7" y="11" width="3" height="3" rx="0.6"/><rect x="14" y="11" width="3" height="3" rx="0.6"/><line x1="12" y1="3" x2="12" y2="6" stroke-width="1.6"/><circle cx="12" cy="2.4" r="1.3"/><rect x="9" y="16.5" width="6" height="2" rx="1"/>`,
-  star: `<path d="M9 10l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2-1.6-1.5 2.2-.3z"/><path d="M15 10l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2-1.6-1.5 2.2-.3z"/><path d="M9 18c1 1 5 1 6 0" fill="none" stroke-width="1.6" stroke-linecap="round"/>`,
-  ghost: `<ellipse cx="9" cy="13" rx="1.3" ry="1.7"/><ellipse cx="15" cy="13" rx="1.3" ry="1.7"/><circle cx="12" cy="17.3" r="1.6" fill="none" stroke-width="1.4"/>`,
-  fox: `<polygon points="6,9 9,3 10,8"/><polygon points="18,9 15,3 14,8"/><circle cx="9.5" cy="14" r="1.2"/><circle cx="14.5" cy="14" r="1.2"/><polygon points="11,16.5 13,16.5 12,18"/>`,
-  bear: `<circle cx="6.5" cy="6.5" r="2.4"/><circle cx="17.5" cy="6.5" r="2.4"/><circle cx="9.3" cy="13.5" r="1.3"/><circle cx="14.7" cy="13.5" r="1.3"/><ellipse cx="12" cy="16.5" rx="2" ry="1.4"/>`,
-  alien: `<circle cx="8" cy="5" r="1"/><circle cx="16" cy="5" r="1"/><line x1="8" y1="6" x2="8" y2="7.5" stroke-width="1.3"/><line x1="16" y1="6" x2="16" y2="7.5" stroke-width="1.3"/><path d="M6 8.5a6 5.5 0 0 1 12 0v5.5a1.8 1.8 0 0 1-1.8 1.8h-.7v1.7h-1.6v-1.7h-1.8v1.7h-1.6v-1.7h-.7A1.8 1.8 0 0 1 6 14Z"/><circle cx="9.3" cy="10.5" r="1.2" fill="rgba(0,0,0,.32)"/><circle cx="14.7" cy="10.5" r="1.2" fill="rgba(0,0,0,.32)"/>`,
-  hero: `<line x1="12" y1="2" x2="12" y2="5" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="1.6" r="1.3"/><path d="M5 10.3c0-1.1 3.1-2.3 7-2.3s7 1.2 7 2.3v2.2c0 .75-.55 1.35-1.28 1.45-1.75.28-3.72.45-5.72.45s-3.97-.17-5.72-.45A1.47 1.47 0 0 1 5 12.5Z"/><circle cx="9" cy="11.4" r="1" fill="rgba(0,0,0,.38)"/><circle cx="15" cy="11.4" r="1" fill="rgba(0,0,0,.38)"/><path d="M8.3 17c1.3 1 6.1 1 7.4 0" fill="none" stroke-width="1.6" stroke-linecap="round"/>`,
-  cursor: `<path d="M5 3.5 18.5 10l-5.7 1.3L15 17l-2.3 1-2.6-5.7-3.6 4z"/>`
-};
-// Mirrors index.html's AVATAR_IMAGE_STYLES -- real brand-logo files instead
-// of drawn shapes, for the AI-tool avatar options.
-const CUSTOMER_AVATAR_IMAGE_STYLES = {
-  claude: "assets/claude_logo_3ec57d87f2.svg", chatgpt: "assets/chatgpt-icon.png", gemini: "assets/gemini-sparkle-icon.png",
-  manus: "assets/Manus.jpeg", grok: "assets/grok-icon.webp", copilot: "assets/github-copilot-icon.png"
-};
 function userDisplayHandle(u){
   const uname = u.meta?.username;
   return uname ? "@" + uname : emailUsername(u.email);
 }
+// A customer's avatar is just their own uploaded photo (avatar_url) --
+// falls back to a deterministic initial-letter gradient when they haven't
+// set one, same as index.html's own fallback.
 function userAvatarHtml(u){
-  const style = u.meta?.avatar_style;
-  const img = CUSTOMER_AVATAR_IMAGE_STYLES[style];
-  if(img){
-    return `<span class="row-avatar user-avatar" style="background:#fff"><img src="${img}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></span>`;
+  const url = u.meta?.avatar_url;
+  if(url){
+    return `<span class="row-avatar user-avatar" style="background:#fff"><img src="${url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></span>`;
   }
-  const shape = CUSTOMER_AVATAR_STYLES[style];
-  if(!shape){
-    return `<span class="row-avatar" style="background:${avatarGradientFor(u.email)}">${(u.email[0] || "?").toUpperCase()}</span>`;
-  }
-  const colors = CUSTOMER_AVATAR_COLORS[u.meta?.avatar_color] || CUSTOMER_AVATAR_COLORS.purple;
-  return `<span class="row-avatar user-avatar" style="background:linear-gradient(135deg,${colors[0]},${colors[1]})"><svg viewBox="0 0 24 24" fill="#fff" stroke="#fff">${shape}</svg></span>`;
+  return `<span class="row-avatar" style="background:${avatarGradientFor(u.email)}">${(u.email[0] || "?").toUpperCase()}</span>`;
 }
 
 function renderUserRow(u){

@@ -1471,7 +1471,7 @@ body{background-color:#050812!important;background-image:radial-gradient(circle 
 .field.payment-field{position:relative!important}.pay-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:9px!important;width:100%!important;align-items:stretch!important}.pay-option{position:relative!important;min-width:0!important;min-height:72px!important;aspect-ratio:1!important;padding:7px 3px!important;border-radius:16px!important;display:grid!important;place-items:center!important;align-content:center!important;gap:5px!important;overflow:visible!important;background:linear-gradient(145deg,rgba(27,52,91,.72),rgba(7,14,30,.88))!important;border:1px solid rgba(86,243,255,.24)!important;color:#eaffff!important;box-shadow:0 12px 25px rgba(0,0,0,.26),inset 0 1px rgba(255,255,255,.10)!important;transition:transform .25s cubic-bezier(.23,1,.32,1),box-shadow .25s ease,border-color .2s ease!important}.pay-option:hover{transform:translateY(-4px) scale(1.03)!important;border-color:var(--cyan)!important;box-shadow:0 0 24px rgba(86,243,255,.28)!important}.pay-option.active{transform:translateY(-3px) scale(1.04)!important;background:linear-gradient(145deg,rgba(86,243,255,.27),rgba(35,120,255,.28))!important;border-color:#d8ffff!important;box-shadow:0 0 0 3px rgba(86,243,255,.14),0 0 30px rgba(86,243,255,.52)!important}.pay-option.active::after{content:"";position:absolute;left:15%;right:15%;bottom:-5px;height:3px;border-radius:99px;background:#dfffff;box-shadow:0 0 9px var(--cyan),0 0 20px var(--cyan)}.pay-logo{display:block!important;width:35px!important;height:35px!important;object-fit:contain!important;border-radius:9px!important;padding:2px!important;background:#fff!important;box-shadow:0 0 15px rgba(86,243,255,.34)!important;transition:transform .25s ease,box-shadow .25s ease!important}.pay-option:hover .pay-logo,.pay-option.active .pay-logo{transform:scale(1.1)!important;box-shadow:0 0 21px rgba(86,243,255,.74)!important}.pay-option span:last-child{font-size:9px!important;font-weight:900!important;white-space:nowrap!important;color:#eaffff!important}.pay-option.active span:last-child{color:#dfffff!important;text-shadow:0 0 9px rgba(86,243,255,.85)}
 .payment-quick-pop{position:absolute!important;left:50%!important;bottom:calc(100% + 12px)!important;z-index:100!important;width:min(260px,calc(100vw - 42px))!important;padding:11px 13px!important;border-radius:15px!important;color:#efffff!important;background:linear-gradient(145deg,rgba(17,42,77,.99),rgba(4,10,25,.99))!important;border:1px solid rgba(86,243,255,.75)!important;box-shadow:0 0 25px rgba(86,243,255,.40),0 16px 30px rgba(0,0,0,.42)!important;opacity:0!important;transform:translateX(-50%) translateY(6px) scale(.94)!important;pointer-events:none!important;transition:opacity .2s ease,transform .2s cubic-bezier(.23,1,.32,1)!important}.payment-quick-pop.show{opacity:1!important;transform:translateX(-50%) translateY(0) scale(1)!important;pointer-events:auto!important}.payment-quick-pop.hidden{display:none!important}.payment-quick-method{font-size:11px!important;color:#aaffff!important}.payment-quick-number{margin-top:3px!important;font-size:16px!important;font-weight:950!important;color:#fff!important;text-shadow:0 0 13px rgba(86,243,255,.62)}.payment-quick-name{margin-top:2px!important;color:#aeefff!important;font-size:11px!important}.payment-quick-hint{margin-top:6px!important;color:#7898b7!important;font-size:9px!important}
 .support-profile{display:flex;align-items:center;justify-content:center;gap:10px;margin:16px auto 4px}.support-avatar{display:block!important;width:52px!important;height:52px!important;border-radius:50%!important;object-fit:cover!important;border:2px solid rgba(86,243,255,.82)!important;box-shadow:0 0 20px rgba(86,243,255,.55)!important}.support-profile strong{display:block;color:#eaffff}.support-profile small{display:block;color:#8ca7bf;margin-top:3px}.support-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.support-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 12px;border-radius:12px;text-decoration:none;color:#eaffff!important;background:rgba(86,243,255,.08)!important;border:1px solid rgba(86,243,255,.35)!important}.support-btn span{color:#8fa8c0;font-size:10px}.whatsapp-support{border-color:rgba(37,211,102,.65)!important}
-.intro-splash{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;align-content:center;gap:10px;background:#ffffff;pointer-events:none;animation:introOut .65s cubic-bezier(.23,1,.32,1) 1.05s forwards}@keyframes introOut{to{opacity:0;visibility:hidden;transform:scale(1.055);filter:blur(7px)}}
+.intro-splash{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;align-content:center;gap:10px;background:#ffffff;pointer-events:none;will-change:opacity,transform,filter;animation:introOut .5s cubic-bezier(.23,1,.32,1) .82s forwards}@keyframes introOut{to{opacity:0;visibility:hidden;transform:scale(1.04);filter:blur(6px)}}
 @media(max-width:760px){.pay-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important}.pay-option{min-height:57px!important;padding:5px 1px!important;border-radius:13px!important}.pay-logo{width:28px!important;height:28px!important}.pay-option span:last-child{font-size:7px!important}.payment-quick-pop{width:min(235px,calc(100vw - 38px))!important}.support-avatar{width:48px!important;height:48px!important}}
 @media(prefers-reduced-motion:reduce){.intro-splash,.intro-splash::before,.intro-logo,.intro-title,.intro-label{animation:none!important}.intro-splash{display:none!important}.pay-option,.pay-logo,.payment-quick-pop{transition:none!important}}
 
@@ -3543,30 +3543,38 @@ body.light-mode .lp-hero .lp-hero-copy,
    just enough depth that the splash doesn't read as a flat white card. */
 .intro-orb{
   position:absolute; border-radius:50%; filter:blur(42px); pointer-events:none;
-  animation:introOrbDrift 6s ease-in-out infinite;
+  animation:introOrbDrift 6s ease-in-out infinite; will-change:transform;
 }
 .intro-orb.a{ width:230px; height:230px; top:12%; left:10%; background:radial-gradient(circle,rgba(122,90,232,.30),transparent 70%); }
-.intro-orb.b{ width:270px; height:270px; bottom:10%; right:8%; background:radial-gradient(circle,rgba(74,120,240,.26),transparent 70%); animation-delay:1.6s; }
+.intro-orb.b{ width:270px; height:270px; bottom:10%; right:8%; background:radial-gradient(circle,rgba(74,120,240,.26),transparent 70%); animation-delay:-1.6s; }
 @keyframes introOrbDrift{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(12px,-16px) scale(1.1); } }
 .intro-ring{
   position:relative; width:96px; height:96px; display:grid; place-items:center;
-  border-radius:50%; animation:introHaloPulse 2s ease-in-out .5s infinite;
+  border-radius:50%;
 }
 .intro-ring::before{
-  content:""; position:absolute; inset:0; border-radius:50%;
+  content:""; position:absolute; inset:0; border-radius:50%; will-change:transform;
   background:conic-gradient(from 0deg,transparent 0deg,rgba(58,91,217,.85) 55deg,transparent 130deg,rgba(155,83,216,.85) 235deg,transparent 320deg);
   -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2.5px));
   mask:radial-gradient(farthest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2.5px));
   animation:introRingSpin 1.4s linear infinite;
 }
+/* A pulsing glow layer instead of an animated box-shadow blur radius --
+   opacity+scale run on the compositor, box-shadow doesn't, and that
+   repaint-every-frame cost was the main source of the janky/delayed feel. */
+.intro-ring::after{
+  content:""; position:absolute; inset:-12px; border-radius:50%; will-change:opacity,transform;
+  background:radial-gradient(circle,rgba(124,77,219,.38),transparent 72%);
+  animation:introHaloPulse 2s ease-in-out .5s infinite;
+}
 @keyframes introRingSpin{ to{ transform:rotate(360deg); } }
 @keyframes introHaloPulse{
-  0%,100%{ box-shadow:0 0 0 0 rgba(124,77,219,.28); }
-  50%{ box-shadow:0 0 30px 8px rgba(124,77,219,.24); }
+  0%,100%{ opacity:.35; transform:scale(.82); }
+  50%{ opacity:.9; transform:scale(1.18); }
 }
 .intro-logo{
   position:relative; width:76px; height:76px; border-radius:22px; overflow:hidden;
-  background:#fff;
+  background:#fff; will-change:transform;
   box-shadow:0 2px 10px rgba(20,28,46,.10), 0 14px 30px rgba(20,28,46,.08);
   animation:introLogoPop .55s cubic-bezier(.34,1.56,.64,1) both, introLogoBreathe 2.6s ease-in-out .65s infinite;
 }
@@ -5157,16 +5165,41 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
   border-radius:4px !important;
 }
 /* KBZPay and WavePay's source logos fill their whole square canvas edge to
-   edge (no built-in breathing room like the other marks have), so at the
-   same size they read as a solid block next to everyone else's small
-   centered icon. Scaling just these two down evens out how much white card
-   shows around each mark. */
-.lp-paybar .pay-mark.pay-compact img{ transform:scale(.74) !important; }
-.lp-paybar .pay-mark.currency-mark{ background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; }
+   edge (no built-in breathing room like the other marks have) -- inset on
+   the shared white card, that left a mismatched white margin around their
+   own colored rounded-square icon while AYA/UAB (whose source art is
+   already white-backed) blended straight into the card. Instead of insetting
+   them, let these two fill the tile edge-to-edge with their own icon so no
+   card-white shows through at all -- reads as a clean small app icon like
+   the others, just without the seam. */
+.lp-paybar .pay-mark.pay-compact{
+  padding:0 !important; background:transparent !important; overflow:hidden;
+}
+.lp-paybar .pay-mark.pay-compact img{
+  width:100% !important; height:100% !important;
+  max-width:100% !important; max-height:100% !important;
+  object-fit:cover !important; transform:none !important; border-radius:8px !important;
+}
+/* Currency chips -- a coin-style badge (glossy highlight, ring border,
+   same overlay trick as the avatar circles) plus its own name underneath,
+   since a bare "$" badge didn't say which currencies were meant. */
+.currency-chip{ display:flex; flex-direction:column; align-items:center; gap:3px; }
+.currency-chip-label{
+  font-size:7.5px; font-weight:800; letter-spacing:.02em; text-transform:uppercase;
+  color:var(--muted,rgba(36,28,60,.55)); white-space:nowrap;
+}
 .currency-badge{
-  width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-  font-size:13px; font-weight:800; color:#fff; font-family:var(--font-display,inherit);
-  box-shadow:0 2px 6px rgba(58,40,110,.16);
+  width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:800; color:#fff; font-family:var(--font-display,inherit);
+  box-shadow:0 2px 6px rgba(58,40,110,.18), inset 0 0 0 1px rgba(255,255,255,.4);
+  border:2px solid rgba(255,255,255,.55);
+  position:relative; overflow:hidden;
+}
+.currency-badge::before{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:
+    radial-gradient(circle at 32% 24%,rgba(255,255,255,.7),transparent 42%),
+    linear-gradient(160deg,rgba(255,255,255,.22),transparent 45%,rgba(0,0,0,.22) 100%);
 }
 .currency-badge.usd{ background:linear-gradient(135deg,#34d399,#059669); }
 .currency-badge.gbp{ background:linear-gradient(135deg,#818cf8,#4f46e5); }
@@ -5174,7 +5207,8 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
 @media(max-width:560px){
   .lp-paybar .pay-mark{ width:44px !important; height:32px !important; }
   .lp-paybar .pay-mark.pay-wide{ width:52px !important; }
-  .currency-badge{ width:26px; height:26px; font-size:12px; }
+  .currency-badge{ width:27px; height:27px; font-size:12.5px; }
+  .currency-chip-label{ font-size:7px; }
 }
 
 /* ===== tiers-mobile-orbs-paytiles ===== */
@@ -5590,7 +5624,7 @@ body.light-mode .status-step-line{ background:var(--border,rgba(31,41,55,.14)); 
    actual code/stats. */
 .acct-referral-compact{
   display:flex; align-items:center; gap:14px;
-  width:min(460px,100%); margin:0 auto 22px; padding:14px;
+  width:min(460px,100%); margin:0 auto 10px; padding:14px;
   border-radius:18px; background:rgba(255,255,255,.05); border:1px solid rgba(199,125,255,.16);
   cursor:pointer;
 }
@@ -5686,13 +5720,12 @@ body.light-mode .invite-code-preview{ background:var(--surface,#fff); border-col
   background:linear-gradient(135deg,#e07a3c,#d58cff); display:flex; align-items:center; justify-content:center;
   box-shadow:0 8px 20px rgba(122,53,199,.35);
 }
-/* Glossy-sphere 3D pass, layered on top of whichever gradient JS sets as
-   the avatar's own background (color picker), so it works for every color
-   without needing a separate 3D variant per swatch. Applies to every
-   avatar-shaped circle in the app: the account page, chat bubbles, and the
-   style picker's own preview swatches. */
-.acct-avatar,.chat-avatar,.acct-style-btn{ position:relative; overflow:hidden; }
-.acct-avatar::before,.chat-avatar::before,.acct-style-btn::before{
+/* Glossy-sphere 3D pass, layered on top of whichever gradient/photo the
+   avatar circle shows, so both the fallback-initial gradient and an
+   uploaded photo's frame get the same subtle sheen. Applies to every
+   avatar-shaped circle in the app: the account page and chat bubbles. */
+.acct-avatar,.chat-avatar{ position:relative; overflow:hidden; }
+.acct-avatar::before,.chat-avatar::before{
   content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
   background:
     radial-gradient(circle at 32% 24%,rgba(255,255,255,.65),transparent 42%),
@@ -5707,43 +5740,13 @@ body.light-mode .invite-code-preview{ background:var(--surface,#fff); border-col
 }
 .acct-avatar-edit svg{ width:12px; height:12px; }
 body.light-mode .acct-avatar-edit{ border-color:#fff; box-shadow:0 1px 4px rgba(0,0,0,.18); }
-.avatar-popover{
-  width:min(300px,100%); margin:14px auto 0; text-align:left;
-  background:rgba(255,255,255,.06); border:1px solid rgba(199,125,255,.2);
-  border-radius:14px; padding:14px;
-}
-.avatar-popover.hidden{ display:none; }
-.avatar-popover-label{
-  font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
-  color:var(--muted,rgba(255,255,255,.5)); margin:0 0 8px;
-}
-.avatar-popover-label:not(:first-child){ margin-top:14px; }
-body.light-mode .avatar-popover{ background:#fff; border-color:var(--border,rgba(31,41,55,.14)); box-shadow:0 8px 20px rgba(20,20,43,.06); }
-body.light-mode .avatar-popover-label{ color:var(--muted,#6b7686); }
-.acct-avatar-swatches{ display:flex; gap:8px; justify-content:center; }
-.acct-swatch{
-  width:24px; height:24px; border-radius:50%; cursor:pointer; border:2px solid transparent;
-  padding:0; transition:transform .12s, border-color .12s;
-}
-.acct-swatch:hover{ transform:scale(1.12); }
-.acct-swatch.active{ border-color:#fff; box-shadow:0 0 0 2px rgba(122,53,199,.55); }
-body.light-mode .acct-swatch.active{ border-color:#1f2937; box-shadow:0 0 0 2px rgba(122,53,199,.35); }
-.acct-avatar-styles{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
-.acct-style-btn{
-  width:34px; height:34px; border-radius:50%; border:2px solid transparent; cursor:pointer; padding:0;
-  display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:13px;
-  transition:transform .12s, border-color .12s;
-}
-.acct-style-btn:hover{ transform:scale(1.08); }
-.acct-style-btn.active{ border-color:#fff; box-shadow:0 0 0 2px rgba(122,53,199,.55); }
-body.light-mode .acct-style-btn.active{ border-color:#1f2937; box-shadow:0 0 0 2px rgba(122,53,199,.35); }
 
 .acct-section-label{
   width:min(460px,100%); margin:0 auto 6px; font-size:10.5px; font-weight:800;
   letter-spacing:.08em; color:var(--muted,rgba(255,255,255,.5));
 }
 .acct-list{
-  width:min(460px,100%); margin:0 auto 16px; border-radius:16px; overflow:hidden;
+  width:min(460px,100%); margin:0 auto 10px; border-radius:16px; overflow:hidden;
   background:rgba(255,255,255,.05); border:1px solid rgba(199,125,255,.16);
 }
 .acct-row{
@@ -6064,7 +6067,12 @@ body.light-mode .mo-badge.rejected{ background:#ffe6ec; color:#c81e4d; border-co
    badges above, so "3 Pending" and a pending row read as the same color
    language instead of introducing a second palette. */
 .mo-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin:12px 0; }
-@media(max-width:420px){ .mo-stats{ grid-template-columns:repeat(2,1fr); } }
+@media(max-width:420px){
+  .mo-stats{ gap:4px; }
+  .mo-stat{ padding:7px 2px; border-radius:10px; }
+  .mo-stat-num{ font-size:13px; }
+  .mo-stat-label{ font-size:7px; }
+}
 /* Tapping a tile filters the list below to that status -- Total clears
    the filter. Kept compact (this used to be noticeably chunkier) since
    it's a quick-glance summary row, not a set of headline numbers. */

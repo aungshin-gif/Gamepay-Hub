@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=27">
+  <link rel="stylesheet" href="styles.css?v=28">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -487,9 +487,9 @@
               <span class="pay-mark" title="AYA Pay"><img src="assets/unnamed (2).png" alt="AYA Pay" loading="lazy" decoding="async"></span>
               <span class="pay-mark" title="UABPay"><img src="assets/uabpay-black.png" alt="UABPay" loading="lazy" decoding="async"></span>
               <span class="pay-mark" title="Binance"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjYuNjEgMTI2LjYxIj48cGF0aCBmaWxsPSIjRjNCQTJGIiBkPSJNMzguNzMgNTMuMiA2My4zIDI4LjYzbDI0LjU4IDI0LjU4IDE0LjMxLTE0LjNMNjMuMyAwIDI0LjQyIDM4Ljl6TTAgNjMuM2wxNC4zLTE0LjMxTDI4LjYzIDYzLjNsLTE0LjMxIDE0LjMxem0zOC43MyAxMC4xMUw2My4zIDk3Ljk4bDI0LjU4LTI0LjU4IDE0LjMyIDE0LjI5LS4wMS4wMkw2My4zIDEyNi42MSAyNC40MiA4Ny43MmwtLjAyLS4wMnpNOTguMzUgNjMuM2wxNC4zMS0xNC4zMSAxNC4zMSAxNC4zLTE0LjMxIDE0LjMyek03Ny44MyA2My4yOWguMDJMNjMuMyA0OC43NSA1Mi41NyA1OS40OGgtLjAwMWwtMS4yOSAxLjI4LTIuODcgMi44Ny0uMDEuMDIuMDEuMDJMNjMuMyA3Ny44NGwxNC41My0xNC41My4wMS0uMDF6Ii8+PC9zdmc+" alt="Binance" loading="lazy" decoding="async"></span>
-              <span class="pay-mark currency-mark" title="US Dollar accepted"><span class="currency-badge usd">$</span></span>
-              <span class="pay-mark currency-mark" title="British Pound accepted"><span class="currency-badge gbp">£</span></span>
-              <span class="pay-mark currency-mark" title="Euro accepted"><span class="currency-badge eur">€</span></span>
+              <span class="currency-chip" title="US Dollar accepted"><span class="currency-badge usd">$</span><span class="currency-chip-label">US Dollar</span></span>
+              <span class="currency-chip" title="British Pound accepted"><span class="currency-badge gbp">£</span><span class="currency-chip-label">British Pound</span></span>
+              <span class="currency-chip" title="Euro accepted"><span class="currency-badge eur">€</span><span class="currency-chip-label">Euro</span></span>
             </div>
           </div>
           <div class="lp-paygroup lp-paygroup-sell">
@@ -745,18 +745,13 @@
         <div class="acct-profile-card">
           <div class="acct-avatar-wrap">
             <div class="acct-avatar" id="acctAvatarCircle">—</div>
-            <button type="button" class="acct-avatar-edit" id="acctAvatarEditBtn" aria-label="Edit avatar">
+            <button type="button" class="acct-avatar-edit" id="acctAvatarEditBtn" aria-label="Change photo">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
             </button>
+            <input type="file" id="avatarFileInput" accept="image/*" class="hidden">
           </div>
           <div class="acct-profile-name" id="acctProfileName">—</div>
           <div class="acct-profile-handle" id="acctProfileHandle">—</div>
-          <div class="avatar-popover hidden" id="avatarPopover">
-            <div class="avatar-popover-label">Color</div>
-            <div class="acct-avatar-swatches" id="acctAvatarSwatches"></div>
-            <div class="avatar-popover-label">Style</div>
-            <div class="acct-avatar-styles" id="acctAvatarStyles"></div>
-          </div>
         </div>
 
         <div class="acct-referral-compact" id="acctReferralInviteBtn">
@@ -2179,71 +2174,17 @@ plans: [
     // where on the site they currently are.
     let myOrderChannels = {};
 
-    // Initial-letter avatars (no photo upload -- just a customer-picked
-    // color), shared by the account page and the chat bubbles.
-    const AVATAR_COLORS = {
-      purple: ["#7a35c7", "#b86bff"],
-      blue:   ["#2e6fd6", "#56d2ff"],
-      green:  ["#0f7a3f", "#3ec98b"],
-      orange: ["#e0a83c", "#ffcf6b"],
-      pink:   ["#a3218b", "#ff8fae"],
-      teal:   ["#0e8f8a", "#56f3d6"]
-    };
-    function getAvatarColorId(){
-      const id = currentUser?.user_metadata?.avatar_color;
-      return AVATAR_COLORS[id] ? id : "purple";
+    // Avatar is just the customer's own uploaded photo (avatars storage
+    // bucket) -- no preset icon/color picker. Falls back to a plain
+    // initial-letter circle on one fixed gradient when no photo is set yet.
+    const DEFAULT_AVATAR_GRADIENT = "linear-gradient(135deg,#7a35c7,#b86bff)";
+    function getAvatarUrl(){
+      return currentUser?.user_metadata?.avatar_url || null;
     }
-    function avatarGradient(colorId){
-      const c = AVATAR_COLORS[colorId] || AVATAR_COLORS.purple;
-      return `linear-gradient(135deg,${c[0]},${c[1]})`;
-    }
-    // Small original cartoon-face overlays for the avatar circle -- plain
-    // shapes only, drawn for this project (not any third party's character).
-    // Each is a bare set of SVG shapes meant to inherit fill/stroke="#fff"
-    // from the wrapping <svg> in avatarStyleSvg().
-    const AVATAR_STYLES = {
-      cat: `<polygon points="5,8 8,2 9.5,7"/><polygon points="19,8 16,2 14.5,7"/><circle cx="9" cy="13.5" r="1.4"/><circle cx="15" cy="13.5" r="1.4"/><path d="M10 17.5c.8.8 3.2.8 4 0" fill="none" stroke-width="1.6" stroke-linecap="round"/>`,
-      robot: `<rect x="7" y="11" width="3" height="3" rx="0.6"/><rect x="14" y="11" width="3" height="3" rx="0.6"/><line x1="12" y1="3" x2="12" y2="6" stroke-width="1.6"/><circle cx="12" cy="2.4" r="1.3"/><rect x="9" y="16.5" width="6" height="2" rx="1"/>`,
-      star: `<path d="M9 10l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2-1.6-1.5 2.2-.3z"/><path d="M15 10l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2-1.6-1.5 2.2-.3z"/><path d="M9 18c1 1 5 1 6 0" fill="none" stroke-width="1.6" stroke-linecap="round"/>`,
-      ghost: `<ellipse cx="9" cy="13" rx="1.3" ry="1.7"/><ellipse cx="15" cy="13" rx="1.3" ry="1.7"/><circle cx="12" cy="17.3" r="1.6" fill="none" stroke-width="1.4"/>`,
-      fox: `<polygon points="6,9 9,3 10,8"/><polygon points="18,9 15,3 14,8"/><circle cx="9.5" cy="14" r="1.2"/><circle cx="14.5" cy="14" r="1.2"/><polygon points="11,16.5 13,16.5 12,18"/>`,
-      bear: `<circle cx="6.5" cy="6.5" r="2.4"/><circle cx="17.5" cy="6.5" r="2.4"/><circle cx="9.3" cy="13.5" r="1.3"/><circle cx="14.7" cy="13.5" r="1.3"/><ellipse cx="12" cy="16.5" rx="2" ry="1.4"/>`,
-      alien: `<circle cx="8" cy="5" r="1"/><circle cx="16" cy="5" r="1"/><line x1="8" y1="6" x2="8" y2="7.5" stroke-width="1.3"/><line x1="16" y1="6" x2="16" y2="7.5" stroke-width="1.3"/><path d="M6 8.5a6 5.5 0 0 1 12 0v5.5a1.8 1.8 0 0 1-1.8 1.8h-.7v1.7h-1.6v-1.7h-1.8v1.7h-1.6v-1.7h-.7A1.8 1.8 0 0 1 6 14Z"/><circle cx="9.3" cy="10.5" r="1.2" fill="rgba(0,0,0,.32)"/><circle cx="14.7" cy="10.5" r="1.2" fill="rgba(0,0,0,.32)"/>`,
-      // A bold masked "hero" face -- own original geometry (antenna, visor
-      // band, grin), not a recreation of any studio's character.
-      hero: `<line x1="12" y1="2" x2="12" y2="5" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="1.6" r="1.3"/><path d="M5 10.3c0-1.1 3.1-2.3 7-2.3s7 1.2 7 2.3v2.2c0 .75-.55 1.35-1.28 1.45-1.75.28-3.72.45-5.72.45s-3.97-.17-5.72-.45A1.47 1.47 0 0 1 5 12.5Z"/><circle cx="9" cy="11.4" r="1" fill="rgba(0,0,0,.38)"/><circle cx="15" cy="11.4" r="1" fill="rgba(0,0,0,.38)"/><path d="M8.3 17c1.3 1 6.1 1 7.4 0" fill="none" stroke-width="1.6" stroke-linecap="round"/>`,
-      // A plain arrow-pointer glyph for the "Cursor" avatar -- no matching
-      // logo asset exists locally, so this stays a drawn shape like the
-      // styles above instead of an <img>.
-      cursor: `<path d="M5 3.5 18.5 10l-5.7 1.3L15 17l-2.3 1-2.6-5.7-3.6 4z"/>`
-    };
-    // AI-tool avatars: real brand marks, rendered as <img> instead of the
-    // inline-shape path the styles above use. gemini-sparkle-icon.png is a
-    // cropped version of the sparkle mark in Google-Gemini-AI.webp (that
-    // file is the wordmark lockup, unusable as a round avatar as-is).
-    const AVATAR_IMAGE_STYLES = {
-      claude: "assets/claude_logo_3ec57d87f2.svg",
-      chatgpt: "assets/chatgpt-icon.png",
-      gemini: "assets/gemini-sparkle-icon.png",
-      manus: "assets/Manus.jpeg",
-      grok: "assets/grok-icon.webp",
-      copilot: "assets/github-copilot-icon.png"
-    };
-    function getAvatarStyleId(){
-      const id = currentUser?.user_metadata?.avatar_style;
-      return (AVATAR_STYLES[id] || AVATAR_IMAGE_STYLES[id]) ? id : null;
-    }
-    function avatarStyleSvg(styleId, sizePx){
-      return `<svg viewBox="0 0 24 24" fill="#fff" stroke="#fff" style="width:${sizePx}px;height:${sizePx}px;flex:0 0 auto;">${AVATAR_STYLES[styleId]}</svg>`;
-    }
-    // Shared render path for both kinds of avatar: a real logo image for
-    // the AI-tool styles, the drawn cartoon shapes for everything else.
-    function renderAvatarIcon(styleId, sizePx){
-      const img = AVATAR_IMAGE_STYLES[styleId];
-      if(img){
-        return `<img src="${img}" alt="" style="width:${sizePx}px;height:${sizePx}px;flex:0 0 auto;border-radius:50%;object-fit:cover;background:#fff;">`;
-      }
-      return avatarStyleSvg(styleId, sizePx);
+    // Shared render path for both the account page's big circle and the
+    // small chat-bubble avatar.
+    function renderAvatarPhoto(sizePx){
+      return `<img src="${getAvatarUrl()}" alt="" style="width:${sizePx}px;height:${sizePx}px;flex:0 0 auto;border-radius:50%;object-fit:cover;background:#fff;">`;
     }
     // Small inline-SVG icon set, used instead of emoji for a cleaner look.
     const ICONS = {
@@ -3986,11 +3927,11 @@ function appendChatBubble(sender, body, imageUrl){
   row.className = "chat-row " + (isAdmin ? "admin" : "customer");
   const avatar = document.createElement("span");
   avatar.className = "chat-row-avatar chat-avatar";
-  const myStyle = getAvatarStyleId();
+  const myPhoto = getAvatarUrl();
   avatar.innerHTML = isAdmin
     ? `<img src="${siteLogoSrc()}" alt="GamePay Hub" />`
-    : (myStyle ? renderAvatarIcon(myStyle, 14) : (getDisplayName()[0]?.toUpperCase() || "?"));
-  avatar.style.background = isAdmin ? "#fff" : avatarGradient(getAvatarColorId());
+    : (myPhoto ? renderAvatarPhoto(14) : (getDisplayName()[0]?.toUpperCase() || "?"));
+  avatar.style.background = isAdmin ? "#fff" : (myPhoto ? "#fff" : DEFAULT_AVATAR_GRADIENT);
   const bubble = document.createElement("div");
   bubble.className = "chat-bubble " + (isAdmin ? "admin" : "customer");
   if(imageUrl){
@@ -5022,49 +4963,27 @@ function getUsername(){
   return currentUser?.user_metadata?.username || currentUser?.email.split("@")[0] || "—";
 }
 
-function renderAvatarSwatches(){
-  const box = document.getElementById("acctAvatarSwatches");
-  if(!box) return;
-  const active = getAvatarColorId();
-  box.innerHTML = Object.keys(AVATAR_COLORS).map(id => `
-    <button type="button" class="acct-swatch ${id === active ? "active" : ""}" data-color="${id}"
-      style="background:${avatarGradient(id)};" aria-label="${id} avatar color"></button>
-  `).join("");
-  box.querySelectorAll(".acct-swatch").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const { data, error } = await supabaseClient.auth.updateUser({ data: { avatar_color: btn.dataset.color } });
-      if(error){ showToast("Could not update: " + error.message); return; }
-      currentUser = data.user;
-      refreshAccountFields();
-    });
-  });
-}
-
-function renderAvatarStylePicker(){
-  const box = document.getElementById("acctAvatarStyles");
-  if(!box) return;
-  const active = getAvatarStyleId();
-  const grad = avatarGradient(getAvatarColorId());
-  const letter = getDisplayName()[0]?.toUpperCase() || "?";
-  const options = [
-    `<button type="button" class="acct-style-btn ${!active ? "active" : ""}" data-style="" style="background:${grad};" aria-label="Plain initial">${letter}</button>`,
-    ...Object.keys({ ...AVATAR_STYLES, ...AVATAR_IMAGE_STYLES }).map(id => `
-      <button type="button" class="acct-style-btn ${id === active ? "active" : ""}" data-style="${id}" style="background:${grad};" aria-label="${id} avatar">${renderAvatarIcon(id, 19)}</button>
-    `)
-  ];
-  box.innerHTML = options.join("");
-  box.querySelectorAll(".acct-style-btn").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const { data, error } = await supabaseClient.auth.updateUser({ data: { avatar_style: btn.dataset.style || null } });
-      if(error){ showToast("Could not update: " + error.message); return; }
-      currentUser = data.user;
-      refreshAccountFields();
-    });
-  });
-}
-
 document.getElementById("acctAvatarEditBtn")?.addEventListener("click", () => {
-  document.getElementById("avatarPopover")?.classList.toggle("hidden");
+  document.getElementById("avatarFileInput")?.click();
+});
+
+document.getElementById("avatarFileInput")?.addEventListener("change", async (e) => {
+  const file = e.target.files?.[0];
+  e.target.value = "";
+  if(!file || !currentUser || !supabaseClient) return;
+  if(!file.type.startsWith("image/")){ showToast("Please choose an image file"); return; }
+  if(file.size > 5 * 1024 * 1024){ showToast("Image must be under 5MB"); return; }
+  showToast("Uploading photo…");
+  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+  const path = `${currentUser.id}/${Date.now()}.${ext}`;
+  const { error: upErr } = await supabaseClient.storage.from("avatars").upload(path, file, { upsert: true });
+  if(upErr){ showToast("Could not upload: " + upErr.message); return; }
+  const { data: pub } = supabaseClient.storage.from("avatars").getPublicUrl(path);
+  const { data, error } = await supabaseClient.auth.updateUser({ data: { avatar_url: pub.publicUrl } });
+  if(error){ showToast("Could not update: " + error.message); return; }
+  currentUser = data.user;
+  refreshAccountFields();
+  showToast("Photo updated!");
 });
 
 function refreshAccountFields(){
@@ -5072,13 +4991,11 @@ function refreshAccountFields(){
   const name = getDisplayName();
   const username = getUsername();
   const avatarCircle = document.getElementById("acctAvatarCircle");
-  const styleId = getAvatarStyleId();
-  avatarCircle.innerHTML = styleId ? renderAvatarIcon(styleId, 38) : (name[0]?.toUpperCase() || "?");
-  avatarCircle.style.background = avatarGradient(getAvatarColorId());
+  const photo = getAvatarUrl();
+  avatarCircle.innerHTML = photo ? renderAvatarPhoto(38) : (name[0]?.toUpperCase() || "?");
+  avatarCircle.style.background = photo ? "#fff" : DEFAULT_AVATAR_GRADIENT;
   document.getElementById("acctProfileName").textContent = name;
   document.getElementById("acctProfileHandle").textContent = "@" + username;
-  renderAvatarSwatches();
-  renderAvatarStylePicker();
   document.getElementById("acctDisplayNameValue").textContent = name;
   document.getElementById("acctEmailValue").textContent = maskEmail(currentUser.email);
 }
@@ -5597,7 +5514,7 @@ animateParticles();
 <script>
 (() => {
   const splash=document.querySelector(".intro-splash");
-  if(splash){const reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;if(reduce)splash.remove();else setTimeout(()=>splash.remove(),1850)}
+  if(splash){const reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;if(reduce)splash.remove();else setTimeout(()=>splash.remove(),1320)}
   document.querySelectorAll("img").forEach((img,i)=>{if(i>0){img.loading="lazy";img.decoding="async"}});
 })();
 </script>
