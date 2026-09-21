@@ -5584,65 +5584,97 @@ body.light-mode .status-step-label{ color:var(--muted,#6b7686); }
 body.light-mode .status-step.done .status-step-label, body.light-mode .status-step.current .status-step-label{ color:var(--ink,#1f2937); }
 body.light-mode .status-step-line{ background:var(--border,rgba(31,41,55,.14)); }
 
-/* My Account -- Refer & Earn card: a bigger, more eye-catching box than
-   the plain .acct-list rows, with an animated glow border so it reads as
-   a promo/reward moment instead of another settings line. */
-.acct-referral-card{
-  position:relative; width:min(460px,100%); margin:0 auto 22px; padding:20px;
-  border-radius:20px; border:1.5px solid rgba(124,58,237,.35);
-  background:linear-gradient(160deg, rgba(122,53,199,.22), rgba(30,10,50,.55));
-  backdrop-filter:blur(18px) saturate(1.3); -webkit-backdrop-filter:blur(18px) saturate(1.3);
-  box-shadow:0 20px 50px rgba(93,72,137,.25), inset 0 1px rgba(255,255,255,.10);
-  overflow:hidden;
+/* My Account -- Refer & Earn: a single compact row (icon + copy + CTA),
+   same spirit as a typical wallet app's referral banner, instead of a
+   tall standalone card. Tapping it opens the .auth-modal popup with the
+   actual code/stats. */
+.acct-referral-compact{
+  display:flex; align-items:center; gap:14px;
+  width:min(460px,100%); margin:0 auto 22px; padding:14px;
+  border-radius:18px; background:rgba(255,255,255,.05); border:1px solid rgba(199,125,255,.16);
+  cursor:pointer;
 }
-@property --ref-glow-angle{ syntax:'<angle>'; inherits:false; initial-value:0deg; }
-.acct-referral-glow{
-  position:absolute; inset:-2px; border-radius:22px; padding:2px; pointer-events:none;
-  background:conic-gradient(from var(--ref-glow-angle),
-    transparent 0deg, rgba(199,125,255,.9) 60deg, rgba(86,210,255,.7) 140deg,
-    transparent 220deg, transparent 360deg);
-  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  animation:acctReferralGlow 4s linear infinite;
+.acct-referral-compact-icon{
+  flex:0 0 auto; width:52px; height:52px; border-radius:16px;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#ff6b5a,#ff3b30); color:#fff;
+  box-shadow:0 4px 14px rgba(255,59,48,.30);
 }
-@keyframes acctReferralGlow{ to{ --ref-glow-angle:360deg; } }
-@media(prefers-reduced-motion:reduce){ .acct-referral-glow{ animation:none; } }
-.acct-referral-head{ display:flex; align-items:center; gap:12px; margin-bottom:14px; position:relative; }
-.acct-referral-icon{
-  flex:0 0 auto; width:42px; height:42px; border-radius:50%;
+.acct-referral-compact-icon svg{ width:24px; height:24px; }
+.acct-referral-compact-body{ flex:1; min-width:0; }
+.acct-referral-compact-title{ font-size:15px; font-weight:900; }
+.acct-referral-compact-sub{ font-size:11.5px; color:var(--muted,rgba(255,255,255,.6)); margin-top:2px; line-height:1.35; }
+.acct-referral-compact-cta{
+  flex:0 0 auto; border:none; border-radius:999px; padding:9px 16px; font-size:12px; font-weight:800;
+  background:#fff; color:#1f2937; cursor:pointer;
+}
+body.light-mode .acct-referral-compact{ background:var(--surface,#fff); border-color:var(--border,rgba(31,41,55,.14)); }
+body.light-mode .acct-referral-compact-cta{ background:var(--ink,#1f2937); color:#fff; }
+
+/* Stat chips shared by the Invite Friends page. */
+.acct-referral-stats{ display:flex; gap:8px; width:min(460px,100%); margin:0 auto 18px; }
+.acct-referral-stat{
+  flex:1; text-align:center; background:rgba(255,255,255,.05); border:1px solid rgba(199,125,255,.16);
+  border-radius:12px; padding:12px 6px;
+}
+.acct-referral-stat b{ display:block; font-size:17px; font-weight:900; }
+.acct-referral-stat span{ font-size:9.5px; font-weight:700; letter-spacing:.04em; color:var(--muted,rgba(255,255,255,.6)); text-transform:uppercase; margin-top:2px; display:block; }
+body.light-mode .acct-referral-stat{ background:var(--surface,#fff); border-color:var(--border,rgba(31,41,55,.14)); }
+
+/* Invite Friends page -- a dark hero banner branded with the app's own
+   purple/pink gradient instead of a third-party illustration, then the
+   code preview + a single CTA that opens the Share popup. */
+.invite-hero{ text-align:center; width:min(460px,100%); margin:6px auto 18px; padding:26px 20px;
+  border-radius:22px; background:linear-gradient(160deg,#2d0847,#4c1480 55%,#7a35c7);
+  box-shadow:0 20px 50px rgba(93,72,137,.30);
+}
+.invite-hero-icon{
+  width:56px; height:56px; margin:0 auto 14px; border-radius:50%;
   display:flex; align-items:center; justify-content:center;
   background:linear-gradient(135deg,#e0a83c,#ffcf6b); color:#fff;
-  box-shadow:0 4px 14px rgba(224,168,60,.35);
+  box-shadow:0 6px 18px rgba(224,168,60,.40);
 }
-.acct-referral-icon svg{ width:20px; height:20px; }
-.acct-referral-title{ font-size:16px; font-weight:900; color:#fff; }
-.acct-referral-sub{ font-size:11.5px; color:rgba(255,255,255,.7); margin-top:2px; }
-.acct-referral-code-row{
-  display:flex; align-items:center; gap:10px; margin-bottom:14px; position:relative;
-  background:rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.14); border-radius:12px; padding:10px 14px;
+.invite-hero-icon svg{ width:26px; height:26px; }
+.invite-hero-title{ font-size:22px; font-weight:900; color:#fff; margin:0 0 8px; }
+.invite-hero-title span{ color:#ffcf6b; }
+.invite-hero-sub{ font-size:12.5px; color:rgba(255,255,255,.78); line-height:1.5; margin:0; }
+.invite-code-preview{
+  width:min(460px,100%); margin:0 auto 16px; padding:14px; text-align:center;
+  font-family:monospace; font-size:15px; font-weight:800; letter-spacing:.04em;
+  background:rgba(255,255,255,.05); border:1px dashed rgba(199,125,255,.35); border-radius:14px;
 }
-.acct-referral-code{ flex:1; min-width:0; font-family:monospace; font-size:12.5px; font-weight:700; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.acct-referral-copy{
-  flex:0 0 auto; border:none; border-radius:999px; padding:7px 14px; font-size:11.5px; font-weight:800;
+body.light-mode .invite-code-preview{ background:var(--surface,#fff); border-color:rgba(124,58,237,.30); }
+.invite-share-btn{ width:min(460px,100%); margin:0 auto; display:block; }
+
+/* Share popup -- Referral code / link, each its own copyable row, plus
+   share-to-app shortcuts. */
+.share-copy-row{
+  display:flex; align-items:center; gap:10px; margin-bottom:12px;
+  background:rgba(124,58,237,.06); border:1px solid rgba(124,58,237,.18); border-radius:12px; padding:10px 14px;
+}
+.share-copy-text{ flex:1; min-width:0; }
+.share-copy-label{ font-size:9.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--muted,#6b7686); }
+.share-copy-value{ font-family:monospace; font-size:13px; font-weight:700; color:var(--ink,#1f2937); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.share-copy-btn{
+  flex:0 0 auto; width:34px; height:34px; padding:0; border:none; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
   background:linear-gradient(135deg,#7a35c7,#b86bff); color:#fff; cursor:pointer;
 }
-.acct-referral-stats{ display:flex; gap:8px; position:relative; }
-.acct-referral-stat{
-  flex:1; text-align:center; background:rgba(255,255,255,.06); border-radius:10px; padding:10px 6px;
+.share-copy-btn svg{ width:16px; height:16px; }
+.share-apps-row{ display:flex; justify-content:space-between; gap:8px; margin-top:16px; }
+.share-app-btn{
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:6px;
+  background:none; border:none; color:var(--ink,#1f2937); font-size:10.5px; font-weight:700;
+  text-decoration:none; cursor:pointer;
 }
-.acct-referral-stat b{ display:block; font-size:15px; font-weight:900; color:#fff; }
-.acct-referral-stat span{ font-size:9.5px; font-weight:700; letter-spacing:.04em; color:rgba(255,255,255,.6); text-transform:uppercase; margin-top:2px; display:block; }
-body.light-mode .acct-referral-card{
-  background:linear-gradient(160deg,rgba(255,255,255,.92),rgba(240,230,255,.85));
-  border-color:rgba(124,58,237,.25);
+.share-app-icon{
+  width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff;
 }
-body.light-mode .acct-referral-title{ color:#2b2140; }
-body.light-mode .acct-referral-sub{ color:#6b5f85; }
-body.light-mode .acct-referral-code-row{ background:rgba(124,58,237,.06); border-color:rgba(124,58,237,.18); }
-body.light-mode .acct-referral-code{ color:#2b2140; }
-body.light-mode .acct-referral-stat{ background:rgba(124,58,237,.06); }
-body.light-mode .acct-referral-stat b{ color:#2b2140; }
-body.light-mode .acct-referral-stat span{ color:#6b5f85; }
+.share-app-icon svg{ width:20px; height:20px; }
+.share-app-icon.telegram{ background:#29a9eb; }
+.share-app-icon.whatsapp{ background:#25d366; }
+.share-app-icon.x{ background:#000; }
+.share-app-icon.copy{ background:var(--muted,#98a1ad); }
 
 /* My Account -- settings-list style */
 .acct-profile-card{
@@ -6295,11 +6327,24 @@ body.light-mode .status-icon-svg.rejected{ color:#dc2626; }
 .notice-code-popup{ position:fixed; inset:0; z-index:10000; display:flex; align-items:flex-start; justify-content:center; padding-top:78px; background:rgba(8,6,18,.45); backdrop-filter:blur(2px); }
 .notice-code-popup.hidden{ display:none; }
 .notice-code-card{
+  position:relative; overflow:hidden;
   width:min(320px,calc(100vw - 32px)); padding:16px; border-radius:16px;
   background:rgba(18,14,38,.98); border:1px solid rgba(199,125,255,.35);
   box-shadow:0 20px 44px rgba(0,0,0,.4);
   animation:noticeCodeIn .28s cubic-bezier(.23,1,.32,1) both;
 }
+/* Confetti burst for a coupon-code notice -- empty/no pieces for a plain
+   announcement, so it costs nothing when there's nothing to celebrate. */
+.confetti-burst{ position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
+.confetti-piece{
+  position:absolute; top:-12px; width:7px; height:13px; opacity:.95; border-radius:1px;
+  animation:confettiFall 1.6s cubic-bezier(.36,.66,.64,1) forwards;
+}
+@keyframes confettiFall{
+  0%{ transform:translateY(0) rotate(0deg); opacity:1; }
+  100%{ transform:translateY(280px) rotate(var(--rot,220deg)); opacity:0; }
+}
+@media(prefers-reduced-motion:reduce){ .confetti-piece{ animation:none; display:none; } }
 @keyframes noticeCodeIn{ from{ opacity:0; transform:translateY(-8px) scale(.97); } to{ opacity:1; transform:none; } }
 .notice-code-title{ font-size:14px; font-weight:900; color:#fff; margin-bottom:6px; }
 .notice-code-body{ font-size:12.5px; line-height:1.6; color:#d6c9ff; word-break:break-word; white-space:pre-wrap; max-height:46vh; overflow-y:auto; }

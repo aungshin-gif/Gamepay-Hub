@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=25">
+  <link rel="stylesheet" href="styles.css?v=27">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -118,6 +118,7 @@
       <div class="auth-header-actions" id="authHeaderActions"></div>
       <div id="noticeCodePopup" class="notice-code-popup hidden" role="dialog" aria-label="New notice">
         <div class="notice-code-card">
+          <div class="confetti-burst" id="noticeConfettiBurst"></div>
           <div class="notice-code-title" id="noticeCodeTitle"></div>
           <div class="notice-code-body" id="noticeCodeBody"></div>
           <div class="notice-code-actions">
@@ -298,6 +299,55 @@
         </div>
         <button id="pwResetSubmitBtn" class="telegram-btn" type="button" style="width:100%">Reset password</button>
         <div class="auth-switch"><a id="pwBackToChangeLink2">Back</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="editEmailModalBackdrop" class="auth-modal-backdrop hidden">
+    <div class="auth-modal">
+      <span class="auth-close" id="editEmailCloseBtn">&times;</span>
+      <div class="auth-modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></div>
+      <h3>Change email</h3>
+      <p class="auth-sub">We'll send a confirmation link to your new email.</p>
+      <div class="auth-error" id="editEmailError"></div>
+      <div class="auth-field">
+        <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span>
+        <input id="editEmailInput" type="email" placeholder="New email" autocomplete="email" />
+      </div>
+      <button id="editEmailSaveBtn" class="telegram-btn" type="button" style="width:100%">Save</button>
+    </div>
+  </div>
+
+  <div id="shareModalBackdrop" class="auth-modal-backdrop hidden">
+    <div class="auth-modal">
+      <span class="auth-close" id="shareModalCloseBtn">&times;</span>
+      <h3>Share</h3>
+      <p class="auth-sub">Invite a friend — you both win when they join.</p>
+      <div class="share-copy-row">
+        <div class="share-copy-text"><div class="share-copy-label">Referral code</div><div class="share-copy-value" id="shareReferralCodeValue">—</div></div>
+        <button type="button" class="share-copy-btn" id="shareCopyCodeBtn" aria-label="Copy code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+      </div>
+      <div class="share-copy-row">
+        <div class="share-copy-text"><div class="share-copy-label">Referral link</div><div class="share-copy-value" id="shareReferralLinkValue">—</div></div>
+        <button type="button" class="share-copy-btn" id="shareCopyLinkBtn" aria-label="Copy link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+      </div>
+      <div class="share-apps-row">
+        <a class="share-app-btn" id="shareTelegramBtn" target="_blank" rel="noopener">
+          <span class="share-app-icon telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 3.5 2.6 11c-1.2.5-1.2 1.2-.2 1.5l4.9 1.5 1.9 5.8c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.2-2.1 4.7 3.4c.8.5 1.4.2 1.6-.8l3-14c.3-1.2-.5-1.8-1.6-1.3ZM7.9 13.6l10.3-6.5c.5-.3.9-.1.6.3l-8.6 7.8-.3 3.3-1.6-4.9Z"/></svg></span>
+          <span>Telegram</span>
+        </a>
+        <a class="share-app-btn" id="shareWhatsappBtn" target="_blank" rel="noopener">
+          <span class="share-app-icon whatsapp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.01 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.33A9.96 9.96 0 0 0 12.01 22C17.53 22 22 17.52 22 12S17.53 2 12.01 2Zm5.6 14.15c-.24.67-1.38 1.28-1.9 1.33-.5.05-1.02.24-3.42-.7-2.9-1.15-4.76-4.1-4.9-4.29-.14-.19-1.17-1.56-1.17-2.98 0-1.42.75-2.11 1.01-2.4.27-.28.58-.35.78-.35.2 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.8 2 .87 2.15.07.14.12.31.02.5-.1.19-.15.31-.3.48-.14.16-.3.36-.43.49-.14.14-.29.29-.13.57.17.28.75 1.24 1.61 2.01 1.1.99 2.03 1.29 2.31 1.44.28.14.44.12.6-.07.17-.19.71-.83.9-1.12.19-.28.38-.24.63-.14.26.09 1.64.77 1.92.91.28.14.46.21.53.33.07.12.07.68-.16 1.34Z"/></svg></span>
+          <span>WhatsApp</span>
+        </a>
+        <a class="share-app-btn" id="shareXBtn" target="_blank" rel="noopener">
+          <span class="share-app-icon x"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.2 8.2L23.3 22h-6.6l-5.2-6.8L5.5 22H2.4l7.7-8.8L1 2h6.8l4.7 6.2L18.9 2Zm-1.2 18h1.8L7.4 4h-1.9l12.2 16Z"/></svg></span>
+          <span>X</span>
+        </a>
+        <button type="button" class="share-app-btn" id="shareCopyAllBtn">
+          <span class="share-app-icon copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
+          <span>Copy</span>
+        </button>
       </div>
     </div>
   </div>
@@ -709,24 +759,13 @@
           </div>
         </div>
 
-        <div class="acct-referral-card">
-          <div class="acct-referral-glow"></div>
-          <div class="acct-referral-head">
-            <span class="acct-referral-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-            <div>
-              <div class="acct-referral-title">Refer &amp; Earn</div>
-              <div class="acct-referral-sub">Share your code — you both win when a friend joins</div>
-            </div>
+        <div class="acct-referral-compact" id="acctReferralInviteBtn">
+          <span class="acct-referral-compact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+          <div class="acct-referral-compact-body">
+            <div class="acct-referral-compact-title">Referral</div>
+            <div class="acct-referral-compact-sub">Earn 2,000 Ks for every friend who joins</div>
           </div>
-          <div class="acct-referral-code-row">
-            <span class="acct-referral-code" id="acctReferralCode">—</span>
-            <button type="button" class="acct-referral-copy" id="acctReferralCopyBtn">Copy link</button>
-          </div>
-          <div class="acct-referral-stats">
-            <div class="acct-referral-stat"><b id="acctReferralConfirmed">0</b><span>Confirmed</span></div>
-            <div class="acct-referral-stat"><b id="acctReferralPending">0</b><span>Pending</span></div>
-            <div class="acct-referral-stat"><b>2,000 Ks</b><span>Per referral</span></div>
-          </div>
+          <button type="button" class="acct-referral-compact-cta">Invite now</button>
         </div>
 
         <div class="acct-section-label">ACCOUNT</div>
@@ -735,11 +774,6 @@
             <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
             <div class="acct-row-body"><div class="acct-row-label">DISPLAY NAME</div><div class="acct-row-value" id="acctDisplayNameValue">—</div></div>
             <button class="acct-row-edit" id="editDisplayNameBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
-          </div>
-          <div class="acct-row">
-            <span class="acct-row-icon acct-row-icon-text">@</span>
-            <div class="acct-row-body"><div class="acct-row-label">USERNAME</div><div class="acct-row-value" id="acctUsernameValue">—</div></div>
-            <button class="acct-row-edit" id="editUsernameBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
           </div>
           <div class="acct-row">
             <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span>
@@ -766,9 +800,9 @@
 
         <div class="acct-section-label">SECURITY</div>
         <div class="acct-list">
-          <div class="acct-row acct-row-btn" id="changePasswordRow">
-            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span>
-            <div class="acct-row-body"><div class="acct-row-value">Change password</div></div>
+          <div class="acct-row acct-row-btn" id="openSecurityMenuBtn">
+            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+            <div class="acct-row-body"><div class="acct-row-value">Security</div></div>
             <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
           </div>
           <div class="acct-row acct-row-btn danger" id="accountLogoutBtn">
@@ -776,6 +810,47 @@
             <div class="acct-row-body"><div class="acct-row-value">Log out</div></div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div id="securityView" class="hidden order-status-view">
+      <div class="preview-shell">
+        <div class="dashboard-head"><button id="securityBackBtn" class="dashboard-back-btn" type="button">← Back to Account</button><span class="dashboard-chip">SECURITY</span></div>
+        <div class="acct-list" style="margin-top:12px;">
+          <div class="acct-row acct-row-btn" id="securityUsernameRow">
+            <span class="acct-row-icon acct-row-icon-text">@</span>
+            <div class="acct-row-body"><div class="acct-row-label">USERNAME</div><div class="acct-row-value" id="securityUsernameValue">—</div></div>
+            <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </div>
+          <div class="acct-row acct-row-btn" id="securityEmailRow">
+            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span>
+            <div class="acct-row-body"><div class="acct-row-label">EMAIL</div><div class="acct-row-value" id="securityEmailValue">—</div></div>
+            <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </div>
+          <div class="acct-row acct-row-btn" id="securityPasswordRow">
+            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span>
+            <div class="acct-row-body"><div class="acct-row-value">Change password</div></div>
+            <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="inviteFriendsView" class="hidden order-status-view">
+      <div class="preview-shell">
+        <div class="dashboard-head"><button id="inviteFriendsBackBtn" class="dashboard-back-btn" type="button">← Back to Account</button><span class="dashboard-chip">INVITE FRIENDS</span></div>
+        <div class="invite-hero">
+          <div class="invite-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7Z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7Z"/></svg></div>
+          <h2 class="invite-hero-title">Refer &amp; Earn <span>2,000 Ks</span></h2>
+          <p class="invite-hero-sub">Share your code — you both get a coupon when a friend joins GamePay Hub.</p>
+        </div>
+        <div class="acct-referral-stats invite-stats">
+          <div class="acct-referral-stat"><b id="inviteConfirmedStat">0</b><span>Confirmed</span></div>
+          <div class="acct-referral-stat"><b id="invitePendingStat">0</b><span>Pending</span></div>
+          <div class="acct-referral-stat"><b>2,000 Ks</b><span>Per referral</span></div>
+        </div>
+        <div class="invite-code-preview" id="inviteCodePreview">—</div>
+        <button type="button" class="telegram-btn invite-share-btn" id="inviteShareBtn">Invite now</button>
       </div>
     </div>
 
@@ -2086,8 +2161,16 @@ plans: [
       if(!supabaseClient || !currentUser) return;
       const code = pendingReferralCode();
       if(!code) return;
-      await supabaseClient.rpc("submit_referral", { p_code: code });
+      const { data } = await supabaseClient.rpc("submit_referral", { p_code: code });
       try{ localStorage.removeItem("gph_referral_code"); }catch(e){}
+      const issued = data?.[0];
+      if(issued?.coupon_code){
+        showNoticeCodePopup({
+          title: "Welcome coupon!",
+          body: `Thanks for joining with a referral code! Here's your coupon code: ${issued.coupon_code} (worth ${Number(issued.coupon_amount).toLocaleString()} Ks). Enter it at checkout to use it!`,
+        });
+        supabaseClient.rpc("mark_notifications_read").then(() => refreshNoticeBadge());
+      }
     }
     // Every order's broadcast channel the customer has, keyed by access_token
     // -- kept subscribed for as long as they're signed in (not just while
@@ -2277,6 +2360,8 @@ function hideAllOrderSubviews(){
   document.getElementById("myOrdersView")?.classList.add("hidden");
   document.getElementById("noticeView")?.classList.add("hidden");
   document.getElementById("accountView")?.classList.add("hidden");
+  document.getElementById("securityView")?.classList.add("hidden");
+  document.getElementById("inviteFriendsView")?.classList.add("hidden");
   // Every caller of this helper goes on to show something other than the
   // cart itself, so hide the cart's own header bar by default; openOrder()
   // (the one place that shows the cart) turns it back on afterwards.
@@ -3115,6 +3200,29 @@ if(document.readyState === "loading"){
 
     }
 
+// A skeleton screen instead of a full-page spinner for any view switch --
+// shows the shape of the next screen filling in, rather than a blank
+// loading overlay. Shared by the Products->Plans transition and the
+// My Account sub-pages (Security, Invite Friends).
+function skeletonTransition(hideEl, showEl, renderFn){
+  const skeleton = document.getElementById("planSkeleton");
+  hideEl.classList.add("view-fade-out");
+  setTimeout(() => {
+    window.scrollTo(0, 0);
+    hideEl.classList.add("hidden");
+    hideEl.classList.remove("view-fade-out");
+    skeleton?.classList.remove("hidden");
+  }, 140);
+  setTimeout(() => {
+    skeleton?.classList.add("hidden");
+    showEl.classList.remove("hidden");
+    showEl.classList.add("view-fade-in");
+    renderFn && renderFn();
+    window.scrollTo(0, 0);
+    requestAnimationFrame(() => showEl.classList.remove("view-fade-in"));
+  }, 480);
+}
+
     function openOrder(product){
   document.body.classList.add("order-mode");
   if(product.isGuide){
@@ -3155,27 +3263,11 @@ const sameProduct = currentProduct && currentProduct.id === product.id;
   if(couponInput) couponInput.value = "";
   if(couponMsg){ couponMsg.textContent = ""; couponMsg.className = "coupon-msg"; }
 
-  // A skeleton screen instead of the full-page spinner -- shows the shape
-  // of the plans page filling in while it renders, rather than a blank
-  // loading overlay.
-  const planSkeleton = document.getElementById("planSkeleton");
-  catalogView.classList.add("view-fade-out");
-  setTimeout(() => {
-    window.scrollTo(0, 0);
-    catalogView.classList.add("hidden");
-    catalogView.classList.remove("view-fade-out");
-    planSkeleton?.classList.remove("hidden");
-  }, 140);
-  setTimeout(() => {
-    planSkeleton?.classList.add("hidden");
-    orderView.classList.remove("hidden");
-    orderView.classList.add("view-fade-in");
+  skeletonTransition(catalogView, orderView, () => {
     renderOrder();
     renderPayments();
     updatePreview();
-    window.scrollTo(0, 0);
-    requestAnimationFrame(() => orderView.classList.remove("view-fade-in"));
-  }, 480);
+  });
     }
 function closeOrder(){
   document.body.classList.remove("order-mode");
@@ -4628,6 +4720,23 @@ document.getElementById("notiMenuNotice")?.addEventListener("click", async () =>
   if(latestUnread) showNoticeCodePopup(latestUnread);
   else openNoticeView();
 });
+// Fireworks/confetti moment for a coupon-gift notice (referral reward,
+// welcome coupon, or a manual admin gift) -- empty for a plain
+// announcement, since renderConfettiBurst(null) just clears it.
+function renderConfettiBurst(container){
+  document.querySelectorAll(".confetti-burst").forEach(el => { el.innerHTML = ""; });
+  if(!container) return;
+  const colors = ["#7a35c7","#b86bff","#ffcf6b","#56d2ff","#ff8fae","#3ec98b"];
+  for(let i = 0; i < 26; i++){
+    const piece = document.createElement("span");
+    piece.className = "confetti-piece";
+    piece.style.left = Math.random() * 100 + "%";
+    piece.style.background = colors[i % colors.length];
+    piece.style.animationDelay = (Math.random() * 0.35) + "s";
+    piece.style.setProperty("--rot", (Math.random() * 360) + "deg");
+    container.appendChild(piece);
+  }
+}
 function showNoticeCodePopup(notification){
   const popup = document.getElementById("noticeCodePopup");
   if(!popup) return;
@@ -4638,6 +4747,7 @@ function showNoticeCodePopup(notification){
   // Most notices are a plain announcement with nothing to copy (see the
   // new Broadcast feature) -- only the coupon-gift kind has an actual code.
   document.getElementById("noticeCodeCopyBtn")?.classList.toggle("hidden", !code);
+  renderConfettiBurst(code ? document.getElementById("noticeConfettiBurst") : null);
   popup.classList.remove("hidden");
 }
 function hideNoticeCodePopup(){
@@ -4970,9 +5080,11 @@ function refreshAccountFields(){
   renderAvatarSwatches();
   renderAvatarStylePicker();
   document.getElementById("acctDisplayNameValue").textContent = name;
-  document.getElementById("acctUsernameValue").textContent = "@" + username;
   document.getElementById("acctEmailValue").textContent = maskEmail(currentUser.email);
-  document.getElementById("acctReferralCode").textContent = `${location.origin}${location.pathname}?ref=${username}`;
+}
+
+function getReferralLink(){
+  return `${location.origin}${location.pathname}?ref=${getUsername()}`;
 }
 
 async function openAccountView(){
@@ -5003,25 +5115,7 @@ async function openAccountView(){
     document.getElementById("statOrderCount").textContent = "0";
     document.getElementById("statTotalSpent").textContent = "0 Ks";
   }
-
-  const { data: refStats } = await supabaseClient.rpc("my_referral_stats");
-  const stats = refStats?.[0];
-  document.getElementById("acctReferralConfirmed").textContent = String(stats?.confirmed_count ?? 0);
-  document.getElementById("acctReferralPending").textContent = String(stats?.pending_count ?? 0);
 }
-
-document.getElementById("acctReferralCopyBtn")?.addEventListener("click", async () => {
-  const link = document.getElementById("acctReferralCode").textContent;
-  const btn = document.getElementById("acctReferralCopyBtn");
-  try{
-    await navigator.clipboard.writeText(link);
-    const prevLabel = btn.textContent;
-    btn.textContent = "Copied!";
-    setTimeout(() => { btn.textContent = prevLabel; }, 1600);
-  }catch(e){
-    showToast("Could not copy — long-press the code to copy it manually");
-  }
-});
 
 document.getElementById("accountBackBtn")?.addEventListener("click", () => {
   document.getElementById("accountView").classList.add("hidden");
@@ -5094,11 +5188,6 @@ document.getElementById("editDisplayNameBtn")?.addEventListener("click", (e) => 
   if(!supabaseClient || !currentUser) return;
   openEditNameModal("display_name");
 });
-document.getElementById("editUsernameBtn")?.addEventListener("click", (e) => {
-  e.stopPropagation();
-  if(!supabaseClient || !currentUser) return;
-  openEditNameModal("username");
-});
 document.getElementById("editNameSaveBtn")?.addEventListener("click", async () => {
   const input = document.getElementById("editNameInput");
   const err = document.getElementById("editNameError");
@@ -5144,10 +5233,119 @@ function openPwModal(){
 function closePwModal(){
   document.getElementById("pwModalBackdrop").classList.add("hidden");
 }
-document.getElementById("changePasswordRow")?.addEventListener("click", openPwModal);
 document.getElementById("pwModalCloseBtn")?.addEventListener("click", closePwModal);
 document.getElementById("pwModalBackdrop")?.addEventListener("click", (e) => {
   if(e.target.id === "pwModalBackdrop") closePwModal();
+});
+
+/* ---------- Security page (Username / Email / Password) ---------- */
+function openSecurityView(){
+  if(!currentUser) return;
+  document.getElementById("securityUsernameValue").textContent = "@" + getUsername();
+  document.getElementById("securityEmailValue").textContent = maskEmail(currentUser.email);
+  skeletonTransition(document.getElementById("accountView"), document.getElementById("securityView"));
+}
+document.getElementById("openSecurityMenuBtn")?.addEventListener("click", openSecurityView);
+document.getElementById("securityBackBtn")?.addEventListener("click", () => {
+  document.getElementById("securityView").classList.add("hidden");
+  document.getElementById("accountView").classList.remove("hidden");
+  window.scrollTo(0, 0);
+});
+document.getElementById("securityUsernameRow")?.addEventListener("click", () => openEditNameModal("username"));
+document.getElementById("securityPasswordRow")?.addEventListener("click", openPwModal);
+
+/* ---------- Change email popup ---------- */
+function openEditEmailModal(){
+  document.getElementById("editEmailInput").value = currentUser?.email || "";
+  document.getElementById("editEmailError").textContent = "";
+  document.getElementById("editEmailModalBackdrop").classList.remove("hidden");
+}
+function closeEditEmailModal(){
+  document.getElementById("editEmailModalBackdrop").classList.add("hidden");
+}
+document.getElementById("securityEmailRow")?.addEventListener("click", openEditEmailModal);
+document.getElementById("editEmailCloseBtn")?.addEventListener("click", closeEditEmailModal);
+document.getElementById("editEmailModalBackdrop")?.addEventListener("click", (e) => {
+  if(e.target.id === "editEmailModalBackdrop") closeEditEmailModal();
+});
+document.getElementById("editEmailSaveBtn")?.addEventListener("click", async () => {
+  const input = document.getElementById("editEmailInput");
+  const err = document.getElementById("editEmailError");
+  const btn = document.getElementById("editEmailSaveBtn");
+  const next = input.value.trim();
+  if(!next || !next.includes("@")){ err.textContent = "Enter a valid email."; return; }
+  const prevLabel = btn.textContent; btn.disabled = true; btn.textContent = "Saving…";
+  const { error } = await supabaseClient.auth.updateUser({ email: next });
+  btn.disabled = false; btn.textContent = prevLabel;
+  if(error){ err.textContent = error.message; return; }
+  closeEditEmailModal();
+  showToast("Confirmation link sent — check your new email to finish the change.");
+});
+
+/* ---------- Invite Friends page ---------- */
+async function openInviteFriendsView(){
+  if(!currentUser) return;
+  document.getElementById("inviteCodePreview").textContent = getUsername();
+  skeletonTransition(document.getElementById("accountView"), document.getElementById("inviteFriendsView"), async () => {
+    const { data: refStats } = await supabaseClient.rpc("my_referral_stats");
+    const stats = refStats?.[0];
+    document.getElementById("inviteConfirmedStat").textContent = String(stats?.confirmed_count ?? 0);
+    document.getElementById("invitePendingStat").textContent = String(stats?.pending_count ?? 0);
+  });
+}
+document.getElementById("acctReferralInviteBtn")?.addEventListener("click", openInviteFriendsView);
+document.getElementById("inviteFriendsBackBtn")?.addEventListener("click", () => {
+  document.getElementById("inviteFriendsView").classList.add("hidden");
+  document.getElementById("accountView").classList.remove("hidden");
+  window.scrollTo(0, 0);
+});
+
+/* ---------- Share popup ---------- */
+function openShareModal(){
+  if(!currentUser) return;
+  const code = getUsername();
+  const link = getReferralLink();
+  document.getElementById("shareReferralCodeValue").textContent = code;
+  document.getElementById("shareReferralLinkValue").textContent = link;
+  const shareText = encodeURIComponent(`Join GamePay Hub with my referral code ${code} — ${link}`);
+  document.getElementById("shareTelegramBtn").href = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent("Join GamePay Hub with my referral code " + code)}`;
+  document.getElementById("shareWhatsappBtn").href = `https://wa.me/?text=${shareText}`;
+  document.getElementById("shareXBtn").href = `https://twitter.com/intent/tweet?text=${shareText}`;
+  document.getElementById("shareModalBackdrop").classList.remove("hidden");
+}
+function closeShareModal(){
+  document.getElementById("shareModalBackdrop").classList.add("hidden");
+}
+document.getElementById("inviteShareBtn")?.addEventListener("click", openShareModal);
+document.getElementById("shareModalCloseBtn")?.addEventListener("click", closeShareModal);
+document.getElementById("shareModalBackdrop")?.addEventListener("click", (e) => {
+  if(e.target.id === "shareModalBackdrop") closeShareModal();
+});
+async function copyText(text, btn){
+  try{
+    await navigator.clipboard.writeText(text);
+    const prevHTML = btn.innerHTML;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`;
+    setTimeout(() => { btn.innerHTML = prevHTML; }, 1600);
+  }catch(e){
+    showToast("Could not copy — long-press the text to copy it manually");
+  }
+}
+document.getElementById("shareCopyCodeBtn")?.addEventListener("click", (e) => {
+  copyText(document.getElementById("shareReferralCodeValue").textContent, e.currentTarget);
+});
+document.getElementById("shareCopyLinkBtn")?.addEventListener("click", (e) => {
+  copyText(document.getElementById("shareReferralLinkValue").textContent, e.currentTarget);
+});
+document.getElementById("shareCopyAllBtn")?.addEventListener("click", async () => {
+  const code = document.getElementById("shareReferralCodeValue").textContent;
+  const link = document.getElementById("shareReferralLinkValue").textContent;
+  try{
+    await navigator.clipboard.writeText(`Join GamePay Hub with my referral code ${code} — ${link}`);
+    showToast("Copied!");
+  }catch(e){
+    showToast("Could not copy — long-press the text to copy it manually");
+  }
 });
 
 document.getElementById("pwChangeSubmitBtn")?.addEventListener("click", async () => {
