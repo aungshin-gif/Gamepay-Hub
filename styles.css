@@ -5130,9 +5130,25 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
   object-fit:contain !important;
   border-radius:4px !important;
 }
+/* KBZPay and WavePay's source logos fill their whole square canvas edge to
+   edge (no built-in breathing room like the other marks have), so at the
+   same size they read as a solid block next to everyone else's small
+   centered icon. Scaling just these two down evens out how much white card
+   shows around each mark. */
+.lp-paybar .pay-mark.pay-compact img{ transform:scale(.74) !important; }
+.lp-paybar .pay-mark.currency-mark{ background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; }
+.currency-badge{
+  width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:800; color:#fff; font-family:var(--font-display,inherit);
+  box-shadow:0 2px 6px rgba(58,40,110,.16);
+}
+.currency-badge.usd{ background:linear-gradient(135deg,#34d399,#059669); }
+.currency-badge.gbp{ background:linear-gradient(135deg,#818cf8,#4f46e5); }
+.currency-badge.eur{ background:linear-gradient(135deg,#60a5fa,#2563eb); }
 @media(max-width:560px){
   .lp-paybar .pay-mark{ width:44px !important; height:32px !important; }
   .lp-paybar .pay-mark.pay-wide{ width:52px !important; }
+  .currency-badge{ width:26px; height:26px; font-size:12px; }
 }
 
 /* ===== tiers-mobile-orbs-paytiles ===== */
@@ -6398,6 +6414,7 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 .lp-paybar-heading svg{ width:14px; height:14px; flex:0 0 14px; }
 .lp-paybar .pay-mark{ transition:transform .15s ease, box-shadow .15s ease; }
 .lp-paybar .pay-mark:hover{ transform:translateY(-2px); box-shadow:0 6px 14px rgba(58,40,110,.16) !important; }
+.lp-paybar .pay-mark.currency-mark:hover{ box-shadow:none !important; }
 
 @media(min-width:981px){
   .lp-brandstrip{ grid-template-columns:auto minmax(0,1fr) !important; }
