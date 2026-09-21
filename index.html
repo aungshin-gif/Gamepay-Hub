@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=30">
+  <link rel="stylesheet" href="styles.css?v=31">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -484,10 +484,10 @@
           <div class="lp-paygroup">
             <span class="lp-brand-label">Pay with</span>
             <div class="lp-pays">
-              <span class="pay-mark pay-compact" title="KBZPay"><img src="assets/unnamed.png" alt="KBZPay" loading="lazy" decoding="async"></span>
-              <span class="pay-mark pay-compact" title="WavePay"><img src="assets/unnamed (1).png" alt="WavePay" loading="lazy" decoding="async"></span>
+              <span class="pay-mark pay-compact kbz" title="KBZPay"><img src="assets/unnamed.png" alt="KBZPay" loading="lazy" decoding="async"></span>
+              <span class="pay-mark pay-compact wave" title="WavePay"><img src="assets/unnamed (1).png" alt="WavePay" loading="lazy" decoding="async"></span>
               <span class="pay-mark" title="AYA Pay"><img src="assets/unnamed (2).png" alt="AYA Pay" loading="lazy" decoding="async"></span>
-              <span class="pay-mark" title="UABPay"><img src="assets/uabpay-black.png" alt="UABPay" loading="lazy" decoding="async"></span>
+              <span class="pay-mark uab" title="UABPay"><img src="assets/uabpay-black.png" alt="UABPay" loading="lazy" decoding="async"></span>
               <span class="pay-mark" title="Binance"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjYuNjEgMTI2LjYxIj48cGF0aCBmaWxsPSIjRjNCQTJGIiBkPSJNMzguNzMgNTMuMiA2My4zIDI4LjYzbDI0LjU4IDI0LjU4IDE0LjMxLTE0LjNMNjMuMyAwIDI0LjQyIDM4Ljl6TTAgNjMuM2wxNC4zLTE0LjMxTDI4LjYzIDYzLjNsLTE0LjMxIDE0LjMxem0zOC43MyAxMC4xMUw2My4zIDk3Ljk4bDI0LjU4LTI0LjU4IDE0LjMyIDE0LjI5LS4wMS4wMkw2My4zIDEyNi42MSAyNC40MiA4Ny43MmwtLjAyLS4wMnpNOTguMzUgNjMuM2wxNC4zMS0xNC4zMSAxNC4zMSAxNC4zLTE0LjMxIDE0LjMyek03Ny44MyA2My4yOWguMDJMNjMuMyA0OC43NSA1Mi41NyA1OS40OGgtLjAwMWwtMS4yOSAxLjI4LTIuODcgMi44Ny0uMDEuMDIuMDEuMDJMNjMuMyA3Ny44NGwxNC41My0xNC41My4wMS0uMDF6Ii8+PC9zdmc+" alt="Binance" loading="lazy" decoding="async"></span>
               <span class="currency-chip" title="US Dollar accepted"><span class="currency-badge usd">$</span><span class="currency-chip-label">US Dollar</span></span>
               <span class="currency-chip" title="British Pound accepted"><span class="currency-badge gbp">£</span><span class="currency-chip-label">British Pound</span></span>
@@ -5006,22 +5006,7 @@ function getReferralLink(){
   return `${location.origin}${location.pathname}?ref=${getUsername()}`;
 }
 
-async function openAccountView(){
-  if(!currentUser) return;
-  cameFromLanding = !landingShell.classList.contains("hidden");
-  landingShell.classList.add("hidden");
-  catalogShell.classList.remove("hidden");
-  document.body.classList.add("products-mode", "order-mode", "hub-page-mode");
-  document.body.classList.remove("preview-mode", "dashboard-mode");
-  document.documentElement.classList.remove("dashboard-mode");
-  catalogView.classList.add("hidden");
-  hideAllOrderSubviews();
-  orderView.classList.remove("hidden");
-  document.getElementById("accountView").classList.remove("hidden");
-  window.scrollTo(0, 0);
-
-  refreshAccountFields();
-
+async function loadAccountStats(){
   document.getElementById("statOrderCount").textContent = "…";
   document.getElementById("statTotalSpent").textContent = "…";
   if(!supabaseClient) return;
@@ -5034,6 +5019,26 @@ async function openAccountView(){
     document.getElementById("statOrderCount").textContent = "0";
     document.getElementById("statTotalSpent").textContent = "0 Ks";
   }
+}
+
+// Tapping the header's account box used to jump straight to My Account with
+// no transition -- now uses the same skeleton-loading swap as Products ->
+// Plans (and Security/Invite Friends within the account hub) so it doesn't
+// read as an abrupt cut.
+function openAccountView(){
+  if(!currentUser) return;
+  cameFromLanding = !landingShell.classList.contains("hidden");
+  landingShell.classList.add("hidden");
+  catalogShell.classList.remove("hidden");
+  document.body.classList.add("products-mode", "order-mode", "hub-page-mode");
+  document.body.classList.remove("preview-mode", "dashboard-mode");
+  document.documentElement.classList.remove("dashboard-mode");
+  hideAllOrderSubviews();
+  document.getElementById("accountView").classList.remove("hidden");
+  skeletonTransition(catalogView, orderView, () => {
+    refreshAccountFields();
+    loadAccountStats();
+  });
 }
 
 document.getElementById("accountBackBtn")?.addEventListener("click", () => {
