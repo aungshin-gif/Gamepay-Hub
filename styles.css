@@ -1636,14 +1636,16 @@ body.light-mode{background:#dce7f1!important;color:#263d55!important;background-
 @keyframes compactHeaderIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}@keyframes compactOrbPulse{from{transform:scale(1)}to{transform:scale(1.08);filter:brightness(1.12)}}
 .light-mode .compact-header{background:linear-gradient(110deg,rgba(218,231,239,.82),rgba(204,219,229,.70));border-color:rgba(73,126,153,.25);box-shadow:0 9px 22px rgba(46,82,108,.10),inset 0 1px rgba(255,255,255,.65)}.light-mode .compact-name{color:#345571}.light-mode .compact-name b{color:#287f9d}.light-mode .compact-label,.light-mode .compact-status{color:#718799}.light-mode .compact-divider{background:rgba(73,126,153,.28)}
 @media(max-width:640px){.compact-header{width:calc(100% - 24px);min-height:44px;padding:7px 8px;gap:8px}.compact-label,.compact-status{display:none}.compact-name{font-size:10px;letter-spacing:1px}.compact-orb{width:20px;height:20px;border-radius:7px}.compact-header-right{margin-left:auto}.compact-header .theme-toggle{font-size:9px;padding:5px 8px}
-  /* Account button now sits next to the logo instead of the far right --
-     both need to be able to shrink so a long display name doesn't push
-     News/Noti off the edge on a narrow phone. */
-  .compact-header-left{ min-width:0; flex:1 1 auto; gap:8px; }
-  .compact-brand{ min-width:0; flex:0 1 auto; overflow:hidden; }
-  .compact-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .auth-header-actions{ flex:0 0 auto; }
-  .auth-btn{ max-width:108px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:6px 9px; font-size:9px; }
+  /* Account button now sits next to the logo instead of the far right.
+     The "GamePay Hub" wordmark keeps its full text -- it's the account
+     button that shrinks to just its icon on a narrow phone, since a full
+     display name next to it would otherwise force the wordmark down to
+     an unreadable "GAME...". */
+  .compact-header-left{ min-width:0; flex:0 0 auto; gap:8px; }
+  .compact-name{ white-space:nowrap; }
+  #myAccountBtn.auth-btn{ padding:7px 8px; }
+  #myAccountBtn .auth-btn-label{ display:none; }
+  .auth-btn{ font-size:9px; }
 }
 
 /* ===== contrast-and-neon-announcement ===== */

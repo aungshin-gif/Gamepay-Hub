@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=29">
+  <link rel="stylesheet" href="styles.css?v=30">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -4235,7 +4235,7 @@ function renderAuthUI(){
     // Logout used to have its own header button; it now lives as a "Log
     // out" row inside My Account (see #accountLogoutBtn) so the header
     // stays down to My Account + Noti instead of four separate buttons.
-    authHeaderActions.innerHTML = `<button id="myAccountBtn" class="auth-btn" type="button">${ICONS.user}${getDisplayName()}</button>`;
+    authHeaderActions.innerHTML = `<button id="myAccountBtn" class="auth-btn" type="button">${ICONS.user}<span class="auth-btn-label">${getDisplayName()}</span></button>`;
     document.getElementById("myAccountBtn")?.addEventListener("click", openAccountView);
     refreshNoticeBadge();
     subscribeAllMyOrdersRealtime();
