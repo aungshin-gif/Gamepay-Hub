@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=22">
+  <link rel="stylesheet" href="styles.css?v=23">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -456,6 +456,7 @@
           <details class="store-faq-item"><summary>Can I renew my subscription?</summary><p>Renewal depends on the individual plan. Check the plan note before ordering or contact support for confirmation.</p></details>
           <details class="store-faq-item"><summary>How do student discounts work?</summary><p>Student offers may apply to selected products and periods. Contact support with your request to check current availability.</p></details>
           <details class="store-faq-item"><summary>Where can I see new stock and updates?</summary><p>Join the official Telegram channel for new stock, offers, and service announcements.</p></details>
+          <details class="store-faq-item"><summary>My order was rejected — how do I get a refund?</summary><p>Go to Noti, open the order's message, and message our Admin directly from there. Attach a screenshot of the rejected order along with your payment slip, and include the payment method name and phone number you'd like the refund sent to.</p></details>
         </div>
       </section>
     </div><!-- /landingShell -->
@@ -481,6 +482,25 @@
         <div class="products" id="products"></div>
       </div>
     </div><!-- /catalogShell -->
+
+    <div id="planSkeleton" class="order-view hidden" aria-hidden="true">
+      <div class="panel plan-skeleton">
+        <div class="skel-row">
+          <div class="skel-circle"></div>
+          <div class="skel-lines">
+            <div class="skel-line" style="width:62%"></div>
+            <div class="skel-line" style="width:38%"></div>
+          </div>
+        </div>
+        <div class="skel-bar"></div>
+        <div class="skel-block"></div>
+        <div class="skel-line" style="width:46%;margin:14px 0"></div>
+        <div class="skel-chips">
+          <div class="skel-chip"></div>
+          <div class="skel-chip"></div>
+        </div>
+      </div>
+    </div>
 
     <div id="orderView" class="order-view hidden">
       <div class="panel">
@@ -3081,13 +3101,19 @@ const sameProduct = currentProduct && currentProduct.id === product.id;
   if(couponInput) couponInput.value = "";
   if(couponMsg){ couponMsg.textContent = ""; couponMsg.className = "coupon-msg"; }
 
-  // A quick fade instead of the full-page loader -- this is a local
-  // render, not a network fetch, so a heavy spinner overstates the wait.
+  // A skeleton screen instead of the full-page spinner -- shows the shape
+  // of the plans page filling in while it renders, rather than a blank
+  // loading overlay.
+  const planSkeleton = document.getElementById("planSkeleton");
   catalogView.classList.add("view-fade-out");
   setTimeout(() => {
     window.scrollTo(0, 0);
     catalogView.classList.add("hidden");
     catalogView.classList.remove("view-fade-out");
+    planSkeleton?.classList.remove("hidden");
+  }, 140);
+  setTimeout(() => {
+    planSkeleton?.classList.add("hidden");
     orderView.classList.remove("hidden");
     orderView.classList.add("view-fade-in");
     renderOrder();
@@ -3095,7 +3121,7 @@ const sameProduct = currentProduct && currentProduct.id === product.id;
     updatePreview();
     window.scrollTo(0, 0);
     requestAnimationFrame(() => orderView.classList.remove("view-fade-in"));
-  }, 140);
+  }, 480);
     }
 function closeOrder(){
   document.body.classList.remove("order-mode");

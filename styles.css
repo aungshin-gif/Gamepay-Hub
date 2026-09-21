@@ -2823,6 +2823,31 @@ body.preview-mode{ overflow:hidden !important; }
 .view-fade-out{ opacity:0; transition:opacity .14s ease; }
 .view-fade-in{ animation:viewFadeIn .22s ease; }
 @keyframes viewFadeIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
+
+/* ---------- Products -> Plans skeleton screen ---------- */
+.plan-skeleton{ width:min(460px,100%); margin:0 auto; }
+.skel-row{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.skel-circle{ width:40px; height:40px; border-radius:50%; flex:0 0 40px; }
+.skel-lines{ flex:1; min-width:0; display:grid; gap:8px; }
+.skel-line{ height:10px; border-radius:6px; }
+.skel-bar{ height:14px; border-radius:8px; margin-bottom:14px; }
+.skel-block{ height:130px; border-radius:14px; margin-bottom:14px; }
+.skel-chips{ display:flex; gap:10px; }
+.skel-chip{ flex:1; height:48px; border-radius:12px; }
+.skel-circle,.skel-line,.skel-bar,.skel-block,.skel-chip{
+  background:linear-gradient(90deg, rgba(255,255,255,.06) 25%, rgba(255,255,255,.14) 37%, rgba(255,255,255,.06) 63%);
+  background-size:400% 100%;
+  animation:skeletonShimmer 1.4s ease infinite;
+}
+body.light-mode .skel-circle, body.light-mode .skel-line, body.light-mode .skel-bar,
+body.light-mode .skel-block, body.light-mode .skel-chip{
+  background:linear-gradient(90deg, rgba(31,41,55,.07) 25%, rgba(31,41,55,.14) 37%, rgba(31,41,55,.07) 63%);
+  background-size:400% 100%;
+}
+@keyframes skeletonShimmer{ 0%{ background-position:100% 50%; } 100%{ background-position:0% 50%; } }
+@media(prefers-reduced-motion:reduce){
+  .skel-circle,.skel-line,.skel-bar,.skel-block,.skel-chip{ animation:none; }
+}
 .page-loader-inner{ display:grid; justify-items:center; gap:16px; }
 /* A radar-style "connecting" ping instead of a plain spinner -- reads as
    "reaching out to a system" rather than a generic wait indicator. */
