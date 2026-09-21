@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=25">
+  <link rel="stylesheet" href="styles.css?v=26">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -298,6 +298,65 @@
         </div>
         <button id="pwResetSubmitBtn" class="telegram-btn" type="button" style="width:100%">Reset password</button>
         <div class="auth-switch"><a id="pwBackToChangeLink2">Back</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="securityMenuModalBackdrop" class="auth-modal-backdrop hidden">
+    <div class="auth-modal" style="width:min(380px,100%);">
+      <span class="auth-close" id="securityMenuCloseBtn">&times;</span>
+      <div class="auth-modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <h3>Security</h3>
+      <p class="auth-sub">Manage your username, email, and password.</p>
+      <div class="acct-list" style="margin:0 0 6px;">
+        <div class="acct-row acct-row-btn" id="securityUsernameRow">
+          <span class="acct-row-icon acct-row-icon-text">@</span>
+          <div class="acct-row-body"><div class="acct-row-label">USERNAME</div><div class="acct-row-value" id="securityUsernameValue">—</div></div>
+          <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </div>
+        <div class="acct-row acct-row-btn" id="securityEmailRow">
+          <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span>
+          <div class="acct-row-body"><div class="acct-row-label">EMAIL</div><div class="acct-row-value" id="securityEmailValue">—</div></div>
+          <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </div>
+        <div class="acct-row acct-row-btn" id="securityPasswordRow">
+          <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span>
+          <div class="acct-row-body"><div class="acct-row-value">Change password</div></div>
+          <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="editEmailModalBackdrop" class="auth-modal-backdrop hidden">
+    <div class="auth-modal">
+      <span class="auth-close" id="editEmailCloseBtn">&times;</span>
+      <div class="auth-modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></div>
+      <h3>Change email</h3>
+      <p class="auth-sub">We'll send a confirmation link to your new email.</p>
+      <div class="auth-error" id="editEmailError"></div>
+      <div class="auth-field">
+        <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span>
+        <input id="editEmailInput" type="email" placeholder="New email" autocomplete="email" />
+      </div>
+      <button id="editEmailSaveBtn" class="telegram-btn" type="button" style="width:100%">Save</button>
+    </div>
+  </div>
+
+  <div id="referralModalBackdrop" class="auth-modal-backdrop hidden">
+    <div class="auth-modal">
+      <span class="auth-close" id="referralModalCloseBtn">&times;</span>
+      <div class="auth-modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <h3>Refer &amp; Earn</h3>
+      <p class="auth-sub">Share your code — you both win when a friend joins</p>
+      <div class="acct-referral-code-row">
+        <span class="acct-referral-code" id="acctReferralCode">—</span>
+        <button type="button" class="acct-referral-copy" id="acctReferralCopyBtn">Copy link</button>
+      </div>
+      <div class="acct-referral-stats">
+        <div class="acct-referral-stat"><b id="acctReferralConfirmed">0</b><span>Confirmed</span></div>
+        <div class="acct-referral-stat"><b id="acctReferralPending">0</b><span>Pending</span></div>
+        <div class="acct-referral-stat"><b>2,000 Ks</b><span>Per referral</span></div>
       </div>
     </div>
   </div>
@@ -709,24 +768,13 @@
           </div>
         </div>
 
-        <div class="acct-referral-card">
-          <div class="acct-referral-glow"></div>
-          <div class="acct-referral-head">
-            <span class="acct-referral-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-            <div>
-              <div class="acct-referral-title">Refer &amp; Earn</div>
-              <div class="acct-referral-sub">Share your code — you both win when a friend joins</div>
-            </div>
+        <div class="acct-referral-compact" id="acctReferralInviteBtn">
+          <span class="acct-referral-compact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+          <div class="acct-referral-compact-body">
+            <div class="acct-referral-compact-title">Referral</div>
+            <div class="acct-referral-compact-sub">Earn 2,000 Ks for every friend who joins</div>
           </div>
-          <div class="acct-referral-code-row">
-            <span class="acct-referral-code" id="acctReferralCode">—</span>
-            <button type="button" class="acct-referral-copy" id="acctReferralCopyBtn">Copy link</button>
-          </div>
-          <div class="acct-referral-stats">
-            <div class="acct-referral-stat"><b id="acctReferralConfirmed">0</b><span>Confirmed</span></div>
-            <div class="acct-referral-stat"><b id="acctReferralPending">0</b><span>Pending</span></div>
-            <div class="acct-referral-stat"><b>2,000 Ks</b><span>Per referral</span></div>
-          </div>
+          <button type="button" class="acct-referral-compact-cta">Invite now</button>
         </div>
 
         <div class="acct-section-label">ACCOUNT</div>
@@ -735,11 +783,6 @@
             <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
             <div class="acct-row-body"><div class="acct-row-label">DISPLAY NAME</div><div class="acct-row-value" id="acctDisplayNameValue">—</div></div>
             <button class="acct-row-edit" id="editDisplayNameBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
-          </div>
-          <div class="acct-row">
-            <span class="acct-row-icon acct-row-icon-text">@</span>
-            <div class="acct-row-body"><div class="acct-row-label">USERNAME</div><div class="acct-row-value" id="acctUsernameValue">—</div></div>
-            <button class="acct-row-edit" id="editUsernameBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
           </div>
           <div class="acct-row">
             <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span>
@@ -766,9 +809,9 @@
 
         <div class="acct-section-label">SECURITY</div>
         <div class="acct-list">
-          <div class="acct-row acct-row-btn" id="changePasswordRow">
-            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span>
-            <div class="acct-row-body"><div class="acct-row-value">Change password</div></div>
+          <div class="acct-row acct-row-btn" id="openSecurityMenuBtn">
+            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+            <div class="acct-row-body"><div class="acct-row-value">Security</div></div>
             <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
           </div>
           <div class="acct-row acct-row-btn danger" id="accountLogoutBtn">
@@ -4970,7 +5013,6 @@ function refreshAccountFields(){
   renderAvatarSwatches();
   renderAvatarStylePicker();
   document.getElementById("acctDisplayNameValue").textContent = name;
-  document.getElementById("acctUsernameValue").textContent = "@" + username;
   document.getElementById("acctEmailValue").textContent = maskEmail(currentUser.email);
   document.getElementById("acctReferralCode").textContent = `${location.origin}${location.pathname}?ref=${username}`;
 }
@@ -5094,11 +5136,6 @@ document.getElementById("editDisplayNameBtn")?.addEventListener("click", (e) => 
   if(!supabaseClient || !currentUser) return;
   openEditNameModal("display_name");
 });
-document.getElementById("editUsernameBtn")?.addEventListener("click", (e) => {
-  e.stopPropagation();
-  if(!supabaseClient || !currentUser) return;
-  openEditNameModal("username");
-});
 document.getElementById("editNameSaveBtn")?.addEventListener("click", async () => {
   const input = document.getElementById("editNameInput");
   const err = document.getElementById("editNameError");
@@ -5144,10 +5181,78 @@ function openPwModal(){
 function closePwModal(){
   document.getElementById("pwModalBackdrop").classList.add("hidden");
 }
-document.getElementById("changePasswordRow")?.addEventListener("click", openPwModal);
 document.getElementById("pwModalCloseBtn")?.addEventListener("click", closePwModal);
 document.getElementById("pwModalBackdrop")?.addEventListener("click", (e) => {
   if(e.target.id === "pwModalBackdrop") closePwModal();
+});
+
+/* ---------- Security menu popup (Username / Email / Password) ---------- */
+function openSecurityMenu(){
+  if(!currentUser) return;
+  document.getElementById("securityUsernameValue").textContent = "@" + getUsername();
+  document.getElementById("securityEmailValue").textContent = maskEmail(currentUser.email);
+  document.getElementById("securityMenuModalBackdrop").classList.remove("hidden");
+}
+function closeSecurityMenu(){
+  document.getElementById("securityMenuModalBackdrop").classList.add("hidden");
+}
+document.getElementById("openSecurityMenuBtn")?.addEventListener("click", openSecurityMenu);
+document.getElementById("securityMenuCloseBtn")?.addEventListener("click", closeSecurityMenu);
+document.getElementById("securityMenuModalBackdrop")?.addEventListener("click", (e) => {
+  if(e.target.id === "securityMenuModalBackdrop") closeSecurityMenu();
+});
+document.getElementById("securityUsernameRow")?.addEventListener("click", () => {
+  closeSecurityMenu();
+  openEditNameModal("username");
+});
+document.getElementById("securityPasswordRow")?.addEventListener("click", () => {
+  closeSecurityMenu();
+  openPwModal();
+});
+
+/* ---------- Change email popup ---------- */
+function openEditEmailModal(){
+  document.getElementById("editEmailInput").value = currentUser?.email || "";
+  document.getElementById("editEmailError").textContent = "";
+  document.getElementById("editEmailModalBackdrop").classList.remove("hidden");
+}
+function closeEditEmailModal(){
+  document.getElementById("editEmailModalBackdrop").classList.add("hidden");
+}
+document.getElementById("securityEmailRow")?.addEventListener("click", () => {
+  closeSecurityMenu();
+  openEditEmailModal();
+});
+document.getElementById("editEmailCloseBtn")?.addEventListener("click", closeEditEmailModal);
+document.getElementById("editEmailModalBackdrop")?.addEventListener("click", (e) => {
+  if(e.target.id === "editEmailModalBackdrop") closeEditEmailModal();
+});
+document.getElementById("editEmailSaveBtn")?.addEventListener("click", async () => {
+  const input = document.getElementById("editEmailInput");
+  const err = document.getElementById("editEmailError");
+  const btn = document.getElementById("editEmailSaveBtn");
+  const next = input.value.trim();
+  if(!next || !next.includes("@")){ err.textContent = "Enter a valid email."; return; }
+  const prevLabel = btn.textContent; btn.disabled = true; btn.textContent = "Saving…";
+  const { error } = await supabaseClient.auth.updateUser({ email: next });
+  btn.disabled = false; btn.textContent = prevLabel;
+  if(error){ err.textContent = error.message; return; }
+  closeEditEmailModal();
+  showToast("Confirmation link sent — check your new email to finish the change.");
+});
+
+/* ---------- Referral popup ---------- */
+function openReferralModal(){
+  if(!currentUser) return;
+  document.getElementById("referralModalBackdrop").classList.remove("hidden");
+}
+function closeReferralModal(){
+  document.getElementById("referralModalBackdrop").classList.add("hidden");
+}
+document.getElementById("acctReferralInviteBtn")?.addEventListener("click", openReferralModal);
+document.getElementById("referralModalCloseBtn")?.addEventListener("click", closeReferralModal);
+document.getElementById("referralModalBackdrop")?.addEventListener("click", (e) => {
+  if(e.target.id === "referralModalBackdrop") closeReferralModal();
 });
 
 document.getElementById("pwChangeSubmitBtn")?.addEventListener("click", async () => {
