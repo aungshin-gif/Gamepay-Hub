@@ -2819,6 +2819,10 @@ body.preview-mode{ overflow:hidden !important; }
 }
 .page-loader.show{ opacity:1; pointer-events:auto; }
 .page-loader.hidden{ display:none !important; }
+
+.view-fade-out{ opacity:0; transition:opacity .14s ease; }
+.view-fade-in{ animation:viewFadeIn .22s ease; }
+@keyframes viewFadeIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
 .page-loader-inner{ display:grid; justify-items:center; gap:16px; }
 /* A radar-style "connecting" ping instead of a plain spinner -- reads as
    "reaching out to a system" rather than a generic wait indicator. */
@@ -5535,9 +5539,9 @@ body.light-mode .status-step-line{ background:var(--border,rgba(31,41,55,.14)); 
 
 /* My Account -- settings-list style */
 .acct-profile-card{
-  text-align:center; margin:6px auto 22px; width:min(460px,100%);
+  text-align:center; margin:6px auto 14px; width:min(460px,100%);
 }
-.acct-avatar-wrap{ position:relative; width:64px; height:64px; margin:0 auto 12px; }
+.acct-avatar-wrap{ position:relative; width:64px; height:64px; margin:0 auto 8px; }
 .acct-avatar{
   width:64px; height:64px; border-radius:50%; font-size:24px; font-weight:800; color:#fff;
   background:linear-gradient(135deg,#e07a3c,#d58cff); display:flex; align-items:center; justify-content:center;
@@ -5596,15 +5600,15 @@ body.light-mode .acct-swatch.active{ border-color:#1f2937; box-shadow:0 0 0 2px 
 body.light-mode .acct-style-btn.active{ border-color:#1f2937; box-shadow:0 0 0 2px rgba(122,53,199,.35); }
 
 .acct-section-label{
-  width:min(460px,100%); margin:0 auto 8px; font-size:10.5px; font-weight:800;
+  width:min(460px,100%); margin:0 auto 6px; font-size:10.5px; font-weight:800;
   letter-spacing:.08em; color:var(--muted,rgba(255,255,255,.5));
 }
 .acct-list{
-  width:min(460px,100%); margin:0 auto 22px; border-radius:16px; overflow:hidden;
+  width:min(460px,100%); margin:0 auto 16px; border-radius:16px; overflow:hidden;
   background:rgba(255,255,255,.05); border:1px solid rgba(199,125,255,.16);
 }
 .acct-row{
-  display:flex; align-items:center; gap:13px; padding:13px 15px;
+  display:flex; align-items:center; gap:12px; padding:10px 14px;
   border-bottom:1px solid rgba(255,255,255,.07);
 }
 .acct-list .acct-row:last-child{ border-bottom:none; }
@@ -5628,12 +5632,6 @@ body.light-mode .acct-style-btn.active{ border-color:#1f2937; box-shadow:0 0 0 2
 .acct-row-chevron{ flex:0 0 auto; width:15px; height:15px; color:var(--muted,rgba(255,255,255,.4)); }
 .acct-row.danger .acct-row-value{ color:#ff8fae; font-weight:800; }
 .acct-row.danger .acct-row-icon{ background:rgba(255,143,174,.14); color:#ff8fae; }
-.acct-password-form{ padding:6px 15px 15px; }
-.acct-password-form input{ margin-bottom:8px; }
-.acct-password-form.hidden{ display:none; }
-.account-password-msg{ font-size:11.5px; margin-top:6px; min-height:14px; }
-.account-password-msg.ok{ color:#3ec98b; }
-.account-password-msg.err{ color:#ff8fae; }
 
 body.light-mode .acct-profile-handle{ color:var(--muted,#6b7686); }
 body.light-mode .acct-section-label{ color:var(--muted,#6b7686); }

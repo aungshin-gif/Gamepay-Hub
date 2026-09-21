@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=20">
+  <link rel="stylesheet" href="styles.css?v=21">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -223,6 +223,76 @@
     </div>
   </div>
 
+  <div id="editNameModalBackdrop" class="auth-modal-backdrop hidden">
+    <div class="auth-modal">
+      <span class="auth-close" id="editNameCloseBtn">&times;</span>
+      <div class="auth-modal-icon" id="editNameModalIcon"></div>
+      <h3 id="editNameModalTitle">Edit display name</h3>
+      <p class="auth-sub" id="editNameModalSub">This is the name shown on your profile.</p>
+      <div class="auth-error" id="editNameError"></div>
+      <div class="auth-field">
+        <span class="auth-field-icon" id="editNameFieldIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        <input id="editNameInput" type="text" placeholder="Display name" />
+      </div>
+      <button id="editNameSaveBtn" class="telegram-btn" type="button" style="width:100%">Save</button>
+    </div>
+  </div>
+
+  <div id="pwModalBackdrop" class="auth-modal-backdrop hidden">
+    <div class="auth-modal">
+      <span class="auth-close" id="pwModalCloseBtn">&times;</span>
+      <div class="auth-modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></div>
+      <h3 id="pwModalTitle">Change password</h3>
+      <p class="auth-sub" id="pwModalSub">Enter your current password, then choose a new one.</p>
+      <div class="auth-error" id="pwModalError"></div>
+
+      <div id="pwStepChange">
+        <div class="auth-field">
+          <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span>
+          <input id="pwCurrentInput" type="password" placeholder="Current password" autocomplete="current-password" style="padding-right:40px;" />
+          <button type="button" class="auth-field-toggle" id="pwCurrentToggle" aria-label="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="auth-field">
+          <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          <input id="pwNewInput" type="password" placeholder="New password (min 6 characters)" autocomplete="new-password" style="padding-right:40px;" />
+          <button type="button" class="auth-field-toggle" id="pwNewToggle" aria-label="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="auth-field">
+          <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          <input id="pwConfirmInput" type="password" placeholder="Confirm new password" autocomplete="new-password" style="padding-right:40px;" />
+          <button type="button" class="auth-field-toggle" id="pwConfirmToggle" aria-label="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="auth-forgot-row"><a id="pwForgotLink">Forgot current password?</a></div>
+        <button id="pwChangeSubmitBtn" class="telegram-btn" type="button" style="width:100%">Update password</button>
+      </div>
+
+      <div id="pwStepForgotSend" class="hidden">
+        <p class="auth-sub" style="margin-top:-8px;">We'll send a 6-digit code to <b id="pwForgotEmailLabel"></b>.</p>
+        <button id="pwSendCodeBtn" class="telegram-btn" type="button" style="width:100%">Send code</button>
+        <div class="auth-switch"><a id="pwBackToChangeLink1">Back</a></div>
+      </div>
+
+      <div id="pwStepForgotVerify" class="hidden">
+        <div class="auth-field">
+          <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><line x1="12" y1="15" x2="12" y2="17"/></svg></span>
+          <input id="pwOtpInput" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="Code from email" />
+        </div>
+        <div class="auth-field">
+          <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          <input id="pwResetNewInput" type="password" autocomplete="new-password" placeholder="New password (min 6 characters)" style="padding-right:40px;" />
+          <button type="button" class="auth-field-toggle" id="pwResetNewToggle" aria-label="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="auth-field">
+          <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          <input id="pwResetConfirmInput" type="password" autocomplete="new-password" placeholder="Confirm new password" style="padding-right:40px;" />
+          <button type="button" class="auth-field-toggle" id="pwResetConfirmToggle" aria-label="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <button id="pwResetSubmitBtn" class="telegram-btn" type="button" style="width:100%">Reset password</button>
+        <div class="auth-switch"><a id="pwBackToChangeLink2">Back</a></div>
+      </div>
+    </div>
+  </div>
+
   <div class="page">
     <div id="landingShell" class="landing-shell">
       <section class="lp-hero">
@@ -309,7 +379,7 @@
               <figure class="lp-hero-slide is-active" data-slide="0">
                 <img src="assets/hero-digital-premium.jpg" alt="Digital Premium Store" loading="eager" decoding="async" fetchpriority="high">
               </figure>
-              <figure class="lp-hero-slide" data-slide="1">
+              <figure class="lp-hero-slide" data-slide="1" data-cta="Join" data-href="https://t.me/gamepaydyet">
                 <img src="assets/hero-channel-join.jpg" alt="Join the Gamepay Hub Telegram channel" loading="lazy" decoding="async">
               </figure>
               <figure class="lp-hero-slide" data-slide="2">
@@ -645,14 +715,6 @@
             <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span>
             <div class="acct-row-body"><div class="acct-row-value">Change password</div></div>
             <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
-          </div>
-          <div id="passwordFormBox" class="acct-password-form hidden">
-            <div class="auth-field" style="margin-bottom:10px;">
-              <input id="newPasswordInput" type="password" class="input" placeholder="New password (min 6 characters)" autocomplete="new-password" style="margin-bottom:0;padding-right:40px;" />
-              <button type="button" class="auth-field-toggle" id="newPasswordToggle" aria-label="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>
-            </div>
-            <button id="changePasswordBtn" class="telegram-btn" type="button">Update Password</button>
-            <div id="passwordMsg" class="account-password-msg"></div>
           </div>
           <div class="acct-row acct-row-btn danger" id="accountLogoutBtn">
             <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
@@ -2324,7 +2386,11 @@ function returnToStoreHome(){
   }
 }
 document.getElementById("seeDetailsBtn")?.addEventListener("click", showProductsPage);
-document.getElementById("lpHeroBrowseBtn")?.addEventListener("click", showProductsPage);
+document.getElementById("lpHeroBrowseBtn")?.addEventListener("click", (e) => {
+  const href = e.currentTarget.dataset.href;
+  if(href){ window.open(href, "_blank", "noopener"); return; }
+  showProductsPage();
+});
 document.getElementById("backToLandingBtn")?.addEventListener("click", showLandingPage);
 
 // Tapping a card in the hero's Hot Products strip jumps straight into that
@@ -3012,18 +3078,21 @@ const sameProduct = currentProduct && currentProduct.id === product.id;
   if(couponInput) couponInput.value = "";
   if(couponMsg){ couponMsg.textContent = ""; couponMsg.className = "coupon-msg"; }
 
-  // Show a brief loading state, then reveal the plans page.
-  showPageLoader(`Loading ${product.name} plans…`);
+  // A quick fade instead of the full-page loader -- this is a local
+  // render, not a network fetch, so a heavy spinner overstates the wait.
+  catalogView.classList.add("view-fade-out");
   setTimeout(() => {
     window.scrollTo(0, 0);
     catalogView.classList.add("hidden");
+    catalogView.classList.remove("view-fade-out");
     orderView.classList.remove("hidden");
+    orderView.classList.add("view-fade-in");
     renderOrder();
     renderPayments();
     updatePreview();
     window.scrollTo(0, 0);
-    hidePageLoader();
-  }, 420);
+    requestAnimationFrame(() => orderView.classList.remove("view-fade-in"));
+  }, 140);
     }
 function closeOrder(){
   document.body.classList.remove("order-mode");
@@ -3714,10 +3783,17 @@ function siteLogoSrc(){
   const dots = [...root.querySelectorAll(".lp-hero-dot")];
   if(slides.length < 2) return;
   let index = 0;
+  const btn = document.getElementById("lpHeroBrowseBtn");
   function show(i){
     index = i;
     slides.forEach((s, n) => s.classList.toggle("is-active", n === i));
     dots.forEach((d, n) => d.classList.toggle("is-active", n === i));
+    if(btn){
+      const active = slides[i];
+      const cta = active?.dataset.cta || "Browse";
+      btn.innerHTML = cta + ' <span>&rarr;</span>';
+      btn.dataset.href = active?.dataset.href || "";
+    }
   }
   let timer = setInterval(() => show((index + 1) % slides.length), 5000);
   dots.forEach((dot, i) => dot.addEventListener("click", () => {
@@ -4766,10 +4842,6 @@ async function openAccountView(){
   window.scrollTo(0, 0);
 
   refreshAccountFields();
-  document.getElementById("passwordFormBox").classList.add("hidden");
-  document.getElementById("newPasswordInput").value = "";
-  document.getElementById("passwordMsg").textContent = "";
-  document.getElementById("passwordMsg").className = "account-password-msg";
 
   document.getElementById("statOrderCount").textContent = "…";
   document.getElementById("statTotalSpent").textContent = "…";
@@ -4798,26 +4870,6 @@ document.getElementById("viewOrderHistoryBtn")?.addEventListener("click", () => 
   openMyOrdersView();
 });
 
-document.getElementById("changePasswordBtn")?.addEventListener("click", async () => {
-  const msg = document.getElementById("passwordMsg");
-  const newPassword = document.getElementById("newPasswordInput").value;
-  if(!newPassword || newPassword.length < 6){
-    msg.textContent = "Password must be at least 6 characters.";
-    msg.className = "account-password-msg err";
-    return;
-  }
-  if(!supabaseClient) return;
-  const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
-  if(error){
-    msg.textContent = error.message;
-    msg.className = "account-password-msg err";
-    return;
-  }
-  document.getElementById("newPasswordInput").value = "";
-  msg.textContent = "Password updated.";
-  msg.className = "account-password-msg ok";
-});
-
 document.getElementById("accountLogoutBtn")?.addEventListener("click", async () => {
   if(!supabaseClient) return;
   await supabaseClient.auth.signOut();
@@ -4837,33 +4889,166 @@ document.getElementById("accountLogoutBtn")?.addEventListener("click", async () 
   showToast("Logged out");
 });
 
-document.getElementById("changePasswordRow")?.addEventListener("click", () => {
-  document.getElementById("passwordFormBox").classList.toggle("hidden");
-});
+/* ---------- Edit display name / username popup ---------- */
+let editNameField = null; // "display_name" | "username"
 
-document.getElementById("editDisplayNameBtn")?.addEventListener("click", async (e) => {
+function openEditNameModal(field){
+  editNameField = field;
+  const icon = document.getElementById("editNameModalIcon");
+  const title = document.getElementById("editNameModalTitle");
+  const sub = document.getElementById("editNameModalSub");
+  const input = document.getElementById("editNameInput");
+  const err = document.getElementById("editNameError");
+  err.textContent = "";
+  if(field === "username"){
+    icon.innerHTML = `<span style="font-size:26px;font-weight:800;">@</span>`;
+    title.textContent = "Edit username";
+    sub.textContent = "Letters and numbers only, no spaces.";
+    input.placeholder = "Username";
+    input.value = getUsername();
+  } else {
+    icon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+    title.textContent = "Edit display name";
+    sub.textContent = "This is the name shown on your profile.";
+    input.placeholder = "Display name";
+    input.value = getDisplayName();
+  }
+  document.getElementById("editNameModalBackdrop").classList.remove("hidden");
+  setTimeout(() => input.focus(), 50);
+}
+function closeEditNameModal(){
+  document.getElementById("editNameModalBackdrop").classList.add("hidden");
+}
+document.getElementById("editNameCloseBtn")?.addEventListener("click", closeEditNameModal);
+document.getElementById("editNameModalBackdrop")?.addEventListener("click", (e) => {
+  if(e.target.id === "editNameModalBackdrop") closeEditNameModal();
+});
+document.getElementById("editDisplayNameBtn")?.addEventListener("click", (e) => {
   e.stopPropagation();
   if(!supabaseClient || !currentUser) return;
-  const next = prompt("Enter your display name:", getDisplayName());
-  if(!next || !next.trim()) return;
-  const { data, error } = await supabaseClient.auth.updateUser({ data: { display_name: next.trim() } });
-  if(error){ showToast("Could not update: " + error.message); return; }
-  currentUser = data.user;
-  refreshAccountFields();
-  showToast("Display name updated");
+  openEditNameModal("display_name");
 });
-
-document.getElementById("editUsernameBtn")?.addEventListener("click", async (e) => {
+document.getElementById("editUsernameBtn")?.addEventListener("click", (e) => {
   e.stopPropagation();
   if(!supabaseClient || !currentUser) return;
-  const next = prompt("Enter your username (no spaces):", getUsername());
-  if(!next || !next.trim()) return;
-  const clean = next.trim().replace(/\s+/g, "");
-  const { data, error } = await supabaseClient.auth.updateUser({ data: { username: clean } });
-  if(error){ showToast("Could not update: " + error.message); return; }
+  openEditNameModal("username");
+});
+document.getElementById("editNameSaveBtn")?.addEventListener("click", async () => {
+  const input = document.getElementById("editNameInput");
+  const err = document.getElementById("editNameError");
+  const btn = document.getElementById("editNameSaveBtn");
+  const next = input.value.trim();
+  if(!next){ err.textContent = "This field can't be empty."; return; }
+  const value = editNameField === "username" ? next.replace(/\s+/g, "") : next;
+  const prevLabel = btn.textContent; btn.disabled = true; btn.textContent = "Saving…";
+  const { data, error } = await supabaseClient.auth.updateUser({ data: { [editNameField]: value } });
+  btn.disabled = false; btn.textContent = prevLabel;
+  if(error){ err.textContent = error.message; return; }
   currentUser = data.user;
   refreshAccountFields();
-  showToast("Username updated");
+  closeEditNameModal();
+  showToast(editNameField === "username" ? "Username updated" : "Display name updated");
+});
+
+/* ---------- Change password popup ---------- */
+wirePasswordToggle("pwCurrentInput", "pwCurrentToggle");
+wirePasswordToggle("pwNewInput", "pwNewToggle");
+wirePasswordToggle("pwConfirmInput", "pwConfirmToggle");
+wirePasswordToggle("pwResetNewInput", "pwResetNewToggle");
+wirePasswordToggle("pwResetConfirmInput", "pwResetConfirmToggle");
+
+function showPwStep(step){
+  document.getElementById("pwStepChange").classList.toggle("hidden", step !== "change");
+  document.getElementById("pwStepForgotSend").classList.toggle("hidden", step !== "forgot-send");
+  document.getElementById("pwStepForgotVerify").classList.toggle("hidden", step !== "forgot-verify");
+  document.getElementById("pwModalError").textContent = "";
+  document.getElementById("pwModalTitle").textContent = step === "change" ? "Change password" : "Reset password";
+  document.getElementById("pwModalSub").textContent = step === "change"
+    ? "Enter your current password, then choose a new one."
+    : "We'll email you a code to verify it's you.";
+}
+function openPwModal(){
+  ["pwCurrentInput","pwNewInput","pwConfirmInput","pwOtpInput","pwResetNewInput","pwResetConfirmInput"].forEach(id => {
+    document.getElementById(id).value = "";
+  });
+  document.getElementById("pwForgotEmailLabel").textContent = currentUser?.email || "";
+  showPwStep("change");
+  document.getElementById("pwModalBackdrop").classList.remove("hidden");
+}
+function closePwModal(){
+  document.getElementById("pwModalBackdrop").classList.add("hidden");
+}
+document.getElementById("changePasswordRow")?.addEventListener("click", openPwModal);
+document.getElementById("pwModalCloseBtn")?.addEventListener("click", closePwModal);
+document.getElementById("pwModalBackdrop")?.addEventListener("click", (e) => {
+  if(e.target.id === "pwModalBackdrop") closePwModal();
+});
+
+document.getElementById("pwChangeSubmitBtn")?.addEventListener("click", async () => {
+  const err = document.getElementById("pwModalError");
+  const btn = document.getElementById("pwChangeSubmitBtn");
+  const currentPassword = document.getElementById("pwCurrentInput").value;
+  const newPassword = document.getElementById("pwNewInput").value;
+  const confirmPassword = document.getElementById("pwConfirmInput").value;
+  if(!currentPassword){ err.textContent = "Enter your current password."; return; }
+  if(!newPassword || newPassword.length < 6){ err.textContent = "New password must be at least 6 characters."; return; }
+  if(newPassword !== confirmPassword){ err.textContent = "New password and confirmation don't match."; return; }
+  if(!supabaseClient || !currentUser) return;
+
+  const prevLabel = btn.textContent; btn.disabled = true; btn.textContent = "Checking…";
+  const { error: verifyError } = await supabaseClient.auth.signInWithPassword({ email: currentUser.email, password: currentPassword });
+  if(verifyError){
+    btn.disabled = false; btn.textContent = prevLabel;
+    err.textContent = "Current password is incorrect.";
+    return;
+  }
+  const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
+  btn.disabled = false; btn.textContent = prevLabel;
+  if(error){ err.textContent = error.message; return; }
+  closePwModal();
+  showToast("Password updated");
+});
+
+document.getElementById("pwForgotLink")?.addEventListener("click", () => showPwStep("forgot-send"));
+document.getElementById("pwBackToChangeLink1")?.addEventListener("click", () => showPwStep("change"));
+document.getElementById("pwBackToChangeLink2")?.addEventListener("click", () => showPwStep("change"));
+
+document.getElementById("pwSendCodeBtn")?.addEventListener("click", async () => {
+  const err = document.getElementById("pwModalError");
+  const btn = document.getElementById("pwSendCodeBtn");
+  if(!supabaseClient || !currentUser?.email) return;
+  const prevLabel = btn.textContent; btn.disabled = true; btn.textContent = "Sending…";
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(currentUser.email);
+  btn.disabled = false; btn.textContent = prevLabel;
+  if(error){ err.textContent = error.message; return; }
+  showToast("Code sent — check your email");
+  showPwStep("forgot-verify");
+});
+
+document.getElementById("pwResetSubmitBtn")?.addEventListener("click", async () => {
+  const err = document.getElementById("pwModalError");
+  const btn = document.getElementById("pwResetSubmitBtn");
+  const otp = document.getElementById("pwOtpInput").value.trim();
+  const newPassword = document.getElementById("pwResetNewInput").value;
+  const confirmPassword = document.getElementById("pwResetConfirmInput").value;
+  if(!otp){ err.textContent = "Enter the 6-digit code."; return; }
+  if(!newPassword || newPassword.length < 6){ err.textContent = "New password must be at least 6 characters."; return; }
+  if(newPassword !== confirmPassword){ err.textContent = "New password and confirmation don't match."; return; }
+  if(!supabaseClient || !currentUser?.email) return;
+
+  const prevLabel = btn.textContent; btn.disabled = true; btn.textContent = "Verifying…";
+  const { data, error: otpError } = await supabaseClient.auth.verifyOtp({ email: currentUser.email, token: otp, type: "recovery" });
+  if(otpError){
+    btn.disabled = false; btn.textContent = prevLabel;
+    err.textContent = "Invalid or expired code.";
+    return;
+  }
+  const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
+  btn.disabled = false; btn.textContent = prevLabel;
+  if(error){ err.textContent = error.message; return; }
+  currentUser = data.user;
+  closePwModal();
+  showToast("Password reset");
 });
 
 // Restore an existing login session on page load, if any -- either way,
