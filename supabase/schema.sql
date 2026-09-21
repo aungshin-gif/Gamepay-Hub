@@ -781,7 +781,7 @@ drop function if exists public.submit_referral(text);
 create or replace function public.submit_referral(p_code text)
 returns table(coupon_code text, coupon_amount numeric)
 language plpgsql security definer set search_path = public as $$
-declare v_referrer_id uuid; v_code text; v_amount numeric := 2000;
+declare v_referrer_id uuid; v_code text; v_amount numeric;
 begin
   select id into v_referrer_id from auth.users
   where raw_user_meta_data->>'username' = p_code
@@ -789,6 +789,9 @@ begin
   if v_referrer_id is null or v_referrer_id = auth.uid() then
     return;
   end if;
+
+  select value into v_amount from public.app_settings where key = 'welcome_coupon_amount';
+  if v_amount is null then v_amount := 2000; end if;
 
   insert into public.referrals(referrer_id, referred_id)
   values (v_referrer_id, auth.uid())
@@ -883,6 +886,62 @@ begin
 end;
 $$;
 grant execute on function public.admin_confirm_referral to authenticated;
+
+-- Customer profile photos -- one bucket, each user's files scoped to a
+-- <user_id>/ folder of their own so the upload/overwrite policies can be
+-- ownership-checked (unlike chat-images, where anyone-can-upload is fine
+-- since it's just chat attachments).
+insert into storage.buckets (id, name, public)
+values ('avatars', 'avatars', true)
+on conflict (id) do nothing;
+
+drop policy if exists "anyone can view avatars" on storage.objects;
+create policy "anyone can view avatars" on storage.objects
+  for select to anon, authenticated
+  using (bucket_id = 'avatars');
+
+drop policy if exists "users can upload their own avatar" on storage.objects;
+create policy "users can upload their own avatar" on storage.objects
+  for insert to authenticated
+  with check (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+drop policy if exists "users can replace their own avatar" on storage.objects;
+create policy "users can replace their own avatar" on storage.objects
+  for update to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+-- Small admin-editable key/value settings table -- currently just the
+-- default amount for the referred side's instant welcome coupon (was
+-- hardcoded to 2000 in submit_referral() below), so the admin dashboard's
+-- Referrals tab can change it without touching this file again.
+create table if not exists public.app_settings (
+  key text primary key,
+  value numeric not null
+);
+insert into public.app_settings(key, value) values ('welcome_coupon_amount', 2000)
+  on conflict (key) do nothing;
+alter table public.app_settings enable row level security;
+drop policy if exists "admin manage app settings" on public.app_settings;
+create policy "admin manage app settings" on public.app_settings
+  for all using (public.is_admin()) with check (public.is_admin());
+
+create or replace function public.admin_get_welcome_coupon_amount()
+returns numeric
+language sql security definer set search_path = public as $$
+  select value from public.app_settings where key = 'welcome_coupon_amount';
+$$;
+grant execute on function public.admin_get_welcome_coupon_amount to authenticated;
+
+create or replace function public.admin_set_welcome_coupon_amount(p_amount numeric)
+returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_admin() then raise exception 'not authorized'; end if;
+  insert into public.app_settings(key, value) values ('welcome_coupon_amount', p_amount)
+    on conflict (key) do update set value = excluded.value;
+end;
+$$;
+grant execute on function public.admin_set_welcome_coupon_amount to authenticated;
 
 -- ============================================================
 -- One-time setup after running this file:
