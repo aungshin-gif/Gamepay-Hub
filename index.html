@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=22">
+  <link rel="stylesheet" href="styles.css?v=25">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -205,6 +205,15 @@
         <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
         <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" />
         <button type="button" class="auth-field-toggle" id="authPasswordToggle" aria-label="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+      <div class="auth-field hidden" id="authConfirmPasswordField">
+        <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+        <input id="authConfirmPassword" type="password" placeholder="Confirm password" autocomplete="new-password" />
+        <button type="button" class="auth-field-toggle" id="authConfirmPasswordToggle" aria-label="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+      <div class="auth-field hidden" id="authReferralField">
+        <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="m17 8 2 2 3-4"/></svg></span>
+        <input id="authReferralCode" type="text" placeholder="Referral code (optional)" autocomplete="off" />
       </div>
       <div class="auth-forgot-row" id="authForgotRow"><a id="authForgotLink">Forgot password?</a></div>
       <div class="auth-field hidden" id="authOtpField">
@@ -456,6 +465,7 @@
           <details class="store-faq-item"><summary>Can I renew my subscription?</summary><p>Renewal depends on the individual plan. Check the plan note before ordering or contact support for confirmation.</p></details>
           <details class="store-faq-item"><summary>How do student discounts work?</summary><p>Student offers may apply to selected products and periods. Contact support with your request to check current availability.</p></details>
           <details class="store-faq-item"><summary>Where can I see new stock and updates?</summary><p>Join the official Telegram channel for new stock, offers, and service announcements.</p></details>
+          <details class="store-faq-item"><summary>My order was rejected — how do I get a refund?</summary><p>Go to Noti, open the order's message, and message our Admin directly from there. Attach a screenshot of the rejected order along with your payment slip, and include the payment method name and phone number you'd like the refund sent to.</p></details>
         </div>
       </section>
     </div><!-- /landingShell -->
@@ -481,6 +491,25 @@
         <div class="products" id="products"></div>
       </div>
     </div><!-- /catalogShell -->
+
+    <div id="planSkeleton" class="order-view hidden" aria-hidden="true">
+      <div class="panel plan-skeleton">
+        <div class="skel-row">
+          <div class="skel-circle"></div>
+          <div class="skel-lines">
+            <div class="skel-line" style="width:62%"></div>
+            <div class="skel-line" style="width:38%"></div>
+          </div>
+        </div>
+        <div class="skel-bar"></div>
+        <div class="skel-block"></div>
+        <div class="skel-line" style="width:46%;margin:14px 0"></div>
+        <div class="skel-chips">
+          <div class="skel-chip"></div>
+          <div class="skel-chip"></div>
+        </div>
+      </div>
+    </div>
 
     <div id="orderView" class="order-view hidden">
       <div class="panel">
@@ -634,9 +663,12 @@
           <div id="chatMessages" class="chat-messages"><div class="chat-empty">No messages yet.</div></div>
           <div id="chatClosedBanner" class="chat-closed-banner hidden">This conversation has ended.</div>
           <form id="chatForm" class="chat-input-row">
+            <input id="chatImageInput" type="file" accept="image/*" class="hidden" />
+            <button type="button" id="chatAttachBtn" class="chat-attach-btn" aria-label="Attach image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></button>
             <input id="chatInput" class="input chat-input-pill" type="text" placeholder="Type a message…" autocomplete="off" />
             <button type="submit" class="chat-send-btn" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9 22 2z"/></svg></button>
           </form>
+          <div id="chatImagePreview" class="chat-image-preview hidden"></div>
         </div>
       </div>
     </div>
@@ -674,6 +706,26 @@
             <div class="acct-avatar-swatches" id="acctAvatarSwatches"></div>
             <div class="avatar-popover-label">Style</div>
             <div class="acct-avatar-styles" id="acctAvatarStyles"></div>
+          </div>
+        </div>
+
+        <div class="acct-referral-card">
+          <div class="acct-referral-glow"></div>
+          <div class="acct-referral-head">
+            <span class="acct-referral-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <div>
+              <div class="acct-referral-title">Refer &amp; Earn</div>
+              <div class="acct-referral-sub">Share your code — you both win when a friend joins</div>
+            </div>
+          </div>
+          <div class="acct-referral-code-row">
+            <span class="acct-referral-code" id="acctReferralCode">—</span>
+            <button type="button" class="acct-referral-copy" id="acctReferralCopyBtn">Copy link</button>
+          </div>
+          <div class="acct-referral-stats">
+            <div class="acct-referral-stat"><b id="acctReferralConfirmed">0</b><span>Confirmed</span></div>
+            <div class="acct-referral-stat"><b id="acctReferralPending">0</b><span>Pending</span></div>
+            <div class="acct-referral-stat"><b>2,000 Ks</b><span>Per referral</span></div>
           </div>
         </div>
 
@@ -2017,6 +2069,26 @@ plans: [
     let currentOrder = null; // { id, access_token, order_code }
     let orderChannel = null; // realtime channel for the active order
     let currentUser = null; // Supabase Auth user, once logged in
+
+    // Referral: a ?ref=<username> link stashes the code here until the
+    // visitor actually signs up/logs in, since they may browse around
+    // first instead of signing up immediately off the link.
+    function pendingReferralCode(){
+      try{ return localStorage.getItem("gph_referral_code") || ""; }catch(e){ return ""; }
+    }
+    (function captureReferralFromUrl(){
+      try{
+        const ref = new URLSearchParams(location.search).get("ref");
+        if(ref) localStorage.setItem("gph_referral_code", ref.trim());
+      }catch(e){}
+    })();
+    async function flushPendingReferral(){
+      if(!supabaseClient || !currentUser) return;
+      const code = pendingReferralCode();
+      if(!code) return;
+      await supabaseClient.rpc("submit_referral", { p_code: code });
+      try{ localStorage.removeItem("gph_referral_code"); }catch(e){}
+    }
     // Every order's broadcast channel the customer has, keyed by access_token
     // -- kept subscribed for as long as they're signed in (not just while
     // that order's own status page happens to be open) so a "new message"
@@ -2119,6 +2191,7 @@ plans: [
       });
     }
     wirePasswordToggle("authPassword", "authPasswordToggle");
+    wirePasswordToggle("authConfirmPassword", "authConfirmPasswordToggle");
     wirePasswordToggle("authNewPassword", "authNewPasswordToggle");
     wirePasswordToggle("newPasswordInput", "newPasswordToggle");
     let authMode = "login"; // "login" | "signup" | "forgot-email" | "forgot-otp"
@@ -2136,6 +2209,7 @@ plans: [
     let chatMode = "order"; // "order" (per-order chat) | "support" (general GamePay support chat)
     let supportChannel = null;
     let noticeChannel = null;
+    let selectedChatImageFile = null; // staged image for the support "Message" chat only
 
     const catalogView = document.getElementById("catalogView");
     const orderView = document.getElementById("orderView");
@@ -3081,13 +3155,19 @@ const sameProduct = currentProduct && currentProduct.id === product.id;
   if(couponInput) couponInput.value = "";
   if(couponMsg){ couponMsg.textContent = ""; couponMsg.className = "coupon-msg"; }
 
-  // A quick fade instead of the full-page loader -- this is a local
-  // render, not a network fetch, so a heavy spinner overstates the wait.
+  // A skeleton screen instead of the full-page spinner -- shows the shape
+  // of the plans page filling in while it renders, rather than a blank
+  // loading overlay.
+  const planSkeleton = document.getElementById("planSkeleton");
   catalogView.classList.add("view-fade-out");
   setTimeout(() => {
     window.scrollTo(0, 0);
     catalogView.classList.add("hidden");
     catalogView.classList.remove("view-fade-out");
+    planSkeleton?.classList.remove("hidden");
+  }, 140);
+  setTimeout(() => {
+    planSkeleton?.classList.add("hidden");
     orderView.classList.remove("hidden");
     orderView.classList.add("view-fade-in");
     renderOrder();
@@ -3095,7 +3175,7 @@ const sameProduct = currentProduct && currentProduct.id === product.id;
     updatePreview();
     window.scrollTo(0, 0);
     requestAnimationFrame(() => orderView.classList.remove("view-fade-in"));
-  }, 140);
+  }, 480);
     }
 function closeOrder(){
   document.body.classList.remove("order-mode");
@@ -3806,7 +3886,7 @@ function siteLogoSrc(){
   }));
 })();
 
-function appendChatBubble(sender, body){
+function appendChatBubble(sender, body, imageUrl){
   const box = document.getElementById("chatMessages");
   if(box.querySelector(".chat-empty")) box.innerHTML = "";
   const isAdmin = sender === "admin";
@@ -3821,7 +3901,18 @@ function appendChatBubble(sender, body){
   avatar.style.background = isAdmin ? "#fff" : avatarGradient(getAvatarColorId());
   const bubble = document.createElement("div");
   bubble.className = "chat-bubble " + (isAdmin ? "admin" : "customer");
-  bubble.textContent = body;
+  if(imageUrl){
+    const img = document.createElement("img");
+    img.src = imageUrl;
+    img.alt = "Attached image";
+    img.className = "chat-bubble-image";
+    bubble.appendChild(img);
+  }
+  if(body){
+    const textEl = document.createElement("div");
+    textEl.textContent = body;
+    bubble.appendChild(textEl);
+  }
   if(isAdmin){ row.appendChild(avatar); row.appendChild(bubble); }
   else { row.appendChild(bubble); row.appendChild(avatar); }
   box.appendChild(row);
@@ -3893,7 +3984,7 @@ function subscribeSupportRealtime(){
     if(msg.payload.sender !== "admin") return;
     const watching = chatMode === "support" && !document.getElementById("chatView").classList.contains("hidden");
     if(watching){
-      appendChatBubble("admin", msg.payload.body);
+      appendChatBubble("admin", msg.payload.body, msg.payload.image_url);
     } else {
       showToast("New message from support");
       bumpUnseenBadge();
@@ -3950,7 +4041,7 @@ async function openSupportMessageView(){
   const { data, error } = await supabaseClient.from("support_messages").select("*").order("created_at", { ascending: true });
   box.innerHTML = "";
   if(!error && data && data.length){
-    data.forEach(m => appendChatBubble(m.sender, m.body));
+    data.forEach(m => appendChatBubble(m.sender, m.body, m.image_url));
   } else {
     box.innerHTML = "<div class='chat-empty'>No messages yet. Say hello!</div>";
   }
@@ -3976,20 +4067,55 @@ document.getElementById("chatForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
   const input = document.getElementById("chatInput");
   const text = input.value.trim();
-  if(!text || !supabaseClient) return;
   if(chatMode === "support"){
-    if(!currentUser) return;
+    if((!text && !selectedChatImageFile) || !supabaseClient || !currentUser) return;
     input.value = "";
-    appendChatBubble("customer", text);
-    await supabaseClient.from("support_messages").insert({ user_id: currentUser.id, sender: "customer", body: text });
-    supportChannel?.send({ type: "broadcast", event: "new_message", payload: { sender: "customer", body: text } });
+    const imageFile = selectedChatImageFile;
+    clearChatImageSelection();
+    let imageUrl = null;
+    if(imageFile){
+      const ext = (imageFile.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `${currentUser.id}/${crypto.randomUUID()}.${ext}`;
+      const { error: upErr } = await supabaseClient.storage.from("chat-images").upload(path, imageFile);
+      if(upErr){ showToast("Image upload failed: " + upErr.message); if(!text) return; }
+      else {
+        const { data: pub } = supabaseClient.storage.from("chat-images").getPublicUrl(path);
+        imageUrl = pub.publicUrl;
+      }
+    }
+    appendChatBubble("customer", text, imageUrl);
+    await supabaseClient.from("support_messages").insert({ user_id: currentUser.id, sender: "customer", body: text, image_url: imageUrl });
+    supportChannel?.send({ type: "broadcast", event: "new_message", payload: { sender: "customer", body: text, image_url: imageUrl } });
     return;
   }
+  if(!text || !supabaseClient) return;
   if(!currentOrder || currentOrder.chat_closed) return;
   input.value = "";
   appendChatBubble("customer", text);
   await supabaseClient.rpc("send_customer_message", { p_token: currentOrder.access_token, p_body: text });
   orderChannel?.send({ type: "broadcast", event: "new_message", payload: { sender: "customer", body: text } });
+});
+
+function clearChatImageSelection(){
+  selectedChatImageFile = null;
+  const input = document.getElementById("chatImageInput");
+  if(input) input.value = "";
+  const preview = document.getElementById("chatImagePreview");
+  if(preview){ preview.classList.add("hidden"); preview.innerHTML = ""; }
+}
+document.getElementById("chatAttachBtn")?.addEventListener("click", () => {
+  document.getElementById("chatImageInput")?.click();
+});
+document.getElementById("chatImageInput")?.addEventListener("change", () => {
+  const input = document.getElementById("chatImageInput");
+  const file = input.files && input.files[0];
+  if(!file) return;
+  selectedChatImageFile = file;
+  const url = URL.createObjectURL(file);
+  const preview = document.getElementById("chatImagePreview");
+  preview.classList.remove("hidden");
+  preview.innerHTML = `<img src="${url}" alt="Selected image"><span>${file.name}</span><span class="slip-remove" id="chatImageRemoveBtn">Remove</span>`;
+  document.getElementById("chatImageRemoveBtn")?.addEventListener("click", clearChatImageSelection);
 });
 
 function rememberOrderInHistory(order){
@@ -4092,11 +4218,15 @@ const authUsernameField = document.getElementById("authUsernameField");
 const authUsername = document.getElementById("authUsername");
 const authEmailField = document.getElementById("authEmailField");
 const authPasswordField = document.getElementById("authPasswordField");
+const authConfirmPasswordField = document.getElementById("authConfirmPasswordField");
 const authForgotRow = document.getElementById("authForgotRow");
 const authOtpField = document.getElementById("authOtpField");
 const authNewPasswordField = document.getElementById("authNewPasswordField");
 const authOtp = document.getElementById("authOtp");
 const authNewPassword = document.getElementById("authNewPassword");
+const authConfirmPassword = document.getElementById("authConfirmPassword");
+const authReferralField = document.getElementById("authReferralField");
+const authReferralCode = document.getElementById("authReferralCode");
 
 function openAuthModal(mode, pendingEmail){
   authMode = mode;
@@ -4104,6 +4234,8 @@ function openAuthModal(mode, pendingEmail){
   authUsername.value = "";
   authEmail.value = "";
   authPassword.value = "";
+  authConfirmPassword.value = "";
+  authReferralCode.value = pendingReferralCode() || "";
   authOtp.value = "";
   authNewPassword.value = "";
   const switchLink = () => document.getElementById("authSwitchLink")?.addEventListener("click", () => openAuthModal(
@@ -4118,6 +4250,8 @@ function openAuthModal(mode, pendingEmail){
     authUsernameField.classList.add("hidden");
     authEmailField.classList.add("hidden");
     authPasswordField.classList.add("hidden");
+    authConfirmPasswordField.classList.add("hidden");
+    authReferralField.classList.add("hidden");
     authForgotRow.classList.add("hidden");
     authOtpField.classList.add("hidden");
     authNewPasswordField.classList.add("hidden");
@@ -4139,6 +4273,8 @@ function openAuthModal(mode, pendingEmail){
 
   if(mode === "forgot-email"){
     authPasswordField.classList.add("hidden");
+    authConfirmPasswordField.classList.add("hidden");
+    authReferralField.classList.add("hidden");
     authForgotRow.classList.add("hidden");
     authOtpField.classList.add("hidden");
     authNewPasswordField.classList.add("hidden");
@@ -4148,6 +4284,8 @@ function openAuthModal(mode, pendingEmail){
     document.getElementById("authSwitchText").innerHTML = `Remembered it? <a id="authSwitchLink">Back to Login</a>`;
   } else if(mode === "forgot-otp"){
     authPasswordField.classList.add("hidden");
+    authConfirmPasswordField.classList.add("hidden");
+    authReferralField.classList.add("hidden");
     authForgotRow.classList.add("hidden");
     authOtpField.classList.remove("hidden");
     authNewPasswordField.classList.remove("hidden");
@@ -4159,6 +4297,8 @@ function openAuthModal(mode, pendingEmail){
     const isLogin = mode === "login";
     authUsernameField.classList.toggle("hidden", isLogin);
     authPasswordField.classList.remove("hidden");
+    authConfirmPasswordField.classList.toggle("hidden", isLogin);
+    authReferralField.classList.toggle("hidden", isLogin);
     authForgotRow.classList.toggle("hidden", !isLogin);
     authOtpField.classList.add("hidden");
     authNewPasswordField.classList.add("hidden");
@@ -4219,6 +4359,9 @@ document.getElementById("authSubmitBtn")?.addEventListener("click", async () => 
   if(authMode === "signup"){
     username = authUsername.value.trim().replace(/\s+/g, "");
     if(!username){ authError.textContent = "Please choose a username."; return; }
+    if(authConfirmPassword.value !== password){ authError.textContent = "Passwords don't match."; return; }
+    const refCode = authReferralCode.value.trim();
+    if(refCode){ try{ localStorage.setItem("gph_referral_code", refCode); }catch(e){} }
   }
   const action = authMode === "login"
     ? supabaseClient.auth.signInWithPassword({ email, password })
@@ -4233,6 +4376,7 @@ document.getElementById("authSubmitBtn")?.addEventListener("click", async () => 
   renderAuthUI();
   authModalBackdrop.classList.add("hidden");
   showToast(authMode === "login" ? "Welcome back!" : "Account created!");
+  flushPendingReferral();
 });
 
 /* ================= My Orders (order history) ================= */
@@ -4828,6 +4972,7 @@ function refreshAccountFields(){
   document.getElementById("acctDisplayNameValue").textContent = name;
   document.getElementById("acctUsernameValue").textContent = "@" + username;
   document.getElementById("acctEmailValue").textContent = maskEmail(currentUser.email);
+  document.getElementById("acctReferralCode").textContent = `${location.origin}${location.pathname}?ref=${username}`;
 }
 
 async function openAccountView(){
@@ -4858,7 +5003,25 @@ async function openAccountView(){
     document.getElementById("statOrderCount").textContent = "0";
     document.getElementById("statTotalSpent").textContent = "0 Ks";
   }
+
+  const { data: refStats } = await supabaseClient.rpc("my_referral_stats");
+  const stats = refStats?.[0];
+  document.getElementById("acctReferralConfirmed").textContent = String(stats?.confirmed_count ?? 0);
+  document.getElementById("acctReferralPending").textContent = String(stats?.pending_count ?? 0);
 }
+
+document.getElementById("acctReferralCopyBtn")?.addEventListener("click", async () => {
+  const link = document.getElementById("acctReferralCode").textContent;
+  const btn = document.getElementById("acctReferralCopyBtn");
+  try{
+    await navigator.clipboard.writeText(link);
+    const prevLabel = btn.textContent;
+    btn.textContent = "Copied!";
+    setTimeout(() => { btn.textContent = prevLabel; }, 1600);
+  }catch(e){
+    showToast("Could not copy — long-press the code to copy it manually");
+  }
+});
 
 document.getElementById("accountBackBtn")?.addEventListener("click", () => {
   document.getElementById("accountView").classList.add("hidden");
@@ -5062,6 +5225,7 @@ document.getElementById("pwResetSubmitBtn")?.addEventListener("click", async () 
   const { data: { session } } = await supabaseClient.auth.getSession();
   if(session) currentUser = session.user;
   renderAuthUI();
+  flushPendingReferral();
 })();
 
     searchInput.addEventListener("input", renderProducts);

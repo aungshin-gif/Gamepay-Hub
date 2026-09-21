@@ -2823,6 +2823,31 @@ body.preview-mode{ overflow:hidden !important; }
 .view-fade-out{ opacity:0; transition:opacity .14s ease; }
 .view-fade-in{ animation:viewFadeIn .22s ease; }
 @keyframes viewFadeIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
+
+/* ---------- Products -> Plans skeleton screen ---------- */
+.plan-skeleton{ width:min(460px,100%); margin:0 auto; }
+.skel-row{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.skel-circle{ width:40px; height:40px; border-radius:50%; flex:0 0 40px; }
+.skel-lines{ flex:1; min-width:0; display:grid; gap:8px; }
+.skel-line{ height:10px; border-radius:6px; }
+.skel-bar{ height:14px; border-radius:8px; margin-bottom:14px; }
+.skel-block{ height:130px; border-radius:14px; margin-bottom:14px; }
+.skel-chips{ display:flex; gap:10px; }
+.skel-chip{ flex:1; height:48px; border-radius:12px; }
+.skel-circle,.skel-line,.skel-bar,.skel-block,.skel-chip{
+  background:linear-gradient(90deg, rgba(255,255,255,.06) 25%, rgba(255,255,255,.14) 37%, rgba(255,255,255,.06) 63%);
+  background-size:400% 100%;
+  animation:skeletonShimmer 1.4s ease infinite;
+}
+body.light-mode .skel-circle, body.light-mode .skel-line, body.light-mode .skel-bar,
+body.light-mode .skel-block, body.light-mode .skel-chip{
+  background:linear-gradient(90deg, rgba(31,41,55,.07) 25%, rgba(31,41,55,.14) 37%, rgba(31,41,55,.07) 63%);
+  background-size:400% 100%;
+}
+@keyframes skeletonShimmer{ 0%{ background-position:100% 50%; } 100%{ background-position:0% 50%; } }
+@media(prefers-reduced-motion:reduce){
+  .skel-circle,.skel-line,.skel-bar,.skel-block,.skel-chip{ animation:none; }
+}
 .page-loader-inner{ display:grid; justify-items:center; gap:16px; }
 /* A radar-style "connecting" ping instead of a plain spinner -- reads as
    "reaching out to a system" rather than a generic wait indicator. */
@@ -4456,7 +4481,7 @@ body.products-mode .page,
 body.order-mode .page,
 body.dashboard-mode .page,
 body.preview-mode .page{
-  padding:0 !important; margin:0 !important; min-height:0 !important;
+  padding:0 !important; margin:0 auto !important; min-height:0 !important;
 }
 
 /* ===== view-hidden-wins ===== */
@@ -4472,6 +4497,7 @@ body.preview-mode .page{
 #previewSection.hidden,
 #productPage.hidden,
 #cartItem.hidden,
+#planSkeleton.hidden,
 #pageLoader.hidden{ display:none !important; }
 
 /* ===== hero-depth-3d ===== */
@@ -5454,6 +5480,11 @@ body.light-mode #checkoutSection .pay-option.active{
    existing dashboard/preview cards so the new flow doesn't look bolted on. */
 .order-status-view, .order-chat-view{ display:block; }
 .order-status-view.hidden, .order-chat-view.hidden{ display:none; }
+/* This view (and the .preview-shell/.acct-list cards inside it) had no
+   horizontal gutter of its own, so on narrow screens the cards sat flush
+   against the viewport edge and their rounded corners had nothing to show
+   against -- they read as square. */
+.order-status-view{ padding:0 clamp(12px,4vw,28px); }
 .order-status-card{
   width:min(560px,100%);
   margin:18px auto 0;
@@ -5552,6 +5583,66 @@ body.light-mode .status-step-dot{ background:var(--surface-2,#f7f9fc); border-co
 body.light-mode .status-step-label{ color:var(--muted,#6b7686); }
 body.light-mode .status-step.done .status-step-label, body.light-mode .status-step.current .status-step-label{ color:var(--ink,#1f2937); }
 body.light-mode .status-step-line{ background:var(--border,rgba(31,41,55,.14)); }
+
+/* My Account -- Refer & Earn card: a bigger, more eye-catching box than
+   the plain .acct-list rows, with an animated glow border so it reads as
+   a promo/reward moment instead of another settings line. */
+.acct-referral-card{
+  position:relative; width:min(460px,100%); margin:0 auto 22px; padding:20px;
+  border-radius:20px; border:1.5px solid rgba(124,58,237,.35);
+  background:linear-gradient(160deg, rgba(122,53,199,.22), rgba(30,10,50,.55));
+  backdrop-filter:blur(18px) saturate(1.3); -webkit-backdrop-filter:blur(18px) saturate(1.3);
+  box-shadow:0 20px 50px rgba(93,72,137,.25), inset 0 1px rgba(255,255,255,.10);
+  overflow:hidden;
+}
+@property --ref-glow-angle{ syntax:'<angle>'; inherits:false; initial-value:0deg; }
+.acct-referral-glow{
+  position:absolute; inset:-2px; border-radius:22px; padding:2px; pointer-events:none;
+  background:conic-gradient(from var(--ref-glow-angle),
+    transparent 0deg, rgba(199,125,255,.9) 60deg, rgba(86,210,255,.7) 140deg,
+    transparent 220deg, transparent 360deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  animation:acctReferralGlow 4s linear infinite;
+}
+@keyframes acctReferralGlow{ to{ --ref-glow-angle:360deg; } }
+@media(prefers-reduced-motion:reduce){ .acct-referral-glow{ animation:none; } }
+.acct-referral-head{ display:flex; align-items:center; gap:12px; margin-bottom:14px; position:relative; }
+.acct-referral-icon{
+  flex:0 0 auto; width:42px; height:42px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#e0a83c,#ffcf6b); color:#fff;
+  box-shadow:0 4px 14px rgba(224,168,60,.35);
+}
+.acct-referral-icon svg{ width:20px; height:20px; }
+.acct-referral-title{ font-size:16px; font-weight:900; color:#fff; }
+.acct-referral-sub{ font-size:11.5px; color:rgba(255,255,255,.7); margin-top:2px; }
+.acct-referral-code-row{
+  display:flex; align-items:center; gap:10px; margin-bottom:14px; position:relative;
+  background:rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.14); border-radius:12px; padding:10px 14px;
+}
+.acct-referral-code{ flex:1; min-width:0; font-family:monospace; font-size:12.5px; font-weight:700; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.acct-referral-copy{
+  flex:0 0 auto; border:none; border-radius:999px; padding:7px 14px; font-size:11.5px; font-weight:800;
+  background:linear-gradient(135deg,#7a35c7,#b86bff); color:#fff; cursor:pointer;
+}
+.acct-referral-stats{ display:flex; gap:8px; position:relative; }
+.acct-referral-stat{
+  flex:1; text-align:center; background:rgba(255,255,255,.06); border-radius:10px; padding:10px 6px;
+}
+.acct-referral-stat b{ display:block; font-size:15px; font-weight:900; color:#fff; }
+.acct-referral-stat span{ font-size:9.5px; font-weight:700; letter-spacing:.04em; color:rgba(255,255,255,.6); text-transform:uppercase; margin-top:2px; display:block; }
+body.light-mode .acct-referral-card{
+  background:linear-gradient(160deg,rgba(255,255,255,.92),rgba(240,230,255,.85));
+  border-color:rgba(124,58,237,.25);
+}
+body.light-mode .acct-referral-title{ color:#2b2140; }
+body.light-mode .acct-referral-sub{ color:#6b5f85; }
+body.light-mode .acct-referral-code-row{ background:rgba(124,58,237,.06); border-color:rgba(124,58,237,.18); }
+body.light-mode .acct-referral-code{ color:#2b2140; }
+body.light-mode .acct-referral-stat{ background:rgba(124,58,237,.06); }
+body.light-mode .acct-referral-stat b{ color:#2b2140; }
+body.light-mode .acct-referral-stat span{ color:#6b5f85; }
 
 /* My Account -- settings-list style */
 .acct-profile-card{
@@ -5790,6 +5881,19 @@ body.light-mode .chat-closed-banner{ background:#ffe6ec; color:#c81e4d; border-c
   background:linear-gradient(135deg,#7a35c7,#b86bff); border:none; color:#fff; cursor:pointer;
 }
 .chat-send-btn svg{ width:17px; height:17px; }
+.chat-attach-btn{
+  flex:0 0 auto; width:40px; height:40px; padding:0; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.08); border:1px solid rgba(224,180,255,.28); color:#fff; cursor:pointer;
+}
+.chat-attach-btn svg{ width:17px; height:17px; }
+.chat-attach-btn:hover{ background:rgba(255,255,255,.14); }
+body.light-mode .chat-attach-btn{ background:rgba(255,255,255,.5); border-color:rgba(212,168,67,.35); color:var(--ink,#1f2937); }
+.chat-image-preview{ margin:0 12px 10px; display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted,rgba(255,255,255,.74)); }
+.chat-image-preview img{ width:44px; height:44px; object-fit:cover; border-radius:8px; border:1px solid rgba(224,180,255,.3); }
+.chat-image-preview.hidden{ display:none; }
+.chat-bubble-image{ display:block; max-width:100%; border-radius:10px; margin-bottom:6px; }
+.chat-bubble-image:last-child{ margin-bottom:0; }
 body.light-mode .chat-bubble.customer{ box-shadow:0 1px 2px rgba(122,53,199,.25); }
 body.light-mode .chat-panel{
   background:linear-gradient(160deg,rgba(255,251,240,.95),rgba(233,215,255,.8));
