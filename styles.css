@@ -1632,7 +1632,7 @@ body.light-mode{background:#dce7f1!important;color:#263d55!important;background-
 
 /* ===== compact-premium-header ===== */
 .compact-header{width:min(1220px,94%);margin:8px auto 4px;min-height:48px;padding:8px 12px 8px 10px;display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid rgba(86,243,255,.18);border-radius:16px;background:linear-gradient(110deg,rgba(9,23,48,.78),rgba(10,17,37,.54));box-shadow:0 10px 26px rgba(0,0,0,.16),0 0 22px rgba(50,136,255,.08),inset 0 1px rgba(255,255,255,.07);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);animation:compactHeaderIn .7s cubic-bezier(.23,1,.32,1) both}
-.compact-brand,.compact-header-right,.compact-header-left{display:flex;align-items:center;gap:9px}.compact-brand{cursor:pointer}.compact-header-left{gap:14px;min-width:0;}.compact-name{font-size:12px;font-weight:950;letter-spacing:1.4px;color:#efffff}.compact-name b{color:#5ff7ff}.compact-label{font-size:9px;font-weight:800;letter-spacing:1.6px;color:#7f9bb4}.compact-divider{width:1px;height:16px;background:rgba(125,174,205,.32)}.compact-orb{width:23px;height:23px;border-radius:8px;background:linear-gradient(145deg,#faffff,#56f3ff 48%,#735dff);box-shadow:0 0 14px rgba(86,243,255,.55);animation:compactOrbPulse 2.6s ease-in-out infinite alternate}.compact-status{font-size:8px;letter-spacing:1px;color:#84a6b9}.compact-status i{display:inline-block;width:6px;height:6px;margin-right:4px;border-radius:50%;background:#6dffbd;box-shadow:0 0 8px #6dffbd}.compact-header .theme-toggle{position:static!important}.compact-header .theme-toggle{font-size:10px;padding:6px 10px}
+.compact-brand,.compact-header-right,.compact-header-left{display:flex;align-items:center;gap:9px}.compact-brand{cursor:pointer}.compact-header-left{gap:10px;min-width:0;}.compact-name{font-size:12px;font-weight:950;letter-spacing:1.4px;color:#efffff}.compact-name b{color:#5ff7ff}.compact-label{font-size:9px;font-weight:800;letter-spacing:1.6px;color:#7f9bb4}.compact-divider{width:1px;height:16px;background:rgba(125,174,205,.32)}.compact-orb{width:23px;height:23px;border-radius:8px;background:linear-gradient(145deg,#faffff,#56f3ff 48%,#735dff);box-shadow:0 0 14px rgba(86,243,255,.55);animation:compactOrbPulse 2.6s ease-in-out infinite alternate}.compact-status{font-size:8px;letter-spacing:1px;color:#84a6b9}.compact-status i{display:inline-block;width:6px;height:6px;margin-right:4px;border-radius:50%;background:#6dffbd;box-shadow:0 0 8px #6dffbd}.compact-header .theme-toggle{position:static!important}.compact-header .theme-toggle{font-size:10px;padding:6px 10px}
 @keyframes compactHeaderIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}@keyframes compactOrbPulse{from{transform:scale(1)}to{transform:scale(1.08);filter:brightness(1.12)}}
 .light-mode .compact-header{background:linear-gradient(110deg,rgba(218,231,239,.82),rgba(204,219,229,.70));border-color:rgba(73,126,153,.25);box-shadow:0 9px 22px rgba(46,82,108,.10),inset 0 1px rgba(255,255,255,.65)}.light-mode .compact-name{color:#345571}.light-mode .compact-name b{color:#287f9d}.light-mode .compact-label,.light-mode .compact-status{color:#718799}.light-mode .compact-divider{background:rgba(73,126,153,.28)}
 @media(max-width:640px){.compact-header{width:calc(100% - 24px);min-height:44px;padding:7px 8px;gap:8px}.compact-label,.compact-status{display:none}.compact-name{font-size:10px;letter-spacing:1px}.compact-orb{width:20px;height:20px;border-radius:7px}.compact-header-right{margin-left:auto}.compact-header .theme-toggle{font-size:9px;padding:5px 8px}
@@ -5176,20 +5176,32 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
   border-radius:4px !important;
 }
 /* KBZPay and WavePay's source logos fill their whole square canvas edge to
-   edge (no built-in breathing room like the other marks have) -- inset on
-   the shared white card, that left a mismatched white margin around their
-   own colored rounded-square icon while AYA/UAB (whose source art is
-   already white-backed) blended straight into the card. Instead of insetting
-   them, let these two fill the tile edge-to-edge with their own icon so no
-   card-white shows through at all -- reads as a clean small app icon like
-   the others, just without the seam. */
+   edge (no built-in breathing room like the other marks have). Letting them
+   fill the tile completely (no padding at all) fixed the earlier white-seam
+   mismatch but then made these two read visually bigger/bolder than
+   AYA/UAB/Binance's small centered icons -- a different kind of "uneven".
+   A small inset -- in each brand's own color instead of the shared white --
+   gives them the same breathing room as the other marks without
+   reintroducing a mismatched white margin around a colored icon. */
 .lp-paybar .pay-mark.pay-compact{
-  padding:0 !important; background:transparent !important; overflow:hidden;
+  padding:3px !important; overflow:hidden;
 }
+.lp-paybar .pay-mark.pay-compact.kbz{ background:#0c4ea2 !important; }
+.lp-paybar .pay-mark.pay-compact.wave{ background:#ffcb05 !important; }
 .lp-paybar .pay-mark.pay-compact img{
   width:100% !important; height:100% !important;
   max-width:100% !important; max-height:100% !important;
-  object-fit:cover !important; transform:none !important; border-radius:8px !important;
+  object-fit:cover !important; transform:none !important; border-radius:6px !important;
+}
+/* UABPay's source file is the icon mark stacked over a "uab pay" wordmark
+   in one square image -- fit normally, the mark itself renders tiny (most
+   of the tile spent on empty margin + the wordmark), reading as near-blank
+   next to the other brand marks. Zoom into just the icon and crop the
+   wordmark out instead. */
+.lp-paybar .pay-mark.uab{ overflow:hidden; }
+.lp-paybar .pay-mark.uab img{
+  transform:scale(1.9) translateY(18%) !important;
+  object-fit:contain !important;
 }
 /* Currency chips -- a coin-style badge (glossy highlight, ring border,
    same overlay trick as the avatar circles) plus its own name underneath,
@@ -6762,3 +6774,12 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 .discount-row .price-from{ margin:0 !important; }
 .discount-row .price-from strong{ font-size:13px; }
 .discount-row .pc-flag.pc-flag-discount{ position:static; }
+
+/* Header wordmark removed -- the account box now sits directly next to the
+   logo icon (per user request), so the "GAMEPAY HUB / DIGITAL STORE" text
+   and its divider are just extra clutter between them. Kept as elements
+   (not deleted from the DOM) rather than removed from HTML/JS since
+   nothing else depends on hiding them being reversible. */
+.compact-brand .compact-name,
+.compact-brand .compact-divider,
+.compact-brand .compact-label{ display:none !important; }
