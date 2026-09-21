@@ -730,6 +730,120 @@ create policy "admin can delete news images" on storage.objects
   for delete to authenticated
   using (bucket_id = 'news-images' and public.is_admin());
 
+-- 11. Referrals -------------------------------------------------
+-- A customer's own username doubles as their referral code (no separate
+-- code to generate/store). A new signup enters the code they were given;
+-- once they're logged in, submit_referral() records the link as
+-- "pending". Nothing is granted automatically -- admin reviews the list
+-- and confirms each one by hand, gifting a coupon of whatever amount
+-- they choose (2000 Ks is just the number advertised to customers, not
+-- a hardcoded value here).
+create table if not exists public.referrals (
+  id uuid primary key default gen_random_uuid(),
+  referrer_id uuid not null references auth.users(id) on delete cascade,
+  referred_id uuid not null references auth.users(id) on delete cascade,
+  status text not null default 'pending' check (status in ('pending','confirmed')),
+  reward_amount numeric,
+  coupon_code text,
+  created_at timestamptz not null default now(),
+  confirmed_at timestamptz,
+  unique(referred_id)
+);
+alter table public.referrals enable row level security;
+
+drop policy if exists "customer read own referrals" on public.referrals;
+create policy "customer read own referrals" on public.referrals
+  for select using (auth.uid() = referrer_id or auth.uid() = referred_id);
+
+drop policy if exists "admin manage referrals" on public.referrals;
+create policy "admin manage referrals" on public.referrals
+  for all using (public.is_admin()) with check (public.is_admin());
+
+-- Customer: submit the referral code they signed up with. security
+-- definer because a plain insert policy would let a customer set an
+-- arbitrary referrer_id/referred_id pair themselves; this looks the
+-- code up server-side and silently no-ops on an unknown code or a
+-- self-referral instead of erroring the signup flow over it.
+create or replace function public.submit_referral(p_code text)
+returns void
+language plpgsql security definer set search_path = public as $$
+declare v_referrer_id uuid;
+begin
+  select id into v_referrer_id from auth.users
+  where raw_user_meta_data->>'username' = p_code
+  limit 1;
+  if v_referrer_id is null or v_referrer_id = auth.uid() then
+    return;
+  end if;
+  insert into public.referrals(referrer_id, referred_id)
+  values (v_referrer_id, auth.uid())
+  on conflict (referred_id) do nothing;
+end;
+$$;
+grant execute on function public.submit_referral to authenticated;
+
+-- Customer: their own referral stats for the My Account "Referral" card
+-- (how many people they've referred, confirmed vs. still pending).
+create or replace function public.my_referral_stats()
+returns table(pending_count bigint, confirmed_count bigint)
+language sql security definer set search_path = public as $$
+  select
+    count(*) filter (where status = 'pending'),
+    count(*) filter (where status = 'confirmed')
+  from public.referrals where referrer_id = auth.uid();
+$$;
+grant execute on function public.my_referral_stats to authenticated;
+
+-- Admin: full referral list (both sides' username/email) for the
+-- dashboard's Referrals tab.
+create or replace function public.admin_list_referrals()
+returns table(
+  id uuid, status text, reward_amount numeric, coupon_code text,
+  created_at timestamptz, confirmed_at timestamptz,
+  referrer_id uuid, referrer_email text, referrer_username text,
+  referred_id uuid, referred_email text, referred_username text
+)
+language sql security definer set search_path = public as $$
+  select
+    r.id, r.status, r.reward_amount, r.coupon_code, r.created_at, r.confirmed_at,
+    ru.id, ru.email, ru.raw_user_meta_data->>'username',
+    rd.id, rd.email, rd.raw_user_meta_data->>'username'
+  from public.referrals r
+  join auth.users ru on ru.id = r.referrer_id
+  join auth.users rd on rd.id = r.referred_id
+  where public.is_admin()
+  order by (r.status = 'pending') desc, r.created_at desc;
+$$;
+grant execute on function public.admin_list_referrals to authenticated;
+
+-- Admin: confirm one referral -- gifts the referrer a coupon (amount and
+-- code both chosen by the admin at confirm time) and notifies them,
+-- reusing the exact coupon+notification pattern admin_create_coupon uses.
+create or replace function public.admin_confirm_referral(p_referral_id uuid, p_code text, p_amount numeric)
+returns void
+language plpgsql security definer set search_path = public as $$
+declare v_referrer_id uuid; v_status text;
+begin
+  if not public.is_admin() then raise exception 'not authorized'; end if;
+  select referrer_id, status into v_referrer_id, v_status from public.referrals where id = p_referral_id;
+  if v_referrer_id is null then raise exception 'referral not found'; end if;
+  if v_status = 'confirmed' then raise exception 'already confirmed'; end if;
+
+  insert into public.coupons(code, amount, assigned_user_id, created_by)
+  values (p_code, p_amount, v_referrer_id, auth.uid());
+
+  insert into public.notifications(user_id, title, body)
+  values (
+    v_referrer_id, 'Referral reward!',
+    'Thanks for referring a friend to GamePay Hub! Here''s your coupon code: ' || p_code || ' (worth ' || p_amount || ' Ks). Enter it at checkout to use it!'
+  );
+
+  update public.referrals set status = 'confirmed', reward_amount = p_amount, coupon_code = p_code, confirmed_at = now()
+  where id = p_referral_id;
+end;
+$$;
+grant execute on function public.admin_confirm_referral to authenticated;
+
 -- ============================================================
 -- One-time setup after running this file:
 -- 1. Create your own admin login: Authentication -> Users -> Add user

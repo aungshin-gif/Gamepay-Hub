@@ -13,7 +13,7 @@
        this a browser that already has admin.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time admin.css changes. -->
-  <link rel="stylesheet" href="admin.css?v=4">
+  <link rel="stylesheet" href="admin.css?v=5">
 
 </head>
 <body>
@@ -60,6 +60,11 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
         Messages
         <span id="navMessagesBadge" class="unread-badge hidden">0</span>
+      </div>
+      <div class="admin-nav-item" id="navReferralsBtn" data-view="referrals">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Referrals
+        <span id="navReferralsBadge" class="unread-badge hidden">0</span>
       </div>
       <div class="admin-nav-item" id="navNewsBtn" data-view="news">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/></svg>
@@ -317,6 +322,16 @@
         </div>
       </div>
 
+      <div id="referralsView" class="hidden">
+        <div class="top-row">
+          <div>
+            <h1>Referrals</h1>
+            <div class="sub">A customer refers a friend using their username as the code -- confirm each one by hand and choose the coupon amount to gift.</div>
+          </div>
+        </div>
+        <div id="referralsList" class="referrals-list"><div class="empty-note">Loading…</div></div>
+      </div>
+
       <div id="newsView" class="hidden">
         <div class="top-row">
           <div>
@@ -524,6 +539,7 @@ const couponsView = document.getElementById("couponsView");
 const stockView = document.getElementById("stockView");
 const broadcastView = document.getElementById("broadcastView");
 const messagesView = document.getElementById("messagesView");
+const referralsView = document.getElementById("referralsView");
 const newsView = document.getElementById("newsView");
 const navHomeBtn = document.getElementById("navHomeBtn");
 const navSettingsBtn = document.getElementById("navSettingsBtn");
@@ -532,10 +548,11 @@ const navCouponsBtn = document.getElementById("navCouponsBtn");
 const navStockBtn = document.getElementById("navStockBtn");
 const navBroadcastBtn = document.getElementById("navBroadcastBtn");
 const navMessagesBtn = document.getElementById("navMessagesBtn");
+const navReferralsBtn = document.getElementById("navReferralsBtn");
 const navNewsBtn = document.getElementById("navNewsBtn");
 
-const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView, stockView, broadcastView, messagesView, newsView];
-const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn, navStockBtn, navBroadcastBtn, navMessagesBtn, navNewsBtn];
+const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView, stockView, broadcastView, messagesView, referralsView, newsView];
+const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn, navStockBtn, navBroadcastBtn, navMessagesBtn, navReferralsBtn, navNewsBtn];
 
 function showDashboardHome(){
   ALL_VIEWS.forEach(v => v.classList.add("hidden"));
@@ -595,6 +612,13 @@ function showMessagesView(){
   navMessagesBtn.classList.add("active");
   loadMessagesInbox();
 }
+function showReferralsView(){
+  ALL_VIEWS.forEach(v => v.classList.add("hidden"));
+  ALL_NAV_BTNS.forEach(b => b.classList.remove("active"));
+  referralsView.classList.remove("hidden");
+  navReferralsBtn.classList.add("active");
+  loadReferrals();
+}
 navHomeBtn.addEventListener("click", showDashboardHome);
 navSettingsBtn.addEventListener("click", showSettingsView);
 navUsersBtn.addEventListener("click", showUsersView);
@@ -603,6 +627,7 @@ navStockBtn.addEventListener("click", showStockView);
 navBroadcastBtn.addEventListener("click", showBroadcastView);
 navNewsBtn.addEventListener("click", showNewsView);
 navMessagesBtn.addEventListener("click", showMessagesView);
+navReferralsBtn.addEventListener("click", showReferralsView);
 document.getElementById("orderDetailBackBtn").addEventListener("click", showDashboardHome);
 
 let orders = [];
@@ -659,6 +684,7 @@ async function checkAdminAndEnter(){
   showDashboardHome();
   loadOrders();
   loadMessagesInbox();
+  loadReferrals();
   subscribeRealtime();
 }
 
@@ -1209,7 +1235,13 @@ async function openMessageThread(userId){
   const thread = document.getElementById("messagesThread");
   thread.innerHTML = `
     <button type="button" class="ghost messages-thread-back" id="messagesThreadBackBtn">← Back</button>
-    <div class="messages-thread-header">${escapeHtml(userDisplayHandle(u))}${u.email ? ` <span style="color:var(--muted);font-weight:600;">(${escapeHtml(u.email)})</span>` : ""}</div>
+    <div class="messages-thread-header">
+      ${userAvatarHtml(u)}
+      <div class="messages-thread-header-text">
+        <div class="messages-thread-header-name">${escapeHtml(userDisplayHandle(u))}</div>
+        ${u.email ? `<div class="messages-thread-header-email">${escapeHtml(u.email)}</div>` : ""}
+      </div>
+    </div>
     <div class="chat-messages" id="messagesThreadBox"></div>
     <form id="messagesThreadForm" class="chat-input-row">
       <input id="messagesThreadImageInput" type="file" accept="image/*" style="display:none;" />
@@ -1415,6 +1447,83 @@ document.getElementById("couponCreateBtn")?.addEventListener("click", async () =
   loadCoupons();
 });
 
+// ---------------------------------------------------------------------
+// Referrals: a customer's username is their referral code (see
+// submit_referral() in schema.sql). Nothing here is automatic -- a
+// pending row just means someone signed up with that code; the admin
+// reviews it and, if it looks legitimate, confirms it with whatever
+// coupon amount they choose, which gifts the referrer that coupon.
+// ---------------------------------------------------------------------
+function refreshReferralsBadge(pendingCount){
+  const badge = document.getElementById("navReferralsBadge");
+  if(!badge) return;
+  if(pendingCount > 0){ badge.textContent = pendingCount > 99 ? "99+" : String(pendingCount); badge.classList.remove("hidden"); }
+  else badge.classList.add("hidden");
+}
+
+function referralUserLabel(id, email, username){
+  return username ? "@" + username : (email || id);
+}
+
+function renderReferralRow(r){
+  const referrerLabel = escapeHtml(referralUserLabel(r.referrer_id, r.referrer_email, r.referrer_username));
+  const referredLabel = escapeHtml(referralUserLabel(r.referred_id, r.referred_email, r.referred_username));
+  const when = new Date(r.created_at).toLocaleDateString();
+  if(r.status === "confirmed"){
+    return `
+      <div class="order-row referral-row" data-id="${r.id}" style="cursor:default;">
+        <span class="row-avatar" style="background:linear-gradient(135deg,#16a34a,#4ade80)">${ICON_USER}</span>
+        <div class="or-main">
+          <div class="or-code">${referrerLabel} → ${referredLabel} <span class="badge approved">CONFIRMED</span></div>
+          <div class="or-sub">${when} · Confirmed ${new Date(r.confirmed_at).toLocaleDateString()} · Code ${escapeHtml(r.coupon_code)}</div>
+        </div>
+        <div class="or-amount">${Number(r.reward_amount).toLocaleString()} Ks</div>
+      </div>
+    `;
+  }
+  return `
+    <div class="order-row referral-row" data-id="${r.id}" style="cursor:default;flex-wrap:wrap;">
+      <span class="row-avatar" style="background:linear-gradient(135deg,#e0a83c,#ffcf6b)">${ICON_USER}</span>
+      <div class="or-main">
+        <div class="or-code">${referrerLabel} → ${referredLabel} <span class="badge pending">PENDING</span></div>
+        <div class="or-sub">${when}</div>
+      </div>
+      <div class="referral-row-actions">
+        <input type="number" class="referral-amount-input" value="2000" min="1" aria-label="Coupon amount" />
+        <button type="button" class="referral-confirm-btn" data-id="${r.id}">Send Code</button>
+      </div>
+    </div>
+  `;
+}
+
+async function loadReferrals(){
+  const box = document.getElementById("referralsList");
+  box.innerHTML = "<div class='empty-note'>Loading…</div>";
+  const { data, error } = await sb.rpc("admin_list_referrals");
+  if(error){ box.innerHTML = `<div class="empty-note">${error.message}</div>`; return; }
+  const referrals = data || [];
+  refreshReferralsBadge(referrals.filter(r => r.status === "pending").length);
+  if(!referrals.length){ box.innerHTML = "<div class='empty-note'>No referrals yet.</div>"; return; }
+  box.innerHTML = referrals.map(renderReferralRow).join("");
+  box.querySelectorAll(".referral-confirm-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const row = btn.closest(".referral-row");
+      const amount = Number(row.querySelector(".referral-amount-input").value);
+      if(!amount || amount <= 0){ showAdminToast("Enter a valid coupon amount.", true); return; }
+      const ok = await showAdminConfirm(
+        `Send a ${amount.toLocaleString()} Ks coupon to this referrer?`,
+        { title: "Confirm referral?", confirmText: "Send Code" }
+      );
+      if(!ok) return;
+      const code = randomCouponCode();
+      const { error: confirmError } = await sb.rpc("admin_confirm_referral", { p_referral_id: btn.dataset.id, p_code: code, p_amount: amount });
+      if(confirmError){ showAdminToast("Failed: " + confirmError.message, true); return; }
+      showAdminToast(`Coupon "${code}" sent.`);
+      loadReferrals();
+    });
+  });
+}
+
 function statCard(label, value, icon, tint){
   return `
     <div class="stat-card">
@@ -1493,6 +1602,11 @@ function subscribeRealtime(){
     .on("postgres_changes", { event: "INSERT", schema: "public", table: "support_messages" }, (payload) => {
       if(payload.new?.sender === "customer") loadMessagesInbox();
     })
+    .subscribe();
+  // New pending referral -- keeps the Referrals nav badge live the same
+  // way the two subscriptions above do for their own tabs.
+  sb.channel("admin-referrals")
+    .on("postgres_changes", { event: "INSERT", schema: "public", table: "referrals" }, () => loadReferrals())
     .subscribe();
 }
 
