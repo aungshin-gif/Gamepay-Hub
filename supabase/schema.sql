@@ -774,6 +774,10 @@ alter table public.referrals add column if not exists referred_coupon_amount num
 -- referrer's coupon (admin-confirmed, admin-chosen amount), the signer-up
 -- gets their welcome coupon immediately, no approval needed -- returns it
 -- so the client can show a confetti popup right away.
+-- Postgres can't CREATE OR REPLACE a function whose return type changed
+-- (void -> table(...)) -- has to be dropped first.
+drop function if exists public.submit_referral(text);
+
 create or replace function public.submit_referral(p_code text)
 returns table(coupon_code text, coupon_amount numeric)
 language plpgsql security definer set search_path = public as $$
@@ -823,6 +827,10 @@ grant execute on function public.my_referral_stats to authenticated;
 
 -- Admin: full referral list (both sides' username/email) for the
 -- dashboard's Referrals tab.
+-- Postgres can't CREATE OR REPLACE a function whose return columns changed
+-- (added coupon_active/referred_coupon_*) -- has to be dropped first.
+drop function if exists public.admin_list_referrals();
+
 create or replace function public.admin_list_referrals()
 returns table(
   id uuid, status text, reward_amount numeric, coupon_code text, coupon_active boolean,
