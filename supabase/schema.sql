@@ -759,15 +759,25 @@ drop policy if exists "admin manage referrals" on public.referrals;
 create policy "admin manage referrals" on public.referrals
   for all using (public.is_admin()) with check (public.is_admin());
 
+-- The referred side's own welcome coupon (issued instantly by
+-- submit_referral() below), tracked separately from the referrer's
+-- coupon/reward_amount columns above so admin can see both halves of
+-- one referral.
+alter table public.referrals add column if not exists referred_coupon_code text;
+alter table public.referrals add column if not exists referred_coupon_amount numeric;
+
 -- Customer: submit the referral code they signed up with. security
 -- definer because a plain insert policy would let a customer set an
 -- arbitrary referrer_id/referred_id pair themselves; this looks the
 -- code up server-side and silently no-ops on an unknown code or a
--- self-referral instead of erroring the signup flow over it.
+-- self-referral instead of erroring the signup flow over it. Unlike the
+-- referrer's coupon (admin-confirmed, admin-chosen amount), the signer-up
+-- gets their welcome coupon immediately, no approval needed -- returns it
+-- so the client can show a confetti popup right away.
 create or replace function public.submit_referral(p_code text)
-returns void
+returns table(coupon_code text, coupon_amount numeric)
 language plpgsql security definer set search_path = public as $$
-declare v_referrer_id uuid;
+declare v_referrer_id uuid; v_code text; v_amount numeric := 2000;
 begin
   select id into v_referrer_id from auth.users
   where raw_user_meta_data->>'username' = p_code
@@ -775,9 +785,26 @@ begin
   if v_referrer_id is null or v_referrer_id = auth.uid() then
     return;
   end if;
+
   insert into public.referrals(referrer_id, referred_id)
   values (v_referrer_id, auth.uid())
   on conflict (referred_id) do nothing;
+  if not found then
+    return; -- already referred before -- never issue a second welcome coupon
+  end if;
+
+  v_code := 'WELCOME' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 6));
+  insert into public.coupons(code, amount, assigned_user_id, created_by)
+  values (v_code, v_amount, auth.uid(), v_referrer_id);
+  insert into public.notifications(user_id, title, body)
+  values (
+    auth.uid(), 'Welcome coupon!',
+    'Thanks for joining with a referral code! Here''s your coupon: ' || v_code || ' (worth ' || v_amount || ' Ks). Enter it at checkout to use it!'
+  );
+  update public.referrals set referred_coupon_code = v_code, referred_coupon_amount = v_amount
+  where referrer_id = v_referrer_id and referred_id = auth.uid();
+
+  return query select v_code, v_amount;
 end;
 $$;
 grant execute on function public.submit_referral to authenticated;
@@ -798,19 +825,24 @@ grant execute on function public.my_referral_stats to authenticated;
 -- dashboard's Referrals tab.
 create or replace function public.admin_list_referrals()
 returns table(
-  id uuid, status text, reward_amount numeric, coupon_code text,
+  id uuid, status text, reward_amount numeric, coupon_code text, coupon_active boolean,
+  referred_coupon_code text, referred_coupon_amount numeric, referred_coupon_active boolean,
   created_at timestamptz, confirmed_at timestamptz,
   referrer_id uuid, referrer_email text, referrer_username text,
   referred_id uuid, referred_email text, referred_username text
 )
 language sql security definer set search_path = public as $$
   select
-    r.id, r.status, r.reward_amount, r.coupon_code, r.created_at, r.confirmed_at,
+    r.id, r.status, r.reward_amount, r.coupon_code, (c1.used_at is null) as coupon_active,
+    r.referred_coupon_code, r.referred_coupon_amount, (c2.used_at is null) as referred_coupon_active,
+    r.created_at, r.confirmed_at,
     ru.id, ru.email, ru.raw_user_meta_data->>'username',
     rd.id, rd.email, rd.raw_user_meta_data->>'username'
   from public.referrals r
   join auth.users ru on ru.id = r.referrer_id
   join auth.users rd on rd.id = r.referred_id
+  left join public.coupons c1 on c1.code = r.coupon_code
+  left join public.coupons c2 on c2.code = r.referred_coupon_code
   where public.is_admin()
   order by (r.status = 'pending') desc, r.created_at desc;
 $$;

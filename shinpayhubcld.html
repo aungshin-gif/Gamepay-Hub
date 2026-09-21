@@ -1465,17 +1465,27 @@ function referralUserLabel(id, email, username){
   return username ? "@" + username : (email || id);
 }
 
+function couponStatusBadge(active){
+  return active ? `<span class="badge approved">ACTIVE</span>` : `<span class="badge archived">EXPIRED</span>`;
+}
 function renderReferralRow(r){
   const referrerLabel = escapeHtml(referralUserLabel(r.referrer_id, r.referrer_email, r.referrer_username));
   const referredLabel = escapeHtml(referralUserLabel(r.referred_id, r.referred_email, r.referred_username));
   const when = new Date(r.created_at).toLocaleDateString();
+  // The referred side's welcome coupon is issued instantly at signup
+  // (see submit_referral() in schema.sql), independent of whether the
+  // referrer's own reward has been confirmed yet.
+  const welcomeLine = r.referred_coupon_code
+    ? `<div class="or-sub">${referredLabel}'s welcome coupon: ${escapeHtml(r.referred_coupon_code)} (${Number(r.referred_coupon_amount).toLocaleString()} Ks) ${couponStatusBadge(r.referred_coupon_active)}</div>`
+    : "";
   if(r.status === "confirmed"){
     return `
-      <div class="order-row referral-row" data-id="${r.id}" style="cursor:default;">
+      <div class="order-row referral-row" data-id="${r.id}" style="cursor:default;flex-wrap:wrap;">
         <span class="row-avatar" style="background:linear-gradient(135deg,#16a34a,#4ade80)">${ICON_USER}</span>
         <div class="or-main">
           <div class="or-code">${referrerLabel} → ${referredLabel} <span class="badge approved">CONFIRMED</span></div>
-          <div class="or-sub">${when} · Confirmed ${new Date(r.confirmed_at).toLocaleDateString()} · Code ${escapeHtml(r.coupon_code)}</div>
+          <div class="or-sub">${when} · Confirmed ${new Date(r.confirmed_at).toLocaleDateString()} · Code ${escapeHtml(r.coupon_code)} ${couponStatusBadge(r.coupon_active)}</div>
+          ${welcomeLine}
         </div>
         <div class="or-amount">${Number(r.reward_amount).toLocaleString()} Ks</div>
       </div>
@@ -1487,6 +1497,7 @@ function renderReferralRow(r){
       <div class="or-main">
         <div class="or-code">${referrerLabel} → ${referredLabel} <span class="badge pending">PENDING</span></div>
         <div class="or-sub">${when}</div>
+        ${welcomeLine}
       </div>
       <div class="referral-row-actions">
         <input type="number" class="referral-amount-input" value="2000" min="1" aria-label="Coupon amount" />
