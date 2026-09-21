@@ -544,6 +544,25 @@ drop policy if exists "admin manage support messages" on public.support_messages
 create policy "admin manage support messages" on public.support_messages
   for all using (public.is_admin()) with check (public.is_admin());
 
+-- Optional image attachment (a screenshot, a payment slip, a promo image)
+-- alongside or instead of body text -- body stays not-null (empty string
+-- for an image-only message) so existing rows/constraints don't change.
+alter table public.support_messages add column if not exists image_url text;
+
+insert into storage.buckets (id, name, public)
+values ('chat-images', 'chat-images', true)
+on conflict (id) do nothing;
+
+drop policy if exists "anyone can view chat images" on storage.objects;
+create policy "anyone can view chat images" on storage.objects
+  for select to anon, authenticated
+  using (bucket_id = 'chat-images');
+
+drop policy if exists "authenticated can upload chat images" on storage.objects;
+create policy "authenticated can upload chat images" on storage.objects
+  for insert to authenticated
+  with check (bucket_id = 'chat-images');
+
 -- support_messages has no natural "one row per conversation" to hang an
 -- admin_last_read_at on the way orders does -- this table gives it one,
 -- so the admin's Messages inbox can compute unread counts/badges the

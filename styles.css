@@ -4481,7 +4481,7 @@ body.products-mode .page,
 body.order-mode .page,
 body.dashboard-mode .page,
 body.preview-mode .page{
-  padding:0 !important; margin:0 !important; min-height:0 !important;
+  padding:0 !important; margin:0 auto !important; min-height:0 !important;
 }
 
 /* ===== view-hidden-wins ===== */
@@ -4497,6 +4497,7 @@ body.preview-mode .page{
 #previewSection.hidden,
 #productPage.hidden,
 #cartItem.hidden,
+#planSkeleton.hidden,
 #pageLoader.hidden{ display:none !important; }
 
 /* ===== hero-depth-3d ===== */
@@ -5479,6 +5480,11 @@ body.light-mode #checkoutSection .pay-option.active{
    existing dashboard/preview cards so the new flow doesn't look bolted on. */
 .order-status-view, .order-chat-view{ display:block; }
 .order-status-view.hidden, .order-chat-view.hidden{ display:none; }
+/* This view (and the .preview-shell/.acct-list cards inside it) had no
+   horizontal gutter of its own, so on narrow screens the cards sat flush
+   against the viewport edge and their rounded corners had nothing to show
+   against -- they read as square. */
+.order-status-view{ padding:0 clamp(12px,4vw,28px); }
 .order-status-card{
   width:min(560px,100%);
   margin:18px auto 0;
@@ -5815,6 +5821,19 @@ body.light-mode .chat-closed-banner{ background:#ffe6ec; color:#c81e4d; border-c
   background:linear-gradient(135deg,#7a35c7,#b86bff); border:none; color:#fff; cursor:pointer;
 }
 .chat-send-btn svg{ width:17px; height:17px; }
+.chat-attach-btn{
+  flex:0 0 auto; width:40px; height:40px; padding:0; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.08); border:1px solid rgba(224,180,255,.28); color:#fff; cursor:pointer;
+}
+.chat-attach-btn svg{ width:17px; height:17px; }
+.chat-attach-btn:hover{ background:rgba(255,255,255,.14); }
+body.light-mode .chat-attach-btn{ background:rgba(255,255,255,.5); border-color:rgba(212,168,67,.35); color:var(--ink,#1f2937); }
+.chat-image-preview{ margin:0 12px 10px; display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted,rgba(255,255,255,.74)); }
+.chat-image-preview img{ width:44px; height:44px; object-fit:cover; border-radius:8px; border:1px solid rgba(224,180,255,.3); }
+.chat-image-preview.hidden{ display:none; }
+.chat-bubble-image{ display:block; max-width:100%; border-radius:10px; margin-bottom:6px; }
+.chat-bubble-image:last-child{ margin-bottom:0; }
 body.light-mode .chat-bubble.customer{ box-shadow:0 1px 2px rgba(122,53,199,.25); }
 body.light-mode .chat-panel{
   background:linear-gradient(160deg,rgba(255,251,240,.95),rgba(233,215,255,.8));
