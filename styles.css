@@ -4280,20 +4280,13 @@ body.light-mode .lp-hero, .lp-hero{
 .lp-hero .lp-hero-dot.is-active{ background:#fff; transform:scale(1.3); }
 @media(max-width:640px){
   .lp-hero .lp-hero-carousel{ border-radius:12px; }
-  /* The source art is an exact 16:9 landscape banner, which reads as a flat,
-     short strip on a narrow phone. Cropping to fill a taller box (object-fit:
-     cover) gave the banner more vertical presence but cut real content off
-     the left/right edges -- slide 1's own "GAMEPAY HUB" wordmark included.
-     Taller box, but object-fit:contain: the full image always stays visible
-     (fills the box's full width, letterboxed above/below by the box's own
-     gradient background instead of cropped) -- more vertical presence
-     without ever losing part of the picture. */
-  .lp-hero .lp-hero-carousel{ aspect-ratio:4/3; }
-  /* object-position:bottom keeps the image glued to the carousel box's own
-     bottom edge -- the Browse button/dots are positioned relative to that
-     same box edge, so this keeps them sitting on the actual artwork
-     instead of floating in the empty letterbox margin above it. */
-  .lp-hero .lp-hero-slide img{ object-fit:contain; object-position:center bottom; }
+  /* A taller mobile box (aspect-ratio:4/3) was tried for more vertical
+     presence, but the source art is an exact 16:9 landscape banner --
+     any box taller than that always leaves empty letterbox space above
+     or below the picture. Desktop's plain 16:9 box has zero such gap
+     since it matches the source images exactly, so mobile now uses the
+     same ratio: the full banner fills its box edge-to-edge, no crop and
+     no empty space, identical to desktop. */
 }
 
 /* ---------- clouds rolling across the base of the scene ---------- */
@@ -4429,6 +4422,11 @@ body.light-mode .lp-hero .lp-cta-ghost{
 .lp-paygroup-sell{ padding-top:12px; border-top:1px solid rgba(36,28,60,.09); width:100%; }
 .lp-paybar .lp-brand-label{ margin:0 !important; }
 .lp-pays{ display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+/* Groups USD/GBP/EUR as one unit -- flex-basis:100% forces a line break
+   before the group in the wrapping .lp-pays row, so the three currency
+   chips always land together on their own row instead of the wrap point
+   splitting them unevenly across the payment-logo row above. */
+.currency-chip-group{ display:flex; align-items:center; gap:7px; flex-wrap:wrap; flex-basis:100%; }
 .pay-mark{
   display:grid; place-items:center;
   width:44px; height:30px; padding:5px 6px;
