@@ -1041,6 +1041,83 @@ end;
 $$;
 grant execute on function public.admin_unlink_telegram_link to authenticated;
 
+-- 13. Email change alerts ------------------------------------------
+-- This app has no Telegram Bot API integration (see the manual-review
+-- note on telegram_links above), so email-change visibility for admins
+-- is surfaced here instead, in the dashboard.
+--
+-- Supabase Auth handles the actual email swap entirely on its own:
+-- auth.updateUser({ email }) sends a confirmation to the new address
+-- (and, if "Secure email change" is on, to the old one too); auth.users
+-- keeps the OLD email live and working until every required link is
+-- confirmed, then flips the single email column to the new value in
+-- place -- there is never a second row or a lingering old value to
+-- clean up by hand.
+--
+-- "requested" rows are logged by the client right before it calls
+-- auth.updateUser({ email }), so admins see a change in flight
+-- immediately; the trigger below flips the matching row to "completed"
+-- only when auth.users.email actually changes to that new value, i.e.
+-- once Supabase Auth has finished confirming it.
+create table if not exists public.email_change_events (
+  id bigint generated always as identity primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  old_email text not null,
+  new_email text not null,
+  status text not null default 'requested' check (status in ('requested','completed')),
+  requested_at timestamptz not null default now(),
+  completed_at timestamptz
+);
+alter table public.email_change_events enable row level security;
+
+drop policy if exists "admin read email change events" on public.email_change_events;
+create policy "admin read email change events" on public.email_change_events
+  for select using (public.is_admin());
+
+create or replace function public.log_email_change_request(p_new_email text)
+returns void
+language plpgsql security definer set search_path = public as $$
+declare v_old_email text;
+begin
+  select email into v_old_email from auth.users where id = auth.uid();
+  if v_old_email is null then
+    raise exception 'not authenticated';
+  end if;
+  insert into public.email_change_events (user_id, old_email, new_email, status)
+  values (auth.uid(), v_old_email, p_new_email, 'requested');
+end;
+$$;
+grant execute on function public.log_email_change_request to authenticated;
+
+create or replace function public.admin_list_email_change_events(p_limit int default 30)
+returns table(id bigint, user_id uuid, old_email text, new_email text, status text, requested_at timestamptz, completed_at timestamptz)
+language sql security definer set search_path = public as $$
+  select id, user_id, old_email, new_email, status, requested_at, completed_at
+  from public.email_change_events
+  where public.is_admin()
+  order by requested_at desc
+  limit p_limit;
+$$;
+grant execute on function public.admin_list_email_change_events to authenticated;
+
+create or replace function public.mark_email_change_completed()
+returns trigger
+language plpgsql security definer set search_path = public as $$
+begin
+  if new.email is distinct from old.email then
+    update public.email_change_events
+    set status = 'completed', completed_at = now()
+    where user_id = new.id and new_email = new.email and status = 'requested';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_email_changed on auth.users;
+create trigger on_auth_user_email_changed
+  after update on auth.users
+  for each row execute function public.mark_email_change_completed();
+
 -- ============================================================
 -- One-time setup after running this file:
 -- 1. Create your own admin login: Authentication -> Users -> Add user
