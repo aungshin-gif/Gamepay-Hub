@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=40">
+  <link rel="stylesheet" href="styles.css?v=41">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -3048,28 +3048,25 @@ if(document.readyState === "loading"){
       return list;
     }
 
-    // A compact row instead of a poster tile -- icon, tier + name, and
-    // price + discount all sit on one line so several plans stack as a
-    // vertical list on the panel's own continuous strip background,
-    // rather than a horizontal-scroll row of boxy cards.
+    // An ultra-compact vertical card, several sitting side-by-side in a
+    // horizontal-scroll row -- a tiny stage (36px icon) and just name +
+    // price beneath it, no tier line and no Buy Now bar, so each card
+    // stays as short as the info actually needs instead of stacking into
+    // a tall vertical list.
     function buildDiscountRowCard({ product, plan }, onSelect){
-      const row = document.createElement("button");
-      row.type = "button";
-      row.className = "sale-row";
-      const tierLabel = TIER_LABEL[planTier(plan)] || product.category || "Store";
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "sale-card";
       const priceNum = formatKs(plan.price).replace(/\s*Ks$/, "");
-      row.dataset.cat = product.category || "Other";
-      row.innerHTML = `
-  <span class="sale-row-flag" title="Discount">-${plan.discountPercent}%</span>
-  <span class="sale-row-icon"><span class="icon-wrap">${renderIcon(product)}</span></span>
-  <span class="sale-row-mid">
-    <span class="sale-row-tier">${tierLabel}</span>
-    <span class="sale-row-name">${product.name}</span>
-  </span>
-  <span class="sale-row-price"><s class="price-original">${formatKs(plan.originalPrice)}</s><span class="sale-row-now"><strong>${priceNum}</strong><em>Ks</em></span></span>
+      card.dataset.cat = product.category || "Other";
+      card.innerHTML = `
+  <span class="sale-card-flag" title="Discount">-${plan.discountPercent}%</span>
+  <span class="sale-card-icon"><span class="icon-wrap">${renderIcon(product)}</span></span>
+  <span class="sale-card-name">${product.name}</span>
+  <span class="sale-card-price"><s class="price-original">${formatKs(plan.originalPrice)}</s><strong>${priceNum}</strong></span>
 `;
-      row.onclick = () => onSelect(product, plan);
-      return row;
+      card.onclick = () => onSelect(product, plan);
+      return card;
     }
 
     // Catalog is already open wherever this strip lives, so opening a
