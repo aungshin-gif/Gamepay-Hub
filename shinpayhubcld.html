@@ -13,7 +13,7 @@
        this a browser that already has admin.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time admin.css changes. -->
-  <link rel="stylesheet" href="admin.css?v=5">
+  <link rel="stylesheet" href="admin.css?v=6">
 
 </head>
 <body>
@@ -69,6 +69,10 @@
       <div class="admin-nav-item" id="navNewsBtn" data-view="news">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/></svg>
         News
+      </div>
+      <div class="admin-nav-item" id="navAvatarsBtn" data-view="avatars">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="10" r="2.2"/><path d="m21 16-5.2-5.2a2 2 0 0 0-2.8 0L4 19"/></svg>
+        Avatars
       </div>
       <div class="admin-nav-item" id="navSettingsBtn" data-view="settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
@@ -369,6 +373,34 @@
         </div>
       </div>
 
+      <div id="avatarsView" class="hidden">
+        <div class="top-row">
+          <div>
+            <h1>Avatars</h1>
+            <div class="sub">Customers can only pick a profile picture from what you upload here -- each one paired with a background color.</div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Add a new avatar</div>
+          <input type="file" id="avatarPresetFileInput" accept="image/*" style="display:none;" />
+          <div class="avatar-upload-row">
+            <button type="button" id="avatarPresetUploadBtn" class="avatar-upload-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span>Choose picture</span>
+            </button>
+            <div id="avatarPresetPreview" class="avatar-preset-preview hidden"></div>
+          </div>
+          <div class="avatar-field-label">Background color</div>
+          <div class="avatar-bg-swatches" id="avatarBgSwatches"></div>
+          <button type="button" id="avatarPresetSaveBtn" disabled style="margin-top:14px;">Add to gallery</button>
+          <div id="avatarPresetMsg" style="font-size:12.5px;margin-top:8px;color:var(--muted);"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Gallery</div>
+          <div id="avatarPresetsList" class="avatar-presets-grid"><div class="empty-note">Loading…</div></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -552,6 +584,7 @@ const broadcastView = document.getElementById("broadcastView");
 const messagesView = document.getElementById("messagesView");
 const referralsView = document.getElementById("referralsView");
 const newsView = document.getElementById("newsView");
+const avatarsView = document.getElementById("avatarsView");
 const navHomeBtn = document.getElementById("navHomeBtn");
 const navSettingsBtn = document.getElementById("navSettingsBtn");
 const navUsersBtn = document.getElementById("navUsersBtn");
@@ -561,9 +594,10 @@ const navBroadcastBtn = document.getElementById("navBroadcastBtn");
 const navMessagesBtn = document.getElementById("navMessagesBtn");
 const navReferralsBtn = document.getElementById("navReferralsBtn");
 const navNewsBtn = document.getElementById("navNewsBtn");
+const navAvatarsBtn = document.getElementById("navAvatarsBtn");
 
-const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView, stockView, broadcastView, messagesView, referralsView, newsView];
-const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn, navStockBtn, navBroadcastBtn, navMessagesBtn, navReferralsBtn, navNewsBtn];
+const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView, stockView, broadcastView, messagesView, referralsView, newsView, avatarsView];
+const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn, navStockBtn, navBroadcastBtn, navMessagesBtn, navReferralsBtn, navNewsBtn, navAvatarsBtn];
 
 function showDashboardHome(){
   ALL_VIEWS.forEach(v => v.classList.add("hidden"));
@@ -631,6 +665,102 @@ function showReferralsView(){
   loadReferrals();
   loadWelcomeCouponAmount();
 }
+function showAvatarsView(){
+  ALL_VIEWS.forEach(v => v.classList.add("hidden"));
+  ALL_NAV_BTNS.forEach(b => b.classList.remove("active"));
+  avatarsView.classList.remove("hidden");
+  navAvatarsBtn.classList.add("active");
+  loadAvatarPresets();
+}
+
+// Customers can only pick from pictures uploaded here -- each paired with
+// one of a fixed set of background colors (no free-form color picker,
+// keeps the gallery looking consistent).
+const AVATAR_BG_PALETTE = {
+  "white-glass": { label: "White glass", css: "linear-gradient(135deg, rgba(255,255,255,.95), rgba(240,240,245,.72))" },
+  "white-milk": { label: "White milk", css: "#f7f5f2" },
+  "white-grey-soft": { label: "White grey soft", css: "linear-gradient(135deg,#f2f3f5,#e3e6ea)" },
+  "green-light": { label: "Green light", css: "linear-gradient(135deg,#d9f7e6,#a8e6c3)" },
+  "sky-blue": { label: "Sky blue", css: "linear-gradient(135deg,#cdeeff,#8fd3f4)" },
+};
+let avatarPresetFile = null;
+let avatarPresetBgId = "white-glass";
+
+function renderAvatarBgSwatches(){
+  const box = document.getElementById("avatarBgSwatches");
+  if(!box) return;
+  box.innerHTML = Object.entries(AVATAR_BG_PALETTE).map(([id, v]) => `
+    <button type="button" class="avatar-bg-swatch ${id === avatarPresetBgId ? "active" : ""}" data-bg="${id}" style="background:${v.css}" title="${v.label}" aria-label="${v.label}"></button>
+  `).join("");
+  box.querySelectorAll(".avatar-bg-swatch").forEach(btn => {
+    btn.addEventListener("click", () => {
+      avatarPresetBgId = btn.dataset.bg;
+      renderAvatarBgSwatches();
+    });
+  });
+}
+renderAvatarBgSwatches();
+
+document.getElementById("avatarPresetUploadBtn")?.addEventListener("click", () => {
+  document.getElementById("avatarPresetFileInput")?.click();
+});
+document.getElementById("avatarPresetFileInput")?.addEventListener("change", (e) => {
+  const file = e.target.files?.[0];
+  if(!file) return;
+  avatarPresetFile = file;
+  const preview = document.getElementById("avatarPresetPreview");
+  preview.classList.remove("hidden");
+  preview.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="">`;
+  document.getElementById("avatarPresetSaveBtn").disabled = false;
+});
+
+document.getElementById("avatarPresetSaveBtn")?.addEventListener("click", async () => {
+  if(!avatarPresetFile) return;
+  const msg = document.getElementById("avatarPresetMsg");
+  const btn = document.getElementById("avatarPresetSaveBtn");
+  btn.disabled = true;
+  msg.textContent = "Uploading…";
+  const { data: { user } } = await sb.auth.getUser();
+  const ext = (avatarPresetFile.name.split(".").pop() || "png").toLowerCase();
+  const path = `${user.id}/presets/${crypto.randomUUID()}.${ext}`;
+  const { error: upErr } = await sb.storage.from("avatars").upload(path, avatarPresetFile);
+  if(upErr){ msg.textContent = "Could not upload: " + upErr.message; btn.disabled = false; return; }
+  const { data: pub } = sb.storage.from("avatars").getPublicUrl(path);
+  const { error } = await sb.from("avatar_presets").insert({ image_url: pub.publicUrl, bg_color: avatarPresetBgId });
+  if(error){ msg.textContent = "Could not save: " + error.message; btn.disabled = false; return; }
+  msg.textContent = "Added!";
+  avatarPresetFile = null;
+  document.getElementById("avatarPresetFileInput").value = "";
+  document.getElementById("avatarPresetPreview").classList.add("hidden");
+  loadAvatarPresets();
+});
+
+function avatarPresetCardHtml(p){
+  const bg = AVATAR_BG_PALETTE[p.bg_color]?.css || "#fff";
+  return `
+    <div class="avatar-preset-card" data-id="${p.id}">
+      <div class="avatar-preset-circle" style="background:${bg}"><img src="${p.image_url}" alt=""></div>
+      <button type="button" class="avatar-preset-delete" data-id="${p.id}" aria-label="Delete avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `;
+}
+async function loadAvatarPresets(){
+  const box = document.getElementById("avatarPresetsList");
+  const { data, error } = await sb.from("avatar_presets").select("*").order("sort_order").order("created_at");
+  if(error){ box.innerHTML = "<div class='empty-note'>Could not load.</div>"; return; }
+  if(!data.length){ box.innerHTML = "<div class='empty-note'>No avatars yet -- add one above.</div>"; return; }
+  box.innerHTML = data.map(avatarPresetCardHtml).join("");
+  box.querySelectorAll(".avatar-preset-delete").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const ok = await showAdminConfirm("Delete this avatar? Customers who picked it keep it until they change their photo.", { title: "Delete avatar?", confirmText: "Delete" });
+      if(!ok) return;
+      await sb.from("avatar_presets").delete().eq("id", btn.dataset.id);
+      loadAvatarPresets();
+    });
+  });
+}
 
 async function loadWelcomeCouponAmount(){
   const input = document.getElementById("welcomeCouponAmountInput");
@@ -654,6 +784,7 @@ navBroadcastBtn.addEventListener("click", showBroadcastView);
 navNewsBtn.addEventListener("click", showNewsView);
 navMessagesBtn.addEventListener("click", showMessagesView);
 navReferralsBtn.addEventListener("click", showReferralsView);
+navAvatarsBtn.addEventListener("click", showAvatarsView);
 document.getElementById("orderDetailBackBtn").addEventListener("click", showDashboardHome);
 
 let orders = [];
@@ -1103,7 +1234,10 @@ async function uploadChatImage(file){
 // instead of a 38px list row.
 function customerBubbleAvatar(u){
   const url = u?.meta?.avatar_url;
-  if(url) return { background: "#fff", html: `<img src="${url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` };
+  if(url){
+    const bg = AVATAR_BG_PALETTE[u?.meta?.avatar_bg]?.css || "#fff";
+    return { background: bg, html: `<img src="${url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` };
+  }
   const email = u?.email || "";
   return { background: avatarGradientFor(email), html: (email[0] || "?").toUpperCase() };
 }
@@ -1334,7 +1468,8 @@ function userDisplayHandle(u){
 function userAvatarHtml(u){
   const url = u.meta?.avatar_url;
   if(url){
-    return `<span class="row-avatar user-avatar" style="background:#fff"><img src="${url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></span>`;
+    const bg = AVATAR_BG_PALETTE[u.meta?.avatar_bg]?.css || "#fff";
+    return `<span class="row-avatar user-avatar" style="background:${bg}"><img src="${url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></span>`;
   }
   return `<span class="row-avatar" style="background:${avatarGradientFor(u.email)}">${(u.email[0] || "?").toUpperCase()}</span>`;
 }
