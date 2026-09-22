@@ -218,7 +218,12 @@
             <div id="adminGateMsg" style="font-size:12.5px;margin-top:8px;color:var(--muted);"></div>
           </div>
         </div>
-        <div class="card">
+        <div class="card" style="margin-top:16px;">
+          <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 7 8.4 5.6a2 2 0 0 0 2.2 0L22 7"/></svg>Email Change Log</div>
+          <div class="settings-sub" style="margin-bottom:10px;">Every customer or admin email change, logged the moment it's requested and marked confirmed once Supabase Auth finishes verifying it -- no Telegram bot needed to see it happen.</div>
+          <div id="emailChangeLogList" class="order-list"></div>
+        </div>
+        <div class="card" style="margin-top:16px;">
           <div class="card-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>Dashboard Preferences</div>
           <div class="settings-row">
             <div>
@@ -639,6 +644,7 @@ function showSettingsView(){
   ALL_NAV_BTNS.forEach(b => b.classList.remove("active"));
   settingsView.classList.remove("hidden");
   navSettingsBtn.classList.add("active");
+  loadEmailChangeLog();
 }
 function showUsersView(){
   ALL_VIEWS.forEach(v => v.classList.add("hidden"));
@@ -1000,6 +1006,7 @@ document.getElementById("adminSubmitNewEmailBtn")?.addEventListener("click", asy
   const msg = document.getElementById("adminEmailChangeMsg");
   const newEmail = newEmailInput.value.trim();
   if(!newEmail || !newEmail.includes("@")){ setSecurityMsg(msg, "Enter a valid email address.", false); return; }
+  await sb.rpc("log_email_change_request", { p_new_email: newEmail }).catch(() => {});
   const { error } = await sb.auth.updateUser({ email: newEmail });
   if(error){ setSecurityMsg(msg, error.message, false); return; }
   newEmailInput.value = "";
@@ -1021,6 +1028,24 @@ document.getElementById("adminGateSaveBtn")?.addEventListener("click", async () 
   currentInput.value = ""; newInput.value = ""; confirmInput.value = "";
   setSecurityMsg(msg, "Access code updated.", true);
 });
+
+async function loadEmailChangeLog(){
+  const box = document.getElementById("emailChangeLogList");
+  if(!box) return;
+  box.innerHTML = "<div class='empty-note'>Loading…</div>";
+  const { data, error } = await sb.rpc("admin_list_email_change_events", { p_limit: 30 });
+  if(error){ box.innerHTML = "<div class='empty-note'>Could not load.</div>"; return; }
+  if(!data?.length){ box.innerHTML = "<div class='empty-note'>No email changes yet.</div>"; return; }
+  box.innerHTML = data.map(ev => `
+    <div class="order-row">
+      <div class="or-main">
+        <div class="or-code" style="white-space:normal;">${escapeHtml(ev.old_email)} <span style="color:var(--muted-2);">&rarr;</span> ${escapeHtml(ev.new_email)}</div>
+        <div class="or-sub" style="white-space:normal;">${new Date(ev.requested_at).toLocaleString()}</div>
+      </div>
+      <span class="telegram-admin-badge ${ev.status === "completed" ? "linked" : "pending"}">${ev.status === "completed" ? "Confirmed" : "Pending"}</span>
+    </div>
+  `).join("");
+}
 
 function friendlyDateLabel(dateStr){
   const d = new Date(dateStr);

@@ -310,7 +310,7 @@
       <span class="auth-close" id="telegramLinkCloseBtn">&times;</span>
       <div class="auth-modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></div>
       <h3 id="telegramLinkTitle">Link your Telegram</h3>
-      <p class="auth-sub" id="telegramLinkSub">Enter your Telegram username -- our team checks it by hand and confirms the link.</p>
+      <p class="auth-sub" id="telegramLinkSub">Enter your Telegram username. Our team manually verifies each request for your account's security before confirming the link.</p>
       <div class="auth-error" id="telegramLinkError"></div>
       <div id="telegramLinkBody"></div>
     </div>
@@ -5242,7 +5242,7 @@ function renderTelegramLinkBody(link){
   document.getElementById("telegramLinkError").textContent = "";
   if(!link){
     title.textContent = "Link your Telegram";
-    sub.textContent = "Enter your Telegram username -- our team checks it by hand and confirms the link.";
+    sub.textContent = "Enter your Telegram username. Our team manually verifies each request for your account's security before confirming the link.";
     body.innerHTML = `
       <div class="auth-field">
         <span class="auth-field-icon">@</span>
@@ -5254,7 +5254,7 @@ function renderTelegramLinkBody(link){
     document.getElementById("telegramUsernameInput").addEventListener("keydown", e => { if(e.key === "Enter") submitTelegramLink(); });
   } else if(link.status === "pending"){
     title.textContent = "Pending verification";
-    sub.textContent = "We're checking this by hand -- it can take a little while. You can cancel and resubmit anytime.";
+    sub.textContent = "Your request is under manual review for account security -- this may take a little while. You're free to cancel and resubmit at any time.";
     body.innerHTML = `
       <div class="telegram-link-status pending">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -5336,6 +5336,7 @@ document.getElementById("editEmailSaveBtn")?.addEventListener("click", async () 
   const next = input.value.trim();
   if(!next || !next.includes("@")){ err.textContent = "Enter a valid email."; return; }
   const prevLabel = btn.textContent; btn.disabled = true; btn.textContent = "Saving…";
+  await supabaseClient.rpc("log_email_change_request", { p_new_email: next }).catch(() => {});
   const { error } = await supabaseClient.auth.updateUser({ email: next });
   btn.disabled = false; btn.textContent = prevLabel;
   if(error){ err.textContent = error.message; return; }
