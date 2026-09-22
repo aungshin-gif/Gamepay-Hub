@@ -5251,6 +5251,7 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
 #orderView .plan-option{ --tier:#6B6486; --tier-2:#8A83A6; }
 #orderView .plan-option[data-tier="plus"]    { --tier:#7B3FD1; --tier-2:#9A62E8; }
 #orderView .plan-option[data-tier="pro"]     { --tier:#2C63D8; --tier-2:#4E86EE; }
+#orderView .plan-option[data-tier="proplus"] { --tier:#5A2CBE; --tier-2:#8657F0; }
 #orderView .plan-option[data-tier="premium"] { --tier:#B3701A; --tier-2:#D89231; }
 #orderView .plan-option[data-tier="max"]     { --tier:#C0356B; --tier-2:#E2568C; }
 #orderView .plan-option[data-tier="vip"]     { --tier:#9A7B12; --tier-2:#C8A62A; }
@@ -5422,6 +5423,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="vip"]       { --tier:#6A4A08; --tier-2:#B98F1E; --tier-ink:#FFF6DF; }
 #orderView .plan-option[data-tier="max"]       { --tier:#7A1B44; --tier-2:#C2366F; --tier-ink:#FFEDF4; }
 #orderView .plan-option[data-tier="pro"]       { --tier:#1E3A8A; --tier-2:#3B63C9; --tier-ink:#EDF2FF; }
+#orderView .plan-option[data-tier="proplus"]   { --tier:#4C2889; --tier-2:#7B4FE0; --tier-ink:#F3EDFF; }
 #orderView .plan-option[data-tier="core"]      { --tier:#0F6E64; --tier-2:#22A399; --tier-ink:#E7FBF8; }
 #orderView .plan-option[data-tier="standard"]  { --tier:#3C4A66; --tier-2:#63799E; --tier-ink:#EEF3FB; }
 #orderView .plan-option[data-tier="plus"]      { --tier:#5B2AA8; --tier-2:#8A55DC; --tier-ink:#F4EDFF; }
@@ -5528,10 +5530,32 @@ body.light-mode #checkoutSection .pay-option.active{
   background-repeat:no-repeat, no-repeat, no-repeat !important;
 }
 
+/* ---------- Extra details (Warranty / Format / Note) ---------- */
+#orderView .plan-extra-details{
+  display:grid; gap:7px; margin-top:9px; padding-top:9px;
+  border-top:1px solid rgba(28,22,60,.07);
+}
+#orderView .plan-extra-row{ display:grid; gap:3px; }
+#orderView .plan-extra-row .plan-field-label{
+  display:block !important;
+  font-size:7.5px !important; font-weight:900 !important;
+  letter-spacing:.14em !important; text-transform:uppercase !important;
+  color:#A29CBA !important; line-height:1 !important;
+}
+#orderView .plan-extra-value{
+  font-size:11px !important; font-weight:700 !important;
+  color:#4B4468 !important; letter-spacing:-.005em; line-height:1.4;
+}
+#orderView .plan-extra-note .plan-extra-value{
+  font-weight:600 !important; white-space:pre-line;
+}
+
 @media(max-width:560px){
   #orderView .plan-tier-chip{ padding:3px 10px !important; font-size:8.5px !important; }
   #orderView .plan-type-value{ font-size:10.5px !important; }
   #orderView .plan-type-line{ margin-top:8px; padding-top:8px; }
+  #orderView .plan-extra-value{ font-size:10.5px !important; }
+  #orderView .plan-extra-details{ margin-top:8px; padding-top:8px; }
 }
 
 /* ===== order-status-chat-style ===== */
