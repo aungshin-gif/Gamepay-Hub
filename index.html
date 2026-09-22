@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=42">
+  <link rel="stylesheet" href="styles.css?v=43">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -3048,20 +3048,22 @@ if(document.readyState === "loading"){
       return list;
     }
 
-    // An ultra-compact vertical card, several sitting side-by-side in a
-    // horizontal-scroll row -- a tiny stage (36px icon) and just name +
-    // price beneath it, no tier line and no Buy Now bar, so each card
-    // stays as short as the info actually needs instead of stacking into
-    // a tall vertical list.
+    // An ultra-compact vertical card, several sitting side-by-side in an
+    // auto-scrolling row -- a tiny stage (36px icon), a small tier pill,
+    // name, and price, with a bold high-contrast discount badge, so each
+    // card stays short while still showing everything a shopper needs at
+    // a glance.
     function buildDiscountRowCard({ product, plan }, onSelect){
       const card = document.createElement("button");
       card.type = "button";
       card.className = "sale-card";
+      const tierLabel = TIER_LABEL[planTier(plan)] || product.category || "Store";
       const priceNum = formatKs(plan.price).replace(/\s*Ks$/, "");
       card.dataset.cat = product.category || "Other";
       card.innerHTML = `
-  <span class="sale-card-flag" title="Discount">-${plan.discountPercent}%</span>
+  <span class="sale-card-flag" title="Discount">-${plan.discountPercent}% OFF</span>
   <span class="sale-card-icon"><span class="icon-wrap">${renderIcon(product)}</span></span>
+  <span class="sale-card-tier">${tierLabel}</span>
   <span class="sale-card-name">${product.name}</span>
   <span class="sale-card-price"><s class="price-original">${formatKs(plan.originalPrice)}</s><strong>${priceNum}</strong></span>
 `;
@@ -3083,10 +3085,12 @@ if(document.readyState === "loading"){
       }
     }
 
-    // Same ticker mechanism as Hot Products, but lives on the catalog page
-    // next to "Back to home" rather than the landing page -- empty until an
-    // admin actually discounts something, so the whole section (label
-    // included) hides itself rather than showing an empty strip.
+    // Same auto-scrolling ticker mechanism as Hot Products (the list is
+    // duplicated once so the infinite translateX(-50%) loop is seamless),
+    // but lives on the catalog page next to "Back to home" rather than the
+    // landing page -- empty until an admin actually discounts something,
+    // so the whole section (label included) hides itself rather than
+    // showing an empty strip.
     function renderCatalogDiscounts(){
       const section = document.getElementById("catalogDiscountSection");
       const track = document.getElementById("catalogDiscountTrack");
@@ -3096,7 +3100,7 @@ if(document.readyState === "loading"){
       section.classList.toggle("hidden", !discounted.length);
       if(!discounted.length) return;
       const frag = document.createDocumentFragment();
-      discounted.forEach(entry => frag.appendChild(buildDiscountRowCard(entry, openDiscountPlan)));
+      discounted.concat(discounted).forEach(entry => frag.appendChild(buildDiscountRowCard(entry, openDiscountPlan)));
       track.appendChild(frag);
     }
     function hidePaymentQuick(){
