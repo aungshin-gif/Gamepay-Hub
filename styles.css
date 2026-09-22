@@ -6293,6 +6293,7 @@ body.light-mode .auth-btn{ color:var(--ink,#1f2937); background:var(--surface,#f
 }
 .auth-modal-icon.hidden{ display:none; }
 .auth-modal-icon svg{ width:30px; height:30px; }
+.auth-modal-icon img{ width:40px; height:40px; object-fit:contain; }
 @keyframes authIconPop{ from{ opacity:0; transform:scale(.7); } to{ opacity:1; transform:scale(1); } }
 .auth-modal.celebrate{
   border:2px solid rgba(212,168,67,.55);
@@ -6374,6 +6375,7 @@ body.light-mode .auth-btn-danger:hover{ background:#fecdd3; }
 /* Icons -- inline SVG instead of emoji, sized to sit inline with text */
 .btn-icon{ width:15px; height:15px; vertical-align:-2.5px; margin-right:5px; }
 .news-btn-icon{ object-fit:contain; border-radius:3px; }
+.account-btn-icon{ object-fit:contain; }
 .status-icon-svg{ width:46px; height:46px; margin-bottom:8px; }
 .status-icon-svg.pending{ color:#e0a83c; }
 .status-icon-svg.approved{ color:#3ec98b; }

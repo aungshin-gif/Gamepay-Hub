@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=43">
+  <link rel="stylesheet" href="styles.css?v=44">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -117,7 +117,7 @@
     </div>
     <div class="compact-header-right">
       <button id="newsFeedBtn" class="my-orders-btn" type="button" aria-label="News"><img class="btn-icon news-btn-icon" src="assets/icon-news.png" alt="" loading="lazy" decoding="async">News</button>
-      <button id="notiBtn" class="my-orders-btn" type="button" aria-label="Notifications"><svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>Noti<span id="notiBtnBadge" class="notif-badge hidden">1</span></button>
+      <button id="notiBtn" class="my-orders-btn" type="button" aria-label="Notifications"><img class="btn-icon news-btn-icon" src="assets/icon-noti.png" alt="" loading="lazy" decoding="async">Noti<span id="notiBtnBadge" class="notif-badge hidden">1</span></button>
       <div id="noticeCodePopup" class="notice-code-popup hidden" role="dialog" aria-label="New notice">
         <div class="notice-code-card">
           <div class="confetti-burst" id="noticeConfettiBurst"></div>
@@ -253,7 +253,7 @@
   <div id="pwModalBackdrop" class="auth-modal-backdrop hidden">
     <div class="auth-modal">
       <span class="auth-close" id="pwModalCloseBtn">&times;</span>
-      <div class="auth-modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></div>
+      <div class="auth-modal-icon"><img src="assets/icon-password.png" alt=""></div>
       <h3 id="pwModalTitle">Change password</h3>
       <p class="auth-sub" id="pwModalSub">Enter your current password, then choose a new one.</p>
       <div class="auth-error" id="pwModalError"></div>
@@ -308,7 +308,7 @@
   <div id="telegramLinkModalBackdrop" class="auth-modal-backdrop hidden">
     <div class="auth-modal">
       <span class="auth-close" id="telegramLinkCloseBtn">&times;</span>
-      <div class="auth-modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></div>
+      <div class="auth-modal-icon telegram-modal-icon"><img src="assets/icon-telegram.jpg" alt=""></div>
       <h3 id="telegramLinkTitle">Link your Telegram</h3>
       <p class="auth-sub" id="telegramLinkSub">Enter your Telegram username. Our team manually verifies each request for your account's security before confirming the link.</p>
       <div class="auth-error" id="telegramLinkError"></div>
@@ -2217,7 +2217,7 @@ plans: [
       copy: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`,
       x: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
       check: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>`,
-      user: `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+      user: `<img class="btn-icon account-btn-icon" src="assets/icon-account.png" alt="">`,
       eyeOpen: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>`,
       eyeOff: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.8 21.8 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a21.8 21.8 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`,
       // Product Benefits section icons (no btn-icon class -- sized by their own wrapper, not inline text)
