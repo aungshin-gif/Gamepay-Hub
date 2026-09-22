@@ -6757,41 +6757,57 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 
 /* A dark "AI console" panel instead of the pale card -- glowing cyan/violet
    blobs behind a glass gradient, so the on-sale strip reads as a distinct,
-   modern showcase rather than another plain white section. The panel has
-   no fixed height of its own -- it hugs whatever card height sits inside
-   it, so a tall poster card (see buildDiscountPlanCard) fills the panel
-   full-bleed instead of leaving dark space around a short row. */
+   modern showcase rather than another plain white section. Padding is kept
+   tight and the label sits close above the cards (see .sale-card below) so
+   no bare dark gap shows between the "On sale" label and the card row. */
 .catalog-discount-panel{
   position:relative; overflow:hidden;
-  width:100%; padding:18px 16px 20px; border-radius:22px;
+  width:100%; padding:14px 14px 15px; border-radius:20px;
   background:linear-gradient(150deg,#0B1130 0%,#131B4A 55%,#0D3A63 100%);
   border:1px solid rgba(94,234,255,.20);
   box-shadow:0 16px 34px rgba(8,14,42,.32), inset 0 1px rgba(255,255,255,.05);
 }
 .catalog-discount-panel::before{
   content:""; position:absolute; top:-55%; right:-12%; width:60%; height:160%;
-  background:radial-gradient(circle, rgba(94,234,255,.22), transparent 68%);
+  background:radial-gradient(circle, rgba(94,234,255,.28), transparent 68%);
   pointer-events:none;
 }
 .catalog-discount-panel::after{
   content:""; position:absolute; bottom:-60%; left:-10%; width:55%; height:150%;
-  background:radial-gradient(circle, rgba(139,108,241,.20), transparent 68%);
+  background:radial-gradient(circle, rgba(139,108,241,.26), transparent 68%);
   pointer-events:none;
 }
 .catalog-discount-label{
   position:relative; z-index:1;
-  display:inline-flex; align-items:center; gap:7px; margin:0 0 12px;
+  display:inline-flex; align-items:center; gap:7px; margin:0 0 9px;
   font-size:12px; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
   color:#EAF6FF; text-shadow:0 0 12px rgba(94,234,255,.35);
 }
 .catalog-discount-icon{
   display:inline-grid; place-items:center;
-  width:22px; height:22px; border-radius:50%;
-  background:linear-gradient(140deg,#5EEAFF,#7B5BEC);
-  box-shadow:0 0 14px rgba(94,234,255,.55), 0 3px 8px rgba(40,20,110,.35);
+  width:21px; height:21px; padding:4px; border-radius:8px; box-sizing:border-box;
+  background:linear-gradient(155deg,#fff,#EAF6FF);
+  box-shadow:0 0 12px rgba(94,234,255,.5), 0 3px 8px rgba(40,20,110,.35);
 }
-.catalog-discount-icon svg{ width:12px; height:12px; stroke:#0B1130; }
+.catalog-discount-icon img{ width:100%; height:100%; object-fit:contain; display:block; }
 .catalog-discount-panel .lp-hot{ position:relative; z-index:1; }
+
+/* ===== sale-card ===== */
+/* A shorter poster than the regular grid card -- a colored top accent
+   (the same category tint the stage glow already uses) stands in for the
+   dropped Buy Now bar and smaller stage, so the card still reads as a
+   distinct, colorful tile against the dark panel rather than a plain box. */
+.lp-hot-track .card.sale-card{ flex:0 0 148px; width:148px; max-width:148px; }
+.sale-card::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:4px; z-index:2;
+  background:linear-gradient(90deg,var(--pc),var(--pc-2));
+}
+.sale-card .pc-stage{ padding:13px 8px 10px; }
+.sale-card .pc-stage .icon-wrap{ width:38px !important; height:38px !important; padding:6px !important; border-radius:11px !important; }
+.sale-card .pc-body{ padding:8px 9px 10px; }
+.sale-card .pc-name{ font-size:10.5px; }
+.sale-card .price-from{ margin-top:5px !important; }
+.sale-card .price-from strong{ font-size:13px; }
 
 /* Header wordmark removed -- the account box now sits directly next to the
    logo icon (per user request), so the "GAMEPAY HUB / DIGITAL STORE" text
