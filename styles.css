@@ -6755,62 +6755,105 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 .catalog-discount-section{ margin:0 0 2px; }
 .products-head{ margin:0 0 14px; }
 
-/* A light lavender-white panel -- the same gradient family as the hero
-   carousel's own backdrop -- instead of the earlier dark "AI console"
-   look, so the on-sale strip reads as part of the app's light theme
-   rather than a jarring dark block. Padding is kept tight and the label
-   sits close above the cards (see .sale-card below) so no bare gap shows
-   between the "On sale" label and the card row. */
+/* A soft pastel panel (warm off-white into pale mint) instead of a flat
+   white or dark block, so it reads as its own gently-toned showcase
+   without clashing with the app's light theme. The label sits plain
+   (no badge chip) and is pulled over the strip below it via a negative
+   margin, so the rounded strip's own top edge -- not just a bare gap --
+   sits behind the label instead of a dead space above the list. */
 .catalog-discount-panel{
   position:relative; overflow:hidden;
-  width:100%; padding:12px 12px 13px; border-radius:20px;
-  background:linear-gradient(155deg,#FFFFFF,#F1EAFC);
-  border:1px solid rgba(122,53,199,.14);
-  box-shadow:0 14px 30px rgba(90,52,150,.14), inset 0 1px rgba(255,255,255,.6);
+  width:100%; padding:18px 12px 12px; border-radius:22px;
+  background:linear-gradient(160deg,#FAF7F2 0%,#F3EEFB 55%,#EDF8F1 100%);
+  border:1px solid rgba(122,53,199,.10);
+  box-shadow:0 12px 26px rgba(122,53,199,.10);
 }
 .catalog-discount-panel::before{
   content:""; position:absolute; top:-55%; right:-12%; width:60%; height:160%;
-  background:radial-gradient(circle, rgba(122,53,199,.10), transparent 68%);
+  background:radial-gradient(circle, rgba(122,53,199,.08), transparent 68%);
   pointer-events:none;
 }
 .catalog-discount-panel::after{
   content:""; position:absolute; bottom:-60%; left:-10%; width:55%; height:150%;
-  background:radial-gradient(circle, rgba(94,180,255,.10), transparent 68%);
+  background:radial-gradient(circle, rgba(136,214,181,.16), transparent 68%);
   pointer-events:none;
 }
 .catalog-discount-label{
-  position:relative; z-index:1;
-  display:inline-flex; align-items:center; gap:7px; margin:0 0 8px;
-  font-size:12px; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
-  color:#5B2C97;
+  position:relative; z-index:2;
+  display:flex; align-items:center; gap:6px; margin:0 0 -16px; padding-left:2px;
+  font-size:12px; font-weight:800; letter-spacing:.03em;
+  color:#5B2C97; text-shadow:0 1px 0 rgba(255,255,255,.7);
 }
 .catalog-discount-icon{
-  display:inline-grid; place-items:center;
-  width:21px; height:21px; padding:4px; border-radius:8px; box-sizing:border-box;
-  background:linear-gradient(140deg,#7a35c7,#b86bff);
-  box-shadow:0 3px 8px rgba(122,53,199,.35);
+  width:13px; height:13px; flex:0 0 auto; background:#8B5FBF;
+  -webkit-mask:url(assets/icon-sale-tag.png) center/contain no-repeat;
+  mask:url(assets/icon-sale-tag.png) center/contain no-repeat;
 }
-.catalog-discount-icon img{ width:100%; height:100%; object-fit:contain; display:block; filter:brightness(0) invert(1); }
-.catalog-discount-panel .lp-hot{ position:relative; z-index:1; }
+.catalog-discount-panel .catalog-discount-strip{ position:relative; z-index:1; }
 
-/* ===== sale-card ===== */
-/* Narrower than the regular grid card and a touch taller in the stage, for
-   a sleeker, more upright silhouette than a squarish tile -- a colored top
-   accent (the same category tint the stage glow already uses) stands in
-   for the dropped Buy Now bar so the card still reads as a distinct,
-   colorful poster rather than a plain box. */
-.lp-hot-track .card.sale-card{ flex:0 0 122px; width:122px; max-width:122px; }
-.sale-card::before{
-  content:""; position:absolute; top:0; left:0; right:0; height:4px; z-index:2;
-  background:linear-gradient(90deg,var(--pc),var(--pc-2));
+/* ===== on-sale strip + rows ===== */
+/* One continuous pastel "shelf" instead of separate card backgrounds --
+   rows float on it as glossy rounded pills, stacked vertically, so
+   several discounted plans read as a compact flowing list rather than a
+   horizontal row of boxy tiles. */
+.catalog-discount-strip{
+  padding:22px 6px 6px; border-radius:18px;
+  background:linear-gradient(165deg,#EEE7FA,#E3F5EC);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7), inset 0 -1px 6px rgba(122,53,199,.05);
 }
-.sale-card .pc-stage{ padding:16px 7px 11px; }
-.sale-card .pc-stage .icon-wrap{ width:36px !important; height:36px !important; padding:6px !important; border-radius:11px !important; }
-.sale-card .pc-body{ padding:8px 8px 11px; }
-.sale-card .pc-name{ font-size:10px; line-height:1.22; }
-.sale-card .price-from{ margin-top:6px !important; flex-wrap:wrap; }
-.sale-card .price-from strong{ font-size:12.5px; }
-.sale-card .price-from .price-original{ font-size:9px; }
+.catalog-discount-list{ display:flex; flex-direction:column; gap:7px; }
+.sale-row{
+  --pc:#4C4BD8; --pc-2:#6E5CE8;
+  position:relative; width:100%; text-align:left; cursor:pointer;
+  display:flex; align-items:center; gap:9px;
+  padding:7px 12px 7px 7px; border-radius:15px; border:0;
+  background:linear-gradient(155deg,#FFFFFF,#FBF9FE);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 5px 12px rgba(90,52,150,.09), 0 1px 2px rgba(90,52,150,.06);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.sale-row:active{ transform:scale(.98); box-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 2px 6px rgba(90,52,150,.10); }
+.sale-row[data-cat="AI"]       { --pc:#4C4BD8; --pc-2:#7B5BEC; }
+.sale-row[data-cat="VPN"]      { --pc:#1E7FC4; --pc-2:#3AA6DE; }
+.sale-row[data-cat="Music"]    { --pc:#1F9E74; --pc-2:#2FBE8C; }
+.sale-row[data-cat="Video"]    { --pc:#C0356B; --pc-2:#E2568C; }
+.sale-row[data-cat="Editing"]  { --pc:#7B3FD1; --pc-2:#9A62E8; }
+.sale-row[data-cat="Social"]   { --pc:#2C63D8; --pc-2:#4E86EE; }
+.sale-row[data-cat="Services"] { --pc:#B3701A; --pc-2:#D89231; }
+.sale-row[data-cat="Streaming"]{ --pc:#B02F5A; --pc-2:#D6527F; }
+.sale-row[data-cat="Gift"]     { --pc:#8A3FB8; --pc-2:#AC61D6; }
+.sale-row[data-cat="Games"]    { --pc:#6A44C8; --pc-2:#8C63E4; }
+.sale-row-icon{ flex:0 0 auto; }
+.sale-row-icon .icon-wrap{
+  width:36px; height:36px; padding:6px; margin:0; border-radius:11px;
+  background:linear-gradient(152deg,#FFFFFF,#F6F4FD);
+  border:1px solid rgba(28,22,60,.06);
+  box-shadow:0 1px 0 rgba(255,255,255,.95) inset, 0 2px 5px rgba(48,32,104,.10);
+}
+.sale-row-icon .icon-wrap img{ width:100%; height:100%; object-fit:contain; border-radius:8px; display:block; }
+.sale-row-mid{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:0; }
+.sale-row-tier{
+  font-size:7.5px; font-weight:900; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--pc); opacity:.85;
+}
+.sale-row-name{
+  font-size:11.5px; font-weight:800; color:#241B3D;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.sale-row-price{
+  flex:0 0 auto; display:flex; flex-direction:column; align-items:flex-end; gap:0; text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+.sale-row-price s{ font-size:8.5px; font-weight:600; color:#A99CC7; text-decoration-thickness:1.2px; }
+.sale-row-now{ display:flex; align-items:baseline; gap:2px; }
+.sale-row-price strong{ font-size:13.5px; font-weight:900; color:var(--pc); white-space:nowrap; }
+.sale-row-price em{ font-style:normal; font-size:8px; font-weight:800; color:var(--pc); }
+.sale-row-flag{
+  position:absolute; top:-6px; right:9px; z-index:2;
+  font-size:8px; font-weight:900; letter-spacing:.04em; line-height:1;
+  padding:3px 7px; border-radius:999px; color:#fff;
+  background:linear-gradient(140deg,#7FD1AC,#4FB585);
+  box-shadow:0 2px 6px rgba(74,170,125,.35);
+}
 
 /* Header wordmark removed -- the account box now sits directly next to the
    logo icon (per user request), so the "GAMEPAY HUB / DIGITAL STORE" text

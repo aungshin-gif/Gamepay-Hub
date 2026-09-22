@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=39">
+  <link rel="stylesheet" href="styles.css?v=40">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -538,9 +538,9 @@
     <div id="catalogShell" class="catalog-shell hidden">
       <div class="catalog-discount-section hidden" id="catalogDiscountSection">
         <div class="catalog-discount-panel">
-          <span class="catalog-discount-label"><span class="catalog-discount-icon"><img src="assets/icon-sale-tag.png" alt="" loading="lazy" decoding="async"></span>On sale</span>
-          <div class="lp-hot">
-            <div class="lp-hot-track products" id="catalogDiscountTrack"></div>
+          <span class="catalog-discount-label"><span class="catalog-discount-icon"></span>Special Offers</span>
+          <div class="catalog-discount-strip">
+            <div class="catalog-discount-list" id="catalogDiscountTrack"></div>
           </div>
         </div>
       </div>
@@ -3048,28 +3048,28 @@ if(document.readyState === "loading"){
       return list;
     }
 
-    // A compact poster -- same stage+body idea as the regular product
-    // grid, minus the Buy Now bar (the whole tile already opens the plan
-    // on click) and with a shorter stage -- so it fills the on-sale panel
-    // snugly without a short row's wasted backdrop or a full grid card's
-    // extra height pushing the products list further down the page.
-    function buildDiscountPlanCard({ product, plan }, onSelect){
-      const card = document.createElement("div");
-      card.className = "card sale-card";
+    // A compact row instead of a poster tile -- icon, tier + name, and
+    // price + discount all sit on one line so several plans stack as a
+    // vertical list on the panel's own continuous strip background,
+    // rather than a horizontal-scroll row of boxy cards.
+    function buildDiscountRowCard({ product, plan }, onSelect){
+      const row = document.createElement("button");
+      row.type = "button";
+      row.className = "sale-row";
       const tierLabel = TIER_LABEL[planTier(plan)] || product.category || "Store";
       const priceNum = formatKs(plan.price).replace(/\s*Ks$/, "");
-      card.dataset.cat = product.category || "Other";
-      card.innerHTML = `
-  <span class="pc-flag pc-flag-discount" title="Discount">-${plan.discountPercent}%</span>
-  <div class="pc-stage"><div class="icon-wrap">${renderIcon(product)}</div></div>
-  <div class="pc-body">
-    <span class="pc-cat">${tierLabel}</span>
-    <h3 class="pc-name">${product.name}</h3>
-    <p class="price-from"><s class="price-original">${formatKs(plan.originalPrice)}</s><strong>${priceNum}</strong><em>Ks</em></p>
-  </div>
+      row.dataset.cat = product.category || "Other";
+      row.innerHTML = `
+  <span class="sale-row-flag" title="Discount">-${plan.discountPercent}%</span>
+  <span class="sale-row-icon"><span class="icon-wrap">${renderIcon(product)}</span></span>
+  <span class="sale-row-mid">
+    <span class="sale-row-tier">${tierLabel}</span>
+    <span class="sale-row-name">${product.name}</span>
+  </span>
+  <span class="sale-row-price"><s class="price-original">${formatKs(plan.originalPrice)}</s><span class="sale-row-now"><strong>${priceNum}</strong><em>Ks</em></span></span>
 `;
-      card.onclick = () => onSelect(product, plan);
-      return card;
+      row.onclick = () => onSelect(product, plan);
+      return row;
     }
 
     // Catalog is already open wherever this strip lives, so opening a
@@ -3099,7 +3099,7 @@ if(document.readyState === "loading"){
       section.classList.toggle("hidden", !discounted.length);
       if(!discounted.length) return;
       const frag = document.createDocumentFragment();
-      discounted.concat(discounted).forEach(entry => frag.appendChild(buildDiscountPlanCard(entry, openDiscountPlan)));
+      discounted.forEach(entry => frag.appendChild(buildDiscountRowCard(entry, openDiscountPlan)));
       track.appendChild(frag);
     }
     function hidePaymentQuick(){
