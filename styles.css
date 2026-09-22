@@ -5217,19 +5217,14 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
   box-shadow:0 2px 6px rgba(58,40,110,.18);
   position:relative; overflow:hidden;
 }
-/* Flat, single-color marks matching the reference icons -- a money bag for
-   USD, a solid blue coin for GBP, a plain black-ring coin for EUR -- so no
-   glossy overlay here (that read as a mismatched "coin" style once the USD
-   mark became an actual bag illustration instead of a plain circle). */
-.currency-badge.usd{ background:#fff; }
-.currency-badge.usd svg{ width:20px; height:20px; }
-.currency-badge.gbp{ background:#4655c4; }
-.currency-badge.eur{ background:#fff; color:#111; border:2.5px solid #111; }
+/* The three currency icons the user supplied directly -- each one already
+   a finished square coin/bag illustration, so just fill the badge with it
+   edge to edge (no flat color fill or glossy overlay needed anymore). */
+.currency-badge img{ width:100%; height:100%; object-fit:cover; display:block; }
 @media(max-width:560px){
   .lp-paybar .pay-mark{ width:44px !important; height:32px !important; }
   .lp-paybar .pay-mark.pay-wide{ width:52px !important; }
   .currency-badge{ width:27px; height:27px; font-size:12.5px; }
-  .currency-badge.usd svg{ width:18px; height:18px; }
   .currency-chip-label{ font-size:7px; }
 }
 
