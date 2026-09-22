@@ -4280,6 +4280,14 @@ body.light-mode .lp-hero, .lp-hero{
 .lp-hero .lp-hero-dot.is-active{ background:#fff; transform:scale(1.3); }
 @media(max-width:640px){
   .lp-hero .lp-hero-carousel{ border-radius:12px; }
+  /* The source art is an exact 16:9 landscape banner, which reads as a flat,
+     short strip on a narrow phone even though nothing is actually being
+     squished -- give the banner more vertical presence on mobile by
+     cropping to a taller box instead of boxing the same flat strip. Center-
+     anchored: all three slides keep their logo/QR/cards content centered
+     with secondary text nearer the edges, so a moderate crop stays safe. */
+  .lp-hero .lp-hero-carousel{ aspect-ratio:4/3; }
+  .lp-hero .lp-hero-slide img{ object-fit:cover; object-position:center; }
 }
 
 /* ---------- clouds rolling across the base of the scene ---------- */
@@ -5176,22 +5184,15 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
   border-radius:4px !important;
 }
 /* KBZPay and WavePay's source logos fill their whole square canvas edge to
-   edge (no built-in breathing room like the other marks have). Letting them
-   fill the tile completely (no padding at all) fixed the earlier white-seam
-   mismatch but then made these two read visually bigger/bolder than
-   AYA/UAB/Binance's small centered icons -- a different kind of "uneven".
-   A small inset -- in each brand's own color instead of the shared white --
-   gives them the same breathing room as the other marks without
-   reintroducing a mismatched white margin around a colored icon. */
+   edge -- shown as-is with nothing added behind them (no card background,
+   no colored inset), just the picture filling the tile. */
 .lp-paybar .pay-mark.pay-compact{
-  padding:3px !important; overflow:hidden;
+  padding:0 !important; background:transparent !important; overflow:hidden;
 }
-.lp-paybar .pay-mark.pay-compact.kbz{ background:#0c4ea2 !important; }
-.lp-paybar .pay-mark.pay-compact.wave{ background:#ffcb05 !important; }
 .lp-paybar .pay-mark.pay-compact img{
   width:100% !important; height:100% !important;
   max-width:100% !important; max-height:100% !important;
-  object-fit:cover !important; transform:none !important; border-radius:6px !important;
+  object-fit:cover !important; transform:none !important; border-radius:8px !important;
 }
 /* UABPay's source file is the icon mark stacked over a "uab pay" wordmark
    in one square image -- fit normally, the mark itself renders tiny (most
@@ -5212,19 +5213,22 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
   color:var(--muted,rgba(36,28,60,.55)); white-space:nowrap;
 }
 .currency-badge{
-  width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  width:30px !important; height:30px !important; border-radius:50% !important; flex:0 0 auto !important;
+  display:flex; align-items:center; justify-content:center;
   font-size:14px; font-weight:800; color:#fff; font-family:var(--font-display,inherit);
   box-shadow:0 2px 6px rgba(58,40,110,.18);
-  position:relative; overflow:hidden;
+  position:relative; overflow:hidden !important;
 }
 /* The three currency icons the user supplied directly -- each one already
    a finished square coin/bag illustration, so just fill the badge with it
-   edge to edge (no flat color fill or glossy overlay needed anymore). */
-.currency-badge img{ width:100%; height:100%; object-fit:cover; display:block; }
+   edge to edge (no flat color fill or glossy overlay needed anymore).
+   !important throughout since these must never grow past the badge circle
+   regardless of the source image's own intrinsic size. */
+.currency-badge img{ width:100% !important; height:100% !important; object-fit:cover !important; display:block; }
 @media(max-width:560px){
   .lp-paybar .pay-mark{ width:44px !important; height:32px !important; }
   .lp-paybar .pay-mark.pay-wide{ width:52px !important; }
-  .currency-badge{ width:27px; height:27px; font-size:12.5px; }
+  .currency-badge{ width:27px !important; height:27px !important; font-size:12.5px; }
   .currency-chip-label{ font-size:7px; }
 }
 
@@ -5778,7 +5782,7 @@ body.light-mode .avatar-popover-label{ color:var(--muted,#6b7686); }
   display:flex; align-items:center; justify-content:center; width:52px; height:52px; margin:0 auto;
   border-radius:50%; border:2px solid transparent; transition:transform .12s, border-color .12s;
 }
-.avatar-gallery-circle img{ width:76%; height:76%; object-fit:contain; }
+.avatar-gallery-circle img{ width:94%; height:94%; object-fit:contain; }
 .avatar-gallery-item:hover .avatar-gallery-circle{ transform:scale(1.06); }
 .avatar-gallery-item.active .avatar-gallery-circle{ border-color:#7a35c7; box-shadow:0 0 0 2px rgba(122,53,199,.35); }
 
