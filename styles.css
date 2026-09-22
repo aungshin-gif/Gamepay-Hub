@@ -6756,6 +6756,21 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 .products .pc-flag.pc-flag-discount{
   background:linear-gradient(140deg,#2FBE8C,#1F9E74);
 }
+/* A glowing violet-to-blue badge, distinct from HOT's flat orange and the
+   discount's flat green -- an animated soft pulse instead of a static
+   shadow marks it as a permanent quality tier, not a time-limited flag. */
+.products .pc-flag.pc-flag-pro{
+  background:linear-gradient(135deg,#8A5CF6,#5B8DF8);
+  box-shadow:0 2px 6px rgba(110,80,240,.35), 0 0 0 0 rgba(139,109,246,.55);
+  animation:pcFlagProGlow 2.2s ease-in-out infinite;
+}
+@keyframes pcFlagProGlow{
+  0%, 100%{ box-shadow:0 2px 6px rgba(110,80,240,.35), 0 0 0 0 rgba(139,109,246,.45); }
+  50%{ box-shadow:0 2px 6px rgba(110,80,240,.35), 0 0 8px 2px rgba(139,109,246,.55); }
+}
+@media(prefers-reduced-motion:reduce){
+  .products .pc-flag.pc-flag-pro{ animation:none; }
+}
 .products .price-from .price-original{
   font-size:9px; font-weight:800; color:#A29CBA;
   text-decoration:line-through; text-decoration-thickness:1.4px; text-decoration-color:#c9c3de;
