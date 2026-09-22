@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=45">
+  <link rel="stylesheet" href="styles.css?v=46">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -1120,19 +1120,23 @@
       {
   id: "zoom",
   name: "Zoom Pro",
-  
+  pro: true,
   subtitle: "Tap to see prices",
   badge: "available",
   category: "Services",
   iconType: "image",
   icon: "assets/image.png",
   search: "zoom pro meeting video",
+  warranty: "Full Warranty",
+  format: "Mail & Password",
+  note: "Enjoy ur career",
   description: "🔐 Private access is provided.\n🛍 Select the required duration before purchase.\n❗️Availability may change based on stock.",
   benefits: {
-    subtitle: "Everything included with Zoom Pro",
+    subtitle: "Everything included with the Zoom Pro Plan",
     rows: [
       { icon: "chat", label: "Participant capacity", values: "Host sessions with up to 100 participants." },
-      { icon: "zap", label: "Meeting duration", values: PB_YES + " Extended, effectively unlimited meeting duration — no standard 40-minute cutoff." }
+      { icon: "zap", label: "Meeting duration", values: PB_YES + " Unlimited meeting duration — no standard 40-minute cutoff." },
+      { icon: "image", label: "Video/audio & recording", values: "High-quality video and audio, with both cloud and local recording capabilities." }
     ]
   },
   plans: [
@@ -1181,21 +1185,23 @@ plans: [
       {
   id: "hma_vpn",
   name: "HMA VPN",
-
+  pro: true,
   subtitle: "Tap to see prices",
   badge: "available",
   category: "VPN",
   iconType: "image",
   icon: "assets/file_00000000fc3c71fab87726fc991b3be0.png",
   search: "hma vpn android mac pc",
-  note: "✔️ Android / Mac / PC ရပါတယ်။\n❌ iOS မရပါ။\n⚠️ Only one device can be used in Share.\n📊 8-9 Devices can be used in Private.",
+  warranty: "Full Warranty",
+  format: "Mail & Password",
+  note: "✔️ Android / Mac / PC ရပါတယ်။\n❌ iOS မရပါ။\n⚠️ Only one device can be used in Share.\n📊 8-9 Devices can be used in Private.\n\n🎉 Enjoy ur network!",
   description: "✅ Android / Mac / PC အသုံးပြုနိုင်သည်။\n❌ iOS မရပါ။\n⚠️ Share plan တွင် device 1 ခုသာ အသုံးပြုနိုင်သည်။\n📊 Private plan တွင် devices 8–9 ခု အသုံးပြုနိုင်သည်.",
   benefits: {
-    subtitle: "HMA VPN Benefits & Guidelines",
-    intro: "Pre-connection optimization protocol guides and setup tutorials are sent directly by the Admin alongside your account credentials.",
+    subtitle: "Everything included with the HMA VPN Pro Plan",
+    intro: "Speed optimization protocol guides and tutorials are delivered directly with your account credentials.",
     rows: [
-      { icon: "check", label: "OS compatibility", values: PB_YES + " Android — fully supported with top-tier performance.<br>" + PB_NO + " iOS — incompatible (frequent handshake failures and delays). Do not purchase for iOS." },
-      { icon: "chat", label: "Account tiers", values: "Private Account: supports 5–7 simultaneous devices.<br>Shared Account: 1 device only." }
+      { icon: "check", label: "Device limits & compatibility", values: "Private Account: supports 5–7 simultaneous devices.<br>Shared Account: 1 device only." },
+      { icon: "x", label: "OS warning", values: PB_YES + " Tailored for Android — superior speed.<br>" + PB_NO + " Incompatible with iOS (connection drops/delays). Do not purchase for iOS." }
     ]
   },
   plans: [
@@ -1207,22 +1213,23 @@ plans: [
       {
   id: "vpn",
   name: "Express VPN",
-  
+  pro: true,
   subtitle: "Tap to see prices",
   badge: "available",
   category: "VPN",
   iconType: "image",
   icon: "assets/ExpressVPN-logo.png",
   search: "express vpn android mac pc ios",
-  note: "✔️ Android / Mac / PC ရပါတယ်။\n✔️ iOS ရပါတယ်။\n🔐 All plans are same as private.",
+  warranty: "Full Warranty",
+  format: "Mail & Password",
+  note: "✔️ Android / Mac / PC ရပါတယ်။\n✔️ iOS ရပါတယ်။\n🔐 All plans are same as private.\n\n🎉 Enjoy ur Network!",
   description: "✅ Android / Mac / PC / iOS အသုံးပြုနိုင်သည်။\n🔐 All plans use private-style access.\n🛍 Device count ကို plan အလိုက်ရွေးချယ်ပါ။",
   benefits: {
-    subtitle: "Express VPN Benefits & Guidelines",
-    intro: "Pre-connection optimization protocol guides and setup tutorials are sent directly by the Admin alongside your account credentials.",
+    subtitle: "Everything included with the Express VPN Pro Plan",
+    intro: "Pre-connection protocol guide and setup instructions are provided by the Admin upon delivery.",
     rows: [
-      { icon: "check", label: "OS compatibility", values: PB_YES + " Android, macOS, Windows PC and iOS — high stability across all platforms." },
-      { icon: "upload", label: "Subscription terms", values: "Multiple duration options available, from short-term to multi-month plans." },
-      { icon: "x", label: "Device limit & security", values: "Strictly 1 device per account. Concurrent logins cause connection errors, drops, or instant account termination — and a strict no-refund policy applies to multi-login breaches." }
+      { icon: "check", label: "Platform compatibility", values: PB_YES + " Ultra-stable performance across Android, iOS, Windows PC, and macOS." },
+      { icon: "x", label: "Device rule (strict warning)", values: "Exactly 1 device per account. Multi-device logins cause disconnects or account termination — no refunds." }
     ]
   },
   plans: [
@@ -1283,6 +1290,46 @@ plans: [
   warranty: "Full Warranty",
   format: "Own Mail",
   description: "✔️ Best for programming and research.\n✔️ Full Warranty\n✔️ Own Mail Type\n🔼 Claude API coming soon.",
+  benefits: {
+    subtitle: "Free, Pro and Max, side by side",
+    tiers: [
+      { key: "free", label: "Free" },
+      { key: "pro", label: "Pro" },
+      { key: "max", label: "Max / Team" }
+    ],
+    rows: [
+      { icon: "brain", label: "Models", values: {
+        free: "Claude 3.5 Haiku — standard, everyday tasks.",
+        pro: "<b>Included:</b> Claude 3.5 Sonnet, Claude 3 Opus, Claude Opus 4.8.<br><b>Paid add-on:</b> Fable 5, Fable 5.1 — requires a separate purchase / extra credits to unlock.",
+        max: "<b>Fully included:</b> Fable 5 and Fable 5.1, fully unlocked at no extra cost.<br><b>Complete lineup:</b> Claude 3.5 Sonnet, Claude Opus 4.8, Claude Opus 5, Fable 5, and Fable 5.1 — priority bandwidth, zero peak-hour throttles."
+      }},
+      { icon: "chat", label: "Messages", values: {
+        free: "Standard daily allowance with dynamic limits based on server capacity.",
+        pro: "5× higher message allowance across standard reasoning models.",
+        max: "20× usage allowance — practically unlimited capacity for high-intensity workflows."
+      }},
+      { icon: "upload", label: "File upload", values: {
+        free: "Up to 5 files / session · 10 MB per file.",
+        pro: "30 MB per file · extended context window for large document and codebase analysis.",
+        max: "30 MB+ per file · 5× expanded batch processing allowance for massive multi-file projects."
+      }},
+      { icon: "image", label: "Image generation", values: {
+        free: "SVG/code generation — pairable with external tools like Midjourney or DALL-E via generated prompts.",
+        pro: "Advanced vision & code-based visual artifacts, optimized for prompt chaining with third-party image generators.",
+        max: "High-speed SVG rendering & vision analysis pipeline, optimized to power external image pipelines at scale."
+      }},
+      { icon: "zap", label: "Deep Research", values: {
+        free: PB_NO,
+        pro: "Extended reasoning and structured research workflows.",
+        max: "Full extended thinking mode with deep research tokens and prioritized execution."
+      }},
+      { icon: "image", label: "Video creation", values: {
+        free: PB_NO,
+        pro: "Scripting, scene direction, and prompt architecture — integrates with third-party tools such as Runway, Luma, Sora, and CapCut.",
+        max: "End-to-end video storyboard orchestration and automated multi-scene prompt suites for external video engines."
+      }}
+    ]
+  },
   plans: [
     { name: "Claude PRO – 1 Month – 93000 Ks", price: 93000, ownMail: true, bestSeller: true },
     { name: "Claude MAX – 1 Month – 500000 Ks", price: 500000, ownMail: true }
@@ -1301,6 +1348,37 @@ plans: [
   description: "✔️ Own Mail Type\n✔️ Best for coding with AI agents.\n✉️ Pro and Pro+ include Full Warranty.\n🔼 Ultra is available with Full Warranty or No Warranty -- pick carefully before purchase.",
   format: "On your Own mail",
   warranty: "Full Warranty",
+  benefits: {
+    subtitle: "Pro, Pro Plus and Ultra, side by side",
+    tiers: [
+      { key: "pro", label: "Pro" },
+      { key: "proplus", label: "Pro Plus" },
+      { key: "ultra", label: "Ultra" }
+    ],
+    rows: [
+      { icon: "brain", label: "Included AI models", values: "All three tiers unlock the exact same full roster:<br><b>Cursor in-house:</b> Composer 2.5 (low-latency, multi-file agentic coding), Grok 4.5 &amp; Grok 4.6 (flagship reasoning), Fusion (powers instant Cursor Tab completions).<br><b>Third-party frontier:</b> Anthropic Claude Opus/Sonnet tiers, OpenAI GPT-5.5/5.6 Sol &amp; o-series reasoning, Google Gemini Pro variants, plus Auto Mode's intelligent dynamic routing." },
+      { icon: "zap", label: "Usage pools & allowance", values: {
+        pro: "$20/mo — standard baseline high-speed third-party token pool + unlimited Fusion Tab completions.",
+        proplus: "$60/mo — ~3× the standard third-party API/agent token allowance of Pro, for heavy daily multi-file editing.",
+        ultra: "$200/mo — massive compute allocation, ~20× the baseline Pro usage pool, for parallel cloud agents and non-stop coding."
+      }},
+      { icon: "upload", label: "Agent requests & multi-file execution", values: {
+        pro: "Standard agent request throughput — ideal as a daily coding copilot.",
+        proplus: "Significantly expanded headroom for complex multi-file agent runs — eliminates overage anxiety.",
+        ultra: "Extreme compute headroom for continuous parallel agent workflows with zero bottleneck."
+      }},
+      { icon: "check", label: "Exclusive perks & rollouts", values: {
+        pro: "Standard platform access.",
+        proplus: "High-reliability priority routing during peak network hours.",
+        ultra: "Top-tier priority feature rollout, early access to experimental agent capabilities, and preview model drops before public release."
+      }},
+      { icon: "chat", label: "Best for", values: {
+        pro: "Standard developers who use AI as an active coding assistant.",
+        proplus: "Power users frequently hitting baseline limits during large codebase refactoring.",
+        ultra: "Full-time developers and engineering teams running autonomous cloud agents all day long."
+      }}
+    ]
+  },
   plans: [
     {
       name: "Cursor Pro – 1 Month – 92000 Ks",
@@ -3000,7 +3078,8 @@ if(document.readyState === "loading"){
       card.dataset.cat = product.category || "Other";
       const flagHtml = product.top
         ? '<span class="pc-flag" title="Popular">HOT</span>'
-        : (discountPct ? `<span class="pc-flag pc-flag-discount" title="Discount">-${discountPct}%</span>` : '');
+        : (discountPct ? `<span class="pc-flag pc-flag-discount" title="Discount">-${discountPct}%</span>`
+        : (product.pro ? '<span class="pc-flag pc-flag-pro" title="Pro">PRO</span>' : ''));
       card.innerHTML = `
   ${flagHtml}
   <div class="pc-stage"><div class="icon-wrap">${renderIcon(product)}</div></div>
