@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=46">
+  <link rel="stylesheet" href="styles.css?v=47">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -1140,9 +1140,9 @@
     ]
   },
   plans: [
-      { name: "🔐 Private – 14 Days – 5000 Ks", price: 5000 },
-      { name: "🔐 Private – 1 Month – 8000 Ks", price: 8000, bestSeller: true },
-      { name: "🔐 Private – 2 Months – 15000 Ks", price: 15000 },
+      { name: "🔐 Private – 14 Days – 5000 Ks", label: "Pro Plan", tier: "pro", type: "Private Acc", price: 5000 },
+      { name: "🔐 Private – 1 Month – 8000 Ks", label: "Pro Plan", tier: "pro", type: "Private Acc", price: 8000, bestSeller: true },
+      { name: "🔐 Private – 2 Months – 15000 Ks", label: "Pro Plan", tier: "pro", type: "Private Acc", price: 15000 },
   ]
 },
       {
@@ -1205,9 +1205,9 @@ plans: [
     ]
   },
   plans: [
-      { name: "👥 1 Month – Share – 1400 Ks", price: 1400, access: "share" },
-      { name: "🔐 1 Month – Private – 5000 Ks", price: 5000, access: "private", bestSeller: true },
-      { name: "✉️ 1 Month – Own Mail – 6000 Ks", price: 6000, ownMail: true },
+      { name: "👥 1 Month – Share – 1400 Ks", label: "Pro Plan", tier: "pro", price: 1400, access: "share" },
+      { name: "🔐 1 Month – Private – 5000 Ks", label: "Pro Plan", tier: "pro", price: 5000, access: "private", bestSeller: true },
+      { name: "✉️ 1 Month – Own Mail – 6000 Ks", label: "Pro Plan", tier: "pro", price: 6000, ownMail: true },
   ]
 },
       {
@@ -1233,10 +1233,10 @@ plans: [
     ]
   },
   plans: [
-      { name: "🔐 2 Months – 1 Device – 5000 Ks", price: 5000 },
-      { name: "🔐 3 Months – 2 Devices – 7000 Ks", price: 7000, bestSeller: true },
-      { name: "🔐 6 Months – 4 Devices – 11000 Ks", price: 11000 },
-      { name: "🔐 12 Months – 6 Devices – 15000 Ks", price: 15000 },
+      { name: "🔐 2 Months – 1 Device – 5000 Ks", label: "Pro Plan", tier: "pro", type: "1 Device", duration: "2 Months", access: "private", price: 5000 },
+      { name: "🔐 3 Months – 2 Devices – 7000 Ks", label: "Pro Plan", tier: "pro", type: "2 Devices", duration: "3 Months", access: "private", price: 7000, bestSeller: true },
+      { name: "🔐 6 Months – 4 Devices – 11000 Ks", label: "Pro Plan", tier: "pro", type: "4 Devices", duration: "6 Months", access: "private", price: 11000 },
+      { name: "🔐 12 Months – 6 Devices – 15000 Ks", label: "Pro Plan", tier: "pro", type: "6 Devices", duration: "12 Months", access: "private", price: 15000 },
   ]
 },
       {
@@ -1390,6 +1390,7 @@ plans: [
     },
     {
       name: "Cursor Pro+ – 1 Month – 285000 Ks",
+      label: "Cursor Pro Plus", tier: "proplus",
       price: 285000, ownMail: true,
       duration: "1 Month",
       format: "On your Own mail",
@@ -3131,7 +3132,7 @@ if(document.readyState === "loading"){
     // a plan may name its own tier; otherwise it's read off the plan's name.
     const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
       team:"Team", education:"Education", individual:"Individual", family:"Family",
-      pro:"Pro", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
+      pro:"Pro", proplus:"Pro Plus", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
       "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra", hobby:"Hobby"};
     function planTier(plan){
       if(plan.tier) return plan.tier;
@@ -3521,7 +3522,7 @@ planName = plan.label ? plan.label : planName.replace(/\b(private|share|own[- ]?
 const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
 const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
   team:"Team", education:"Education", individual:"Individual", family:"Family",
-  pro:"Pro", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
+  pro:"Pro", proplus:"Pro Plus", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
   "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra", hobby:"Hobby"};
 const tierChipFor = t => t ? `<span class="plan-tier-chip">${TIER_LABEL[t] || t}</span>` : "";
 // How the account is delivered. Explicit plan.type wins; otherwise infer.
@@ -3559,12 +3560,20 @@ el.className += accessClass;
     el.dataset.tier = tier;
     el.classList.add("has-tier");
   }
+const extraWarranty = plan.warranty || currentProduct.warranty;
+const extraFormat = plan.format || currentProduct.format;
+const extraNote = plan.note || currentProduct.note;
+const extraRows = [];
+if(extraWarranty) extraRows.push(`<div class="plan-extra-row"><span class="plan-field-label">Warranty</span><strong class="plan-extra-value">${extraWarranty}</strong></div>`);
+if(extraFormat) extraRows.push(`<div class="plan-extra-row"><span class="plan-field-label">Format</span><strong class="plan-extra-value">${extraFormat}</strong></div>`);
+if(extraNote) extraRows.push(`<div class="plan-extra-row plan-extra-note"><span class="plan-field-label">Note</span><strong class="plan-extra-value">${extraNote.replace(/\n/g, "<br>")}</strong></div>`);
+const extraDetailsHtml = extraRows.length ? `<div class="plan-extra-details">${extraRows.join("")}</div>` : "";
 el.innerHTML = `
   ${watermark}
   ${plan.outOfStock ? '<span class="out-stock-badge">⛔ Out of Stock</span>' : (plan.lowStock ? '<span class="low-stock-badge">⚠️ Low Stock</span>' : '')}
   ${(plan.discount || plan.discountPercent) ? `<span class="discount-badge"><svg class="discount-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8Z"/><circle cx="7" cy="7" r=".6" fill="currentColor"/></svg>${plan.discountPercent ? "-" + plan.discountPercent + "%" : "Discount"}</span>` : ''}
   ${plan.bestSeller ? '<span class="best-seller-badge">🔥 Best Seller</span>' : ''}
-  <div class="plan-professional"><div class="plan-primary-line"><span class="plan-field-label">Plan</span><strong class="plan-professional-name">${planName}</strong><span class="plan-chip-row">${tierChipFor(tier)}${typeOf(plan) ? "" : ownMailLabel}</span></div><div class="plan-type-line">${typeOf(plan) ? `<span class="plan-field-label">Type</span><strong class="plan-type-value">${typeOf(plan)}</strong>` : ""}</div><div class="plan-secondary-line${plan.noDuration ? " no-duration" : ""}">${plan.noDuration ? "" : `<div><span class="plan-field-label">Duration</span><strong>${durationText}</strong></div>`}<div class="plan-price-block"><span class="plan-field-label">Price</span>${plan.discountPercent ? `<s class="plan-price-original">${formatKs(plan.originalPrice)}</s>` : ''}<strong>${priceText}</strong></div></div></div>
+  <div class="plan-professional"><div class="plan-primary-line"><span class="plan-field-label">Plan</span><strong class="plan-professional-name">${planName}</strong><span class="plan-chip-row">${tierChipFor(tier)}${typeOf(plan) ? "" : ownMailLabel}</span></div><div class="plan-type-line">${typeOf(plan) ? `<span class="plan-field-label">Type</span><strong class="plan-type-value">${typeOf(plan)}</strong>` : ""}</div><div class="plan-secondary-line${plan.noDuration ? " no-duration" : ""}">${plan.noDuration ? "" : `<div><span class="plan-field-label">Duration</span><strong>${durationText}</strong></div>`}<div class="plan-price-block"><span class="plan-field-label">Price</span>${plan.discountPercent ? `<s class="plan-price-original">${formatKs(plan.originalPrice)}</s>` : ''}<strong>${priceText}</strong></div></div>${extraDetailsHtml}</div>
 `;
 if(plan.outOfStock){
   el.onclick = null;
