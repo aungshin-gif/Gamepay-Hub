@@ -6757,9 +6757,10 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 
 /* A dark "AI console" panel instead of the pale card -- glowing cyan/violet
    blobs behind a glass gradient, so the on-sale strip reads as a distinct,
-   modern showcase rather than another plain white section. The white
-   discount-row cards keep floating on top unchanged, spotlighted by the
-   dark backdrop. */
+   modern showcase rather than another plain white section. The panel has
+   no fixed height of its own -- it hugs whatever card height sits inside
+   it, so a tall poster card (see buildDiscountPlanCard) fills the panel
+   full-bleed instead of leaving dark space around a short row. */
 .catalog-discount-panel{
   position:relative; overflow:hidden;
   width:100%; padding:18px 16px 20px; border-radius:22px;
@@ -6785,45 +6786,12 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 }
 .catalog-discount-icon{
   display:inline-grid; place-items:center;
-  width:22px; height:22px; border-radius:50%; font-size:11px;
+  width:22px; height:22px; border-radius:50%;
   background:linear-gradient(140deg,#5EEAFF,#7B5BEC);
   box-shadow:0 0 14px rgba(94,234,255,.55), 0 3px 8px rgba(40,20,110,.35);
 }
+.catalog-discount-icon svg{ width:12px; height:12px; stroke:#0B1130; }
 .catalog-discount-panel .lp-hot{ position:relative; z-index:1; }
-
-/* ===== discount-row-card ===== */
-/* A short, wide strip instead of a tall poster: logo+name on the left,
-   plan badge/price/discount stacked on the right, so the "On sale" row
-   stays low without wasting vertical space. Clicking the whole tile
-   still opens that exact plan. */
-.lp-hot-track .discount-row{
-  flex:0 0 208px !important; width:208px !important; max-width:208px !important;
-  display:flex !important; flex-direction:row !important; align-items:center !important;
-  gap:10px; padding:11px 13px !important;
-}
-.discount-row .disc-row-left{
-  display:flex; align-items:center; gap:8px; min-width:0; flex:1 1 auto;
-}
-.discount-row .disc-row-left .icon-wrap{
-  width:36px !important; height:36px !important; margin:0 !important; flex:0 0 auto;
-}
-.discount-row .pc-name{
-  margin:0; font-size:10.5px; font-weight:800; line-height:1.2;
-  color:#1B1636; text-align:left;
-  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
-}
-.discount-row .disc-row-right{
-  display:flex; flex-direction:column; align-items:flex-end; gap:3px;
-  flex:0 0 auto; text-align:right;
-}
-.discount-row .disc-plan-badge{
-  font-size:7.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
-  color:var(--pc); background:color-mix(in srgb, var(--pc) 12%, #fff); white-space:nowrap;
-  padding:2px 7px; border-radius:999px;
-}
-.discount-row .price-from{ margin:0 !important; }
-.discount-row .price-from strong{ font-size:13px; }
-.discount-row .pc-flag.pc-flag-discount{ position:static; }
 
 /* Header wordmark removed -- the account box now sits directly next to the
    logo icon (per user request), so the "GAMEPAY HUB / DIGITAL STORE" text

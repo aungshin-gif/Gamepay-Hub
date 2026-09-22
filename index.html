@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=36">
+  <link rel="stylesheet" href="styles.css?v=37">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -538,7 +538,7 @@
     <div id="catalogShell" class="catalog-shell hidden">
       <div class="catalog-discount-section hidden" id="catalogDiscountSection">
         <div class="catalog-discount-panel">
-          <span class="catalog-discount-label"><span class="catalog-discount-icon">&#127991;&#65039;</span>On sale</span>
+          <span class="catalog-discount-label"><span class="catalog-discount-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m20.59 13.41-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82Z"/><circle cx="7" cy="7" r="1.4" fill="currentColor" stroke="none"/></svg></span>On sale</span>
           <div class="lp-hot">
             <div class="lp-hot-track products" id="catalogDiscountTrack"></div>
           </div>
@@ -3048,22 +3048,25 @@ if(document.readyState === "loading"){
       return list;
     }
 
+    // Same tall "poster" card as the regular product grid (icon on a
+    // gradient stage, name + price stacked below) instead of a short wide
+    // strip -- a poster fills the on-sale panel's full vertical space, a
+    // short row left most of it as empty dark backdrop.
     function buildDiscountPlanCard({ product, plan }, onSelect){
       const card = document.createElement("div");
-      card.className = "card discount-row";
+      card.className = "card";
       const tierLabel = TIER_LABEL[planTier(plan)] || product.category || "Store";
       const priceNum = formatKs(plan.price).replace(/\s*Ks$/, "");
       card.dataset.cat = product.category || "Other";
       card.innerHTML = `
-  <div class="disc-row-left">
-    <div class="icon-wrap">${renderIcon(product)}</div>
+  <span class="pc-flag pc-flag-discount" title="Discount">-${plan.discountPercent}%</span>
+  <div class="pc-stage"><div class="icon-wrap">${renderIcon(product)}</div></div>
+  <div class="pc-body">
+    <span class="pc-cat">${tierLabel}</span>
     <h3 class="pc-name">${product.name}</h3>
+    <p class="price-from"><s class="price-original">${formatKs(plan.originalPrice)}</s><strong>${priceNum}</strong><em>Ks</em></p>
   </div>
-  <div class="disc-row-right">
-    <span class="disc-plan-badge">${tierLabel}</span>
-    <p class="price-from"><strong>${priceNum}</strong><em>Ks</em></p>
-    <span class="pc-flag pc-flag-discount" title="Discount">-${plan.discountPercent}%</span>
-  </div>
+  <button class="buy-now-btn" type="button"><span>Buy now</span></button>
 `;
       card.onclick = () => onSelect(product, plan);
       return card;
