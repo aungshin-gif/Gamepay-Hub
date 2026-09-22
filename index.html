@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=31">
+  <link rel="stylesheet" href="styles.css?v=33">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -489,9 +489,9 @@
               <span class="pay-mark" title="AYA Pay"><img src="assets/unnamed (2).png" alt="AYA Pay" loading="lazy" decoding="async"></span>
               <span class="pay-mark uab" title="UABPay"><img src="assets/uabpay-black.png" alt="UABPay" loading="lazy" decoding="async"></span>
               <span class="pay-mark" title="Binance"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjYuNjEgMTI2LjYxIj48cGF0aCBmaWxsPSIjRjNCQTJGIiBkPSJNMzguNzMgNTMuMiA2My4zIDI4LjYzbDI0LjU4IDI0LjU4IDE0LjMxLTE0LjNMNjMuMyAwIDI0LjQyIDM4Ljl6TTAgNjMuM2wxNC4zLTE0LjMxTDI4LjYzIDYzLjNsLTE0LjMxIDE0LjMxem0zOC43MyAxMC4xMUw2My4zIDk3Ljk4bDI0LjU4LTI0LjU4IDE0LjMyIDE0LjI5LS4wMS4wMkw2My4zIDEyNi42MSAyNC40MiA4Ny43MmwtLjAyLS4wMnpNOTguMzUgNjMuM2wxNC4zMS0xNC4zMSAxNC4zMSAxNC4zLTE0LjMxIDE0LjMyek03Ny44MyA2My4yOWguMDJMNjMuMyA0OC43NSA1Mi41NyA1OS40OGgtLjAwMWwtMS4yOSAxLjI4LTIuODcgMi44Ny0uMDEuMDIuMDEuMDJMNjMuMyA3Ny44NGwxNC41My0xNC41My4wMS0uMDF6Ii8+PC9zdmc+" alt="Binance" loading="lazy" decoding="async"></span>
-              <span class="currency-chip" title="US Dollar accepted"><span class="currency-badge usd">$</span><span class="currency-chip-label">US Dollar</span></span>
-              <span class="currency-chip" title="British Pound accepted"><span class="currency-badge gbp">£</span><span class="currency-chip-label">British Pound</span></span>
-              <span class="currency-chip" title="Euro accepted"><span class="currency-badge eur">€</span><span class="currency-chip-label">Euro</span></span>
+              <span class="currency-chip" title="US Dollar accepted"><span class="currency-badge usd"><img src="assets/currency-usd.png" alt="US Dollar" loading="lazy" decoding="async"></span><span class="currency-chip-label">US Dollar</span></span>
+              <span class="currency-chip" title="British Pound accepted"><span class="currency-badge gbp"><img src="assets/currency-gbp.jpg" alt="British Pound" loading="lazy" decoding="async"></span><span class="currency-chip-label">British Pound</span></span>
+              <span class="currency-chip" title="Euro accepted"><span class="currency-badge eur"><img src="assets/currency-eur.png" alt="Euro" loading="lazy" decoding="async"></span><span class="currency-chip-label">Euro</span></span>
             </div>
           </div>
           <div class="lp-paygroup lp-paygroup-sell">
@@ -750,10 +750,13 @@
             <button type="button" class="acct-avatar-edit" id="acctAvatarEditBtn" aria-label="Change photo">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
             </button>
-            <input type="file" id="avatarFileInput" accept="image/*" class="hidden">
           </div>
           <div class="acct-profile-name" id="acctProfileName">—</div>
           <div class="acct-profile-handle" id="acctProfileHandle">—</div>
+          <div class="avatar-popover hidden" id="avatarGalleryPopover">
+            <div class="avatar-popover-label">Choose a picture</div>
+            <div class="avatar-gallery-grid" id="avatarGalleryGrid"><div class="chat-empty">Loading…</div></div>
+          </div>
         </div>
 
         <div class="acct-referral-compact" id="acctReferralInviteBtn">
@@ -2176,12 +2179,24 @@ plans: [
     // where on the site they currently are.
     let myOrderChannels = {};
 
-    // Avatar is just the customer's own uploaded photo (avatars storage
-    // bucket) -- no preset icon/color picker. Falls back to a plain
-    // initial-letter circle on one fixed gradient when no photo is set yet.
+    // Avatar is picked from the admin-curated gallery (Admin dashboard ->
+    // Avatars) -- each picture comes paired with one of these background
+    // colors, chosen by the admin when they added it. Falls back to a
+    // plain initial-letter circle on one fixed gradient when no photo is
+    // picked yet. Mirrors shinpayhubcld.html's AVATAR_BG_PALETTE exactly.
     const DEFAULT_AVATAR_GRADIENT = "linear-gradient(135deg,#7a35c7,#b86bff)";
+    const AVATAR_BG_PALETTE = {
+      "white-glass": "linear-gradient(135deg, rgba(255,255,255,.95), rgba(240,240,245,.72))",
+      "white-milk": "#f7f5f2",
+      "white-grey-soft": "linear-gradient(135deg,#f2f3f5,#e3e6ea)",
+      "green-light": "linear-gradient(135deg,#d9f7e6,#a8e6c3)",
+      "sky-blue": "linear-gradient(135deg,#cdeeff,#8fd3f4)",
+    };
     function getAvatarUrl(){
       return currentUser?.user_metadata?.avatar_url || null;
+    }
+    function getAvatarBg(){
+      return currentUser?.user_metadata?.avatar_bg || null;
     }
     // Shared render path for both the account page's big circle and the
     // small chat-bubble avatar.
@@ -3933,7 +3948,7 @@ function appendChatBubble(sender, body, imageUrl){
   avatar.innerHTML = isAdmin
     ? `<img src="${siteLogoSrc()}" alt="GamePay Hub" />`
     : (myPhoto ? renderAvatarPhoto(14) : (getDisplayName()[0]?.toUpperCase() || "?"));
-  avatar.style.background = isAdmin ? "#fff" : (myPhoto ? "#fff" : DEFAULT_AVATAR_GRADIENT);
+  avatar.style.background = isAdmin ? "#fff" : (myPhoto ? (AVATAR_BG_PALETTE[getAvatarBg()] || "#fff") : DEFAULT_AVATAR_GRADIENT);
   const bubble = document.createElement("div");
   bubble.className = "chat-bubble " + (isAdmin ? "admin" : "customer");
   if(imageUrl){
@@ -4965,28 +4980,39 @@ function getUsername(){
   return currentUser?.user_metadata?.username || currentUser?.email.split("@")[0] || "—";
 }
 
+// Customers can only pick from the admin-curated gallery (see the admin
+// dashboard's Avatars tab) instead of uploading an arbitrary photo of
+// their own -- tapping the edit pencil opens that gallery as a popover.
 document.getElementById("acctAvatarEditBtn")?.addEventListener("click", () => {
-  document.getElementById("avatarFileInput")?.click();
+  const popover = document.getElementById("avatarGalleryPopover");
+  const wasHidden = popover.classList.contains("hidden");
+  popover.classList.toggle("hidden");
+  if(wasHidden) loadAvatarGallery();
 });
 
-document.getElementById("avatarFileInput")?.addEventListener("change", async (e) => {
-  const file = e.target.files?.[0];
-  e.target.value = "";
-  if(!file || !currentUser || !supabaseClient) return;
-  if(!file.type.startsWith("image/")){ showToast("Please choose an image file"); return; }
-  if(file.size > 5 * 1024 * 1024){ showToast("Image must be under 5MB"); return; }
-  showToast("Uploading photo…");
-  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-  const path = `${currentUser.id}/${Date.now()}.${ext}`;
-  const { error: upErr } = await supabaseClient.storage.from("avatars").upload(path, file, { upsert: true });
-  if(upErr){ showToast("Could not upload: " + upErr.message); return; }
-  const { data: pub } = supabaseClient.storage.from("avatars").getPublicUrl(path);
-  const { data, error } = await supabaseClient.auth.updateUser({ data: { avatar_url: pub.publicUrl } });
-  if(error){ showToast("Could not update: " + error.message); return; }
-  currentUser = data.user;
-  refreshAccountFields();
-  showToast("Photo updated!");
-});
+async function loadAvatarGallery(){
+  const grid = document.getElementById("avatarGalleryGrid");
+  if(!supabaseClient){ grid.innerHTML = "<div class='chat-empty'>Not available.</div>"; return; }
+  const { data, error } = await supabaseClient.from("avatar_presets").select("*").order("sort_order").order("created_at");
+  if(error || !data?.length){ grid.innerHTML = "<div class='chat-empty'>No pictures available yet.</div>"; return; }
+  const activeUrl = getAvatarUrl();
+  grid.innerHTML = data.map(p => `
+    <button type="button" class="avatar-gallery-item ${p.image_url === activeUrl ? "active" : ""}" data-url="${p.image_url}" data-bg="${p.bg_color}">
+      <span class="avatar-gallery-circle" style="background:${AVATAR_BG_PALETTE[p.bg_color] || AVATAR_BG_PALETTE["white-glass"]}"><img src="${p.image_url}" alt=""></span>
+    </button>
+  `).join("");
+  grid.querySelectorAll(".avatar-gallery-item").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      if(!currentUser) return;
+      const { data, error } = await supabaseClient.auth.updateUser({ data: { avatar_url: btn.dataset.url, avatar_bg: btn.dataset.bg } });
+      if(error){ showToast("Could not update: " + error.message); return; }
+      currentUser = data.user;
+      refreshAccountFields();
+      document.getElementById("avatarGalleryPopover").classList.add("hidden");
+      showToast("Photo updated!");
+    });
+  });
+}
 
 function refreshAccountFields(){
   if(!currentUser) return;
@@ -4995,7 +5021,7 @@ function refreshAccountFields(){
   const avatarCircle = document.getElementById("acctAvatarCircle");
   const photo = getAvatarUrl();
   avatarCircle.innerHTML = photo ? renderAvatarPhoto(38) : (name[0]?.toUpperCase() || "?");
-  avatarCircle.style.background = photo ? "#fff" : DEFAULT_AVATAR_GRADIENT;
+  avatarCircle.style.background = photo ? (AVATAR_BG_PALETTE[getAvatarBg()] || "#fff") : DEFAULT_AVATAR_GRADIENT;
   document.getElementById("acctProfileName").textContent = name;
   document.getElementById("acctProfileHandle").textContent = "@" + username;
   document.getElementById("acctDisplayNameValue").textContent = name;

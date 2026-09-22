@@ -5214,19 +5214,13 @@ body.light-mode .lp-hero .lp-wordmark, .lp-hero .lp-wordmark{
 .currency-badge{
   width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;
   font-size:14px; font-weight:800; color:#fff; font-family:var(--font-display,inherit);
-  box-shadow:0 2px 6px rgba(58,40,110,.18), inset 0 0 0 1px rgba(255,255,255,.4);
-  border:2px solid rgba(255,255,255,.55);
+  box-shadow:0 2px 6px rgba(58,40,110,.18);
   position:relative; overflow:hidden;
 }
-.currency-badge::before{
-  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-  background:
-    radial-gradient(circle at 32% 24%,rgba(255,255,255,.7),transparent 42%),
-    linear-gradient(160deg,rgba(255,255,255,.22),transparent 45%,rgba(0,0,0,.22) 100%);
-}
-.currency-badge.usd{ background:linear-gradient(135deg,#34d399,#059669); }
-.currency-badge.gbp{ background:linear-gradient(135deg,#818cf8,#4f46e5); }
-.currency-badge.eur{ background:linear-gradient(135deg,#60a5fa,#2563eb); }
+/* The three currency icons the user supplied directly -- each one already
+   a finished square coin/bag illustration, so just fill the badge with it
+   edge to edge (no flat color fill or glossy overlay needed anymore). */
+.currency-badge img{ width:100%; height:100%; object-fit:cover; display:block; }
 @media(max-width:560px){
   .lp-paybar .pay-mark{ width:44px !important; height:32px !important; }
   .lp-paybar .pay-mark.pay-wide{ width:52px !important; }
@@ -5763,6 +5757,30 @@ body.light-mode .invite-code-preview{ background:var(--surface,#fff); border-col
 }
 .acct-avatar-edit svg{ width:12px; height:12px; }
 body.light-mode .acct-avatar-edit{ border-color:#fff; box-shadow:0 1px 4px rgba(0,0,0,.18); }
+
+/* Avatar gallery popover -- the admin-curated picture picker (Admin
+   dashboard -> Avatars), replacing the old free-upload flow. */
+.avatar-popover{
+  width:min(320px,100%); margin:14px auto 0; text-align:left;
+  background:rgba(255,255,255,.06); border:1px solid rgba(199,125,255,.2);
+  border-radius:14px; padding:14px;
+}
+.avatar-popover.hidden{ display:none; }
+.avatar-popover-label{
+  font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--muted,rgba(255,255,255,.5)); margin:0 0 10px;
+}
+body.light-mode .avatar-popover{ background:#fff; border-color:var(--border,rgba(31,41,55,.14)); box-shadow:0 8px 20px rgba(20,20,43,.06); }
+body.light-mode .avatar-popover-label{ color:var(--muted,#6b7686); }
+.avatar-gallery-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(54px,1fr)); gap:10px; }
+.avatar-gallery-item{ border:none; background:none; padding:0; cursor:pointer; }
+.avatar-gallery-circle{
+  display:flex; align-items:center; justify-content:center; width:52px; height:52px; margin:0 auto;
+  border-radius:50%; border:2px solid transparent; transition:transform .12s, border-color .12s;
+}
+.avatar-gallery-circle img{ width:76%; height:76%; object-fit:contain; }
+.avatar-gallery-item:hover .avatar-gallery-circle{ transform:scale(1.06); }
+.avatar-gallery-item.active .avatar-gallery-circle{ border-color:#7a35c7; box-shadow:0 0 0 2px rgba(122,53,199,.35); }
 
 .acct-section-label{
   width:min(460px,100%); margin:0 auto 6px; font-size:10.5px; font-weight:800;

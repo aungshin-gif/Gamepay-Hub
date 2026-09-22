@@ -910,6 +910,31 @@ create policy "users can replace their own avatar" on storage.objects
   for update to authenticated
   using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
 
+-- Admin-curated avatar gallery -- customers pick their profile picture from
+-- this list instead of uploading an arbitrary photo of their own; each
+-- picture is paired with one of a small fixed set of background colors
+-- (chosen by the admin at upload time, see AVATAR_BG_PALETTE client-side).
+-- The image itself is just another file in the avatars bucket above,
+-- uploaded under the admin's own <user_id>/presets/ folder -- the existing
+-- upload policy already covers that since admin is an authenticated user
+-- like any other.
+create table if not exists public.avatar_presets (
+  id uuid primary key default gen_random_uuid(),
+  image_url text not null,
+  bg_color text not null default 'white-glass',
+  sort_order integer not null default 0,
+  created_at timestamptz not null default now()
+);
+alter table public.avatar_presets enable row level security;
+
+drop policy if exists "anyone can view avatar presets" on public.avatar_presets;
+create policy "anyone can view avatar presets" on public.avatar_presets
+  for select to anon, authenticated using (true);
+
+drop policy if exists "admin manage avatar presets" on public.avatar_presets;
+create policy "admin manage avatar presets" on public.avatar_presets
+  for all using (public.is_admin()) with check (public.is_admin());
+
 -- Small admin-editable key/value settings table -- currently just the
 -- default amount for the referred side's instant welcome coupon (was
 -- hardcoded to 2000 in submit_referral() below), so the admin dashboard's
