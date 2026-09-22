@@ -5530,32 +5530,10 @@ body.light-mode #checkoutSection .pay-option.active{
   background-repeat:no-repeat, no-repeat, no-repeat !important;
 }
 
-/* ---------- Extra details (Warranty / Format / Note) ---------- */
-#orderView .plan-extra-details{
-  display:grid; gap:7px; margin-top:9px; padding-top:9px;
-  border-top:1px solid rgba(28,22,60,.07);
-}
-#orderView .plan-extra-row{ display:grid; gap:3px; }
-#orderView .plan-extra-row .plan-field-label{
-  display:block !important;
-  font-size:7.5px !important; font-weight:900 !important;
-  letter-spacing:.14em !important; text-transform:uppercase !important;
-  color:#A29CBA !important; line-height:1 !important;
-}
-#orderView .plan-extra-value{
-  font-size:11px !important; font-weight:700 !important;
-  color:#4B4468 !important; letter-spacing:-.005em; line-height:1.4;
-}
-#orderView .plan-extra-note .plan-extra-value{
-  font-weight:600 !important; white-space:pre-line;
-}
-
 @media(max-width:560px){
   #orderView .plan-tier-chip{ padding:3px 10px !important; font-size:8.5px !important; }
   #orderView .plan-type-value{ font-size:10.5px !important; }
   #orderView .plan-type-line{ margin-top:8px; padding-top:8px; }
-  #orderView .plan-extra-value{ font-size:10.5px !important; }
-  #orderView .plan-extra-details{ margin-top:8px; padding-top:8px; }
 }
 
 /* ===== order-status-chat-style ===== */
