@@ -6373,6 +6373,7 @@ body.light-mode .auth-btn-danger:hover{ background:#fecdd3; }
 
 /* Icons -- inline SVG instead of emoji, sized to sit inline with text */
 .btn-icon{ width:15px; height:15px; vertical-align:-2.5px; margin-right:5px; }
+.news-btn-icon{ object-fit:contain; border-radius:3px; }
 .status-icon-svg{ width:46px; height:46px; margin-bottom:8px; }
 .status-icon-svg.pending{ color:#e0a83c; }
 .status-icon-svg.approved{ color:#3ec98b; }
