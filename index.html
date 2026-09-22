@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=34">
+  <link rel="stylesheet" href="styles.css?v=35">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -302,6 +302,17 @@
         <button id="pwResetSubmitBtn" class="telegram-btn" type="button" style="width:100%">Reset password</button>
         <div class="auth-switch"><a id="pwBackToChangeLink2">Back</a></div>
       </div>
+    </div>
+  </div>
+
+  <div id="telegramLinkModalBackdrop" class="auth-modal-backdrop hidden">
+    <div class="auth-modal">
+      <span class="auth-close" id="telegramLinkCloseBtn">&times;</span>
+      <div class="auth-modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></div>
+      <h3 id="telegramLinkTitle">Link your Telegram</h3>
+      <p class="auth-sub" id="telegramLinkSub">Enter your Telegram username -- our team checks it by hand and confirms the link.</p>
+      <div class="auth-error" id="telegramLinkError"></div>
+      <div id="telegramLinkBody"></div>
     </div>
   </div>
 
@@ -778,6 +789,11 @@
             <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span>
             <div class="acct-row-body"><div class="acct-row-label">EMAIL</div><div class="acct-row-value" id="acctEmailValue">—</div></div>
           </div>
+          <div class="acct-row acct-row-btn" id="openSecurityMenuBtn">
+            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+            <div class="acct-row-body"><div class="acct-row-value">Security</div></div>
+            <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </div>
           <div class="acct-row">
             <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg></span>
             <div class="acct-row-body"><div class="acct-row-label">TOTAL ORDERS</div><div class="acct-row-value" id="statOrderCount">0</div></div>
@@ -789,11 +805,6 @@
           <div class="acct-row acct-row-btn" id="viewOrderHistoryBtn">
             <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
             <div class="acct-row-body"><div class="acct-row-value">View Order History</div></div>
-            <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
-          </div>
-          <div class="acct-row acct-row-btn" id="openSecurityMenuBtn">
-            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
-            <div class="acct-row-body"><div class="acct-row-value">Security</div></div>
             <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
           </div>
           <div class="acct-row acct-row-btn danger" id="accountLogoutBtn">
@@ -816,6 +827,11 @@
           <div class="acct-row acct-row-btn" id="securityEmailRow">
             <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span>
             <div class="acct-row-body"><div class="acct-row-label">EMAIL</div><div class="acct-row-value" id="securityEmailValue">—</div></div>
+            <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </div>
+          <div class="acct-row acct-row-btn" id="securityTelegramRow">
+            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></span>
+            <div class="acct-row-body"><div class="acct-row-label">TELEGRAM ACCOUNT</div><div class="acct-row-value" id="securityTelegramValue">Not linked</div></div>
             <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
           </div>
           <div class="acct-row acct-row-btn" id="securityPasswordRow">
@@ -5184,6 +5200,7 @@ function openSecurityView(){
   if(!currentUser) return;
   document.getElementById("securityUsernameValue").textContent = "@" + getUsername();
   document.getElementById("securityEmailValue").textContent = maskEmail(currentUser.email);
+  refreshSecurityTelegramRow();
   skeletonTransition(document.getElementById("accountView"), document.getElementById("securityView"));
 }
 document.getElementById("openSecurityMenuBtn")?.addEventListener("click", openSecurityView);
@@ -5194,6 +5211,104 @@ document.getElementById("securityBackBtn")?.addEventListener("click", () => {
 });
 document.getElementById("securityUsernameRow")?.addEventListener("click", () => openEditNameModal("username"));
 document.getElementById("securityPasswordRow")?.addEventListener("click", openPwModal);
+
+/* ---------- Telegram account link ---------- */
+// This app has no Telegram Bot API integration, so "verification" is the
+// admin manually checking the submitted username against the real Telegram
+// account (from the Users tab) before confirming -- the customer side just
+// submits/cancels/unlinks, and the admin side confirms/unlinks.
+async function getMyTelegramLink(){
+  if(!supabaseClient || !currentUser) return null;
+  const { data } = await supabaseClient.from("telegram_links").select("*").eq("user_id", currentUser.id).maybeSingle();
+  return data;
+}
+
+async function refreshSecurityTelegramRow(){
+  const valueEl = document.getElementById("securityTelegramValue");
+  if(!valueEl) return;
+  const link = await getMyTelegramLink();
+  valueEl.textContent = !link ? "Not linked" : (link.status === "pending" ? "Pending verification" : "@" + link.telegram_username);
+}
+
+function renderTelegramLinkBody(link){
+  const body = document.getElementById("telegramLinkBody");
+  const title = document.getElementById("telegramLinkTitle");
+  const sub = document.getElementById("telegramLinkSub");
+  document.getElementById("telegramLinkError").textContent = "";
+  if(!link){
+    title.textContent = "Link your Telegram";
+    sub.textContent = "Enter your Telegram username -- our team checks it by hand and confirms the link.";
+    body.innerHTML = `
+      <div class="auth-field">
+        <span class="auth-field-icon">@</span>
+        <input id="telegramUsernameInput" type="text" placeholder="username (without @)" autocomplete="off" />
+      </div>
+      <button id="telegramSubmitBtn" class="telegram-btn" type="button" style="width:100%">Submit for verification</button>
+    `;
+    document.getElementById("telegramSubmitBtn").addEventListener("click", submitTelegramLink);
+    document.getElementById("telegramUsernameInput").addEventListener("keydown", e => { if(e.key === "Enter") submitTelegramLink(); });
+  } else if(link.status === "pending"){
+    title.textContent = "Pending verification";
+    sub.textContent = "We're checking this by hand -- it can take a little while. You can cancel and resubmit anytime.";
+    body.innerHTML = `
+      <div class="telegram-link-status pending">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>@${escapePreviewText(link.telegram_username)}</span>
+      </div>
+      <button id="telegramCancelBtn" class="auth-btn-danger" type="button" style="width:100%">Cancel request</button>
+    `;
+    document.getElementById("telegramCancelBtn").addEventListener("click", () => endTelegramLink("Request cancelled."));
+  } else {
+    title.textContent = "Telegram linked";
+    sub.textContent = "Your account is linked to this Telegram username.";
+    body.innerHTML = `
+      <div class="telegram-link-status linked">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>@${escapePreviewText(link.telegram_username)}</span>
+      </div>
+      <button id="telegramUnlinkBtn" class="auth-btn-danger" type="button" style="width:100%">Unlink</button>
+    `;
+    document.getElementById("telegramUnlinkBtn").addEventListener("click", () => endTelegramLink("Unlinked."));
+  }
+}
+
+async function refreshTelegramLinkModal(){
+  document.getElementById("telegramLinkBody").innerHTML = `<div class="chat-empty">Loading…</div>`;
+  renderTelegramLinkBody(await getMyTelegramLink());
+}
+
+async function openTelegramLinkModal(){
+  document.getElementById("telegramLinkModalBackdrop")?.classList.remove("hidden");
+  refreshTelegramLinkModal();
+}
+document.getElementById("securityTelegramRow")?.addEventListener("click", openTelegramLinkModal);
+document.getElementById("telegramLinkCloseBtn")?.addEventListener("click", () => {
+  document.getElementById("telegramLinkModalBackdrop")?.classList.add("hidden");
+});
+document.getElementById("telegramLinkModalBackdrop")?.addEventListener("click", (e) => {
+  if(e.target.id === "telegramLinkModalBackdrop") e.target.classList.add("hidden");
+});
+
+async function submitTelegramLink(){
+  const input = document.getElementById("telegramUsernameInput");
+  const err = document.getElementById("telegramLinkError");
+  const username = (input.value || "").trim().replace(/^@/, "");
+  if(!username){ err.textContent = "Enter your Telegram username."; return; }
+  err.textContent = "";
+  const { error } = await supabaseClient.rpc("submit_telegram_link", { p_username: username });
+  if(error){ err.textContent = error.message; return; }
+  await refreshTelegramLinkModal();
+  refreshSecurityTelegramRow();
+  showToast("Submitted for verification!");
+}
+
+async function endTelegramLink(toastMsg){
+  const { error } = await supabaseClient.rpc("unlink_telegram_link");
+  if(error){ document.getElementById("telegramLinkError").textContent = error.message; return; }
+  await refreshTelegramLinkModal();
+  refreshSecurityTelegramRow();
+  showToast(toastMsg);
+}
 
 /* ---------- Change email popup ---------- */
 function openEditEmailModal(){
