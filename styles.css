@@ -6006,6 +6006,12 @@ body.light-mode .chat-bubble.admin{ background:rgba(255,255,255,.75); color:#372
   cursor:pointer;
 }
 @media(max-width:640px){ .my-orders-btn{ font-size:9px; padding:6px 9px; } }
+/* Icon-only variant (Noti) -- a square tap target instead of a pill with
+   a label, so the icon itself can be sized up without the button growing
+   into a wide text-plus-icon pair. */
+.icon-only-btn{ display:flex; align-items:center; justify-content:center; padding:8px; }
+.noti-btn-icon{ width:22px; height:22px; margin:0; }
+@media(max-width:640px){ .icon-only-btn{ padding:7px; } .noti-btn-icon{ width:20px; height:20px; } }
 .notif-badge{
   position:absolute; top:-6px; right:-6px;
   min-width:17px; height:17px; padding:0 4px;
@@ -6684,9 +6690,15 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
    the catalog page) -- not scoped to .lp-hero since a second one now lives
    outside it, on the products page. ===== */
 .lp-hot-label{
-  display:block; margin:0 0 10px; font-size:11px; font-weight:800;
-  letter-spacing:.02em; color:#6B54A8; text-align:center;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  margin:0 0 12px; font-size:12px; font-weight:800; letter-spacing:.03em;
+  text-transform:uppercase; color:#6B54A8; text-align:center;
 }
+.lp-hot-flame{
+  display:inline-grid; place-items:center; width:20px; height:20px; flex:0 0 auto;
+  filter:drop-shadow(0 2px 4px rgba(232,56,79,.35));
+}
+.lp-hot-flame svg{ width:100%; height:100%; }
 .lp-hot{
   position:relative; width:100%; overflow:hidden;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);

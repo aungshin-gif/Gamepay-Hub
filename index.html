@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=44">
+  <link rel="stylesheet" href="styles.css?v=45">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -117,7 +117,7 @@
     </div>
     <div class="compact-header-right">
       <button id="newsFeedBtn" class="my-orders-btn" type="button" aria-label="News"><img class="btn-icon news-btn-icon" src="assets/icon-news.png" alt="" loading="lazy" decoding="async">News</button>
-      <button id="notiBtn" class="my-orders-btn" type="button" aria-label="Notifications"><img class="btn-icon news-btn-icon" src="assets/icon-noti.png" alt="" loading="lazy" decoding="async">Noti<span id="notiBtnBadge" class="notif-badge hidden">1</span></button>
+      <button id="notiBtn" class="my-orders-btn icon-only-btn" type="button" aria-label="Notifications"><img class="btn-icon noti-btn-icon news-btn-icon" src="assets/icon-noti.png" alt="" loading="lazy" decoding="async"><span id="notiBtnBadge" class="notif-badge hidden">1</span></button>
       <div id="noticeCodePopup" class="notice-code-popup hidden" role="dialog" aria-label="New notice">
         <div class="notice-code-card">
           <div class="confetti-burst" id="noticeConfettiBurst"></div>
@@ -470,7 +470,7 @@
 
         <div class="lp-headline">
           <h1 class="lp-wordmark lp-wordmark-hidden">GAMEPAY&nbsp;HUB &mdash; The digital store of</h1>
-          <span class="lp-hot-label">&#128293; Hot products</span>
+          <span class="lp-hot-label"><span class="lp-hot-flame"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2c1 3-3 4-3 8a3 3 0 0 0 6 0c1.5 1 2 3 2 4.5A5.5 5.5 0 0 1 6 14.5C6 9 12 7 12 2Z" fill="url(#flameGrad)"/><defs><linearGradient id="flameGrad" x1="6" y1="2" x2="17" y2="19" gradientUnits="userSpaceOnUse"><stop stop-color="#FFC93C"/><stop offset=".5" stop-color="#FF7A3C"/><stop offset="1" stop-color="#E8384F"/></linearGradient></defs></svg></span>Hot Products</span>
           <div class="lp-hot" aria-label="Hot products">
             <div class="lp-hot-track products" id="lpHotTrack"></div>
           </div>
