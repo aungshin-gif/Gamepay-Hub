@@ -973,6 +973,28 @@
   search: "canva design pro",
   warranty: "Full Warranty",
   description: "💥Premium Pro Private Planသည် Account ပေးမှာပါ။\n🔑 သည် own mailနဲ့သဘောတရားတူတူပါပဲ၊\n🔑 သည်ကိုယ်ပိုင်Canva accountထဲမှာ Redeemရုံပါပဲ",
+  benefits: {
+    subtitle: "Edu vs Pro/Business, side by side",
+    tiers: [{ key: "education", label: "Edu Plan" }, { key: "business", label: "Pro / Business" }],
+    rows: [
+      { icon: "check", label: "Feature access", values: {
+        education: "Almost all features unlocked — a few premium assets may still be locked.",
+        business: PB_YES + " 100% of premium features unlocked."
+      }},
+      { icon: "brain", label: "AI capabilities", values: {
+        education: "Limited AI tool access.",
+        business: "Full, unlimited AI tool suite."
+      }},
+      { icon: "image", label: "Font assets", values: {
+        education: "Massive font library included.",
+        business: "Standard font selection."
+      }},
+      { icon: "upload", label: "Duration & pricing", values: {
+        education: "Long-term plans (1–2 years) · budget-friendly, ultra-cheap.",
+        business: "Flexible short/mid-term tiers (1, 2, 3 up to 6–8 months) · higher price tier."
+      }}
+    ]
+  },
   plans: [
     { name: "Canva Education – Own Mail – 1.5 Year – 5000 Ks",
       label: "Canva Education", type: "Own Mail", tier: "education",
@@ -1106,6 +1128,13 @@
   icon: "assets/image.png",
   search: "zoom pro meeting video",
   description: "🔐 Private access is provided.\n🛍 Select the required duration before purchase.\n❗️Availability may change based on stock.",
+  benefits: {
+    subtitle: "Everything included with Zoom Pro",
+    rows: [
+      { icon: "chat", label: "Participant capacity", values: "Host sessions with up to 100 participants." },
+      { icon: "zap", label: "Meeting duration", values: PB_YES + " Extended, effectively unlimited meeting duration — no standard 40-minute cutoff." }
+    ]
+  },
   plans: [
       { name: "🔐 Private – 14 Days – 5000 Ks", price: 5000 },
       { name: "🔐 Private – 1 Month – 8000 Ks", price: 8000, bestSeller: true },
@@ -1152,7 +1181,7 @@ plans: [
       {
   id: "hma_vpn",
   name: "HMA VPN",
-  
+
   subtitle: "Tap to see prices",
   badge: "available",
   category: "VPN",
@@ -1161,6 +1190,14 @@ plans: [
   search: "hma vpn android mac pc",
   note: "✔️ Android / Mac / PC ရပါတယ်။\n❌ iOS မရပါ။\n⚠️ Only one device can be used in Share.\n📊 8-9 Devices can be used in Private.",
   description: "✅ Android / Mac / PC အသုံးပြုနိုင်သည်။\n❌ iOS မရပါ။\n⚠️ Share plan တွင် device 1 ခုသာ အသုံးပြုနိုင်သည်။\n📊 Private plan တွင် devices 8–9 ခု အသုံးပြုနိုင်သည်.",
+  benefits: {
+    subtitle: "HMA VPN Benefits & Guidelines",
+    intro: "Pre-connection optimization protocol guides and setup tutorials are sent directly by the Admin alongside your account credentials.",
+    rows: [
+      { icon: "check", label: "OS compatibility", values: PB_YES + " Android — fully supported with top-tier performance.<br>" + PB_NO + " iOS — incompatible (frequent handshake failures and delays). Do not purchase for iOS." },
+      { icon: "chat", label: "Account tiers", values: "Private Account: supports 5–7 simultaneous devices.<br>Shared Account: 1 device only." }
+    ]
+  },
   plans: [
       { name: "👥 1 Month – Share – 1400 Ks", price: 1400, access: "share" },
       { name: "🔐 1 Month – Private – 5000 Ks", price: 5000, access: "private", bestSeller: true },
@@ -1179,6 +1216,15 @@ plans: [
   search: "express vpn android mac pc ios",
   note: "✔️ Android / Mac / PC ရပါတယ်။\n✔️ iOS ရပါတယ်။\n🔐 All plans are same as private.",
   description: "✅ Android / Mac / PC / iOS အသုံးပြုနိုင်သည်။\n🔐 All plans use private-style access.\n🛍 Device count ကို plan အလိုက်ရွေးချယ်ပါ။",
+  benefits: {
+    subtitle: "Express VPN Benefits & Guidelines",
+    intro: "Pre-connection optimization protocol guides and setup tutorials are sent directly by the Admin alongside your account credentials.",
+    rows: [
+      { icon: "check", label: "OS compatibility", values: PB_YES + " Android, macOS, Windows PC and iOS — high stability across all platforms." },
+      { icon: "upload", label: "Subscription terms", values: "Multiple duration options available, from short-term to multi-month plans." },
+      { icon: "x", label: "Device limit & security", values: "Strictly 1 device per account. Concurrent logins cause connection errors, drops, or instant account termination — and a strict no-refund policy applies to multi-login breaches." }
+    ]
+  },
   plans: [
       { name: "🔐 2 Months – 1 Device – 5000 Ks", price: 5000 },
       { name: "🔐 3 Months – 2 Devices – 7000 Ks", price: 7000, bestSeller: true },
