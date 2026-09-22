@@ -4281,13 +4281,19 @@ body.light-mode .lp-hero, .lp-hero{
 @media(max-width:640px){
   .lp-hero .lp-hero-carousel{ border-radius:12px; }
   /* The source art is an exact 16:9 landscape banner, which reads as a flat,
-     short strip on a narrow phone even though nothing is actually being
-     squished -- give the banner more vertical presence on mobile by
-     cropping to a taller box instead of boxing the same flat strip. Center-
-     anchored: all three slides keep their logo/QR/cards content centered
-     with secondary text nearer the edges, so a moderate crop stays safe. */
+     short strip on a narrow phone. Cropping to fill a taller box (object-fit:
+     cover) gave the banner more vertical presence but cut real content off
+     the left/right edges -- slide 1's own "GAMEPAY HUB" wordmark included.
+     Taller box, but object-fit:contain: the full image always stays visible
+     (fills the box's full width, letterboxed above/below by the box's own
+     gradient background instead of cropped) -- more vertical presence
+     without ever losing part of the picture. */
   .lp-hero .lp-hero-carousel{ aspect-ratio:4/3; }
-  .lp-hero .lp-hero-slide img{ object-fit:cover; object-position:center; }
+  /* object-position:bottom keeps the image glued to the carousel box's own
+     bottom edge -- the Browse button/dots are positioned relative to that
+     same box edge, so this keeps them sitting on the actual artwork
+     instead of floating in the empty letterbox margin above it. */
+  .lp-hero .lp-hero-slide img{ object-fit:contain; object-position:center bottom; }
 }
 
 /* ---------- clouds rolling across the base of the scene ---------- */
@@ -5782,7 +5788,7 @@ body.light-mode .avatar-popover-label{ color:var(--muted,#6b7686); }
   display:flex; align-items:center; justify-content:center; width:52px; height:52px; margin:0 auto;
   border-radius:50%; border:2px solid transparent; transition:transform .12s, border-color .12s;
 }
-.avatar-gallery-circle img{ width:94%; height:94%; object-fit:contain; }
+.avatar-gallery-circle img{ width:100%; height:100%; object-fit:cover; }
 .avatar-gallery-item:hover .avatar-gallery-circle{ transform:scale(1.06); }
 .avatar-gallery-item.active .avatar-gallery-circle{ border-color:#7a35c7; box-shadow:0 0 0 2px rgba(122,53,199,.35); }
 
@@ -6331,6 +6337,30 @@ body.light-mode .auth-field-icon{ color:var(--muted,#6b7686); }
 body.light-mode .auth-field-toggle{ color:var(--muted,#6b7686); }
 body.light-mode .auth-field-toggle:hover{ color:var(--ink,#1f2937); }
 .auth-error{ color:#ff9fc9; font-size:12px; min-height:16px; margin-bottom:6px; }
+.auth-field-icon{ font-size:14px; font-weight:800; line-height:16px; text-align:center; }
+/* Telegram link modal -- the pending/linked states show a plain status
+   pill instead of an input, since there's nothing left to type once a
+   username has been submitted. */
+.telegram-link-status{
+  display:flex; align-items:center; gap:10px; padding:12px 14px; margin-bottom:14px;
+  border-radius:13px; font-size:14px; font-weight:700;
+  background:rgba(255,255,255,.06); border:1.5px solid rgba(224,180,255,.22); color:#fff;
+}
+.telegram-link-status svg{ width:20px; height:20px; flex:0 0 auto; }
+.telegram-link-status.pending{ color:#ffd479; }
+.telegram-link-status.pending svg{ color:#ffd479; }
+.telegram-link-status.linked{ color:#6dffbd; }
+.telegram-link-status.linked svg{ color:#6dffbd; }
+body.light-mode .telegram-link-status{ background:rgba(255,255,255,.7); border-color:rgba(212,168,67,.28); color:var(--ink,#1f2937); }
+.auth-btn-danger{
+  width:100%; padding:13px 14px; border-radius:13px; border:1.5px solid rgba(255,110,150,.4);
+  background:rgba(255,79,120,.12); color:#ff8fae; font-size:14px; font-weight:800; cursor:pointer;
+  transition:background .15s, transform .15s;
+}
+.auth-btn-danger:hover{ background:rgba(255,79,120,.22); }
+.auth-btn-danger:active{ transform:scale(.98); }
+body.light-mode .auth-btn-danger{ background:#fee2e2; border-color:#f3c6c6; color:#dc2626; }
+body.light-mode .auth-btn-danger:hover{ background:#fecdd3; }
 /* Tactile press for the submit button -- lifts on hover, presses down on
    click, instead of sitting flat like a static label. */
 .auth-modal #authSubmitBtn{ transition:transform .16s cubic-bezier(.34,1.56,.64,1), box-shadow .16s ease; }

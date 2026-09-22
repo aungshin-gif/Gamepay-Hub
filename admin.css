@@ -603,9 +603,22 @@
     width:68px; height:68px; border-radius:50%; overflow:hidden; border:1px solid var(--border-strong);
     display:flex; align-items:center; justify-content:center;
   }
-  .avatar-preset-circle img{ width:96%; height:96%; object-fit:contain; }
+  .avatar-preset-circle img{ width:100%; height:100%; object-fit:cover; }
   .avatar-preset-delete{
     position:absolute; top:-4px; right:-4px; width:22px; height:22px; padding:0; border-radius:50%;
     background:#fff; color:var(--bad); border:1px solid #f3c6c6; box-shadow:0 2px 6px rgba(20,20,43,.15);
   }
   .avatar-preset-delete svg{ width:11px; height:11px; }
+
+  /* ---------- Telegram Account card (user detail modal) ---------- */
+  .telegram-admin-status{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:11px 14px; border-radius:12px; margin-bottom:10px;
+    background:#fbfbfe; border:1px solid var(--border); font-weight:700; font-size:13.5px;
+  }
+  .telegram-admin-badge{
+    font-size:10.5px; font-weight:800; letter-spacing:.03em; text-transform:uppercase;
+    padding:3px 9px; border-radius:999px;
+  }
+  .telegram-admin-status.pending .telegram-admin-badge{ background:var(--warn-soft); color:var(--warn); }
+  .telegram-admin-status.linked .telegram-admin-badge{ background:var(--good-soft); color:var(--good); }

@@ -968,6 +968,79 @@ end;
 $$;
 grant execute on function public.admin_set_welcome_coupon_amount to authenticated;
 
+-- Telegram account linking -- this app has no Telegram Bot API integration,
+-- so "verification" is the admin manually checking the submitted username
+-- against the real Telegram account (from the dashboard's Users tab) before
+-- confirming it. Every step is reversible: the customer can cancel a
+-- pending request or unlink an already-confirmed one (same action, delete
+-- the row -- just a different button label client-side depending on
+-- status), and the admin can unlink from their side too.
+create table if not exists public.telegram_links (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  telegram_username text not null,
+  status text not null default 'pending' check (status in ('pending','linked')),
+  submitted_at timestamptz not null default now(),
+  confirmed_at timestamptz,
+  confirmed_by uuid references auth.users(id)
+);
+alter table public.telegram_links enable row level security;
+
+drop policy if exists "read own or admin telegram link" on public.telegram_links;
+create policy "read own or admin telegram link" on public.telegram_links
+  for select using (auth.uid() = user_id or public.is_admin());
+
+-- Customer: submit (or resubmit) a Telegram username for verification.
+-- Resubmitting always resets to pending, even over an already-linked row --
+-- changing your Telegram means it needs re-verifying.
+create or replace function public.submit_telegram_link(p_username text)
+returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if p_username is null or length(trim(p_username)) = 0 then
+    raise exception 'username required';
+  end if;
+  insert into public.telegram_links(user_id, telegram_username, status, submitted_at, confirmed_at, confirmed_by)
+  values (auth.uid(), trim(p_username), 'pending', now(), null, null)
+  on conflict (user_id) do update
+    set telegram_username = excluded.telegram_username,
+        status = 'pending', submitted_at = now(), confirmed_at = null, confirmed_by = null;
+end;
+$$;
+grant execute on function public.submit_telegram_link to authenticated;
+
+-- Customer: cancel a pending request, or unlink an already-confirmed one.
+create or replace function public.unlink_telegram_link()
+returns void
+language sql security definer set search_path = public as $$
+  delete from public.telegram_links where user_id = auth.uid();
+$$;
+grant execute on function public.unlink_telegram_link to authenticated;
+
+-- Admin: confirm a pending request as verified.
+create or replace function public.admin_confirm_telegram_link(p_user_id uuid)
+returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_admin() then raise exception 'not authorized'; end if;
+  update public.telegram_links set status = 'linked', confirmed_at = now(), confirmed_by = auth.uid()
+  where user_id = p_user_id;
+  if not found then raise exception 'no pending request for this user'; end if;
+end;
+$$;
+grant execute on function public.admin_confirm_telegram_link to authenticated;
+
+-- Admin: reject a pending request, or unlink an already-confirmed one from
+-- the admin side.
+create or replace function public.admin_unlink_telegram_link(p_user_id uuid)
+returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_admin() then raise exception 'not authorized'; end if;
+  delete from public.telegram_links where user_id = p_user_id;
+end;
+$$;
+grant execute on function public.admin_unlink_telegram_link to authenticated;
+
 -- ============================================================
 -- One-time setup after running this file:
 -- 1. Create your own admin login: Authentication -> Users -> Add user
