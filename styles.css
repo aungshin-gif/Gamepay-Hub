@@ -6918,3 +6918,132 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 #orderView .order-preview-table td .discount-badge{background:linear-gradient(135deg,#00d4ff,#0099ff)}
 .light-mode .order-preview-table td .preview-logo{box-shadow:0 0 10px rgba(111,81,176,.20)}
 @media(max-width:700px){.order-preview-table td .preview-logo{width:23px;height:23px;margin-right:8px}}
+
+/* ============ Figma Make voucher-slip restyle: Order Preview (light mode) ============
+   Applies the lavender voucher-slip design to the Order Preview screen.
+   Dark mode keeps its existing styling untouched. */
+body.light-mode #previewSection.order-preview-view{
+  background:linear-gradient(180deg,#F6F3FC 0%,#ECE5F9 58%,#E6DCF8 100%)!important;
+  color:#2C2C2C!important;
+}
+body.light-mode #previewSection .preview-shell{max-width:560px;}
+body.light-mode #previewSection .dashboard-back-btn{
+  background:#fff!important;border:1px solid rgba(116,87,180,.28)!important;
+  color:#5B4A86!important;box-shadow:0 4px 14px rgba(116,87,180,.10)!important;
+  text-shadow:none!important;border-radius:999px!important;
+}
+body.light-mode #previewSection .dashboard-back-btn:hover{background:#F4F0FC!important;transform:translateY(-1px);}
+body.light-mode #previewSection .preview-chip{
+  color:#7457B4!important;border:1px solid rgba(116,87,180,.30)!important;
+  background:rgba(255,255,255,.65)!important;
+}
+body.light-mode #previewSection .preview-page-title{
+  font-family:Georgia,'Times New Roman',serif!important;font-weight:700!important;
+  color:#2C2C2C!important;letter-spacing:.01em!important;
+}
+body.light-mode #previewSection .preview-page-sub{color:#8B8499!important;}
+body.light-mode #previewSection .preview-final-box{
+  background:transparent!important;border:0!important;box-shadow:none!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  animation:none!important;max-width:520px;margin:0 auto;overflow:visible!important;
+}
+body.light-mode #previewSection .preview-final-box::before{display:none!important;}
+body.light-mode #previewSection .slip-card{
+  background:#FFFEFC;border:1px solid rgba(116,87,180,.15);border-bottom:0;
+  border-radius:22px 22px 0 0;box-shadow:0 18px 45px rgba(116,87,180,.16);overflow:hidden;
+}
+body.light-mode #previewSection .preview-empty{
+  background:#FFFEFC;border:1px solid rgba(116,87,180,.15);border-radius:22px;
+  box-shadow:0 18px 45px rgba(116,87,180,.16);color:#8B8499;
+}
+body.light-mode #previewSection .preview-table-caption{
+  background:transparent!important;border-bottom:1px dashed rgba(116,87,180,.25)!important;
+  color:#8B8499!important;animation:none!important;padding:16px 20px!important;
+}
+body.light-mode #previewSection .preview-table-caption::after{display:none!important;}
+body.light-mode #previewSection .preview-table-caption b{
+  color:#2E7D4F!important;border:1px solid rgba(46,125,79,.30)!important;
+  background:rgba(46,125,79,.08)!important;
+}
+body.light-mode #previewSection .order-preview-table th,
+body.light-mode #previewSection .order-preview-table td{border-bottom:1px solid #F0EBFA!important;}
+body.light-mode #previewSection .order-preview-table th{color:#8B8499!important;}
+body.light-mode #previewSection .order-preview-table td{color:#2C2C2C!important;}
+body.light-mode #previewSection .order-preview-table tbody tr{animation:none!important;}
+body.light-mode #previewSection .order-preview-table tbody tr:hover{background:transparent!important;transform:none!important;}
+body.light-mode #previewSection .order-preview-table tr:last-child th,
+body.light-mode #previewSection .order-preview-table tr:last-child td{
+  background:#EFF1FE!important;border-bottom:0!important;
+}
+body.light-mode #previewSection .order-preview-table tr:last-child td{
+  color:#7457B4!important;font-size:22px!important;font-weight:800!important;
+}
+body.light-mode #previewSection .order-preview-table tr:last-child th::after{
+  content:"All included. No surprises.";display:block;margin-top:5px;
+  font-size:9px;font-weight:600;letter-spacing:.05em;color:#8B8499;text-transform:none;
+}
+body.light-mode #previewSection .order-preview-table tr:last-child td::after{
+  content:"MYANMAR KYAT";display:block;margin-top:3px;
+  font-size:8.5px;font-weight:700;letter-spacing:.24em;color:#B7ABC3;
+}
+body.light-mode #previewSection .slip-barcode{padding:20px 20px 4px;text-align:center;}
+body.light-mode #previewSection .slip-bars{
+  height:46px;margin:0 auto 10px;max-width:240px;
+  background:repeating-linear-gradient(90deg,#2C2C2C 0 2px,transparent 2px 5px,#2C2C2C 5px 6px,transparent 6px 11px,#2C2C2C 11px 14px,transparent 14px 18px);
+}
+body.light-mode #previewSection .slip-barcode span{
+  font-size:9px;font-weight:800;letter-spacing:.34em;color:#8B8499;text-indent:.34em;display:inline-block;
+}
+body.light-mode #previewSection .slip-keep{
+  padding:2px 20px 22px;text-align:center;font-size:10.5px;color:#B7ABC3;
+}
+body.light-mode #previewSection .slip-zigzag{
+  height:13px;margin:0 7px;
+  background:
+    linear-gradient(45deg,transparent 50%,#FFFEFC 50%) 0 0/18px 18px repeat-x,
+    linear-gradient(-45deg,transparent 50%,#FFFEFC 50%) 9px 0/18px 18px repeat-x;
+  filter:drop-shadow(0 12px 14px rgba(116,87,180,.14));
+}
+body.light-mode #previewSection #previewOrderBtn{
+  max-width:520px;margin:24px auto 0!important;width:100%;
+  background:linear-gradient(135deg,#5B50C8,#9154CD)!important;border:0!important;
+  color:#fff!important;font-size:15px!important;font-weight:800!important;
+  padding:16px!important;border-radius:16px!important;
+  box-shadow:0 12px 28px rgba(110,84,200,.35)!important;text-shadow:none!important;
+  display:flex!important;align-items:center;justify-content:center;gap:10px;
+}
+body.light-mode #previewSection #previewOrderBtn:hover{transform:translateY(-1px);}
+body.light-mode #previewSection #previewOrderBtn:disabled{
+  background:#D9D4E8!important;color:#fff!important;box-shadow:none!important;opacity:.8;
+  transform:none!important;
+}
+body.light-mode #previewSection #previewOrderBtn .btn-icon{width:18px;height:18px;}
+body.light-mode #previewSection .checkout-trustline{
+  max-width:520px;margin:14px auto 0!important;background:transparent!important;
+  border:0!important;color:#8B8499!important;justify-content:center;
+}
+body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
+#orderView .order-preview-table td .preview-tier{display:inline-flex;margin-left:10px;vertical-align:3px}
+#orderView .order-preview-table td .preview-tier[data-tier="business"]{--tier:#0E5C4A;--tier-2:#1C8F6B;--tier-ink:#FFF8E6}
+#orderView .order-preview-table td .preview-tier[data-tier="premium"]{--tier:#7A5410;--tier-2:#C79A2E;--tier-ink:#FFF8E6}
+#orderView .order-preview-table td .preview-tier[data-tier="vip"]{--tier:#6A4A08;--tier-2:#B98F1E;--tier-ink:#FFF6DF}
+#orderView .order-preview-table td .preview-tier[data-tier="max"]{--tier:#7A1B44;--tier-2:#C2366F;--tier-ink:#FFEDF4}
+#orderView .order-preview-table td .preview-tier[data-tier="pro"]{--tier:#1E3A8A;--tier-2:#3B63C9;--tier-ink:#EDF2FF}
+#orderView .order-preview-table td .preview-tier[data-tier="proplus"]{--tier:#4C2889;--tier-2:#7B4FE0;--tier-ink:#F3EDFF}
+#orderView .order-preview-table td .preview-tier[data-tier="core"]{--tier:#0F6E64;--tier-2:#22A399;--tier-ink:#E7FBF8}
+#orderView .order-preview-table td .preview-tier[data-tier="standard"]{--tier:#3C4A66;--tier-2:#63799E;--tier-ink:#EEF3FB}
+#orderView .order-preview-table td .preview-tier[data-tier="plus"]{--tier:#5B2AA8;--tier-2:#8A55DC;--tier-ink:#F4EDFF}
+#orderView .order-preview-table td .preview-tier[data-tier="team"]{--tier:#0F5F7A;--tier-2:#2A93B5;--tier-ink:#E9F8FC}
+#orderView .order-preview-table td .preview-tier[data-tier="individual"]{--tier:#37307A;--tier-2:#5F55B8;--tier-ink:#EFEDFF}
+#orderView .order-preview-table td .preview-tier[data-tier="education"]{--tier:#155E45;--tier-2:#2E9B72;--tier-ink:#EAFBF3}
+#orderView .order-preview-table td .preview-tier[data-tier="family"]{--tier:#8A4210;--tier-2:#C97A2A;--tier-ink:#FFF2E4}
+#orderView .order-preview-table td .preview-tier[data-tier="go"]{--tier:#D4AF37;--tier-2:#F6DFA0;--tier-ink:#5C4310}
+#orderView .order-preview-table td .preview-tier[data-tier="link"]{--tier:#0E5468;--tier-2:#2B8AA6;--tier-ink:#E9F7FB}
+#orderView .order-preview-table td .preview-tier[data-tier="basic"]{--tier:#475569;--tier-2:#6B7A90;--tier-ink:#F1F4F9}
+#orderView .order-preview-table td .preview-tier[data-tier="4k"]{--tier:#0B4F6C;--tier-2:#1C9FC6;--tier-ink:#E8FBFF}
+#orderView .order-preview-table td .preview-tier[data-tier="gptpro"]{--tier:#2A1B6B;--tier-2:#5B3FD6;--tier-ink:#F1EDFF}
+#orderView .order-preview-table td .preview-tier[data-tier="ultra"]{--tier:#101018;--tier-2:#4F7DF3;--tier-ink:#EEF4FF}
+@media(max-width:600px){
+  body.light-mode #previewSection .order-preview-table tr:last-child td{font-size:19px!important;}
+  body.light-mode #previewSection .slip-bars{max-width:200px;height:40px;}
+}
