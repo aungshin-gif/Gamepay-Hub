@@ -6910,30 +6910,6 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 /* Order preview summary: product / payment logos */
 .order-preview-table td .preview-logo{width:27px;height:27px;object-fit:contain;border-radius:8px;background:#fff;padding:2px;margin-right:10px;vertical-align:-8px;box-shadow:0 0 12px rgba(86,243,255,.28)}
 .order-preview-table td .preview-logo-emoji{font-size:21px;line-height:1;margin-right:10px;vertical-align:-4px}
-/* Plan row reuses the plan-list tier pill: the same .plan-tier-chip style as the
-   plan cards. The --tier palette (which the cards get from
-   .plan-option[data-tier]) is re-declared here so the chip keeps its colors
-   inside the preview table. */
-#orderView .order-preview-table td .preview-tier{display:inline-flex;margin-left:10px;vertical-align:3px}
-#orderView .order-preview-table td .preview-tier[data-tier="business"]{--tier:#0E5C4A;--tier-2:#1C8F6B;--tier-ink:#FFF8E6}
-#orderView .order-preview-table td .preview-tier[data-tier="premium"]{--tier:#7A5410;--tier-2:#C79A2E;--tier-ink:#FFF8E6}
-#orderView .order-preview-table td .preview-tier[data-tier="vip"]{--tier:#6A4A08;--tier-2:#B98F1E;--tier-ink:#FFF6DF}
-#orderView .order-preview-table td .preview-tier[data-tier="max"]{--tier:#7A1B44;--tier-2:#C2366F;--tier-ink:#FFEDF4}
-#orderView .order-preview-table td .preview-tier[data-tier="pro"]{--tier:#1E3A8A;--tier-2:#3B63C9;--tier-ink:#EDF2FF}
-#orderView .order-preview-table td .preview-tier[data-tier="proplus"]{--tier:#4C2889;--tier-2:#7B4FE0;--tier-ink:#F3EDFF}
-#orderView .order-preview-table td .preview-tier[data-tier="core"]{--tier:#0F6E64;--tier-2:#22A399;--tier-ink:#E7FBF8}
-#orderView .order-preview-table td .preview-tier[data-tier="standard"]{--tier:#3C4A66;--tier-2:#63799E;--tier-ink:#EEF3FB}
-#orderView .order-preview-table td .preview-tier[data-tier="plus"]{--tier:#5B2AA8;--tier-2:#8A55DC;--tier-ink:#F4EDFF}
-#orderView .order-preview-table td .preview-tier[data-tier="team"]{--tier:#0F5F7A;--tier-2:#2A93B5;--tier-ink:#E9F8FC}
-#orderView .order-preview-table td .preview-tier[data-tier="individual"]{--tier:#37307A;--tier-2:#5F55B8;--tier-ink:#EFEDFF}
-#orderView .order-preview-table td .preview-tier[data-tier="education"]{--tier:#155E45;--tier-2:#2E9B72;--tier-ink:#EAFBF3}
-#orderView .order-preview-table td .preview-tier[data-tier="family"]{--tier:#8A4210;--tier-2:#C97A2A;--tier-ink:#FFF2E4}
-#orderView .order-preview-table td .preview-tier[data-tier="go"]{--tier:#D4AF37;--tier-2:#F6DFA0;--tier-ink:#5C4310}
-#orderView .order-preview-table td .preview-tier[data-tier="link"]{--tier:#0E5468;--tier-2:#2B8AA6;--tier-ink:#E9F7FB}
-#orderView .order-preview-table td .preview-tier[data-tier="basic"]{--tier:#475569;--tier-2:#6B7A90;--tier-ink:#F1F4F9}
-#orderView .order-preview-table td .preview-tier[data-tier="4k"]{--tier:#0B4F6C;--tier-2:#1C9FC6;--tier-ink:#E8FBFF}
-#orderView .order-preview-table td .preview-tier[data-tier="gptpro"]{--tier:#2A1B6B;--tier-2:#5B3FD6;--tier-ink:#F1EDFF}
-#orderView .order-preview-table td .preview-tier[data-tier="ultra"]{--tier:#101018;--tier-2:#4F7DF3;--tier-ink:#EEF4FF}
 .light-mode .order-preview-table td .preview-logo{box-shadow:0 0 10px rgba(111,81,176,.20)}
 @media(max-width:700px){.order-preview-table td .preview-logo{width:23px;height:23px;margin-right:8px}}
 
@@ -6977,7 +6953,61 @@ body.light-mode #previewSection .preview-empty{
 body.light-mode #previewSection .preview-table-caption{
   background:transparent!important;border-bottom:1px dashed rgba(116,87,180,.25)!important;
   color:#8B8499!important;animation:none!important;padding:16px 20px!important;
+}/* Plan row reuses the plan-list tier pill. NOTE: #previewSection is re-parented
+   onto <body> at runtime (the order-dashboard-flow script moves it out of
+   #orderView so position:fixed overlays anchor to the viewport), so these
+   selectors must be scoped under #previewSection, NOT #orderView. */
+#previewSection .order-preview-table td .preview-tier{display:inline-flex;margin-left:10px;vertical-align:3px}
+#previewSection .order-preview-table td .preview-tier[data-tier="business"]{--tier:#0E5C4A;--tier-2:#1C8F6B;--tier-ink:#FFF8E6}
+#previewSection .order-preview-table td .preview-tier[data-tier="premium"]{--tier:#7A5410;--tier-2:#C79A2E;--tier-ink:#FFF8E6}
+#previewSection .order-preview-table td .preview-tier[data-tier="vip"]{--tier:#6A4A08;--tier-2:#B98F1E;--tier-ink:#FFF6DF}
+#previewSection .order-preview-table td .preview-tier[data-tier="max"]{--tier:#7A1B44;--tier-2:#C2366F;--tier-ink:#FFEDF4}
+#previewSection .order-preview-table td .preview-tier[data-tier="pro"]{--tier:#1E3A8A;--tier-2:#3B63C9;--tier-ink:#EDF2FF}
+#previewSection .order-preview-table td .preview-tier[data-tier="proplus"]{--tier:#4C2889;--tier-2:#7B4FE0;--tier-ink:#F3EDFF}
+#previewSection .order-preview-table td .preview-tier[data-tier="core"]{--tier:#0F6E64;--tier-2:#22A399;--tier-ink:#E7FBF8}
+#previewSection .order-preview-table td .preview-tier[data-tier="standard"]{--tier:#3C4A66;--tier-2:#63799E;--tier-ink:#EEF3FB}
+#previewSection .order-preview-table td .preview-tier[data-tier="plus"]{--tier:#5B2AA8;--tier-2:#8A55DC;--tier-ink:#F4EDFF}
+#previewSection .order-preview-table td .preview-tier[data-tier="team"]{--tier:#0F5F7A;--tier-2:#2A93B5;--tier-ink:#E9F8FC}
+#previewSection .order-preview-table td .preview-tier[data-tier="individual"]{--tier:#37307A;--tier-2:#5F55B8;--tier-ink:#EFEDFF}
+#previewSection .order-preview-table td .preview-tier[data-tier="education"]{--tier:#155E45;--tier-2:#2E9B72;--tier-ink:#EAFBF3}
+#previewSection .order-preview-table td .preview-tier[data-tier="family"]{--tier:#8A4210;--tier-2:#C97A2A;--tier-ink:#FFF2E4}
+#previewSection .order-preview-table td .preview-tier[data-tier="go"]{--tier:#D4AF37;--tier-2:#F6DFA0;--tier-ink:#5C4310}
+#previewSection .order-preview-table td .preview-tier[data-tier="link"]{--tier:#0E5468;--tier-2:#2B8AA6;--tier-ink:#E9F7FB}
+#previewSection .order-preview-table td .preview-tier[data-tier="basic"]{--tier:#475569;--tier-2:#6B7A90;--tier-ink:#F1F4F9}
+#previewSection .order-preview-table td .preview-tier[data-tier="4k"]{--tier:#0B4F6C;--tier-2:#1C9FC6;--tier-ink:#E8FBFF}
+#previewSection .order-preview-table td .preview-tier[data-tier="gptpro"]{--tier:#2A1B6B;--tier-2:#5B3FD6;--tier-ink:#F1EDFF}
+#previewSection .order-preview-table td .preview-tier[data-tier="ultra"]{--tier:#101018;--tier-2:#4F7DF3;--tier-ink:#EEF4FF}
+#previewSection .order-preview-table td .preview-tier[data-tier="hobby"]{--tier:#57534E;--tier-2:#A8A29E;--tier-ink:#FAFAF9}
+/* Base pill shape inside the preview (the plan-list .plan-tier-chip lives under
+   #orderView, so it is re-declared here for the re-parented preview section). */
+#previewSection .order-preview-table td .plan-tier-chip{
+  position:relative;
+  display:inline-flex; align-items:center;
+  padding:4px 12px !important; border-radius:999px !important;
+  font-size:9.5px !important; font-weight:900 !important;
+  letter-spacing:.06em !important; text-transform:uppercase;
+  color:var(--tier-ink) !important;
+  background:linear-gradient(135deg,var(--tier),var(--tier-2)) !important;
+  border:1px solid color-mix(in srgb, var(--tier) 55%, #000 6%) !important;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 42%, transparent),
+    0 2px 7px color-mix(in srgb, var(--tier) 40%, transparent) !important;
+  overflow:hidden;
 }
+/* Metallic sweep for the premium tiers, mirroring the plan list. */
+#previewSection .order-preview-table td .preview-tier[data-tier="business"] .plan-tier-chip::after,
+#previewSection .order-preview-table td .preview-tier[data-tier="premium"] .plan-tier-chip::after,
+#previewSection .order-preview-table td .preview-tier[data-tier="vip"] .plan-tier-chip::after,
+#previewSection .order-preview-table td .preview-tier[data-tier="go"] .plan-tier-chip::after,
+#previewSection .order-preview-table td .preview-tier[data-tier="4k"] .plan-tier-chip::after,
+#previewSection .order-preview-table td .preview-tier[data-tier="gptpro"] .plan-tier-chip::after,
+#previewSection .order-preview-table td .preview-tier[data-tier="ultra"] .plan-tier-chip::after,
+#previewSection .order-preview-table td .preview-tier[data-tier="max"] .plan-tier-chip::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(112deg,transparent 30%,rgba(255,255,255,.42) 48%,transparent 64%);
+  pointer-events:none;
+}
+
 body.light-mode #previewSection .preview-table-caption::after{display:none!important;}
 body.light-mode #previewSection .preview-table-caption b{
   color:#2E7D4F!important;border:1px solid rgba(46,125,79,.30)!important;
@@ -7041,26 +7071,6 @@ body.light-mode #previewSection .checkout-trustline{
   border:0!important;color:#8B8499!important;justify-content:center;
 }
 body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
-#orderView .order-preview-table td .preview-tier{display:inline-flex;margin-left:10px;vertical-align:3px}
-#orderView .order-preview-table td .preview-tier[data-tier="business"]{--tier:#0E5C4A;--tier-2:#1C8F6B;--tier-ink:#FFF8E6}
-#orderView .order-preview-table td .preview-tier[data-tier="premium"]{--tier:#7A5410;--tier-2:#C79A2E;--tier-ink:#FFF8E6}
-#orderView .order-preview-table td .preview-tier[data-tier="vip"]{--tier:#6A4A08;--tier-2:#B98F1E;--tier-ink:#FFF6DF}
-#orderView .order-preview-table td .preview-tier[data-tier="max"]{--tier:#7A1B44;--tier-2:#C2366F;--tier-ink:#FFEDF4}
-#orderView .order-preview-table td .preview-tier[data-tier="pro"]{--tier:#1E3A8A;--tier-2:#3B63C9;--tier-ink:#EDF2FF}
-#orderView .order-preview-table td .preview-tier[data-tier="proplus"]{--tier:#4C2889;--tier-2:#7B4FE0;--tier-ink:#F3EDFF}
-#orderView .order-preview-table td .preview-tier[data-tier="core"]{--tier:#0F6E64;--tier-2:#22A399;--tier-ink:#E7FBF8}
-#orderView .order-preview-table td .preview-tier[data-tier="standard"]{--tier:#3C4A66;--tier-2:#63799E;--tier-ink:#EEF3FB}
-#orderView .order-preview-table td .preview-tier[data-tier="plus"]{--tier:#5B2AA8;--tier-2:#8A55DC;--tier-ink:#F4EDFF}
-#orderView .order-preview-table td .preview-tier[data-tier="team"]{--tier:#0F5F7A;--tier-2:#2A93B5;--tier-ink:#E9F8FC}
-#orderView .order-preview-table td .preview-tier[data-tier="individual"]{--tier:#37307A;--tier-2:#5F55B8;--tier-ink:#EFEDFF}
-#orderView .order-preview-table td .preview-tier[data-tier="education"]{--tier:#155E45;--tier-2:#2E9B72;--tier-ink:#EAFBF3}
-#orderView .order-preview-table td .preview-tier[data-tier="family"]{--tier:#8A4210;--tier-2:#C97A2A;--tier-ink:#FFF2E4}
-#orderView .order-preview-table td .preview-tier[data-tier="go"]{--tier:#D4AF37;--tier-2:#F6DFA0;--tier-ink:#5C4310}
-#orderView .order-preview-table td .preview-tier[data-tier="link"]{--tier:#0E5468;--tier-2:#2B8AA6;--tier-ink:#E9F7FB}
-#orderView .order-preview-table td .preview-tier[data-tier="basic"]{--tier:#475569;--tier-2:#6B7A90;--tier-ink:#F1F4F9}
-#orderView .order-preview-table td .preview-tier[data-tier="4k"]{--tier:#0B4F6C;--tier-2:#1C9FC6;--tier-ink:#E8FBFF}
-#orderView .order-preview-table td .preview-tier[data-tier="gptpro"]{--tier:#2A1B6B;--tier-2:#5B3FD6;--tier-ink:#F1EDFF}
-#orderView .order-preview-table td .preview-tier[data-tier="ultra"]{--tier:#101018;--tier-2:#4F7DF3;--tier-ink:#EEF4FF}
 @media(max-width:600px){
   body.light-mode #previewSection .order-preview-table tr:last-child td{font-size:19px!important;}
   body.light-mode #previewSection .slip-bars{max-width:200px;height:40px;}
