@@ -3711,8 +3711,14 @@ function renderPreviewTable(message){
       : (currentProduct.icon ? `<img class="preview-logo" src="${currentProduct.icon}" alt="" loading="lazy" decoding="async">` : "");
   }
   const selectedPlan = currentProduct?.plans?.[currentPlanIndex];
-  const planBadge = (selectedPlan && selectedPlan.bestSeller)
-    ? `<span class="preview-plan-badge">🔥 Best Seller</span>` : "";
+  // Plan-row badges, exactly like the plan list: the same badge classes
+  // (best-seller / discount), re-laid-out for the table by the
+  // #orderView .order-preview-table overrides in styles.css.
+  const planBadges =
+    ((selectedPlan && (selectedPlan.discount || selectedPlan.discountPercent))
+      ? `<span class="discount-badge"><svg class="discount-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8Z"/><circle cx="7" cy="7" r=".6" fill="currentColor"/></svg>${selectedPlan.discountPercent ? "-" + selectedPlan.discountPercent + "%" : "Discount"}</span>` : "") +
+    ((selectedPlan && selectedPlan.bestSeller)
+      ? `<span class="best-seller-badge">🔥 Best Seller</span>` : "");
   const payMeta = (typeof paymentMeta !== "undefined" && paymentMeta[activePayment]) || null;
   const paymentLogo = (payMeta && payMeta.logo)
     ? `<img class="preview-logo" src="${payMeta.logo}" alt="" loading="lazy" decoding="async">` : "";
@@ -3727,7 +3733,7 @@ function renderPreviewTable(message){
       // reading as an uneven, ragged table.
       if(key === "📄 Plan") value = stripTrailingPrice(value);
       const prefix = cellPrefix[key] || "";
-      const suffix = (key === "📄 Plan") ? planBadge : "";
+      const suffix = (key === "📄 Plan") ? planBadges : "";
       if(value) rows.push(`<tr><th>${labels[key]}</th><td>${prefix}${escapePreviewText(value)}${suffix}</td></tr>`);
     }
   }
