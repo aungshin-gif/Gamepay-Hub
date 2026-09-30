@@ -682,7 +682,7 @@
         <div class="preview-title preview-page-title">Order Preview</div>
         <div class="preview-page-sub">Check your plan, payment and total before sending the order.</div>
         <div id="previewFinalBox" class="preview-box preview-final-box"><div class="preview-empty">No order preview yet.</div></div>
-        <button id="previewOrderBtn" class="telegram-btn" type="button" disabled><svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Place Order</button>
+        <button id="previewOrderBtn" class="telegram-btn" type="button" disabled>Confirm &amp; place order <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>
         <div id="previewProgressBar" class="order-progress-bar hidden"><div class="order-progress-fill"></div></div>
         <div class="checkout-trustline"><b>Live order tracking</b><span>•</span><span>Chat with support after approval</span></div>
       </div>
@@ -3736,7 +3736,7 @@ function renderPreviewTable(message){
       if(value) rows.push(`<tr><th>${labels[key]}</th><td>${prefix}${escapePreviewText(value)}${suffix}</td></tr>`);
     }
   }
-  previewFinalBox.innerHTML = `<div class="preview-table-caption"><span>ORDER SUMMARY</span><b>READY TO SEND</b></div><table class="order-preview-table"><tbody>${rows.join("")}</tbody></table>`;
+  previewFinalBox.innerHTML = `<div class="slip-card"><div class="preview-table-caption"><span>ORDER SUMMARY</span><b>READY TO SEND</b></div><table class="order-preview-table"><tbody>${rows.join("")}</tbody></table><div class="slip-barcode" aria-hidden="true"><div class="slip-bars"></div><span>GAMEPAY</span></div><div class="slip-keep">Keep this little slip for your records.</div></div><div class="slip-zigzag" aria-hidden="true"></div>`;
 }
 function updatePreview(){
   const selectedPlan = currentProduct?.plans[currentPlanIndex];
