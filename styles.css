@@ -6907,3 +6907,9 @@ body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 .compact-brand .compact-name,
 .compact-brand .compact-divider,
 .compact-brand .compact-label{ display:none !important; }
+/* Order preview summary: product / payment logos + plan badge */
+.order-preview-table td .preview-logo{width:27px;height:27px;object-fit:contain;border-radius:8px;background:#fff;padding:2px;margin-right:10px;vertical-align:-8px;box-shadow:0 0 12px rgba(86,243,255,.28)}
+.order-preview-table td .preview-logo-emoji{font-size:21px;line-height:1;margin-right:10px;vertical-align:-4px}
+.preview-plan-badge{display:inline-block;margin-left:10px;padding:4px 10px;border-radius:999px;font-size:9px;font-weight:900;letter-spacing:.4px;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,#ffb347,#ff6b6b);border:1px solid rgba(255,255,255,.18);box-shadow:0 4px 12px rgba(255,107,107,.25);vertical-align:3px;white-space:nowrap}
+.light-mode .order-preview-table td .preview-logo{box-shadow:0 0 10px rgba(111,81,176,.20)}
+@media(max-width:700px){.order-preview-table td .preview-logo{width:23px;height:23px;margin-right:8px}.preview-plan-badge{font-size:8px;padding:3px 8px}}
