@@ -3703,7 +3703,7 @@ function renderPreviewTable(message){
   const lines=String(message).split("\n");
   const labels={"💌 Product":"Product","📄 Plan":"Plan","💳 Payment":"Payment","📱 Payment Phone":"Payment number","👤 Payment Name":"Payment name","🎟 Coupon Applied":"Coupon applied","💰 Total Amount":"Total amount","🔢 Custom Amount":"Custom amount","📝Note":"Note","👤Account":"Account"};
   // Logos & badges for the summary rows, taken from the same data the page
-  // already uses: product icon, the plan's best-seller flag, payment logos.
+  // already uses: product icon, the plan's tier pill, payment logos.
   let productLogo = "";
   if(currentProduct){
     productLogo = currentProduct.iconType === "emoji"
@@ -3711,14 +3711,13 @@ function renderPreviewTable(message){
       : (currentProduct.icon ? `<img class="preview-logo" src="${currentProduct.icon}" alt="" loading="lazy" decoding="async">` : "");
   }
   const selectedPlan = currentProduct?.plans?.[currentPlanIndex];
-  // Plan-row badges, exactly like the plan list: the same badge classes
-  // (best-seller / discount), re-laid-out for the table by the
-  // #orderView .order-preview-table overrides in styles.css.
-  const planBadges =
-    ((selectedPlan && (selectedPlan.discount || selectedPlan.discountPercent))
-      ? `<span class="discount-badge"><svg class="discount-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8Z"/><circle cx="7" cy="7" r=".6" fill="currentColor"/></svg>${selectedPlan.discountPercent ? "-" + selectedPlan.discountPercent + "%" : "Discount"}</span>` : "") +
-    ((selectedPlan && selectedPlan.bestSeller)
-      ? `<span class="best-seller-badge">🔥 Best Seller</span>` : "");
+  // Plan-row tier pill, exactly like the plan list: the shared planTier()
+  // + TIER_LABEL helpers and the .plan-tier-chip style; the --tier palette
+  // variables are re-declared for the preview table in styles.css.
+  const planTierKey = selectedPlan ? planTier(selectedPlan) : "";
+  const tierPill = (/^[a-z0-9]+$/.test(planTierKey) && (TIER_LABEL[planTierKey] || planTierKey))
+    ? `<span class="preview-tier" data-tier="${planTierKey}"><span class="plan-tier-chip">${TIER_LABEL[planTierKey] || planTierKey}</span></span>`
+    : "";
   const payMeta = (typeof paymentMeta !== "undefined" && paymentMeta[activePayment]) || null;
   const paymentLogo = (payMeta && payMeta.logo)
     ? `<img class="preview-logo" src="${payMeta.logo}" alt="" loading="lazy" decoding="async">` : "";
@@ -3733,7 +3732,7 @@ function renderPreviewTable(message){
       // reading as an uneven, ragged table.
       if(key === "📄 Plan") value = stripTrailingPrice(value);
       const prefix = cellPrefix[key] || "";
-      const suffix = (key === "📄 Plan") ? planBadges : "";
+      const suffix = (key === "📄 Plan") ? tierPill : "";
       if(value) rows.push(`<tr><th>${labels[key]}</th><td>${prefix}${escapePreviewText(value)}${suffix}</td></tr>`);
     }
   }
