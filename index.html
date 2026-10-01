@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=52">
+  <link rel="stylesheet" href="styles.css?v=53">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -704,7 +704,6 @@
               <div class="pv3-slot" aria-hidden="true"><i class="pv3-vent"></i><i class="pv3-vent"></i></div>
             </div>
             <div class="pv3-paperwell">
-              <div class="pv3-backing" aria-hidden="true"><i></i><i></i></div>
               <div class="pv3-paper" id="pvPaper">
                 <div id="previewFinalBox" class="preview-box preview-final-box"><div class="preview-empty">No order preview yet.</div></div>
               </div>
@@ -3958,33 +3957,37 @@ function renderPreviewTable(message){
   const dt = pvSlipDate();
   const qty = (typeof currentQty === "number" && currentQty > 0) ? currentQty : 1;
   const noteRow = note
-    ? `<div class="pv3-row"><span>Note</span><i>-</i><b>${escapePreviewText(note)}</b></div>` : "";
+    ? `<div class="pv3-row"><span>Note<i aria-hidden="true">\u2013</i></span><b>${escapePreviewText(note)}</b></div>` : "";
   const totalSub = coupon ? escapePreviewText(coupon) : "All included";
   // "25,380 Ks" renders as a big "25,380" with a small "Ks", like the Figma total.
   const totalParts = String(total).match(/^(.*?)\s*Ks\s*$/i);
   const totalBig = escapePreviewText(totalParts ? totalParts[1].trim() : total);
-  const totalCur = totalParts ? " <small>Ks</small>" : "";
+  const totalCur = totalParts ? "<small>Ks</small>" : "";
+  // Barcode bar geometry taken from the Figma voucher's own SVG
+  // (viewBox 0 0 199 24, bars in currentColor = #252a35).
+  const bcX = [0,5,8,13,17,21,27,31,35,38,44,48,51,58,62,65,71,74,78,84,87,91,98,101,105,109,114,118,122,128,131,136,141,145,149,154,157,162,168,171,176,181,184,189,192,197];
+  const bcW = [2,1,3,1,2,4,2,2,1,4,2,1,4,2,1,4,1,2,4,1,2,4,1,2,2,3,2,2,4,1,3,3,2,2,3,1,3,4,1,3,3,1,3,1,3,2];
+  const bcBars = bcX.map((x,i)=>`<rect x="${x}" y="0" width="${bcW[i]}" height="24"/>`).join("");
+  // Zigzag tear-off edge, like Figma: 10px cycle, 7px deep, pure white.
+  const zigPts = "0,0" + Array.from({length:61},(_,k)=>{const x=300-k*5;return ` ${x},${(k%2)?7:0}`;}).join("");
   previewFinalBox.innerHTML =
     `<div class="pv3-slip">` +
+      `<div class="pv3-slipbrand">gamepay.</div>` +
       `<div class="pv3-cap">ORDER PREVIEW</div>` +
-      `<div class="pv3-dt"><span>${dt.date}</span><span>${dt.time}</span></div>` +
-      `<div class="pv3-voucher">${escapePreviewText(pvVoucherNo(message))}</div>` +
-      `<div class="pv3-dash"></div>` +
-      `<div class="pv3-item"><b>${escapePreviewText(product) || dash}</b><span>&times; ${qty}</span></div>` +
-      `<div class="pv3-plan">${escapePreviewText(planLine) || dash}</div>` +
+      `<div class="pv3-sect"><div class="pv3-dt"><span>${dt.date}</span><span>${dt.time}</span></div>` +
+      `<div class="pv3-voucher">${escapePreviewText(pvVoucherNo(message))}</div></div>` +
+      `<div class="pv3-sect"><div class="pv3-itemrow"><b>${escapePreviewText(product) || dash}</b><span class="pv3-qty">&times; ${qty}</span></div>` +
+      `<div class="pv3-plan">${escapePreviewText(planLine) || dash}</div></div>` +
       `<div class="pv3-rows">` +
-        `<div class="pv3-row"><span>Name</span><i>-</i><b>${account ? escapePreviewText(account) : dash}</b></div>` +
-        `<div class="pv3-row"><span>Pay</span><i>-</i><b>${escapePreviewText(payName) || dash}</b></div>` +
-        `<div class="pv3-row"><span>Number</span><i>-</i><b>${escapePreviewText(payNumber) || dash}</b></div>` +
+        `<div class="pv3-row"><span>Name<i aria-hidden="true">\u2013</i></span><b>${account ? escapePreviewText(account) : dash}</b></div>` +
+        `<div class="pv3-row"><span>Pay<i aria-hidden="true">\u2013</i></span><b>${escapePreviewText(payName) || dash}</b></div>` +
+        `<div class="pv3-row"><span>Number<i aria-hidden="true">\u2013</i></span><b>${escapePreviewText(payNumber) || dash}</b></div>` +
         noteRow +
       `</div>` +
-      `<div class="pv3-dash"></div>` +
       `<div class="pv3-total"><div class="pv3-total-l"><b>TOTAL</b><span>${totalSub}</span></div><div class="pv3-amount">${totalBig}${totalCur}</div></div>` +
-      `<div class="pv3-dash"></div>` +
-      `<div class="pv3-barcode" aria-hidden="true"><div class="pv3-bars"></div><span>PREVIEW \u00b7 NOT PROOF OF PAYMENT</span></div>` +
-    `</div>` +
-    `<div class="pv3-folds" aria-hidden="true"></div>` +
-    `<div class="pv3-edge" aria-hidden="true"></div>`;
+      `<div class="pv3-barcode"><svg viewBox="0 0 199 24" preserveAspectRatio="none" aria-hidden="true">${bcBars}</svg><span>PREVIEW \u00b7 NOT PROOF OF PAYMENT</span></div>` +
+      `<svg class="pv3-zigzag" viewBox="0 0 300 8" preserveAspectRatio="none" aria-hidden="true"><polygon points="${zigPts}"/></svg>` +
+    `</div>`;
   // The total row under the slip mirrors the slip's total.
   if(pvTotalAmount) pvTotalAmount.textContent = total || "\u2014";
 }

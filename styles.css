@@ -7587,22 +7587,23 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
   box-shadow:0 3px 10px rgba(15,23,42,.08);
 }
 #previewSection .pv3-power svg{width:17px; height:17px; color:#6B7280;}
-/* black paper slot with vent marks */
+/* Figma paper slot: 14px dark slit with a serrated inner line and bottom hairline */
 #previewSection .pv3-slot{
-  position:relative; height:12px; margin:10px 6px 0;
-  background:#0B0E17; border-radius:999px;
-  box-shadow:inset 0 2px 5px rgba(0,0,0,.8),
-             0 8px 12px -8px rgba(0,0,0,.5);
+  position:relative; height:14px; margin:10px 20px 0;
+  border-radius:5px; border:1px solid #788699;
+  background:linear-gradient(180deg,#151e2c,#354255 70%,#718096);
+  box-shadow:0 1px 0 #ffffff, inset 0 3px 4px #0f182a;
 }
-/* Figma's slot is a plain thin slit — no vent marks */
+#previewSection .pv3-slot::before{
+  content:""; position:absolute; left:10px; right:10px; top:5px; height:1px;
+  background:repeating-linear-gradient(90deg,rgba(213,221,235,.35) 0 2px,transparent 2px 4px);
+}
+#previewSection .pv3-slot::after{
+  content:""; position:absolute; left:8px; right:8px; bottom:2px; height:1px;
+  background:rgba(141,152,171,.4);
+}
+/* Figma's slot is a plain slit — vent marks stay hidden */
 #previewSection .pv3-vent{display:none;}
-#previewSection .pv3-vent{
-  position:absolute; top:50%; width:14px; height:8px; transform:translateY(-50%);
-  opacity:.5;
-  background:repeating-linear-gradient(180deg,#5B6478 0 1.5px,transparent 1.5px 3.5px);
-}
-#previewSection .pv3-vent:first-child{left:12px;}
-#previewSection .pv3-vent:last-child{right:12px;}
 /* ---- paper well: backing sheets + feeding slip ---- */
 #previewSection .pv3-paperwell{
   position:relative; z-index:1;
@@ -7613,30 +7614,15 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
   overflow:hidden;
   border-radius:0 0 12px 12px;
 }
-#previewSection .pv3-backing{position:absolute; inset:0; pointer-events:none;}
-#previewSection .pv3-backing i{
-  position:absolute; inset:0; background:#fff; border-radius:0 0 10px 10px;
-  box-shadow:0 18px 40px -20px rgba(15,23,42,.25);
-}
-#previewSection .pv3-backing i:first-child{transform:rotate(-1.6deg) translate(-4px,3px);}
-#previewSection .pv3-backing i:last-child{transform:rotate(1.4deg) translate(4px,5px);}
 /* THE FIX: the paper rests at translateY(0) once .is-done is set. The feed
    animation only exists on .is-printing, so removing that class without
    .is-done used to snap the paper back up and paint a blank slip. */
 #previewSection .pv3-paper{
   position:relative; z-index:1;
   transform:translateY(-102%);
-  /* clean white slip, like the Figma voucher */
-  background:#FFFFFF;
-  /* soft float shadow so the slip lifts like real paper, plus the
-     slot bar pressing down on its top edge */
-  box-shadow:0 30px 55px -20px rgba(15,23,42,.35),
-             inset 0 18px 22px -18px rgba(15,23,42,.30);
-}
-/* paper grain: barely-there, like the Figma's clean white stock */
-#previewSection .pv3-paper::after{
-  content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.45' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  /* Figma voucher shadow: two soft layers, clean white stock */
+  box-shadow:0 3px 8px rgba(35,43,62,.04),
+             0 15px 30px -16px rgba(35,43,62,.21);
 }
 #previewSection .pv3-printer.is-printing .pv3-paper{
   /* slow, steady feed like a real receipt printer */
@@ -7644,70 +7630,70 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 }
 #previewSection .pv3-printer.is-done .pv3-paper{transform:translateY(0);}
 @keyframes pv3Feed{from{transform:translateY(-102%);}to{transform:translateY(0);}}
-/* ---- the slip: matches the Figma "User greeting" voucher ---- */
+/* ---- the slip: rebuilt 1:1 from the Figma "User greeting" voucher ----
+   Specs pulled from the Figma Make project's own rendered DOM:
+   square white stock, dot-grain + diagonal sheen, 1px dashed #cdd2dc
+   dividers, mono 10px base, 14px product, 25px total, en-dash rows,
+   real bar geometry, 8px zigzag tear edge. No folds, no beige. */
 #previewSection .pv3-slip{
-  background:transparent;
-  padding:20px 24px 12px;
-  color:#111;
-  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  position:relative;
+  background-color:#ffffff;
+  background-image:
+    radial-gradient(rgba(100,116,139,.04) .5px, transparent .6px),
+    linear-gradient(105deg,#ffffff,#fafbfe 50%,#ffffff);
+  background-size:3px 3px,100% 100%;
+  padding:12px 20px;
+  color:#252a35;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  font-size:10px; line-height:1.5;
+}
+#previewSection .pv3-slipbrand{
+  text-align:center;
+  font-family:ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size:20px; font-weight:600; line-height:24px; letter-spacing:-.6px;
+  color:#252a35;
 }
 #previewSection .pv3-cap{
-  text-align:center; font-size:11px; font-weight:600;
-  letter-spacing:.2em; color:#9AA0B4;
+  margin-top:2px; text-align:center;
+  font-size:9px; font-weight:400; letter-spacing:2px; color:#596272;
 }
-#previewSection .pv3-dt{
-  display:flex; justify-content:space-between; gap:10px;
-  margin-top:12px; font-size:12px; font-weight:500;
-  letter-spacing:.06em; color:#8A90A6; text-transform:uppercase;
+/* dashed section separators, exactly like Figma */
+#previewSection .pv3-sect{margin-top:6px; border-top:1px dashed #cdd2dc; padding-top:6px;}
+#previewSection .pv3-dt{display:flex; justify-content:space-between; gap:8px; font-size:10px; color:#252a35;}
+#previewSection .pv3-voucher{margin-top:2px; text-align:center; font-size:9px; color:#596272;}
+#previewSection .pv3-itemrow{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
+#previewSection .pv3-itemrow b{
+  font-family:ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size:14px; font-weight:600; color:#252a35; min-width:0; overflow-wrap:anywhere;
 }
-#previewSection .pv3-voucher{
-  text-align:center; margin-top:8px;
-  font-size:11.5px; font-weight:500; letter-spacing:.04em; color:#8A90A6;
-}
-#previewSection .pv3-dash{border-top:1px dashed #DDE1EA; margin:12px 0;}
-#previewSection .pv3-item{display:flex; align-items:baseline; justify-content:space-between; gap:10px;}
-#previewSection .pv3-item b{font-size:16.5px; font-weight:800; color:#111;}
-#previewSection .pv3-item span{font-size:12px; color:#8A90A6; flex:none;}
-#previewSection .pv3-plan{font-size:12.5px; color:#8A90A6; margin-top:6px;}
-#previewSection .pv3-rows{margin-top:10px;}
-#previewSection .pv3-row{
-  display:flex; align-items:baseline; gap:8px;
-  padding:4px 0; font-size:13px;
-}
-#previewSection .pv3-row > span{flex:none; width:58px; color:#8A90A6;}
-#previewSection .pv3-row > i{font-style:normal; color:#B9BECB; flex:none; width:14px; text-align:center;}
-#previewSection .pv3-row > b{font-weight:600; color:#1F2937; min-width:0; overflow-wrap:anywhere;}
+#previewSection .pv3-qty{flex:none; padding-top:2px; font-size:10px; color:#596272;}
+#previewSection .pv3-plan{margin-top:2px; font-size:10px; color:#596272; overflow-wrap:anywhere;}
+#previewSection .pv3-rows{margin-top:8px; display:grid; gap:6px; font-size:11px;}
+#previewSection .pv3-row{display:grid; grid-template-columns:52px minmax(0,1fr); gap:8px; align-items:baseline;}
+#previewSection .pv3-row > span{display:flex; justify-content:space-between; color:#252a35;}
+#previewSection .pv3-row > span > i{font-style:normal;}
+#previewSection .pv3-row > b{font-weight:500; color:#252a35; min-width:0; overflow-wrap:anywhere;}
 #previewSection .pv3-slip .preview-na{color:#B9BECB;}
 #previewSection .pv3-total{
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  margin-top:6px; border-top:1px dashed #cdd2dc; border-bottom:1px dashed #cdd2dc;
+  padding:8px 0; display:flex; align-items:center; justify-content:space-between; gap:12px;
 }
-#previewSection .pv3-total-l b{display:block; font-size:13px; font-weight:800; letter-spacing:.12em; color:#111;}
-#previewSection .pv3-total-l span{display:block; font-size:10.5px; color:#8A90A6; margin-top:3px;}
-#previewSection .pv3-amount{font-size:28px; font-weight:800; color:#111; letter-spacing:-.01em; white-space:nowrap;}
-#previewSection .pv3-amount small{font-size:12px; font-weight:600; color:#8A90A6;}
-#previewSection .pv3-barcode{margin-top:10px; text-align:center;}
-#previewSection .pv3-bars{
-  height:42px; max-width:230px; margin:0 auto 8px;
-  background:repeating-linear-gradient(90deg,#111 0 2px,transparent 2px 5px,#111 5px 6px,transparent 6px 10px,#111 10px 13px,transparent 13px 16px);
+#previewSection .pv3-total-l b{display:block; font-size:10px; font-weight:500; letter-spacing:1px; color:#252a35;}
+#previewSection .pv3-total-l span{display:block; font-size:8px; color:#596272; margin-top:2px;}
+#previewSection .pv3-amount{
+  font-family:ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size:25px; font-weight:600; line-height:32px; letter-spacing:-.7px;
+  color:#252a35; white-space:nowrap;
 }
-#previewSection .pv3-barcode > span{
-  font-size:9px; letter-spacing:.18em; color:#9AA0B4;
-}
-/* zigzag perforated bottom edge, like the Figma slip */
-/* gentle paper folds near the bottom — soft wrinkle shading like a real slip
-   curling as it comes out of the printer, not a flat digital card */
-#previewSection .pv3-folds{
-  height:30px; margin:4px 0 -2px; position:relative;
-  background:
-    radial-gradient(130% 100% at 18% 0%, rgba(0,0,0,0) 52%, rgba(112,92,60,.10) 76%, rgba(0,0,0,0) 98%),
-    radial-gradient(110% 90% at 78% 10%, rgba(0,0,0,0) 48%, rgba(112,92,60,.12) 74%, rgba(0,0,0,0) 100%),
-    linear-gradient(180deg, rgba(0,0,0,0) 25%, rgba(112,92,60,.05) 62%, rgba(112,92,60,.10) 100%);
-}
-#previewSection .pv3-edge{
-  height:12px;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M0 0 H12 V3 L6 12 L0 3 Z' fill='%23FFFFFF'/%3E%3C/svg%3E");
-  background-repeat:repeat-x;
-  background-size:12px 12px;
+#previewSection .pv3-amount small{font-size:12px; font-weight:500; letter-spacing:normal; margin-left:6px;}
+#previewSection .pv3-barcode{margin-top:8px; text-align:center;}
+#previewSection .pv3-barcode svg{display:block; width:80%; height:16px; margin:0 auto; color:#252a35;}
+#previewSection .pv3-barcode svg rect{fill:currentColor;}
+#previewSection .pv3-barcode > span{display:block; margin-top:6px; font-size:8px; letter-spacing:.4px; color:#596272;}
+/* zigzag tear-off edge: pure white, 10px cycle, 7px deep — like Figma */
+#previewSection .pv3-zigzag{
+  position:absolute; left:0; right:0; top:100%;
+  display:block; width:100%; height:8px; fill:#ffffff;
 }
 #previewSection .preview-empty{padding:26px 10px; text-align:center; color:#9AA1B8; font-size:13px;}
 /* the slip container must stay invisible; the slip owns all visuals */
@@ -7780,8 +7766,7 @@ body.light-mode #previewSection #previewOrderBtn.pv3-confirm:disabled{
   #previewSection .pv3-brandtext{font-size:17px;}
   #previewSection .pv3-printchip{padding:8px 11px; font-size:10.5px;}
   #previewSection .pv3-power{width:36px; height:36px;}
-  #previewSection .pv3-slip{padding:18px 18px 22px;}
-  #previewSection .pv3-amount{font-size:26px;}
+  #previewSection .pv3-slip{padding:12px 16px;}
   #previewSection .pv3-totalrow{padding:12px;}
   #previewSection #previewOrderBtn.pv3-confirm{padding:13px 18px; font-size:14px;}
 }
@@ -7807,8 +7792,7 @@ body.light-mode #previewSection #previewOrderBtn.pv3-confirm:disabled{
   #previewSection .pv3-totalrow,
   #previewSection .pv3-micro,
   #previewSection .pv3-support,
-  #previewSection .pv3-foot,
-  #previewSection .pv3-backing{display:none !important;}
+  #previewSection .pv3-foot{display:none !important;}
   #previewSection .pv3-card{background:none !important; border:0 !important; box-shadow:none !important; padding:0 !important;}
   #previewSection .pv3-paperwell{overflow:visible !important; margin:0 !important;}
   #previewSection .pv3-paper{transform:none !important; animation:none !important; box-shadow:none !important;}
