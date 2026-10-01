@@ -7484,6 +7484,11 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
   width:min(560px,100%);
   margin:0 auto;
   padding:4px clamp(14px,4vw,28px) 30px;
+  /* Figma "User greeting" type: the whole preview unit is set in Geist,
+     the slip body in IBM Plex Mono. Scoped here so the rest of the site
+     keeps its own fonts. */
+  font-family:"Geist","Noto Sans Myanmar",sans-serif;
+  color:#252a35;
 }
 /* the legacy section padding used to leave a big empty gap above everything:
    stick the whole preview to the top */
@@ -7494,125 +7499,203 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
   margin-bottom:8px;
 }
 #previewSection .pv3-back{
-  background:none; border:0; padding:8px 4px; cursor:pointer;
-  font:inherit; font-size:13.5px; font-weight:500; color:#3B4358;
+  background:none; border:0; padding:0; cursor:pointer;
+  display:inline-flex; align-items:center; gap:6px;
+  min-height:36px;
+  font-family:inherit; font-size:12px; font-weight:400; line-height:16px; color:#596477;
 }
-#previewSection .pv3-back:hover{color:#0F172A;}
+#previewSection .pv3-back:hover{color:#252a35;}
+#previewSection .pv3-back svg{width:13px; height:13px; flex:none;}
 #previewSection .pv3-printslip{
   display:inline-flex; align-items:center; gap:8px;
-  background:#fff; border:1px solid #E2E6F2; border-radius:999px;
-  padding:9px 16px; cursor:pointer;
-  font:inherit; font-size:13px; font-weight:600; color:#1F2937;
-  box-shadow:0 2px 8px rgba(15,23,42,.06);
+  background:#fff; border:1px solid #e1e5ee; border-radius:8px;
+  min-height:36px; padding:0 12px; cursor:pointer;
+  font-family:inherit; font-size:12px; font-weight:500; line-height:16px; color:#4d586b;
 }
-#previewSection .pv3-printslip:hover{border-color:#C9D2E8; box-shadow:0 4px 12px rgba(15,23,42,.09);}
-#previewSection .pv3-printslip svg{width:16px; height:16px;}
-/* ---- printer card ---- */
+#previewSection .pv3-printslip:hover{background:#f0f2f7;}
+#previewSection .pv3-printslip svg{width:15px; height:15px; flex:none;}
+/* ---- printer stage: the card behind the machine, like Figma ---- */
 #previewSection .pv3-card{
-  background:#F8FAFF;
-  border:1px solid #E9EDF7;
-  border-radius:24px;
-  padding:14px 14px 16px;
-  box-shadow:0 18px 44px -22px rgba(15,23,42,.18);
+  background-color:#f0f2f7;
+  background-image:radial-gradient(at 50% 45%, #ffffff 0%, #f0f2f7 70%);
+  border:1px solid #e3e7ef;
+  border-radius:16px;
+  padding:12px;
+}
+@media (min-width:640px){
+  #previewSection .pv3-card{padding:16px 20px 12px;}
 }
 #previewSection .pv3-statusline{
   display:flex; align-items:center; justify-content:space-between; gap:10px;
-  margin:2px 4px 10px;
+  margin-bottom:4px;
 }
 #previewSection .pv3-status{
-  display:inline-flex; align-items:center; gap:8px;
-  font-size:12.5px; color:#8A90A6;
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:11px; font-weight:500; line-height:16.5px; color:#555e6e;
 }
-#previewSection .pv3-dot{width:6px; height:6px; border-radius:50%; background:#B9C0D4; flex:none;}
-#previewSection .pv3-statusline.is-done .pv3-dot{background:#22C55E;}
+#previewSection .pv3-dot{width:6px; height:6px; border-radius:50%; background:#7e8fa5; flex:none;}
+#previewSection .pv3-status:not(.is-done) .pv3-dot{animation:pv3Pulse 2s ease-in-out infinite;}
+@keyframes pv3Pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+#previewSection .pv3-status.is-done .pv3-dot{background:#697a8a; animation:none;}
 #previewSection .pv3-replay{
   display:inline-flex; align-items:center; gap:6px;
-  background:none; border:0; padding:6px 2px; cursor:pointer;
-  font:inherit; font-size:12.5px; font-weight:500; color:#8A90A6;
+  background:none; border:0; border-radius:8px; padding:0 8px; cursor:pointer;
+  min-height:44px;
+  font-family:inherit; font-size:11px; font-weight:400; color:#555e6e;
 }
-#previewSection .pv3-replay:hover:not(:disabled){color:#3B4358;}
-#previewSection .pv3-replay:disabled{opacity:.45; cursor:default;}
-#previewSection .pv3-replay svg{width:14px; height:14px;}
-#previewSection .pv3-replay.is-busy svg{animation:pv3Spin 1s linear infinite;}
-@keyframes pv3Spin{to{transform:rotate(360deg);}}
-/* ---- the light printer machine ---- */
+#previewSection .pv3-replay:hover:not(:disabled){background:rgba(255,255,255,.7);}
+#previewSection .pv3-replay:disabled{opacity:.4; cursor:wait;}
+#previewSection .pv3-replay svg{width:13px; height:13px; flex:none;}
+/* ---- the printer machine, 1:1 from the Figma "User greeting" design ----
+   108px metallic body over a back plate; the paper feeds out of the 14px
+   slot. (The logo box keeps the site's real Gamepay Hub mark, per the
+   standing "website ကဟာတွေပဲထည့်နော်" rule — everything else is Figma.) */
+#previewSection .pv3-printer{
+  position:relative;
+  max-width:340px;
+  margin:0 auto;
+}
+#previewSection .pv3-backplate{
+  position:absolute; left:12px; right:12px; top:18px; height:94px;
+  border-radius:22px;
+  background:#c7cfdb;
+  border-bottom:1px solid #aeb8c8;
+  box-shadow:0 15px 24px -12px rgba(41,52,74,.27);
+}
 #previewSection .pv3-machine{
-  background:#FFFFFF;
-  border:1px solid #E4E8F3;
-  border-radius:20px;
-  padding:12px 14px 0;
-  margin:0 56px;
-  box-shadow:0 14px 34px -18px rgba(15,23,42,.22);
-  position:relative; z-index:2;
+  position:absolute; left:0; right:0; top:0; height:108px; z-index:20;
+  border:1px solid #bfc8d6;
+  border-radius:22px;
+  background:linear-gradient(165deg,#ffffff 0%,#eef1f6 48%,#cdd5e1 100%);
+  box-shadow:inset 0 2px 1px #ffffff, inset 0 -3px 2px #b9c3d2, 0 5px 8px rgba(53,64,88,.13);
 }
-#previewSection .pv3-machine-top{
+#previewSection .pv3-top-panel{
+  position:absolute; left:8px; right:8px; top:8px; height:52px;
+  border-radius:17px;
+  border:1px solid rgba(255,255,255,.8);
+  background:linear-gradient(155deg,#ffffff 0%,#f5f7fb 58%,#e1e6ef 100%);
+  transform:perspective(600px) rotateX(12deg);
+  box-shadow:0 2px 2px rgba(115,129,153,.15), inset 0 1px 0 #ffffff;
+}
+#previewSection .pv3-machine-row{
+  position:absolute; top:14px; left:14px; right:14px; z-index:2;
   display:flex; align-items:center; justify-content:space-between; gap:12px;
 }
-#previewSection .pv3-brand{display:flex; align-items:center; gap:10px;}
+#previewSection .pv3-brand{display:flex; align-items:center; gap:8px;}
 #previewSection .pv3-plus{
-  width:34px; height:34px; border-radius:10px; flex:none;
+  width:28px; height:28px; border-radius:8px; flex:none;
   background:#232B45;
   display:inline-flex; align-items:center; justify-content:center;
   overflow:hidden;
 }
 /* the real Gamepay Hub logo, dark-filtered, on the navy square */
 #previewSection .pv3-logoimg{
-  width:22px; height:22px; object-fit:contain; display:block;
-  border-radius:6px;
+  width:18px; height:18px; object-fit:contain; display:block;
+  border-radius:4px;
   filter:brightness(.55) saturate(1.2) contrast(1.05);
 }
-#previewSection .pv3-brandtext{font-size:19px; font-weight:800; color:#141A2B; letter-spacing:-.01em; line-height:1.1;}
+#previewSection .pv3-brandtext{font-size:13px; font-weight:600; color:#4c5667; letter-spacing:-.3px; line-height:1.5;}
 #previewSection .pv3-brandtext small{
-  display:block; font-size:8.5px; font-weight:700; color:#9AA1B8;
-  letter-spacing:.32em; margin-top:3px;
+  display:block; font-size:7px; font-weight:500; color:#6c7788;
+  letter-spacing:1.6px; margin-top:2px; line-height:1.5;
 }
-#previewSection .pv3-actions{display:flex; align-items:center; gap:10px;}
+#previewSection .pv3-actions{display:flex; align-items:center; gap:8px;}
 #previewSection .pv3-printchip{
-  display:inline-flex; align-items:center; gap:8px;
-  background:#E9F1FD; border:1px solid #D3E3FA; border-radius:12px;
-  padding:9px 14px; cursor:pointer;
-  font:inherit; font-size:11.5px; font-weight:800; letter-spacing:.14em; color:#1D6FE0;
+  width:48px; height:36px; padding:0; flex:none;
+  display:inline-flex; align-items:center; justify-content:center; gap:4px;
+  background:#eef5ff; border:1px solid #91afd1; border-radius:6px;
+  box-shadow:inset 0 1px 2px rgba(59,96,128,.15), 0 1px 0 #ffffff;
+  cursor:pointer;
 }
-#previewSection .pv3-printchip:hover{background:#DCE9FC;}
-#previewSection .pv3-eq{display:inline-flex; align-items:flex-end; gap:2.5px; height:14px;}
-#previewSection .pv3-eq i{width:3px; border-radius:2px; background:#1D6FE0; height:5px;}
-#previewSection .pv3-printchip.is-active .pv3-eq i{animation:pv3Eq .7s ease-in-out infinite;}
+#previewSection .pv3-printlabel{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:8px; font-weight:700; line-height:1; letter-spacing:.5px; color:#1f466e;
+}
+#previewSection .pv3-eq{display:inline-flex; align-items:flex-end; gap:2px; height:12px;}
+#previewSection .pv3-eq i{
+  width:5px; border-radius:1px; background:#185b98;
+  box-shadow:0 0 3px rgba(68,138,204,.25);
+}
+#previewSection .pv3-eq i:nth-child(1){height:6px;}
+#previewSection .pv3-eq i:nth-child(2){height:9px;}
+#previewSection .pv3-eq i:nth-child(3){height:12px;}
+#previewSection .pv3-printchip.is-active .pv3-eq i{animation:pv3Eq 1.4s ease-in-out infinite; transform-origin:bottom;}
 #previewSection .pv3-printchip.is-active .pv3-eq i:nth-child(2){animation-delay:.15s;}
 #previewSection .pv3-printchip.is-active .pv3-eq i:nth-child(3){animation-delay:.3s;}
-@keyframes pv3Eq{0%,100%{height:5px;}50%{height:14px;}}
+@keyframes pv3Eq{0%,100%{transform:scaleY(.4);}50%{transform:scaleY(1);}}
 #previewSection .pv3-power{
-  width:40px; height:40px; border-radius:50%; flex:none;
-  background:#fff; border:1px solid #E2E6F2;
+  width:28px; height:28px; border-radius:50%; flex:none;
+  background:linear-gradient(145deg,#ffffff,#dbe2ed);
+  border:1px solid #bdc7d6;
   display:inline-flex; align-items:center; justify-content:center;
-  box-shadow:0 3px 10px rgba(15,23,42,.08);
+  box-shadow:inset 0 1px 0 #ffffff, 0 1px 2px rgba(41,52,73,.19);
 }
-#previewSection .pv3-power svg{width:17px; height:17px; color:#6B7280;}
-/* Figma paper slot: 14px dark slit with a serrated inner line and bottom hairline */
+#previewSection .pv3-power svg{width:11px; height:11px; color:#69768c;}
+/* bottom band under the brand row */
+#previewSection .pv3-bottom-band{
+  position:absolute; left:0; right:0; bottom:0; height:44px;
+  border-radius:0 0 21px 21px;
+  border-top:1px solid rgba(196,204,217,.5);
+  background:linear-gradient(180deg,rgba(223,229,238,.57) 0%,#edf0f6 50%,#c5cedb 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5);
+}
+#previewSection .pv3-led{
+  position:absolute; left:50%; top:62px; width:36px; height:2px;
+  transform:translateX(-50%);
+  border-radius:999px;
+  background:rgba(184,195,210,.7);
+  box-shadow:0 1px 0 #ffffff;
+}
+#previewSection .pv3-screw{
+  position:absolute; bottom:10px; width:4px; height:4px; border-radius:50%;
+  background:#a5afbf;
+}
+#previewSection .pv3-screw-l{left:14px;}
+#previewSection .pv3-screw-r{right:14px;}
+#previewSection .pv3-vents{position:absolute; top:83px; display:flex; gap:3px;}
+#previewSection .pv3-vents-l{left:8px;}
+#previewSection .pv3-vents-r{right:8px;}
+#previewSection .pv3-vents i{width:1px; height:6px; background:#9ba9be; display:block;}
+#previewSection .pv3-vent{display:none;}
+/* Figma paper slot: 14px dark slit, 20px insets, serrated inner line */
 #previewSection .pv3-slot{
-  position:relative; height:14px; margin:10px 20px 0;
+  position:absolute; left:20px; right:20px; bottom:14px; height:14px;
   border-radius:5px; border:1px solid #788699;
   background:linear-gradient(180deg,#151e2c,#354255 70%,#718096);
   box-shadow:0 1px 0 #ffffff, inset 0 3px 4px #0f182a;
 }
 #previewSection .pv3-slot::before{
-  content:""; position:absolute; left:10px; right:10px; top:5px; height:1px;
-  background:repeating-linear-gradient(90deg,rgba(213,221,235,.35) 0 2px,transparent 2px 4px);
+  content:""; position:absolute; left:8px; right:8px; top:4px; height:1px; opacity:.35;
+  background:repeating-linear-gradient(90deg,#d5ddeb 0 2px,transparent 2px 4px);
 }
 #previewSection .pv3-slot::after{
   content:""; position:absolute; left:8px; right:8px; bottom:2px; height:1px;
   background:rgba(141,152,171,.4);
 }
+#previewSection .pv3-mfoot{
+  position:absolute; bottom:-6px; width:28px; height:6px;
+  border-radius:0 0 6px 6px;
+  background:#b9c2d0;
+}
+#previewSection .pv3-mfoot-l{left:48px;}
+#previewSection .pv3-mfoot-r{right:48px;}
+/* soft shadow the slot casts onto the paper as it feeds out */
+#previewSection .pv3-slotshadow{
+  position:absolute; left:4px; right:4px; top:90px; height:24px; z-index:15;
+  background:linear-gradient(180deg,rgba(37,48,68,.145),transparent);
+  pointer-events:none;
+}
 /* Figma's slot is a plain slit — vent marks stay hidden */
 #previewSection .pv3-vent{display:none;}
-/* ---- paper well: backing sheets + feeding slip ---- */
+/* ---- paper viewport: the slip feeds out of the slot here ----
+   pt-94px tucks the paper's top edge exactly behind the slot (the slot's
+   bottom edge sits at 94px of the 108px machine); pb-12px leaves room for
+   the zigzag tear edge so it stays visible at the paper's bottom. */
 #previewSection .pv3-paperwell{
-  position:relative; z-index:1;
-  /* tuck the paper's top edge up behind the slot bar so the slip
-     visibly feeds OUT of the machine, like a real receipt printer.
-     Narrow column, like the Figma voucher. */
-  margin:-14px 96px 0;
+  position:relative; z-index:10;
+  margin:0 20px;
+  padding:94px 4px 12px;
   overflow:hidden;
-  border-radius:0 0 12px 12px;
 }
 /* THE FIX: the paper rests at translateY(0) once .is-done is set. The feed
    animation only exists on .is-printing, so removing that class without
@@ -7637,6 +7720,7 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
    real bar geometry, 8px zigzag tear edge. No folds, no beige. */
 #previewSection .pv3-slip{
   position:relative;
+  width:292px; max-width:100%; margin:0 auto;
   background-color:#ffffff;
   background-image:
     radial-gradient(rgba(100,116,139,.04) .5px, transparent .6px),
@@ -7644,17 +7728,18 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
   background-size:3px 3px,100% 100%;
   padding:12px 20px;
   color:#252a35;
-  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  font-family:"IBM Plex Mono",monospace;
   font-size:10px; line-height:1.5;
 }
 #previewSection .pv3-slipbrand{
   text-align:center;
-  font-family:ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-family:"Geist","Noto Sans Myanmar",sans-serif;
   font-size:20px; font-weight:600; line-height:24px; letter-spacing:-.6px;
   color:#252a35;
 }
 #previewSection .pv3-cap{
   margin-top:2px; text-align:center;
+  font-family:"IBM Plex Mono",monospace;
   font-size:9px; font-weight:400; letter-spacing:2px; color:#596272;
 }
 /* dashed section separators, exactly like Figma */
@@ -7663,7 +7748,7 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 #previewSection .pv3-voucher{margin-top:2px; text-align:center; font-size:9px; color:#596272;}
 #previewSection .pv3-itemrow{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
 #previewSection .pv3-itemrow b{
-  font-family:ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-family:"Geist","Noto Sans Myanmar",sans-serif;
   font-size:14px; font-weight:600; color:#252a35; min-width:0; overflow-wrap:anywhere;
 }
 #previewSection .pv3-qty{flex:none; padding-top:2px; font-size:10px; color:#596272;}
@@ -7681,7 +7766,7 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 #previewSection .pv3-total-l b{display:block; font-size:10px; font-weight:500; letter-spacing:1px; color:#252a35;}
 #previewSection .pv3-total-l span{display:block; font-size:8px; color:#596272; margin-top:2px;}
 #previewSection .pv3-amount{
-  font-family:ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-family:"Geist","Noto Sans Myanmar",sans-serif;
   font-size:25px; font-weight:600; line-height:32px; letter-spacing:-.7px;
   color:#252a35; white-space:nowrap;
 }
@@ -7702,42 +7787,50 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
   max-width:none !important; margin:0 !important; padding:0 !important;
   max-height:none !important; overflow:visible !important; min-height:0 !important;
 }
-/* ---- total + confirm bar ---- */
+/* ---- total card + confirm, like Figma ---- */
 #previewSection .pv3-totalrow{
-  display:flex; align-items:center; justify-content:space-between; gap:14px;
-  background:#fff; border:1px solid #E9EDF7; border-radius:18px;
-  padding:12px 14px; margin-top:10px;
-  box-shadow:0 14px 34px -22px rgba(15,23,42,.2);
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:#fff; border:1px solid #e1e5ee; border-radius:12px;
+  padding:8px 12px; margin-top:8px;
+  box-shadow:0 2px 6px rgba(37,42,53,.02);
 }
-#previewSection .pv3-totaltext span{display:block; font-size:11px; color:#8A90A6;}
-#previewSection .pv3-totaltext b{display:block; font-size:22px; font-weight:800; color:#0F172A; margin-top:2px; white-space:nowrap;}
+#previewSection .pv3-totaltext span{display:block; font-size:10px; color:#596477;}
+#previewSection .pv3-totaltext b{display:block; margin-top:2px; white-space:nowrap; font-weight:400;}
+#previewSection .pv3-totaltext .pv3-tamt{font-size:20px; font-weight:600; letter-spacing:-.5px; color:#252a35;}
+#previewSection .pv3-totaltext .pv3-tks{font-size:12px; font-weight:500; margin-left:4px; color:#252a35;}
 #previewSection .pv3-ctawrap{flex:none;}
 #previewSection #previewOrderBtn.pv3-confirm{
   margin-top:0 !important;
   display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  background:#141A2B; color:#fff; border:0; border-radius:999px;
-  padding:14px 22px; cursor:pointer;
-  font:inherit; font-size:15px; font-weight:700;
-  box-shadow:0 12px 26px -10px rgba(20,26,43,.5);
+  min-height:44px; padding:8px 12px;
+  background:#252a35; color:#fff; border:1px solid #252a35; border-radius:8px;
+  cursor:pointer;
+  font-family:inherit; font-size:12px; font-weight:500;
   white-space:nowrap;
 }
-#previewSection #previewOrderBtn.pv3-confirm:hover:not(:disabled){background:#232B45; transform:translateY(-1px);}
-#previewSection #previewOrderBtn.pv3-confirm:disabled{opacity:.45; cursor:default; box-shadow:none; transform:none;}
-#previewSection #previewOrderBtn.pv3-confirm .btn-icon{width:18px; height:18px;}
+#previewSection #previewOrderBtn.pv3-confirm:hover:not(:disabled){background:#3b4251; border-color:#3b4251;}
+#previewSection #previewOrderBtn.pv3-confirm:disabled{opacity:.45; cursor:default;}
+#previewSection #previewOrderBtn.pv3-confirm .btn-icon{width:14px; height:14px; flex:none;}
 #previewSection #previewProgressBar{margin-top:10px;}
-/* ---- microcopy / support / footer ---- */
+/* ---- microcopy / support / footer, like Figma ---- */
 #previewSection .pv3-micro{
-  display:flex; align-items:center; gap:8px;
-  margin:12px 2px 0; font-size:12.5px; color:#6B7280;
+  display:flex; align-items:flex-start; gap:8px;
+  margin:6px 0 0; padding:0 4px; font-size:10px; line-height:16px; color:#596477;
 }
-#previewSection .pv3-micro svg{width:14px; height:14px; flex:none; color:#9AA1B8;}
+#previewSection .pv3-micro svg{width:13px; height:13px; flex:none; margin-top:2px;}
 #previewSection .pv3-support{
-  display:inline-flex; align-items:center; gap:8px;
-  margin:10px 2px 0; font-size:13px; font-weight:500; color:#4B5563; text-decoration:none;
+  display:inline-flex; align-items:center; gap:6px;
+  margin:4px 0 0; padding:0 4px; min-height:36px;
+  font-size:12px; font-weight:500; color:#4d586b; text-decoration:none;
 }
-#previewSection .pv3-support:hover{color:#0F172A;}
-#previewSection .pv3-support svg{width:15px; height:15px; flex:none; color:#9AA1B8;}
-#previewSection .pv3-foot{margin:22px 2px 6px; font-size:12px; color:#9AA1B8;}
+#previewSection .pv3-support:hover{color:#252a35;}
+#previewSection .pv3-support svg{width:14px; height:14px; flex:none;}
+#previewSection .pv3-support .pv3-arrow{width:12px; height:12px; flex:none;}
+#previewSection .pv3-foot{
+  margin:16px 0 0; padding:16px 0;
+  border-top:1px solid #e1e5ee;
+  font-size:11px; color:#596477;
+}
 /* ---- beat the legacy light-mode button/section rules ---- */
 body.light-mode #previewSection.order-preview-view{
   background:#EDF0F7 !important;
@@ -7745,13 +7838,13 @@ body.light-mode #previewSection.order-preview-view{
   color:#0F172A !important;
 }
 body.light-mode #previewSection #previewOrderBtn.pv3-confirm{
-  background:#141A2B !important; color:#fff !important; border:0 !important;
-  box-shadow:0 12px 26px -10px rgba(20,26,43,.5) !important;
+  background:#252a35 !important; color:#fff !important; border:1px solid #252a35 !important;
+  box-shadow:none !important;
   text-shadow:none !important; filter:none !important; animation:none !important;
 }
 body.light-mode #previewSection #previewOrderBtn.pv3-confirm:hover:not(:disabled){
-  background:#232B45 !important; transform:translateY(-1px) !important;
-  box-shadow:0 12px 26px -10px rgba(20,26,43,.5) !important; filter:none !important;
+  background:#3b4251 !important; border-color:#3b4251 !important;
+  box-shadow:none !important; filter:none !important; transform:none !important;
 }
 body.light-mode #previewSection #previewOrderBtn.pv3-confirm:disabled{
   opacity:.45 !important; box-shadow:none !important; transform:none !important;
@@ -7760,23 +7853,13 @@ body.light-mode #previewSection #previewOrderBtn.pv3-confirm:disabled{
 @media (max-width:520px){
   #previewSection.order-preview-view{padding-top:0 !important;}
   #previewSection .pv3-shell{padding:4px 12px 28px;}
-  #previewSection .pv3-card{padding:14px 12px 20px; border-radius:20px;}
-  #previewSection .pv3-machine{margin:0 8px;}
-  #previewSection .pv3-paperwell{margin:-14px 24px 0;}
-  #previewSection .pv3-brandtext{font-size:17px;}
-  #previewSection .pv3-printchip{padding:8px 11px; font-size:10.5px;}
-  #previewSection .pv3-power{width:36px; height:36px;}
-  #previewSection .pv3-slip{padding:12px 16px;}
-  #previewSection .pv3-totalrow{padding:12px;}
-  #previewSection #previewOrderBtn.pv3-confirm{padding:13px 18px; font-size:14px;}
 }
 /* ---- reduced motion: no feed animation, slip simply visible ---- */
 @media (prefers-reduced-motion: reduce){
   #previewSection .pv3-printer.is-printing .pv3-paper{animation:none !important;}
   #previewSection .pv3-printer.is-printing .pv3-paper,
   #previewSection .pv3-printer.is-done .pv3-paper{transform:none !important;}
-  #previewSection .pv3-printchip.is-active .pv3-eq i,
-  #previewSection .pv3-replay.is-busy svg{animation:none !important;}
+  #previewSection .pv3-printchip.is-active .pv3-eq i{animation:none !important;}
 }
 /* ---- print: the slip only ---- */
 @media print{
@@ -7794,7 +7877,7 @@ body.light-mode #previewSection #previewOrderBtn.pv3-confirm:disabled{
   #previewSection .pv3-support,
   #previewSection .pv3-foot{display:none !important;}
   #previewSection .pv3-card{background:none !important; border:0 !important; box-shadow:none !important; padding:0 !important;}
-  #previewSection .pv3-paperwell{overflow:visible !important; margin:0 !important;}
+  #previewSection .pv3-paperwell{overflow:visible !important; margin:0 !important; padding:0 !important;}
   #previewSection .pv3-paper{transform:none !important; animation:none !important; box-shadow:none !important;}
   #previewSection .pv3-slip{border:1px solid #E2E8F0;}
 }
