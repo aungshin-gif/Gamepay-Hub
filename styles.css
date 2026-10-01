@@ -7483,12 +7483,15 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 #previewSection .pv3-shell{
   width:min(560px,100%);
   margin:0 auto;
-  padding:14px clamp(14px,4vw,28px) 30px;
+  padding:4px clamp(14px,4vw,28px) 30px;
 }
+/* the legacy section padding used to leave a big empty gap above everything:
+   stick the whole preview to the top */
+#previewSection.order-preview-view{padding-top:0 !important;}
 /* ---- top bar: back link + Print slip pill ---- */
 #previewSection .pv3-topbar{
   display:flex; align-items:center; justify-content:space-between; gap:12px;
-  margin-bottom:10px;
+  margin-bottom:8px;
 }
 #previewSection .pv3-back{
   background:none; border:0; padding:8px 4px; cursor:pointer;
@@ -7551,10 +7554,11 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
   display:inline-flex; align-items:center; justify-content:center;
   overflow:hidden;
 }
-/* site's own logo, dark-mode style (white) on the navy square */
+/* the real Gamepay Hub logo, dark-filtered, on the navy square */
 #previewSection .pv3-logoimg{
   width:22px; height:22px; object-fit:contain; display:block;
-  filter:brightness(0) invert(1);
+  border-radius:6px;
+  filter:brightness(.55) saturate(1.2) contrast(1.05);
 }
 #previewSection .pv3-brandtext{font-size:19px; font-weight:800; color:#141A2B; letter-spacing:-.01em; line-height:1.1;}
 #previewSection .pv3-brandtext small{
@@ -7586,7 +7590,8 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 #previewSection .pv3-slot{
   position:relative; height:22px; margin:10px 4px 0;
   background:#0B0E17; border-radius:999px;
-  box-shadow:inset 0 3px 8px rgba(0,0,0,.75), inset 0 -1px 2px rgba(255,255,255,.14);
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.75), inset 0 -1px 2px rgba(255,255,255,.14),
+             0 10px 14px -8px rgba(0,0,0,.55);
 }
 #previewSection .pv3-vent{
   position:absolute; top:50%; width:14px; height:8px; transform:translateY(-50%);
@@ -7598,7 +7603,9 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 /* ---- paper well: backing sheets + feeding slip ---- */
 #previewSection .pv3-paperwell{
   position:relative; z-index:1;
-  margin:-4px 44px 0;
+  /* tuck the paper's top edge up behind the slot bar so the slip
+     visibly feeds OUT of the machine, like a real receipt printer */
+  margin:-16px 44px 0;
   overflow:hidden;
   border-radius:0 0 12px 12px;
 }
@@ -7616,13 +7623,15 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
   position:relative; z-index:1;
   transform:translateY(-102%);
   background:#FDFCF9;
-  box-shadow:0 24px 50px -24px rgba(15,23,42,.35),
-             inset 0 14px 18px -16px rgba(15,23,42,.28);
+  /* deep drop shadow so the slip floats like real paper, plus the
+     slot bar pressing down on its top edge */
+  box-shadow:0 34px 60px -18px rgba(15,23,42,.45),
+             inset 0 18px 22px -18px rgba(15,23,42,.35);
 }
-/* paper grain so the slip feels like real receipt paper (clearly visible) */
+/* paper grain: coarse fibres + fine grain, like real receipt paper */
 #previewSection .pv3-paper::after{
   content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.45' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.09'/%3E%3C/svg%3E");
 }
 #previewSection .pv3-printer.is-printing .pv3-paper{
   /* slow, steady feed like a real receipt printer */
@@ -7751,9 +7760,10 @@ body.light-mode #previewSection #previewOrderBtn.pv3-confirm:disabled{
 }
 /* ---- compact on small screens (Figma: single column everywhere) ---- */
 @media (max-width:520px){
-  #previewSection .pv3-shell{padding:16px 12px 28px;}
+  #previewSection.order-preview-view{padding-top:0 !important;}
+  #previewSection .pv3-shell{padding:4px 12px 28px;}
   #previewSection .pv3-card{padding:14px 12px 20px; border-radius:20px;}
-  #previewSection .pv3-paperwell{margin:-4px 24px 0;}
+  #previewSection .pv3-paperwell{margin:-16px 24px 0;}
   #previewSection .pv3-brandtext{font-size:17px;}
   #previewSection .pv3-printchip{padding:8px 11px; font-size:10.5px;}
   #previewSection .pv3-power{width:36px; height:36px;}
