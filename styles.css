@@ -7483,12 +7483,12 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 #previewSection .pv3-shell{
   width:min(560px,100%);
   margin:0 auto;
-  padding:22px clamp(14px,4vw,28px) 34px;
+  padding:14px clamp(14px,4vw,28px) 30px;
 }
 /* ---- top bar: back link + Print slip pill ---- */
 #previewSection .pv3-topbar{
   display:flex; align-items:center; justify-content:space-between; gap:12px;
-  margin-bottom:16px;
+  margin-bottom:10px;
 }
 #previewSection .pv3-back{
   background:none; border:0; padding:8px 4px; cursor:pointer;
@@ -7509,12 +7509,12 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
   background:#F8FAFF;
   border:1px solid #E9EDF7;
   border-radius:24px;
-  padding:18px 18px 26px;
+  padding:14px 14px 16px;
   box-shadow:0 18px 44px -22px rgba(15,23,42,.18);
 }
 #previewSection .pv3-statusline{
   display:flex; align-items:center; justify-content:space-between; gap:10px;
-  margin:2px 4px 14px;
+  margin:2px 4px 10px;
 }
 #previewSection .pv3-status{
   display:inline-flex; align-items:center; gap:8px;
@@ -7537,7 +7537,7 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
   background:#FFFFFF;
   border:1px solid #E4E8F3;
   border-radius:20px;
-  padding:16px 18px 0;
+  padding:12px 14px 0;
   box-shadow:0 14px 34px -18px rgba(15,23,42,.22);
   position:relative; z-index:2;
 }
@@ -7547,9 +7547,14 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 #previewSection .pv3-brand{display:flex; align-items:center; gap:10px;}
 #previewSection .pv3-plus{
   width:34px; height:34px; border-radius:10px; flex:none;
-  background:#232B45; color:#fff;
+  background:#232B45;
   display:inline-flex; align-items:center; justify-content:center;
-  font-size:22px; font-weight:600; line-height:1;
+  overflow:hidden;
+}
+/* site's own logo, dark-mode style (white) on the navy square */
+#previewSection .pv3-logoimg{
+  width:22px; height:22px; object-fit:contain; display:block;
+  filter:brightness(0) invert(1);
 }
 #previewSection .pv3-brandtext{font-size:19px; font-weight:800; color:#141A2B; letter-spacing:-.01em; line-height:1.1;}
 #previewSection .pv3-brandtext small{
@@ -7579,7 +7584,7 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 #previewSection .pv3-power svg{width:17px; height:17px; color:#6B7280;}
 /* black paper slot with vent marks */
 #previewSection .pv3-slot{
-  position:relative; height:26px; margin:14px 4px 0;
+  position:relative; height:22px; margin:10px 4px 0;
   background:#0B0E17; border-radius:999px;
   box-shadow:inset 0 3px 8px rgba(0,0,0,.75), inset 0 -1px 2px rgba(255,255,255,.14);
 }
@@ -7593,7 +7598,7 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 /* ---- paper well: backing sheets + feeding slip ---- */
 #previewSection .pv3-paperwell{
   position:relative; z-index:1;
-  margin:-4px 34px 0;
+  margin:-4px 44px 0;
   overflow:hidden;
   border-radius:0 0 12px 12px;
 }
@@ -7610,19 +7615,26 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 #previewSection .pv3-paper{
   position:relative; z-index:1;
   transform:translateY(-102%);
-  background:#fff;
-  box-shadow:0 24px 50px -24px rgba(15,23,42,.35);
+  background:#FDFCF9;
+  box-shadow:0 24px 50px -24px rgba(15,23,42,.35),
+             inset 0 14px 18px -16px rgba(15,23,42,.28);
+}
+/* subtle paper grain so the slip feels like real receipt paper */
+#previewSection .pv3-paper::after{
+  content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
 }
 #previewSection .pv3-printer.is-printing .pv3-paper{
-  animation:pv3Feed 2.6s cubic-bezier(.25,.8,.3,1) .2s forwards;
+  animation:pv3Feed 3.4s cubic-bezier(.25,.8,.3,1) .2s forwards;
 }
 #previewSection .pv3-printer.is-done .pv3-paper{transform:translateY(0);}
 @keyframes pv3Feed{from{transform:translateY(-102%);}to{transform:translateY(0);}}
 /* ---- the slip ---- */
 #previewSection .pv3-slip{
-  background:#fff;
-  padding:22px 24px 26px;
+  background:#FDFCF9;
+  padding:16px 18px 20px;
   color:#0F172A;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
 }
 #previewSection .pv3-cap{
   text-align:center; font-size:10px; font-weight:700;
@@ -7630,26 +7642,26 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 }
 #previewSection .pv3-dt{
   display:flex; justify-content:space-between; gap:10px;
-  margin-top:14px; font-size:11px; font-weight:600;
+  margin-top:10px; font-size:10.5px; font-weight:600;
   letter-spacing:.08em; color:#8A90A6; text-transform:uppercase;
 }
 #previewSection .pv3-voucher{
   text-align:center; margin-top:6px;
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  font-size:13px; font-weight:600; letter-spacing:.05em; color:#334155;
+  font-size:12.5px; font-weight:600; letter-spacing:.05em; color:#334155;
 }
-#previewSection .pv3-dash{border-top:1.5px dashed #DFE4F0; margin:14px 0;}
+#previewSection .pv3-dash{border-top:1.5px dashed #DFE4F0; margin:10px 0;}
 #previewSection .pv3-item{display:flex; align-items:baseline; justify-content:space-between; gap:10px;}
-#previewSection .pv3-item b{font-size:15px; font-weight:800; color:#0F172A;}
+#previewSection .pv3-item b{font-size:13.5px; font-weight:800; color:#0F172A;}
 #previewSection .pv3-item span{font-size:12px; color:#8A90A6; flex:none;}
-#previewSection .pv3-plan{font-size:12.5px; color:#64748B; margin-top:4px;}
+#previewSection .pv3-plan{font-size:11.5px; color:#64748B; margin-top:6px;}
 #previewSection .pv3-rows{margin-top:10px;}
 #previewSection .pv3-row{
   display:flex; align-items:baseline; gap:8px;
-  padding:6px 0; font-size:13px;
+  padding:4px 0; font-size:12px;
 }
-#previewSection .pv3-row > span{flex:none; width:64px; color:#8A90A6;}
-#previewSection .pv3-row > i{font-style:normal; color:#B9C0D4; flex:none;}
+#previewSection .pv3-row > span{flex:none; width:58px; color:#8A90A6;}
+#previewSection .pv3-row > i{font-style:normal; color:#B9C0D4; flex:none; width:14px; text-align:center;}
 #previewSection .pv3-row > b{font-weight:600; color:#1E293B; min-width:0; overflow-wrap:anywhere;}
 #previewSection .pv3-slip .preview-na{color:#B6BCCB;}
 #previewSection .pv3-total{
@@ -7657,8 +7669,8 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 }
 #previewSection .pv3-total-l b{display:block; font-size:13px; font-weight:800; letter-spacing:.14em; color:#0F172A;}
 #previewSection .pv3-total-l span{display:block; font-size:11px; color:#8A90A6; margin-top:3px;}
-#previewSection .pv3-amount{font-size:30px; font-weight:800; color:#0F172A; letter-spacing:-.01em; white-space:nowrap;}
-#previewSection .pv3-amount small{font-size:14px; font-weight:600; color:#64748B;}
+#previewSection .pv3-amount{font-size:26px; font-weight:800; color:#0F172A; letter-spacing:-.01em; white-space:nowrap;}
+#previewSection .pv3-amount small{font-size:13px; font-weight:600; color:#64748B;}
 #previewSection .pv3-barcode{margin-top:8px; text-align:center;}
 #previewSection .pv3-bars{
   height:46px; max-width:240px; margin:0 auto 8px;
@@ -7671,7 +7683,7 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 /* zigzag perforated bottom edge, like the Figma slip */
 #previewSection .pv3-edge{
   height:12px;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M0 0 H12 V3 L6 12 L0 3 Z' fill='%23ffffff'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M0 0 H12 V3 L6 12 L0 3 Z' fill='%23FDFCF9'/%3E%3C/svg%3E");
   background-repeat:repeat-x;
   background-size:12px 12px;
 }
@@ -7686,7 +7698,7 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 #previewSection .pv3-totalrow{
   display:flex; align-items:center; justify-content:space-between; gap:14px;
   background:#fff; border:1px solid #E9EDF7; border-radius:18px;
-  padding:14px 16px; margin-top:14px;
+  padding:12px 14px; margin-top:10px;
   box-shadow:0 14px 34px -22px rgba(15,23,42,.2);
 }
 #previewSection .pv3-totaltext span{display:block; font-size:11px; color:#8A90A6;}
@@ -7708,7 +7720,7 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 /* ---- microcopy / support / footer ---- */
 #previewSection .pv3-micro{
   display:flex; align-items:center; gap:8px;
-  margin:16px 2px 0; font-size:12.5px; color:#6B7280;
+  margin:12px 2px 0; font-size:12.5px; color:#6B7280;
 }
 #previewSection .pv3-micro svg{width:14px; height:14px; flex:none; color:#9AA1B8;}
 #previewSection .pv3-support{
@@ -7740,7 +7752,7 @@ body.light-mode #previewSection #previewOrderBtn.pv3-confirm:disabled{
 @media (max-width:520px){
   #previewSection .pv3-shell{padding:16px 12px 28px;}
   #previewSection .pv3-card{padding:14px 12px 20px; border-radius:20px;}
-  #previewSection .pv3-paperwell{margin:-4px 16px 0;}
+  #previewSection .pv3-paperwell{margin:-4px 24px 0;}
   #previewSection .pv3-brandtext{font-size:17px;}
   #previewSection .pv3-printchip{padding:8px 11px; font-size:10.5px;}
   #previewSection .pv3-power{width:36px; height:36px;}
