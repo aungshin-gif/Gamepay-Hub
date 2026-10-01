@@ -7075,3 +7075,315 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
   body.light-mode #previewSection .order-preview-table tr:last-child td{font-size:19px!important;}
   body.light-mode #previewSection .slip-bars{max-width:200px;height:40px;}
 }
+
+/* ============ Figma Make "Order tracking" processing design: Order Status ============
+   White/pale Figma-style restyle of the order-status view. Applies in both
+   color modes (the design itself is light, per request). The Figma "Order
+   details" box is intentionally NOT added -- the page keeps its existing
+   Order Summary (#statusDetails). */
+#orderStatusView{
+  background:#F6F6F1;
+  border-radius:26px;
+  padding:26px clamp(16px,4vw,34px) 36px;
+  margin-top:14px;
+  color:#23281D;
+}
+#orderStatusView .fig-os-shell{ max-width:640px; margin:0 auto; }
+
+/* App chrome on the pale sheet */
+#orderStatusView .dashboard-back-btn{
+  background:#fff !important; border:1px solid #E3E3D6 !important;
+  color:#4C4C42 !important; box-shadow:0 3px 10px rgba(70,70,60,.06) !important;
+  text-shadow:none !important; border-radius:999px !important;
+}
+#orderStatusView .dashboard-back-btn:hover{ background:#F4F4EE !important; transform:translateY(-1px); }
+#orderStatusView .dashboard-chip{
+  color:#6E6E64 !important; border:1px solid #E0E0D2 !important;
+  background:rgba(255,255,255,.7) !important;
+}
+
+/* Type system: Archivo headings (tight grotesque, like the Figma),
+   Plus Jakarta Sans body, wide-tracked uppercase kickers. */
+#orderStatusView .fig-os-kicker{
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-size:10.5px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+  color:#8B8B80;
+}
+#orderStatusView .fig-os-head{ margin:20px 2px 18px; }
+#orderStatusView .fig-os-title{
+  font-family:Archivo,"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-weight:800; font-size:clamp(27px,5.6vw,35px); letter-spacing:-.022em;
+  color:#22271B; margin:10px 0 8px; line-height:1.05;
+}
+#orderStatusView .fig-os-sub{
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-size:13.5px; line-height:1.55; color:#71716A; margin:0; max-width:46ch;
+}
+#orderStatusView .fig-os-section{
+  font-family:Archivo,"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-size:17px; font-weight:800; letter-spacing:-.01em; color:#22271B;
+}
+#orderStatusView .fig-os-rowhead{
+  display:flex; align-items:baseline; justify-content:space-between;
+  gap:10px; margin:24px 2px 10px;
+}
+
+/* Order reference row */
+#orderStatusView .fig-os-ref{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:#fff; border:1px solid #E9E9DE; border-radius:18px;
+  padding:15px 18px; box-shadow:0 8px 24px rgba(70,70,60,.05);
+}
+#orderStatusView .fig-os-ref-meta{ display:flex; flex-direction:column; gap:6px; min-width:0; }
+#orderStatusView .fig-os-code{ display:flex; align-items:center; gap:8px; min-width:0; }
+#orderStatusView .fig-os-code b{
+  font-family:Archivo,"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-size:17px; font-weight:800; letter-spacing:.01em; color:#22271B;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+#orderStatusView .fig-os-copy{
+  flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center;
+  width:30px; height:30px; border-radius:10px; border:1px solid #E4E4D6;
+  background:#FAFAF6; color:#71716A !important; cursor:pointer; padding:0;
+  transition:transform .15s ease, color .15s ease, border-color .15s ease;
+}
+#orderStatusView .fig-os-copy:hover{ transform:translateY(-1px); color:#22271B; border-color:#CFCFBE; }
+#orderStatusView .fig-os-copy svg{ width:15px; height:15px; }
+#orderStatusView .fig-os-copy.copied{ color:#1E7A3C; border-color:#BFE3C6; background:#EFF7F0; }
+#orderStatusView .fig-os-refresh{
+  flex:0 0 auto; display:inline-flex; align-items:center; gap:8px;
+  border:0; border-radius:12px; padding:11px 16px; cursor:pointer;
+  background:#23281D; color:#fff !important;
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-size:13px; font-weight:800;
+  box-shadow:0 8px 18px rgba(35,40,29,.22);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+#orderStatusView .fig-os-refresh:hover{ transform:translateY(-1px); box-shadow:0 12px 24px rgba(35,40,29,.28); }
+#orderStatusView .fig-os-refresh svg{ width:16px; height:16px; }
+#orderStatusView .fig-os-refresh.spin svg{ animation:figSpin .7s cubic-bezier(.4,.1,.4,1); }
+@keyframes figSpin{ to{ transform:rotate(360deg); } }
+
+/* Status card */
+#orderStatusView .fig-os-card{
+  position:relative; display:flex; align-items:flex-start; gap:16px;
+  background:#fff; border:1px solid #E9E9DE; border-radius:20px;
+  padding:20px; margin-top:14px; box-shadow:0 12px 32px rgba(70,70,60,.07);
+  overflow:hidden;
+}
+#orderStatusView .fig-os-status-icon{
+  flex:0 0 auto; width:54px; height:54px; border-radius:17px;
+  display:flex; align-items:center; justify-content:center;
+  background:#F2F3EC; border:1px solid #E5E6DA; color:#3F3F36;
+}
+#orderStatusView .fig-os-status-icon svg{ width:27px; height:27px; }
+#orderStatusView .fig-os-status-icon.flip svg{ animation:hourglassFlip 5s ease-in-out infinite; transform-origin:50% 50%; }
+@keyframes hourglassFlip{ 0%,72%{ transform:rotate(0); } 88%,100%{ transform:rotate(180deg); } }
+#orderStatusView .fig-os-status-body{ flex:1 1 auto; min-width:0; padding-top:2px; }
+#orderStatusView .fig-os-status-title{
+  font-family:Archivo,"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-size:19px; font-weight:800; letter-spacing:-.015em; color:#22271B; line-height:1.25;
+}
+#orderStatusView .fig-os-status-desc{
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-size:13px; line-height:1.55; color:#71716A; margin:6px 0 0;
+}
+#orderStatusView .fig-os-pill{
+  flex:0 0 auto; align-self:flex-start;
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-size:11px; font-weight:800; letter-spacing:.02em; white-space:nowrap;
+  padding:7px 13px; border-radius:999px;
+  background:#F7EECB; color:#7A5E13; border:1px solid #EADFAE;
+}
+#orderStatusView .fig-os-pill.done{ background:#DFF2E3; color:#1E7A3C; border-color:#BFE3C6; }
+#orderStatusView .fig-os-pill.bad{ background:#FADFDF; color:#B3261E; border-color:#F0BFBF; }
+
+/* Journey stepper (Figma style) -- keeps the .status-step* class contract
+   that updateStatusStepper() drives. */
+#orderStatusView .fig-os-stepper{
+  width:100%; max-width:520px; margin:2px auto 4px; display:flex; align-items:flex-start;
+}
+#orderStatusView .fig-os-stepper .status-step{
+  flex:0 0 auto; width:auto; min-width:104px; display:flex; flex-direction:column;
+  align-items:center; gap:10px;
+}
+#orderStatusView .fig-os-stepper .status-step-text{
+  display:flex; flex-direction:column; align-items:center; gap:3px; text-align:center;
+}
+#orderStatusView .fig-os-stepper .status-step-dot{
+  width:54px; height:54px; border-radius:50%;
+  background:#F0F0E9; border:2px solid #E2E2D5; color:#B4B4A6;
+  font-size:12px; box-shadow:none;
+}
+#orderStatusView .fig-os-stepper .status-step-dot svg{ width:24px; height:24px; }
+#orderStatusView .fig-os-stepper .status-step.done .status-step-dot{
+  background:#23281D; border-color:#23281D; color:#fff; box-shadow:0 8px 18px rgba(35,40,29,.25);
+}
+#orderStatusView .fig-os-stepper .status-step.current .status-step-dot{
+  background:#FCFCF8; border-color:#23281D; color:#23281D;
+  box-shadow:0 0 0 6px rgba(35,40,29,.07);
+  animation:figStepPulse 2.2s ease-in-out infinite;
+}
+@keyframes figStepPulse{
+  0%,100%{ box-shadow:0 0 0 5px rgba(35,40,29,.06); }
+  50%{ box-shadow:0 0 0 9px rgba(35,40,29,.10); }
+}
+#orderStatusView .fig-os-stepper .status-step.rejected .status-step-dot{
+  background:#B3261E; border-color:#B3261E; color:#fff; box-shadow:0 8px 18px rgba(179,38,30,.25);
+}
+#orderStatusView .fig-os-stepper .status-step-label{
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-size:13px; font-weight:800; color:#A3A399; line-height:1.3;
+}
+#orderStatusView .fig-os-stepper .status-step.done .status-step-label,
+#orderStatusView .fig-os-stepper .status-step.current .status-step-label{ color:#23281D; }
+#orderStatusView .fig-os-stepper .status-step.rejected .status-step-label{ color:#B3261E; }
+#orderStatusView .fig-os-stepper .status-step-sub{
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-size:10.5px; font-weight:600; color:#9A9A90; line-height:1.35; max-width:120px;
+}
+#orderStatusView .fig-os-stepper .status-step.current .status-step-sub{ color:#71716A; }
+#orderStatusView .fig-os-stepper .status-step-line{
+  flex:1 1 auto; height:2px; border-radius:2px; background:#E2E2D5; margin:26px 2px 0; box-shadow:none;
+}
+#orderStatusView .fig-os-stepper .status-step-line.done{ background:#23281D; }
+
+/* Notice bar */
+#orderStatusView .fig-os-notice{
+  display:flex; align-items:center; gap:10px;
+  background:#EFF0E8; border:1px solid #E1E3D2; border-radius:14px;
+  padding:13px 16px;
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-size:13px; font-weight:600; color:#4C4C42; line-height:1.45;
+}
+#orderStatusView .fig-os-notice-icon{ flex:0 0 auto; display:inline-flex; color:#6E6E64; }
+#orderStatusView .fig-os-notice-icon svg{ width:18px; height:18px; }
+#orderStatusView .fig-os-notice-text{ flex:1 1 auto; }
+#orderStatusView .fig-os-notice-side{
+  flex:0 0 auto; display:inline-flex; align-items:center; gap:6px;
+  font-size:11px; font-weight:700; color:#8B8B80; white-space:nowrap;
+}
+#orderStatusView .fig-os-notice-side svg{ width:14px; height:14px; }
+
+/* Activity timeline */
+#orderStatusView .fig-os-timeline{ display:flex; flex-direction:column; }
+#orderStatusView .fig-os-tl-item{
+  display:flex; align-items:flex-start; gap:14px; padding:11px 4px;
+  border-bottom:1px dashed #E7E7DB;
+}
+#orderStatusView .fig-os-tl-item:last-child{ border-bottom:0; }
+#orderStatusView .fig-os-tl-dot{
+  flex:0 0 auto; width:36px; height:36px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:#EFEFE8; border:1px solid #E4E4D6; color:#9A9A90;
+}
+#orderStatusView .fig-os-tl-dot svg{ width:17px; height:17px; }
+#orderStatusView .fig-os-tl-item.done .fig-os-tl-dot{
+  background:#E7EFE4; border-color:#D5E2CF; color:#3F7A44;
+}
+#orderStatusView .fig-os-tl-item.current .fig-os-tl-dot{
+  background:#fff; border:1.5px solid #23281D; color:#23281D;
+  box-shadow:0 0 0 4px rgba(35,40,29,.06);
+}
+#orderStatusView .fig-os-tl-item.bad .fig-os-tl-dot{
+  background:#FADFDF; border-color:#F0BFBF; color:#B3261E;
+}
+#orderStatusView .fig-os-tl-body{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:3px; }
+#orderStatusView .fig-os-tl-body b{
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-size:13.5px; font-weight:800; color:#23281D;
+}
+#orderStatusView .fig-os-tl-body span{
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-size:12px; color:#8B8B80; line-height:1.45;
+}
+#orderStatusView .fig-os-tl-time{
+  flex:0 0 auto; font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-size:11px; font-weight:700; letter-spacing:.06em; color:#9A9A90; white-space:nowrap;
+  padding-top:10px;
+}
+#orderStatusView .fig-os-tl-now{
+  font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:#71716A;
+  border:1px solid #E0E0D2; background:#fff; border-radius:999px; padding:5px 10px;
+}
+
+/* Existing Order Summary, re-skinned to the pale Figma card */
+#orderStatusView .order-status-details{
+  width:100%; margin:22px auto 0; text-align:left;
+  background:#fff; border:1px solid #E9E9DE; border-radius:18px;
+  box-shadow:0 8px 24px rgba(70,70,60,.05); overflow:hidden;
+}
+#orderStatusView .order-status-details .order-preview-table{ width:100%; margin:0; }
+#orderStatusView .status-details-caption{ color:#8B8B80; }
+#orderStatusView .order-status-details .order-preview-table th{ color:#8B8B80 !important; }
+#orderStatusView .order-status-details .order-preview-table td{ color:#23281D !important; }
+#orderStatusView .order-status-details .order-preview-table th,
+#orderStatusView .order-status-details .order-preview-table td{ border-bottom:1px solid #F1F1E9 !important; }
+
+/* Rejected reason + hint + chat button on the pale sheet */
+#orderStatusView .status-reason-box{
+  width:100%; margin:16px auto 0; background:#FBEFEF; border:1px solid #F0CFCF;
+}
+#orderStatusView .status-reason-icon{ color:#B3261E; }
+#orderStatusView .status-reason-text{ color:#7A2323; }
+#orderStatusView .order-status-hint{
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  color:#8B8B80; text-align:center; margin:18px auto 0; max-width:52ch;
+}
+#orderStatusView #openChatBtn{ margin:18px auto 0; }
+
+/* Staggered entrance for the status page blocks */
+@keyframes figRise{ from{ opacity:0; transform:translateY(16px); } to{ opacity:1; transform:none; } }
+#orderStatusView .fig-anim{ animation:figRise .55s cubic-bezier(.22,.8,.3,1) both; animation-delay:var(--d,0s); }
+
+/* ============ Page-to-page transitions ============
+   Every top-level view animates in when it becomes visible (the animation
+   restarts each time .hidden is removed). */
+@keyframes pageEnter{
+  from{ opacity:0; transform:translateY(18px) scale(.996); }
+  to{ opacity:1; transform:none; }
+}
+#landingShell:not(.hidden),
+#catalogView:not(.hidden),
+#cartItem:not(.hidden),
+#checkoutSection:not(.hidden),
+#previewSection:not(.hidden),
+#orderStatusView:not(.hidden),
+#chatView:not(.hidden),
+#myOrdersView:not(.hidden),
+#noticeView:not(.hidden),
+#accountView:not(.hidden),
+#securityView:not(.hidden),
+#inviteFriendsView:not(.hidden){
+  animation:pageEnter .45s cubic-bezier(.22,.8,.3,1) both;
+}
+@media (prefers-reduced-motion:reduce){
+  #orderStatusView .fig-anim,
+  #orderStatusView .fig-os-status-icon.flip svg,
+  #orderStatusView .fig-os-stepper .status-step.current .status-step-dot,
+  #landingShell:not(.hidden),
+  #catalogView:not(.hidden),
+  #cartItem:not(.hidden),
+  #checkoutSection:not(.hidden),
+  #previewSection:not(.hidden),
+  #orderStatusView:not(.hidden),
+  #chatView:not(.hidden),
+  #myOrdersView:not(.hidden),
+  #noticeView:not(.hidden),
+  #accountView:not(.hidden),
+  #securityView:not(.hidden),
+  #inviteFriendsView:not(.hidden){
+    animation:none !important;
+  }
+}
+@media(max-width:560px){
+  #orderStatusView{ border-radius:20px; padding:20px 14px 28px; }
+  #orderStatusView .fig-os-ref{ flex-direction:column; align-items:stretch; }
+  #orderStatusView .fig-os-refresh{ justify-content:center; }
+  #orderStatusView .fig-os-card{ padding:16px; }
+  #orderStatusView .fig-os-pill{ align-self:auto; }
+  #orderStatusView .fig-os-notice-side{ display:none; }
+  #orderStatusView .fig-os-stepper .status-step{ min-width:88px; }
+  #orderStatusView .fig-os-stepper .status-step-dot{ width:46px; height:46px; }
+  #orderStatusView .fig-os-stepper .status-step-line{ margin-top:22px; }
+}
