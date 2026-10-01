@@ -860,10 +860,35 @@
     </div>
 
     <div id="myOrdersView" class="hidden order-status-view">
-      <div class="preview-shell">
-        <div class="dashboard-head"><button id="myOrdersBackBtn" class="dashboard-back-btn" type="button">← Back to Store</button><span class="dashboard-chip">MY ORDERS</span></div>
-        <div id="myOrdersStats" class="mo-stats hidden"></div>
-        <div id="myOrdersList" class="my-orders-list"><div class="chat-empty">Loading…</div></div>
+      <!-- Figma "User greeting" /orders screen: light app page with the same
+           appbar + bottom tab bar as My Account, soft pastel stat cards,
+           and white order-history cards. Inner order-detail view untouched. -->
+      <div class="acct-screen">
+        <div class="acct-col mo-col">
+          <header class="acct-appbar">
+            <div class="acct-appbar-brand"><span class="acct-appbar-plus">+</span><span class="acct-appbar-word">gamepay.</span></div>
+            <div class="acct-appbar-actions">
+              <button type="button" class="acct-icon-btn" id="moBellBtn" aria-label="Notifications">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+              </button>
+              <button type="button" class="acct-appbar-avatar" id="moHeaderAvatar" aria-label="My account">M</button>
+            </div>
+          </header>
+          <div class="mo-headrow">
+            <button id="myOrdersBackBtn" class="mo-back-btn" type="button">← Back to store</button>
+            <h1 class="mo-page-title">My orders</h1>
+          </div>
+          <div id="myOrdersStats" class="mo-fstats hidden"></div>
+          <h2 class="mo-section-title">Order history</h2>
+          <div id="myOrdersList" class="mo-flist"><div class="chat-empty">Loading…</div></div>
+        </div>
+        <nav class="acct-tabbar" aria-label="Primary">
+          <div class="acct-tabbar-inner">
+            <button type="button" class="acct-tab" id="moTabStore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/></svg>Store</button>
+            <button type="button" class="acct-tab active" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>Orders</button>
+            <button type="button" class="acct-tab" id="moTabAccount"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account</button>
+          </div>
+        </nav>
       </div>
     </div>
 
@@ -5151,6 +5176,36 @@ const MO_STATUS_ICON = {
   completed: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
   rejected: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
 };
+// Figma /orders stat-card icons: document with a small status badge
+// (Total gets a shopping bag). The white badge circle reads as a badge
+// chip against the pastel card backgrounds.
+const MO_STAT_ICON = {
+  total: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8h13l-1 12.5a1.5 1.5 0 0 1-1.5 1.4H8a1.5 1.5 0 0 1-1.5-1.4L5.5 8Z"/><path d="M9 10.5V6a3 3 0 0 1 6 0v4.5"/></svg>`,
+  pending: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7l-5-5Z"/><path d="M14 2v5h5"/><circle cx="12" cy="13.5" r="3.1" fill="#fff"/><path d="M12 11.8v1.8l1.2 1.2"/></svg>`,
+  completed: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7l-5-5Z"/><path d="M14 2v5h5"/><circle cx="12" cy="13.5" r="3.1" fill="#fff"/><path d="m10.7 13.5 1 1 1.9-2.1"/></svg>`,
+  failed: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7l-5-5Z"/><path d="M14 2v5h5"/><circle cx="12" cy="13.5" r="3.1" fill="#fff"/><path d="m11 12.5 2 2m0-2-2 2"/></svg>`
+};
+// Small icons inside the order-card status pills (Figma shows icon + label).
+const MO_PILL_ICON = {
+  pending: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>`,
+  approved: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.2 2.4 2.4 4.6-5"/></svg>`,
+  completed: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.2 2.4 2.4 4.6-5"/></svg>`,
+  rejected: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="m9.5 9.5 5 5m0-5-5 5"/></svg>`
+};
+function moPillLabel(status){
+  if(status === "approved" || status === "completed") return "Completed";
+  if(status === "rejected") return "Rejected";
+  return "Pending";
+}
+// Figma order-card date reads "1 Oct 2026 · 9:29:21 PM".
+function formatOrderDateFigma(iso){
+  try{
+    const d = new Date(iso);
+    const date = d.toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" });
+    const time = d.toLocaleTimeString("en-US", { hour:"numeric", minute:"2-digit", second:"2-digit", hour12:true });
+    return date + " · " + time;
+  }catch(e){ return ""; }
+}
 // Plan names already carry their own price in the text (e.g. "Own Mail –
 // 1.5 Year – 5000 Ks") because that's how they read on the plan-card
 // picker -- but here the amount is also shown as its own field, so left
@@ -5184,17 +5239,23 @@ function renderMyOrdersStats(rows){
   const completed = rows.filter(o => o.status === "approved" || o.status === "completed").length;
   const failed = rows.filter(o => o.status === "rejected").length;
   statsEl.classList.remove("hidden");
-  statsEl.innerHTML = `
-    <div class="mo-stat total ${myOrdersStatusFilter === "all" ? "active" : ""}" data-filter="all"><span class="mo-stat-num">${total}</span><span class="mo-stat-label">Total</span></div>
-    <div class="mo-stat pending ${myOrdersStatusFilter === "pending" ? "active" : ""}" data-filter="pending"><span class="mo-stat-num">${pending}</span><span class="mo-stat-label">Pending</span></div>
-    <div class="mo-stat completed ${myOrdersStatusFilter === "completed" ? "active" : ""}" data-filter="completed"><span class="mo-stat-num">${completed}</span><span class="mo-stat-label">Completed</span></div>
-    <div class="mo-stat failed ${myOrdersStatusFilter === "failed" ? "active" : ""}" data-filter="failed"><span class="mo-stat-num">${failed}</span><span class="mo-stat-label">Failed</span></div>
-  `;
-  // Tapping a tile filters the list below to just that status (tapping the
-  // one already active, or Total, clears the filter back to everything).
-  statsEl.querySelectorAll(".mo-stat").forEach(tile => {
-    tile.addEventListener("click", () => {
-      const filter = tile.dataset.filter;
+  // Figma stat cards: soft pastel tile, status icon, big colored number,
+  // colored label. Tapping a tile filters the list below to just that
+  // status (tapping the one already active, or Total, clears the filter).
+  const tile = (key, filter, num, label) => `
+    <button type="button" class="mo-fstat ${key} ${myOrdersStatusFilter === filter ? "active" : ""}" data-filter="${filter}">
+      <span class="mo-fstat-icon">${MO_STAT_ICON[key]}</span>
+      <span class="mo-fstat-num">${num}</span>
+      <span class="mo-fstat-label">${label}</span>
+    </button>`;
+  statsEl.innerHTML =
+    tile("total", "all", total, "Total") +
+    tile("pending", "pending", pending, "Pending") +
+    tile("completed", "completed", completed, "Completed") +
+    tile("failed", "failed", failed, "Failed");
+  statsEl.querySelectorAll(".mo-fstat").forEach(tileEl => {
+    tileEl.addEventListener("click", () => {
+      const filter = tileEl.dataset.filter;
       myOrdersStatusFilter = (myOrdersStatusFilter === filter && filter !== "all") ? "all" : filter;
       renderMyOrdersStats(rows);
       renderMyOrdersListFiltered();
@@ -5217,19 +5278,25 @@ function renderMyOrdersListFiltered(){
     myOrdersList.innerHTML = `<div class="chat-empty">No orders match this filter.</div>`;
     return;
   }
+  // Figma order-history cards: code + chevron, plan line, date line,
+  // divider, then status pill + amount. data-token + click-through to the
+  // order-detail view are unchanged.
   myOrdersList.innerHTML = rows.map(o => `
-    <div class="my-order-row" data-token="${o.access_token}">
-      <span class="mo-status-icon ${o.status}">${MO_STATUS_ICON[o.status] || MO_STATUS_ICON.pending}</span>
-      <div class="mo-body">
-        <div class="moc">${o.order_code} <span class="mo-badge ${o.status}">${o.status.toUpperCase()}</span>${o._unread > 0 ? `<span class="unread-badge">${o._unread}</span>` : ""}</div>
-        <div class="mol mo-plan" title="${escapePreviewText(o.product_name + " · " + stripTrailingPrice(o.plan_name))}">${o.product_name} · ${stripTrailingPrice(o.plan_name)}</div>
-        <div class="mol mo-date">${formatOrderDate(o.created_at)}</div>
+    <div class="mo-fcard" data-token="${o.access_token}">
+      <div class="mo-fcard-top">
+        <span class="mo-fcard-code">${o.order_code}${o._unread > 0 ? `<span class="unread-badge">${o._unread}</span>` : ""}</span>
+        <svg class="mo-fcard-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
-      <div class="mo-amount">${formatKs(o.amount)}</div>
-      <svg class="mo-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg>
+      <div class="mo-fcard-plan" title="${escapePreviewText(o.product_name + " · " + stripTrailingPrice(o.plan_name))}">${o.product_name} · ${stripTrailingPrice(o.plan_name)}</div>
+      <div class="mo-fcard-date">${formatOrderDateFigma(o.created_at)}</div>
+      <div class="mo-fcard-div"></div>
+      <div class="mo-fcard-bottom">
+        <span class="mo-fpill ${o.status}">${MO_PILL_ICON[o.status] || MO_PILL_ICON.pending}${moPillLabel(o.status)}</span>
+        <span class="mo-fcard-amount">${formatKs(o.amount)}</span>
+      </div>
     </div>
   `).join("");
-  myOrdersList.querySelectorAll(".my-order-row").forEach(el => {
+  myOrdersList.querySelectorAll(".mo-fcard").forEach(el => {
     el.addEventListener("click", () => {
       const row = myOrdersAllRows.find(r => r.access_token === el.dataset.token);
       if(!row) return;
@@ -5280,6 +5347,9 @@ async function openMyOrdersView(){
   myOrdersList.innerHTML = skeletonRows(4);
   document.getElementById("myOrdersStats")?.classList.add("hidden");
   window.scrollTo(0, 0);
+  // Appbar avatar shows the account initial, same as the account page.
+  const moAv = document.getElementById("moHeaderAvatar");
+  if(moAv) moAv.textContent = currentUser ? (getDisplayName()[0]?.toUpperCase() || "?") : "?";
 
   if(!supabaseClient){
     myOrdersList.innerHTML = `<div class="chat-empty">Backend not configured yet.</div>`;
@@ -5583,12 +5653,13 @@ function closeNewsFeed(){
 document.getElementById("newsFeedBtn")?.addEventListener("click", openNewsFeed);
 document.getElementById("newsFeedBackBtn")?.addEventListener("click", closeNewsFeed);
 
-myOrdersBackBtn?.addEventListener("click", () => {
+function exitOrdersView(){
   document.getElementById("myOrdersView").classList.add("hidden");
   document.body.classList.remove("order-mode");
   orderView.classList.add("hidden");
   returnFromNotiSubview();
-});
+}
+myOrdersBackBtn?.addEventListener("click", exitOrdersView);
 
 function noticeRowHtml(n){
   const unread = !n.read_at;
@@ -5782,6 +5853,16 @@ document.getElementById("acctTabStore")?.addEventListener("click", exitAccountVi
 document.getElementById("acctTabOrders")?.addEventListener("click", () => {
   document.body.classList.remove("account-mode");
   openMyOrdersView();
+});
+// Orders page tab bar (Figma /orders): Store exits to the store home,
+// Orders is the current page, Account opens the account screen.
+document.getElementById("moTabStore")?.addEventListener("click", exitOrdersView);
+document.getElementById("moTabAccount")?.addEventListener("click", openAccountView);
+document.getElementById("moBellBtn")?.addEventListener("click", () => {
+  document.getElementById("notiBtn")?.click();
+});
+document.getElementById("moHeaderAvatar")?.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior:"smooth" });
 });
 document.getElementById("acctBellBtn")?.addEventListener("click", () => {
   document.getElementById("notiBtn")?.click();
