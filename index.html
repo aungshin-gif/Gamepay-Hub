@@ -693,7 +693,7 @@
             <div class="pv3-machine">
               <div class="pv3-machine-top">
                 <div class="pv3-brand">
-                  <span class="pv3-plus" aria-hidden="true">+</span>
+                  <span class="pv3-plus" aria-hidden="true"><img class="pv3-logoimg" alt=""></span>
                   <span class="pv3-brandtext">gamepay.<small>RECEIPT STATION</small></span>
                 </div>
                 <div class="pv3-actions">
@@ -2675,6 +2675,14 @@ const pvReplayBtn = document.getElementById("pvReplayBtn");
 const pvCrumbBack = document.getElementById("pvCrumbBack");
 const pvPrintSlipBtn = document.getElementById("pvPrintSlipBtn");
 const pvTotalAmount = document.getElementById("pvTotalAmount");
+
+// Printer mark: reuse the site's own logo, shown dark-mode style (white)
+// on the navy rounded square, sitting where the Figma "+" mark sits.
+(function pvWireLogo(){
+  const mark = document.querySelector("#previewSection .pv3-logoimg");
+  const site = document.querySelector(".compact-logo");
+  if(mark && site && site.src) mark.src = site.src;
+})();
 
 // The equalizer bars on the PRINT chip animate while the slip is feeding.
 function pvSetPrinting(printing){
