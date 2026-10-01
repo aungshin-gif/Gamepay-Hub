@@ -3134,10 +3134,31 @@ if(document.readyState === "loading"){
     // plan.discountPercent are new, and only present at all when a real
     // discount is active, for the few places that show a struck-through
     // "before" price next to a "-30%" badge.
+    //
+    // Rows are keyed by plan name, but plan names get cosmetic edits over
+    // time (v11 stripped the ChatGPT emoji prefixes; renames happen too).
+    // An exact-string match silently orphans every row whose name drifted --
+    // that is how v11 hid the admin's ChatGPT discounts. Both sides are
+    // normalized (emojis stripped, whitespace collapsed, lowercased) so a
+    // cosmetic rename can never silently drop a discount/stock edit again.
+    function normKeyStr(s){
+      return String(s || "")
+        .replace(/[\p{Extended_Pictographic}\uFE00-\uFE0F]/gu, "")
+        .replace(/\u200D/g, "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+    }
+    // Product id and plan name are normalized separately, then joined --
+    // stripping an emoji prefix ("CGPT GO...") leaves a leading space
+    // that trim() must eat per-part, not just at the whole string's ends.
+    function normPlanKey(productId, planName){
+      return normKeyStr(productId) + "::" + normKeyStr(planName);
+    }
     function applyStockOverrides(rows){
       if(!rows || !rows.length) return;
       const byKey = new Map();
-      rows.forEach(r => byKey.set(`${r.product_id}::${r.plan_name}`, r));
+      rows.forEach(r => byKey.set(normPlanKey(r.product_id, r.plan_name), r));
       products.forEach(product => {
         product.plans.forEach(plan => {
           // Same idea as _catalogPrice below -- the lookup key must stay
@@ -3145,7 +3166,7 @@ if(document.readyState === "loading"){
           // plan.name to embed the new price, or a second apply (a
           // realtime refresh, say) would silently miss this plan's row.
           if(plan._catalogName == null) plan._catalogName = plan.name;
-          const row = byKey.get(`${product.id}::${plan._catalogName}`);
+          const row = byKey.get(normPlanKey(product.id, plan._catalogName));
           if(!row) return;
           // Captured once, before any override/discount math touches
           // plan.price -- re-applying overrides (e.g. a second data load)
@@ -3894,6 +3915,16 @@ msg += "╰────────────────────╯\n";
     msg += `👤Account: ${account}\n`;
   }
 
+  // The ordering account's own username (the logged-in user) -- distinct
+  // from the Account field above, which is the account being bought FOR.
+  // Only added when actually logged in, so guests never get an em-dash row.
+  if(currentUser){
+    const orderUsername = getUsername();
+    if(orderUsername && orderUsername !== "—"){
+      msg += `👤Username: ${orderUsername}\n`;
+    }
+  }
+
   return msg.trim();
     }
 function escapePreviewText(value){
@@ -3935,7 +3966,7 @@ function renderPreviewTable(message){
   }
   const plainVals={};
   const lines=String(message).split("\n");
-  const labels={"💌 Product":"Product","📄 Plan":"Plan","💳 Payment":"Payment","📱 Payment Phone":"Payment number","👤 Payment Name":"Payment name","🎟 Coupon Applied":"Coupon applied","💰 Total Amount":"Total amount","🔢 Custom Amount":"Custom amount","📝Note":"Note","👤Account":"Name"};
+  const labels={"💌 Product":"Product","📄 Plan":"Plan","💳 Payment":"Payment","📱 Payment Phone":"Payment number","👤 Payment Name":"Payment name","🎟 Coupon Applied":"Coupon applied","💰 Total Amount":"Total amount","🔢 Custom Amount":"Custom amount","📝Note":"Note","👤Account":"Name","👤Username":"Username"};
   // The "Name" value is the ordering user's account name (the Account field),
   // shown the way the Figma receipt shows "Name - <account>".
   const labelKeys=Object.keys(labels);
@@ -3968,6 +3999,7 @@ function renderPreviewTable(message){
   const payName = plainVals["Payment"] || "";
   const payNumber = plainVals["Payment number"] || "";
   const account = plainVals["Name"] || "";
+  const orderUsername = plainVals["Username"] || "";
   const note = plainVals["Note"] || "";
   const coupon = plainVals["Coupon applied"] || "";
   const total = plainVals["Total amount"] || "";
@@ -3997,6 +4029,7 @@ function renderPreviewTable(message){
       `<div class="pv3-plan">${escapePreviewText(planLine) || dash}</div></div>` +
       `<div class="pv3-rows">` +
         `<div class="pv3-row"><span>Name<i aria-hidden="true">\u2013</i></span><b>${account ? escapePreviewText(account) : dash}</b></div>` +
+        (orderUsername ? `<div class="pv3-row"><span>Username<i aria-hidden="true">\u2013</i></span><b>${escapePreviewText(orderUsername)}</b></div>` : "") +
         `<div class="pv3-row"><span>Pay<i aria-hidden="true">\u2013</i></span><b>${escapePreviewText(payName) || dash}</b></div>` +
         `<div class="pv3-row"><span>Number<i aria-hidden="true">\u2013</i></span><b>${escapePreviewText(payNumber) || dash}</b></div>` +
         noteRow +
