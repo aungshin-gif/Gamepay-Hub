@@ -8100,3 +8100,5 @@ body.light-mode #previewSection #previewOrderBtn.pv3-confirm:disabled{
 .mo-col{ padding-top:2px; gap:10px; }
 .mo-appbar{ padding:0 2px; }
 .mo-headrow{ margin-top:0; }
+/* ===== Account header: real Gamepay Hub logo (replaces "+" placeholder) ===== */
+.acct-brand-logo{ height:36px; width:auto; border-radius:10px; display:block; }

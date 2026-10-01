@@ -64,7 +64,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=61">
+  <link rel="stylesheet" href="styles.css?v=62">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -903,7 +903,7 @@
       <div class="acct-screen">
         <div class="acct-col">
           <header class="acct-appbar">
-            <div class="acct-appbar-brand"><span class="acct-appbar-plus">+</span><span class="acct-appbar-word">gamepay.</span></div>
+            <div class="acct-appbar-brand"><img class="acct-brand-logo" id="acctBrandLogo" alt="Gamepay Hub"><span class="acct-appbar-word">gamepay.</span></div>
             <div class="acct-appbar-actions">
               <button type="button" class="acct-icon-btn" id="acctBellBtn" aria-label="Notifications">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
@@ -5844,6 +5844,9 @@ function openAccountView(){
   document.documentElement.classList.remove("dashboard-mode");
   hideAllOrderSubviews();
   document.getElementById("accountView").classList.remove("hidden");
+  // Appbar brand shows the real Gamepay Hub logo (replaces the "+" placeholder).
+  const acctLogo = document.getElementById("acctBrandLogo");
+  if(acctLogo){ const src = (typeof siteLogoSrc === "function") ? siteLogoSrc() : ""; if(src) acctLogo.src = src; }
   skeletonTransition(catalogView, orderView, () => {
     refreshAccountFields();
     loadAccountStats();
