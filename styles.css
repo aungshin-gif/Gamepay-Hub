@@ -7622,7 +7622,8 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 #previewSection .pv3-paper{
   position:relative; z-index:1;
   transform:translateY(-102%);
-  background:#FDFCF9;
+  /* soft pearl paper: warm lustrous white with a gentle sheen, like real receipt stock */
+  background:linear-gradient(168deg,#FCFAF3 0%,#F7F2E6 48%,#F0E9D8 100%);
   /* deep drop shadow so the slip floats like real paper, plus the
      slot bar pressing down on its top edge */
   box-shadow:0 34px 60px -18px rgba(15,23,42,.45),
@@ -7641,14 +7642,15 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 @keyframes pv3Feed{from{transform:translateY(-102%);}to{transform:translateY(0);}}
 /* ---- the slip ---- */
 #previewSection .pv3-slip{
-  background:#FDFCF9;
-  padding:16px 18px 20px;
+  background:transparent;
+  padding:16px 18px 14px;
   color:#0F172A;
+  /* plain receipt monospace, like a real thermal printout */
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
 }
 #previewSection .pv3-cap{
   text-align:center; font-size:10px; font-weight:700;
-  letter-spacing:.3em; color:#111;
+  letter-spacing:.22em; color:#111;
 }
 #previewSection .pv3-dt{
   display:flex; justify-content:space-between; gap:10px;
@@ -7684,16 +7686,25 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 #previewSection .pv3-barcode{margin-top:8px; text-align:center;}
 #previewSection .pv3-bars{
   height:46px; max-width:240px; margin:0 auto 8px;
-  background:repeating-linear-gradient(90deg,#0F172A 0 2px,transparent 2px 5px,#0F172A 5px 6px,transparent 6px 10px,#0F172A 10px 13px,transparent 13px 16px);
+  background:repeating-linear-gradient(90deg,#111 0 2px,transparent 2px 5px,#111 5px 6px,transparent 6px 10px,#111 10px 13px,transparent 13px 16px);
 }
 #previewSection .pv3-barcode > span{
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  font-size:9.5px; letter-spacing:.24em; color:#111;
+  font-size:9.5px; letter-spacing:.18em; color:#111;
 }
 /* zigzag perforated bottom edge, like the Figma slip */
+/* gentle paper folds near the bottom — soft wrinkle shading like a real slip
+   curling as it comes out of the printer, not a flat digital card */
+#previewSection .pv3-folds{
+  height:30px; margin:4px 0 -2px; position:relative;
+  background:
+    radial-gradient(130% 100% at 18% 0%, rgba(0,0,0,0) 52%, rgba(112,92,60,.10) 76%, rgba(0,0,0,0) 98%),
+    radial-gradient(110% 90% at 78% 10%, rgba(0,0,0,0) 48%, rgba(112,92,60,.12) 74%, rgba(0,0,0,0) 100%),
+    linear-gradient(180deg, rgba(0,0,0,0) 25%, rgba(112,92,60,.05) 62%, rgba(112,92,60,.10) 100%);
+}
 #previewSection .pv3-edge{
   height:12px;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M0 0 H12 V3 L6 12 L0 3 Z' fill='%23FDFCF9'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M0 0 H12 V3 L6 12 L0 3 Z' fill='%23F0E9D8'/%3E%3C/svg%3E");
   background-repeat:repeat-x;
   background-size:12px 12px;
 }
