@@ -54,12 +54,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;700;900&family=Archivo:wdth,wght@75..125,400..900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Figma "User greeting" fonts for the Order Preview unit: the whole
+       preview section (machine, slip, labels) is set in Geist + IBM Plex
+       Mono, exactly like the Figma design. Scoped via #previewSection CSS. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <!-- The ?v= query string busts the browser's cache for this file --
        GitHub Pages doesn't fingerprint asset URLs on its own, so without
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=53">
+  <link rel="stylesheet" href="styles.css?v=54">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -679,7 +684,7 @@
         <div id="previewSection" class="hidden order-preview-view">
       <div class="preview-shell pv3-shell">
         <nav class="pv3-topbar" aria-label="Breadcrumb">
-          <button type="button" class="pv3-back" id="pvCrumbBack">&larr; My orders</button>
+          <button type="button" class="pv3-back" id="pvCrumbBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg><span>My orders</span></button>
           <button type="button" class="pv3-printslip" id="pvPrintSlipBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg><span>Print slip</span></button>
         </nav>
 
@@ -690,24 +695,33 @@
           </div>
 
           <div class="pv3-printer" id="pvPrinter">
+            <div class="pv3-backplate" aria-hidden="true"></div>
             <div class="pv3-machine">
-              <div class="pv3-machine-top">
+              <div class="pv3-top-panel" aria-hidden="true"></div>
+              <div class="pv3-machine-row">
                 <div class="pv3-brand">
                   <span class="pv3-plus" aria-hidden="true"><img class="pv3-logoimg" alt=""></span>
                   <span class="pv3-brandtext">gamepay.<small>RECEIPT STATION</small></span>
                 </div>
                 <div class="pv3-actions">
-                  <button type="button" class="pv3-printchip" id="pvPrintBtn"><span class="pv3-eq" aria-hidden="true"><i></i><i></i><i></i></span>PRINT</button>
-                  <span class="pv3-power" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v9"/><path d="M6.3 6.5a8 8 0 1 0 11.4 0"/></svg></span>
+                  <button type="button" class="pv3-printchip" id="pvPrintBtn"><span class="pv3-eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="pv3-printlabel" id="pvPrintLabel">PRINT</span></button>
+                  <span class="pv3-power" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v9"/><path d="M6.3 6.5a8 8 0 1 0 11.4 0"/></svg></span>
                 </div>
               </div>
-              <div class="pv3-slot" aria-hidden="true"><i class="pv3-vent"></i><i class="pv3-vent"></i></div>
+              <div class="pv3-bottom-band" aria-hidden="true"></div>
+              <span class="pv3-led" aria-hidden="true"></span>
+              <i class="pv3-screw pv3-screw-l" aria-hidden="true"></i><i class="pv3-screw pv3-screw-r" aria-hidden="true"></i>
+              <span class="pv3-vents pv3-vents-l" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="pv3-vents pv3-vents-r" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="pv3-slot" aria-hidden="true"></div>
+              <i class="pv3-mfoot pv3-mfoot-l" aria-hidden="true"></i><i class="pv3-mfoot pv3-mfoot-r" aria-hidden="true"></i>
             </div>
             <div class="pv3-paperwell">
               <div class="pv3-paper" id="pvPaper">
                 <div id="previewFinalBox" class="preview-box preview-final-box"><div class="preview-empty">No order preview yet.</div></div>
               </div>
             </div>
+            <div class="pv3-slotshadow" aria-hidden="true"></div>
           </div>
         </section>
 
@@ -719,8 +733,8 @@
           </div>
         </section>
 
-        <p class="pv3-micro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Preview only. No payment or order is submitted.</p>
-        <a class="pv3-support" href="https://t.me/angsthtun" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2" y="14" width="4" height="7" rx="2"/><rect x="18" y="14" width="4" height="7" rx="2"/></svg>Need a hand? Contact support &rarr;</a>
+        <p class="pv3-micro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="16" r="1"/><rect width="18" height="12" x="3" y="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg><span>Preview only. No payment or order is submitted.</span></p>
+        <a class="pv3-support" href="https://t.me/angsthtun" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2" y="14" width="4" height="7" rx="2"/><rect x="18" y="14" width="4" height="7" rx="2"/></svg><span>Need a hand? Contact support</span><svg class="pv3-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></a>
 
         <footer class="pv3-foot">&copy; 2026 Gamepay Hub</footer>
       </div>
@@ -2674,6 +2688,7 @@ const pvReplayBtn = document.getElementById("pvReplayBtn");
 const pvCrumbBack = document.getElementById("pvCrumbBack");
 const pvPrintSlipBtn = document.getElementById("pvPrintSlipBtn");
 const pvTotalAmount = document.getElementById("pvTotalAmount");
+const pvPrintLabel = document.getElementById("pvPrintLabel");
 
 // Printer mark: reuse the site's own logo, shown dark-mode style (white)
 // on the navy rounded square, sitting where the Figma "+" mark sits.
@@ -2694,7 +2709,8 @@ function pvPrintingDone(){
   pvPrinter?.classList.remove("is-printing");
   pvPrinter?.classList.add("is-done");
   pvSetPrinting(false);
-  if(pvStatusText) pvStatusText.textContent = "Preview ready";
+  if(pvPrintLabel) pvPrintLabel.textContent = "READY";
+  if(pvStatusText) pvStatusText.textContent = "Your slip is ready";
   pvPrintingLabel?.classList.add("is-done");
   if(pvReplayBtn){
     pvReplayBtn.disabled = false;
@@ -2708,6 +2724,7 @@ function pvPlayPrint(){
   pvPrinter.classList.remove("is-done");
   void pvPrinter.offsetWidth; // restart the CSS animation
   if(pvStatusText) pvStatusText.textContent = "Printing your preview\u2026";
+  if(pvPrintLabel) pvPrintLabel.textContent = "PRINT";
   pvPrintingLabel?.classList.remove("is-done");
   if(pvReplayBtn){
     pvReplayBtn.disabled = true;
@@ -3968,8 +3985,8 @@ function renderPreviewTable(message){
   const bcX = [0,5,8,13,17,21,27,31,35,38,44,48,51,58,62,65,71,74,78,84,87,91,98,101,105,109,114,118,122,128,131,136,141,145,149,154,157,162,168,171,176,181,184,189,192,197];
   const bcW = [2,1,3,1,2,4,2,2,1,4,2,1,4,2,1,4,1,2,4,1,2,4,1,2,2,3,2,2,4,1,3,3,2,2,3,1,3,4,1,3,3,1,3,1,3,2];
   const bcBars = bcX.map((x,i)=>`<rect x="${x}" y="0" width="${bcW[i]}" height="24"/>`).join("");
-  // Zigzag tear-off edge, like Figma: 10px cycle, 7px deep, pure white.
-  const zigPts = "0,0" + Array.from({length:61},(_,k)=>{const x=300-k*5;return ` ${x},${(k%2)?7:0}`;}).join("");
+  // Zigzag tear-off edge, like Figma: 60 teeth, 10px wide x 7px deep, pure white.
+  const zigPts = "0,0 600,0" + Array.from({length:60},(_,k)=>` ${590-k*10},${(k%2)?0:7}`).join("");
   previewFinalBox.innerHTML =
     `<div class="pv3-slip">` +
       `<div class="pv3-slipbrand">gamepay.</div>` +
@@ -3986,10 +4003,16 @@ function renderPreviewTable(message){
       `</div>` +
       `<div class="pv3-total"><div class="pv3-total-l"><b>TOTAL</b><span>${totalSub}</span></div><div class="pv3-amount">${totalBig}${totalCur}</div></div>` +
       `<div class="pv3-barcode"><svg viewBox="0 0 199 24" preserveAspectRatio="none" aria-hidden="true">${bcBars}</svg><span>PREVIEW \u00b7 NOT PROOF OF PAYMENT</span></div>` +
-      `<svg class="pv3-zigzag" viewBox="0 0 300 8" preserveAspectRatio="none" aria-hidden="true"><polygon points="${zigPts}"/></svg>` +
+      `<svg class="pv3-zigzag" viewBox="0 0 600 8" preserveAspectRatio="none" aria-hidden="true"><polygon points="${zigPts}"/></svg>` +
     `</div>`;
-  // The total row under the slip mirrors the slip's total.
-  if(pvTotalAmount) pvTotalAmount.textContent = total || "\u2014";
+  // The total row under the slip mirrors the slip's total:
+  // big amount + small "Ks", like the Figma total card.
+  if(pvTotalAmount){
+    const tParts = String(total || "").match(/^(.*?)\s*Ks\s*$/i);
+    pvTotalAmount.innerHTML = tParts
+      ? `<span class="pv3-tamt">${escapePreviewText(tParts[1].trim())}</span><span class="pv3-tks">Ks</span>`
+      : escapePreviewText(total || "\u2014");
+  }
 }
 function updatePreview(){
   const selectedPlan = currentProduct?.plans[currentPlanIndex];
