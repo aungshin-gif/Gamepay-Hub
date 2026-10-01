@@ -8092,3 +8092,11 @@ body.light-mode #previewSection #previewOrderBtn.pv3-confirm:disabled{
   .mo-fstat-num{ font-size:19px; }
   .mo-fstat-label{ font-size:10px; }
 }
+
+/* ===== My Orders v3: kill dead space above the header ===== */
+/* User report 2026-10-02: too much empty space at the top of My Orders.
+   Pull the column up and tighten vertical rhythm (orders-only via .mo-*,
+   account page untouched). */
+.mo-col{ padding-top:2px; gap:10px; }
+.mo-appbar{ padding:0 2px; }
+.mo-headrow{ margin-top:0; }
