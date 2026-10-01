@@ -684,79 +684,82 @@
         </nav>
 
         <div class="fig-pv-head fig-anim" style="--d:.06s">
-          <span class="fig-pv-kicker">The final check</span>
-          <h2 class="fig-pv-title">Your order, on paper.</h2>
-          <p class="fig-pv-sub">Give it one last look before it becomes official.</p>
-        </div>
-
-        <div class="fig-pv-stage fig-anim" style="--d:.10s">
-          <div class="fig-pv-printer" id="pvPrinter">
-            <div class="fig-pv-machine">
-              <div class="fig-pv-machine-top">
-                <span class="fig-pv-brand">gamepay<i>.</i></span>
-                <span class="fig-pv-station">Receipt station</span>
-              </div>
-              <div class="fig-pv-machine-mid">
-                <button type="button" class="fig-pv-printbtn" id="pvPrintBtn">Print</button>
-                <span class="fig-pv-power" aria-hidden="true"><i></i></span>
-              </div>
-              <div class="fig-pv-slot" aria-hidden="true"></div>
+          <div class="fig-pv-headrow">
+            <div class="fig-pv-headtext">
+              <h2 class="fig-pv-title"><span class="fig-pv-t-desktop">Your order, on paper.</span><span class="fig-pv-t-mobile">Order preview</span></h2>
+              <p class="fig-pv-sub">One last look before you make it yours.</p>
             </div>
-            <div class="fig-pv-paperwell">
-              <div class="fig-pv-paper" id="pvPaper">
-                <div id="previewFinalBox" class="preview-box preview-final-box"><div class="preview-empty">No order preview yet.</div></div>
-              </div>
-            </div>
-          </div>
-          <div class="fig-pv-statusline">
-            <span class="fig-pv-printing" id="pvPrintingLabel"><span class="fig-pv-spinner" aria-hidden="true"></span>Printing your preview&hellip;</span>
-            <button type="button" class="fig-pv-replay hidden" id="pvReplayBtn">&circlearrowright; Replay</button>
-          </div>
-          <div class="fig-pv-slipactions">
-            <button type="button" class="fig-pv-linkbtn" id="pvDownloadBtn">Download slip</button>
-            <span class="fig-pv-dotsep" aria-hidden="true">&middot;</span>
-            <button type="button" class="fig-pv-linkbtn" id="pvPrintSlipBtn">Print slip</button>
+            <button type="button" class="fig-pv-printslip" id="pvPrintSlipBtn"><svg class="fig-pv-printer-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg><span>Print slip</span></button>
           </div>
         </div>
 
-        <section class="fig-pv-panel fig-anim" style="--d:.14s" aria-label="Order total">
-          <h3 class="fig-pv-panel-title">One last look before you make it yours</h3>
-          <p class="fig-pv-panel-sub" id="pvTotalMeta">&mdash;</p>
-          <div class="fig-pv-totalrow">
-            <span class="fig-pv-total-label">Total amount</span>
-            <span class="fig-pv-total-value" id="pvTotalAmount">&mdash;</span>
+        <div class="fig-pv-cols">
+          <div class="fig-pv-stagecol">
+            <div class="fig-pv-stage fig-anim" style="--d:.10s">
+              <div class="fig-pv-printer" id="pvPrinter">
+                <div class="fig-pv-machine">
+                  <div class="fig-pv-topface">
+                    <span class="fig-pv-machinelogo">gamepay.</span>
+                    <span class="fig-pv-chip" id="pvChip"><i class="fig-pv-chipdot" aria-hidden="true"></i><span id="pvChipText">READY</span><span class="fig-pv-eq" aria-hidden="true"><i></i><i></i><i></i></span></span>
+                  </div>
+                  <div class="fig-pv-frontface">
+                    <div class="fig-pv-station">RECEIPT STATION</div>
+                    <div class="fig-pv-machinesub">Printing while you look.</div>
+                  </div>
+                  <div class="fig-pv-controls">
+                    <button type="button" class="fig-pv-printbtn" id="pvPrintBtn"><svg class="fig-pv-printer-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg>PRINT</button>
+                    <span class="fig-pv-power" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v9"/><path d="M6.3 6.5a8 8 0 1 0 11.4 0"/></svg></span>
+                  </div>
+                  <div class="fig-pv-slot" aria-hidden="true"></div>
+                </div>
+                <div class="fig-pv-paperwell">
+                  <div class="fig-pv-backing" aria-hidden="true"><i></i><i></i></div>
+                  <div class="fig-pv-paper" id="pvPaper">
+                    <div id="previewFinalBox" class="preview-box preview-final-box"><div class="preview-empty">No order preview yet.</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="fig-pv-statusline">
+                <span class="fig-pv-printing" id="pvPrintingLabel"><span class="fig-pv-dot" aria-hidden="true"></span><span id="pvStatusText">Printing your preview&hellip;</span></span>
+                <button type="button" class="fig-pv-replay hidden" id="pvReplayBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 2.6-6.3"/><path d="M3 4v5h5"/></svg><span>Replay</span></button>
+              </div>
+            </div>
           </div>
-          <button id="previewOrderBtn" class="fig-pv-confirm" type="button" disabled>Confirm order <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>
-          <div id="previewProgressBar" class="order-progress-bar hidden"><div class="order-progress-fill"></div></div>
-        </section>
 
-        <section class="fig-pv-check fig-anim" style="--d:.18s">
-          <h3 class="fig-pv-section">Everything in order?</h3>
-          <p class="fig-pv-muted">Spotted something off? Head back and fix it before you confirm.</p>
-          <button id="previewBackBtn" class="fig-pv-ghostbtn" type="button">&larr; Back to Dashboard</button>
-        </section>
-
-        <section class="fig-pv-help fig-anim" style="--d:.22s">
-          <h3 class="fig-pv-section">A little help?</h3>
-          <p class="fig-pv-muted">Our support team replies fast on Telegram and WhatsApp.</p>
-          <div class="fig-pv-help-links">
-            <a href="https://t.me/angsthtun" target="_blank" rel="noopener">Telegram</a>
-            <a href="https://wa.me/qr/PMHPHBAS33UHB1" target="_blank" rel="noopener">WhatsApp</a>
-          </div>
-        </section>
+          <aside class="fig-pv-panel fig-anim" style="--d:.14s" aria-label="Order summary">
+            <p class="fig-pv-eyebrow">Made for your everyday</p>
+            <h3 class="fig-pv-panel-title">A small upgrade. A whole lot of possibility.</h3>
+            <p class="fig-pv-panel-sub">Your plan, payment details and total &mdash; neatly printed, ready for your final check.</p>
+            <div class="fig-pv-card">
+              <div class="fig-pv-card-product" id="pvCardProduct">&mdash;</div>
+              <div class="fig-pv-card-plan" id="pvCardPlan">&mdash;</div>
+              <div class="fig-pv-card-rows">
+                <div class="fig-pv-card-row"><span>Payment method</span><b id="pvCardPay">&mdash;</b></div>
+                <div class="fig-pv-card-row"><span>Total amount</span><b class="fig-pv-card-total" id="pvCardTotal">&mdash;</b></div>
+              </div>
+            </div>
+            <button id="previewOrderBtn" class="fig-pv-confirm" type="button" disabled><span class="fig-pv-confirm-full">Confirm &amp; place order <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span><span class="fig-pv-confirm-short">Confirm order</span></button>
+            <div id="previewProgressBar" class="order-progress-bar hidden"><div class="order-progress-fill"></div></div>
+            <p class="fig-pv-micro">Sent for review &mdash; track it live right after.</p>
+            <a class="fig-pv-needhand" href="https://t.me/angsthtun" target="_blank" rel="noopener">Need a hand? Contact support &rarr;</a>
+          </aside>
+        </div>
 
         <footer class="fig-pv-foot fig-anim" style="--d:.26s">
-          <span>Gamepay Hub</span><span aria-hidden="true">&middot;</span><span>Digital top-up store</span>
+          <span class="fig-pv-foot-left"><svg class="fig-pv-foot-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/></svg>&copy; 2026 Gamepay Hub</span>
+          <span class="fig-pv-foot-right"><svg class="fig-pv-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Digital premium. Thoughtfully simple.</span>
         </footer>
       </div>
 
       <div class="fig-pv-modalback hidden" id="pvModalBack">
         <div class="fig-pv-modal" role="dialog" aria-modal="true" aria-labelledby="pvModalTitle">
-          <h3 class="fig-pv-modal-title" id="pvModalTitle">Ready to make it official?</h3>
-          <p class="fig-pv-muted" id="pvModalDesc">Your order will be sent for review. You can track it right after.</p>
+          <button type="button" class="fig-pv-modal-x" id="pvModalX" aria-label="Close">&times;</button>
+          <h3 class="fig-pv-modal-title" id="pvModalTitle">Confirm your order</h3>
+          <p class="fig-pv-muted">Your slip is ready for review. Once placed, you can track it live.</p>
+          <div class="fig-pv-modal-box" id="pvModalBox"></div>
           <div class="fig-pv-modalrow">
             <button type="button" class="fig-pv-ghostbtn" id="pvModalCancel">Not yet</button>
-            <button type="button" class="fig-pv-confirm" id="pvModalPlace">Place order</button>
+            <button type="button" class="fig-pv-confirm" id="pvModalPlace">Place order &rarr;</button>
           </div>
         </div>
       </div>
@@ -2700,32 +2703,57 @@ previewBackBtn?.addEventListener("click", () => {
   orderView.classList.add("dashboard-active");
   updatePreview();
 });
-/* ---------- Figma preview: receipt printer, confirm modal, slip actions ---------- */
+/* ---------- Figma preview: receipt printer, summary panel, confirm modal ---------- */
 const pvPrinter = document.getElementById("pvPrinter");
 const pvPaper = document.getElementById("pvPaper");
 const pvPrintBtn = document.getElementById("pvPrintBtn");
+const pvChip = document.getElementById("pvChip");
+const pvChipText = document.getElementById("pvChipText");
 const pvPrintingLabel = document.getElementById("pvPrintingLabel");
+const pvStatusText = document.getElementById("pvStatusText");
 const pvReplayBtn = document.getElementById("pvReplayBtn");
 const pvModalBack = document.getElementById("pvModalBack");
+const pvModalBox = document.getElementById("pvModalBox");
 const pvModalCancel = document.getElementById("pvModalCancel");
+const pvModalX = document.getElementById("pvModalX");
 const pvModalPlace = document.getElementById("pvModalPlace");
 const pvCrumbBack = document.getElementById("pvCrumbBack");
-const pvDownloadBtn = document.getElementById("pvDownloadBtn");
 const pvPrintSlipBtn = document.getElementById("pvPrintSlipBtn");
-const pvTotalAmount = document.getElementById("pvTotalAmount");
-const pvTotalMeta = document.getElementById("pvTotalMeta");
+const pvCardProduct = document.getElementById("pvCardProduct");
+const pvCardPlan = document.getElementById("pvCardPlan");
+const pvCardPay = document.getElementById("pvCardPay");
+const pvCardTotal = document.getElementById("pvCardTotal");
+// Last parsed slip values, reused by the confirm modal summary box.
+let pvLastVals = {};
 
-function pvPrintingDone(){
-  pvPrintingLabel?.classList.add("hidden");
-  pvReplayBtn?.classList.remove("hidden");
+function pvSetChip(printing){
+  if(pvChipText) pvChipText.textContent = printing ? "PRINT" : "READY";
+  pvChip?.classList.toggle("is-active", !!printing);
 }
-// (Re)start the receipt-printer animation: the slip slides out of the slot.
+function pvPrintingDone(){
+  pvPrinter?.classList.remove("is-printing");
+  pvSetChip(false);
+  if(pvStatusText) pvStatusText.textContent = "Your slip is ready";
+  pvPrintingLabel?.classList.add("is-done");
+  if(pvReplayBtn){
+    pvReplayBtn.classList.remove("hidden");
+    pvReplayBtn.disabled = false;
+    pvReplayBtn.classList.remove("is-busy");
+  }
+}
+// (Re)start the receipt-printer animation: the slip feeds out of the slot.
 function pvPlayPrint(){
   if(!pvPrinter) return;
-  pvPrintingLabel?.classList.remove("hidden");
-  pvReplayBtn?.classList.add("hidden");
   pvPrinter.classList.remove("is-printing");
   void pvPrinter.offsetWidth; // restart the CSS animation
+  if(pvStatusText) pvStatusText.textContent = "Printing your preview\u2026";
+  pvPrintingLabel?.classList.remove("is-done");
+  if(pvReplayBtn){
+    pvReplayBtn.classList.remove("hidden");
+    pvReplayBtn.disabled = true;
+    pvReplayBtn.classList.add("is-busy");
+  }
+  pvSetChip(true);
   const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(reduceMotion){ pvPrintingDone(); return; } // CSS keeps the slip visible
   pvPrinter.classList.add("is-printing");
@@ -2734,58 +2762,44 @@ pvPaper?.addEventListener("animationend", (e) => {
   if(e.animationName === "figPvPaperOut") pvPrintingDone();
 });
 pvPrintBtn?.addEventListener("click", pvPlayPrint);
-pvReplayBtn?.addEventListener("click", pvPlayPrint);
+pvReplayBtn?.addEventListener("click", () => { if(pvReplayBtn && !pvReplayBtn.disabled) pvPlayPrint(); });
 
-// "Ready to make it official?" confirm modal.
-function pvOpenModal(){ pvModalBack?.classList.remove("hidden"); }
+// Confirm modal: "Place order" runs the real submitOrder().
+function pvFillModalBox(){
+  if(!pvModalBox) return;
+  const v = pvLastVals || {};
+  if(!v.product){ pvModalBox.innerHTML = ""; return; }
+  pvModalBox.innerHTML =
+    `<div class="fig-pv-mbox-row"><b>${escapePreviewText(v.product)}</b><span>${escapePreviewText(v.plan || "")}</span></div>` +
+    `<div class="fig-pv-mbox-total"><span>Total amount</span><b>${escapePreviewText(v.total || "")}</b></div>`;
+}
+function pvOpenModal(){ pvFillModalBox(); pvModalBack?.classList.remove("hidden"); }
 function pvCloseModal(){ pvModalBack?.classList.add("hidden"); }
 previewOrderBtn?.addEventListener("click", () => {
   if(!previewOrderBtn || previewOrderBtn.disabled) return;
   pvOpenModal();
 });
 pvModalCancel?.addEventListener("click", pvCloseModal);
+pvModalX?.addEventListener("click", pvCloseModal);
 pvModalBack?.addEventListener("click", (e) => { if(e.target === pvModalBack) pvCloseModal(); });
 document.addEventListener("keydown", (e) => {
   if(e.key === "Escape" && pvModalBack && !pvModalBack.classList.contains("hidden")) pvCloseModal();
 });
 pvModalPlace?.addEventListener("click", () => { pvCloseModal(); submitOrder(); });
 
-// Breadcrumb "My orders" goes back to the dashboard, like the back button.
-pvCrumbBack?.addEventListener("click", () => previewBackBtn?.click());
+// Breadcrumb "My orders" goes back to the dashboard (same as the old back button).
+function pvGoBack(){
+  previewSection?.classList.add("hidden");
+  document.body.classList.remove("preview-mode");
+  const ov = document.getElementById("orderView");
+  ov?.classList.remove("hidden");
+  ov?.classList.add("dashboard-active");
+  updatePreview();
+}
+pvCrumbBack?.addEventListener("click", pvGoBack);
 
-// Slip actions: print uses the @media print rules (slip only); download
-// saves a small self-contained HTML copy of the slip.
+// "Print slip" uses the @media print rules (slip only).
 pvPrintSlipBtn?.addEventListener("click", () => window.print());
-pvDownloadBtn?.addEventListener("click", () => {
-  const slip = pvPaper ? pvPaper.innerHTML : "";
-  if(!slip.trim()) return;
-  const css = ".slip-card{background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:22px;font-family:Arial,Helvetica,sans-serif;max-width:440px;margin:24px auto;color:#0f172a}"
-    + ".slip-brandrow{display:flex;align-items:center;gap:10px;padding-bottom:12px;margin-bottom:12px;border-bottom:1px dashed #e2e8f0}"
-    + ".slip-logo{width:34px;height:34px;border-radius:9px;object-fit:cover;background:#0f172a}"
-    + ".slip-brandname{font-weight:800;font-size:15px;letter-spacing:.06em}"
-    + ".slip-ready{margin-left:auto;font-size:9px;font-weight:800;letter-spacing:.14em;color:#059669;border:1.5px solid #059669;border-radius:6px;padding:5px 9px}"
-    + ".slip-voucher{display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.12em;color:#94a3b8;margin:0 0 12px;text-transform:uppercase}"
-    + ".slip-voucher b{color:#0f172a}"
-    + ".preview-table-caption{font-size:11px;font-weight:800;letter-spacing:.16em;padding:0 0 10px;margin:0 0 4px;border-bottom:1px solid #f1f5f9}"
-    + ".order-preview-table{width:100%;border-collapse:collapse}"
-    + ".order-preview-table th,.order-preview-table td{padding:10px 2px;border-bottom:1px dashed #f1f5f9;text-align:left;vertical-align:middle}"
-    + ".order-preview-table th{width:34%;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8}"
-    + ".order-preview-table td{font-size:13.5px;font-weight:700;color:#1e293b}"
-    + ".order-preview-table tr:last-child td{font-size:19px;font-weight:800;color:#0f172a}"
-    + ".preview-logo{width:26px;height:26px;border-radius:7px;object-fit:cover;vertical-align:-7px;margin-right:8px}"
-    + ".slip-barcode{text-align:center;padding:16px 0 6px;margin-top:8px;border-top:1px dashed #e2e8f0}"
-    + ".slip-bars{height:44px;max-width:220px;margin:0 auto 8px;background:repeating-linear-gradient(90deg,#0f172a 0 2px,transparent 2px 5px,#0f172a 5px 6px,transparent 6px 10px,#0f172a 10px 13px,transparent 13px 16px)}"
-    + ".slip-barcode span{font-size:10px;font-weight:700;letter-spacing:.3em;color:#94a3b8}"
-    + ".slip-keep{text-align:center;font-size:11.5px;color:#94a3b8;padding:6px 0 2px}";
-  const doc = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gamepay order slip</title><style>' + css + '</style></head><body>' + slip + '</body></html>';
-  const blob = new Blob([doc], {type:"text/html"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "gamepay-order-slip.html";
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800);
-});
 
 /* ---------- Landing page <-> products page ---------- */
 const landingShell = document.getElementById("landingShell");
@@ -3926,7 +3940,8 @@ function escapePreviewText(value){
   return String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
 }
 // Stable voucher number per preview content, so the slip reads like a real
-// receipt and doesn't change on every re-render.
+// receipt and doesn't change on every re-render. Format matches the Figma
+// slip: GPH-YYYYMMDD-xxxxx.
 let pvVoucherCache = { key: null, no: "" };
 function pvVoucherNo(message){
   const key = String(message || "");
@@ -3935,44 +3950,38 @@ function pvVoucherNo(message){
     const ymd = d.getFullYear() + String(d.getMonth()+1).padStart(2,"0") + String(d.getDate()).padStart(2,"0");
     let h = 0;
     for(let i=0;i<key.length;i++){ h = ((h*31) + key.charCodeAt(i)) >>> 0; }
-    pvVoucherCache = { key, no: "GP-" + ymd + "-" + String(1000 + (h % 9000)) };
+    pvVoucherCache = { key, no: "GPH-" + ymd + "-" + h.toString(16).padStart(8,"0").slice(-5) };
   }
   return pvVoucherCache.no;
 }
+// Slip header date, like the Figma slip: "30 SEP 2026" over "11:59 PM".
+function pvSlipDate(){
+  const d = new Date();
+  const mon = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][d.getMonth()];
+  const date = String(d.getDate()).padStart(2,"0") + " " + mon + " " + d.getFullYear();
+  let h = d.getHours();
+  const ap = h >= 12 ? "PM" : "AM";
+  h = h % 12 || 12;
+  const time = h + ":" + String(d.getMinutes()).padStart(2,"0") + " " + ap;
+  return { date, time };
+}
 function renderPreviewTable(message){
   if(!previewFinalBox) return;
+  const dash = '<span class="preview-na">\u2014</span>';
   if(!message){
     previewFinalBox.innerHTML = '<div class="preview-empty">No order preview yet.</div>';
-    if(pvTotalAmount) pvTotalAmount.textContent = "\u2014";
-    if(pvTotalMeta) pvTotalMeta.textContent = "\u2014";
+    pvLastVals = {};
+    if(pvCardProduct) pvCardProduct.textContent = "\u2014";
+    if(pvCardPlan) pvCardPlan.textContent = "\u2014";
+    if(pvCardPay) pvCardPay.textContent = "\u2014";
+    if(pvCardTotal) pvCardTotal.textContent = "\u2014";
     return;
   }
-  const rows=[];
   const plainVals={};
   const lines=String(message).split("\n");
   const labels={"💌 Product":"Product","📄 Plan":"Plan","💳 Payment":"Payment","📱 Payment Phone":"Payment number","👤 Payment Name":"Payment name","🎟 Coupon Applied":"Coupon applied","💰 Total Amount":"Total amount","🔢 Custom Amount":"Custom amount","📝Note":"Note","👤Account":"Name"};
-  // The "Name" row is the ordering user's account name (the Account field),
+  // The "Name" value is the ordering user's account name (the Account field),
   // shown the way the Figma receipt shows "Name - <account>".
-  // Logos & badges for the summary rows, taken from the same data the page
-  // already uses: product icon, the plan's tier pill, payment logos.
-  let productLogo = "";
-  if(currentProduct){
-    productLogo = currentProduct.iconType === "emoji"
-      ? `<span class="preview-logo-emoji">${currentProduct.icon}</span>`
-      : (currentProduct.icon ? `<img class="preview-logo" src="${currentProduct.icon}" alt="" loading="lazy" decoding="async">` : "");
-  }
-  const selectedPlan = currentProduct?.plans?.[currentPlanIndex];
-  // Plan-row tier pill, exactly like the plan list: the shared planTier()
-  // + TIER_LABEL helpers and the .plan-tier-chip style; the --tier palette
-  // variables are re-declared for the preview table in styles.css.
-  const planTierKey = selectedPlan ? planTier(selectedPlan) : "";
-  const tierPill = (/^[a-z0-9]+$/.test(planTierKey) && (TIER_LABEL[planTierKey] || planTierKey))
-    ? `<span class="preview-tier" data-tier="${planTierKey}"><span class="plan-tier-chip">${TIER_LABEL[planTierKey] || planTierKey}</span></span>`
-    : "";
-  const payMeta = (typeof paymentMeta !== "undefined" && paymentMeta[activePayment]) || null;
-  const paymentLogo = (payMeta && payMeta.logo)
-    ? `<img class="preview-logo" src="${payMeta.logo}" alt="" loading="lazy" decoding="async">` : "";
-  const cellPrefix = {"💌 Product": productLogo, "💳 Payment": paymentLogo};
   const labelKeys=Object.keys(labels);
   for(let i=0;i<lines.length;i++){
     const raw=lines[i].trim();
@@ -3989,41 +3998,67 @@ function renderPreviewTable(message){
       key=hit;
       value=raw.slice(hit.length).replace(/^[:\s]+/,"").replace(/^➥\s*/,"");
     }
-    {
-      // The Plan value repeats the price ("... - 1 Month - 27000 Ks"), which
-      // Total Amount already shows below -- that redundant price wrapped
-      // this one row onto two lines while every other row stayed one,
-      // reading as an uneven, ragged table.
-      if(key === "📄 Plan") value = stripTrailingPrice(value);
-      const prefix = cellPrefix[key] || "";
-      const suffix = (key === "📄 Plan") ? tierPill : "";
-      if(value){ rows.push({label:labels[key], value, html:`<tr><th>${labels[key]}</th><td>${prefix}${escapePreviewText(value)}${suffix}</td></tr>`}); plainVals[labels[key]] = value; }
-    }
+    // The Plan value repeats the price ("... - 1 Month - 27000 Ks"), which
+    // Total already shows -- that redundant price wrapped this one row onto
+    // two lines while every other row stayed one, reading as an uneven,
+    // ragged line.
+    if(key === "📄 Plan") value = stripTrailingPrice(value);
+    if(value) plainVals[labels[key]] = value;
   }
-  // Keep the Figma receipt order: Name sits right after Plan, before Payment.
-  // The row is always shown -- when the Account field is still empty it shows
-  // a muted dash, so the row can never silently disappear from the slip.
-  if(!rows.some(r=>r.label==="Name")){
-    rows.push({label:"Name", html:`<tr><th>Name</th><td><span class="preview-na">—</span></td></tr>`});
+  const product = plainVals["Product"] || "";
+  const plan = plainVals["Plan"] || "";
+  const customAmt = plainVals["Custom amount"] || "";
+  const planLine = customAmt ? (plan ? plan + " \u00b7 " + customAmt : customAmt) : plan;
+  const payName = plainVals["Payment"] || "";
+  const payNumber = plainVals["Payment number"] || "";
+  const account = plainVals["Name"] || "";
+  const note = plainVals["Note"] || "";
+  const coupon = plainVals["Coupon applied"] || "";
+  const total = plainVals["Total amount"] || "";
+  pvLastVals = { product, plan: planLine, total };
+  // Logos & badges for the slip rows, taken from the same data the page
+  // already uses: product icon, the plan's tier pill, payment logos.
+  let productLogo = "";
+  if(currentProduct){
+    productLogo = currentProduct.iconType === "emoji"
+      ? `<span class="preview-logo-emoji">${currentProduct.icon}</span>`
+      : (currentProduct.icon ? `<img class="preview-logo" src="${currentProduct.icon}" alt="" loading="lazy" decoding="async">` : "");
   }
-  const nameIdx=rows.findIndex(r=>r.label==="Name");
-  if(nameIdx>0){
-    const nameRow=rows.splice(nameIdx,1)[0];
-    const planIdx=rows.findIndex(r=>r.label==="Plan");
-    rows.splice(planIdx+1,0,nameRow);
-  }
-  // Slip header uses the site's own logo (same .compact-logo asset as the header).
-  const logoSrc = (typeof siteLogoSrc === "function") ? siteLogoSrc() : "";
-  const slipHead = logoSrc
-    ? `<div class="slip-brandrow"><img class="slip-logo" src="${logoSrc}" alt="Gamepay Hub"><span class="slip-brandname">GAMEPAY HUB</span><b class="slip-ready">READY TO SEND</b></div>`
-    : `<div class="slip-brandrow"><span class="slip-brandname">GAMEPAY HUB</span><b class="slip-ready">READY TO SEND</b></div>`;
-  previewFinalBox.innerHTML = `<div class="slip-card">${slipHead}<div class="slip-voucher"><span>Voucher no.</span><b>${escapePreviewText(pvVoucherNo(message))}</b></div><div class="preview-table-caption"><span>ORDER SUMMARY</span></div><table class="order-preview-table"><tbody>${rows.map(r=>r.html).join("")}</tbody></table><div class="slip-barcode" aria-hidden="true"><div class="slip-bars"></div><span>GAMEPAY</span></div><div class="slip-keep">Keep this little slip for your records.</div></div><div class="slip-zigzag" aria-hidden="true"></div>`;
-  // Summary panel mirrors the slip's product/plan/total.
-  if(pvTotalAmount) pvTotalAmount.textContent = plainVals["Total amount"] || "\u2014";
-  if(pvTotalMeta){
-    const bits = [plainVals["Product"], plainVals["Plan"]].filter(Boolean);
-    pvTotalMeta.textContent = bits.length ? bits.join(" \u00b7 ") : "Review the slip above for details.";
-  }
+  const selectedPlan = currentProduct?.plans?.[currentPlanIndex];
+  // Plan tier pill, exactly like the plan list: the shared planTier() +
+  // TIER_LABEL helpers and the .plan-tier-chip style; the --tier palette
+  // variables are re-declared for the preview table in styles.css.
+  const planTierKey = selectedPlan ? planTier(selectedPlan) : "";
+  const tierPill = (/^[a-z0-9]+$/.test(planTierKey) && (TIER_LABEL[planTierKey] || planTierKey))
+    ? ` <span class="preview-tier" data-tier="${planTierKey}"><span class="plan-tier-chip">${TIER_LABEL[planTierKey] || planTierKey}</span></span>`
+    : "";
+  const payMeta = (typeof paymentMeta !== "undefined" && paymentMeta[activePayment]) || null;
+  const paymentLogo = (payMeta && payMeta.logo)
+    ? `<img class="preview-logo" src="${payMeta.logo}" alt="" loading="lazy" decoding="async">` : "";
+  const dt = pvSlipDate();
+  const noteRow = note
+    ? `<div class="slip-row"><span>Note</span><b>${escapePreviewText(note)}</b></div>` : "";
+  const totalSub = coupon ? escapePreviewText(coupon) : "All included";
+  previewFinalBox.innerHTML =
+    `<div class="slip-card">` +
+      `<div class="slip-head"><span class="slip-brand">gamepay.</span><span class="slip-date">${dt.date}<br>${dt.time}</span></div>` +
+      `<div class="slip-voucher"><span>VOUCHER NO.</span><b>${escapePreviewText(pvVoucherNo(message))}</b></div>` +
+      `<div class="slip-item">${productLogo}<div class="slip-item-text"><b>${escapePreviewText(product)}</b><span>${escapePreviewText(planLine)}${tierPill}</span></div></div>` +
+      `<div class="slip-rows">` +
+        `<div class="slip-row"><span>Name</span><b>${account ? escapePreviewText(account) : dash}</b></div>` +
+        `<div class="slip-row"><span>Pay</span><b>${paymentLogo}${escapePreviewText(payName) || dash}</b></div>` +
+        `<div class="slip-row"><span>Number</span><b>${escapePreviewText(payNumber) || dash}</b></div>` +
+        noteRow +
+      `</div>` +
+      `<div class="slip-totalband"><div class="slip-total-left"><b>TOTAL</b><span>${totalSub}</span></div><b class="slip-amount">${escapePreviewText(total)}</b></div>` +
+      `<div class="slip-barcode" aria-hidden="true"><div class="slip-bars"></div><span>PREVIEW \u00b7 NOT PROOF OF PAYMENT</span></div>` +
+      `<div class="slip-keep">Keep this little slip for your records.<br>Not a payment confirmation.</div>` +
+    `</div>`;
+  // Summary panel card mirrors the slip's product/plan/payment/total.
+  if(pvCardProduct) pvCardProduct.textContent = product || "\u2014";
+  if(pvCardPlan) pvCardPlan.textContent = planLine || "\u2014";
+  if(pvCardPay) pvCardPay.textContent = payName || "\u2014";
+  if(pvCardTotal) pvCardTotal.textContent = total || "\u2014";
 }
 function updatePreview(){
   const selectedPlan = currentProduct?.plans[currentPlanIndex];
