@@ -3743,7 +3743,9 @@ function renderPreviewTable(message){
   if(!message){ previewFinalBox.innerHTML = '<div class="preview-empty">No order preview yet.</div>'; return; }
   const rows=[];
   const lines=String(message).split("\n");
-  const labels={"💌 Product":"Product","📄 Plan":"Plan","💳 Payment":"Payment","📱 Payment Phone":"Payment number","👤 Payment Name":"Payment name","🎟 Coupon Applied":"Coupon applied","💰 Total Amount":"Total amount","🔢 Custom Amount":"Custom amount","📝Note":"Note","👤Account":"Account"};
+  const labels={"💌 Product":"Product","📄 Plan":"Plan","💳 Payment":"Payment","📱 Payment Phone":"Payment number","👤 Payment Name":"Payment name","🎟 Coupon Applied":"Coupon applied","💰 Total Amount":"Total amount","🔢 Custom Amount":"Custom amount","📝Note":"Note","👤Account":"Name"};
+  // The "Name" row is the ordering user's account name (the Account field),
+  // shown the way the Figma receipt shows "Name - <account>".
   // Logos & badges for the summary rows, taken from the same data the page
   // already uses: product icon, the plan's tier pill, payment logos.
   let productLogo = "";
@@ -3764,10 +3766,23 @@ function renderPreviewTable(message){
   const paymentLogo = (payMeta && payMeta.logo)
     ? `<img class="preview-logo" src="${payMeta.logo}" alt="" loading="lazy" decoding="async">` : "";
   const cellPrefix = {"💌 Product": productLogo, "💳 Payment": paymentLogo};
+  const labelKeys=Object.keys(labels);
   for(let i=0;i<lines.length;i++){
-    const key=lines[i].trim();
+    const raw=lines[i].trim();
+    let key=raw, value="";
     if(labels[key]){
-      let value=(lines[i+1]||"").trim().replace(/^➥\s*/,"");
+      // Two-line "KEY" + "➥ value" format.
+      value=(lines[i+1]||"").trim().replace(/^➥\s*/,"");
+    }else{
+      // Single-line "KEY: value" format -- buildTelegramMessage appends
+      // Account and Note this way, so without this branch those rows
+      // never rendered at all.
+      const hit=labelKeys.find(k=>raw===k||raw.startsWith(k+":")||raw.startsWith(k+" "));
+      if(!hit) continue;
+      key=hit;
+      value=raw.slice(hit.length).replace(/^[:\s]+/,"").replace(/^➥\s*/,"");
+    }
+    {
       // The Plan value repeats the price ("... - 1 Month - 27000 Ks"), which
       // Total Amount already shows below -- that redundant price wrapped
       // this one row onto two lines while every other row stayed one,
@@ -3775,10 +3790,17 @@ function renderPreviewTable(message){
       if(key === "📄 Plan") value = stripTrailingPrice(value);
       const prefix = cellPrefix[key] || "";
       const suffix = (key === "📄 Plan") ? tierPill : "";
-      if(value) rows.push(`<tr><th>${labels[key]}</th><td>${prefix}${escapePreviewText(value)}${suffix}</td></tr>`);
+      if(value) rows.push({label:labels[key], html:`<tr><th>${labels[key]}</th><td>${prefix}${escapePreviewText(value)}${suffix}</td></tr>`});
     }
   }
-  previewFinalBox.innerHTML = `<div class="slip-card"><div class="preview-table-caption"><span>ORDER SUMMARY</span><b>READY TO SEND</b></div><table class="order-preview-table"><tbody>${rows.join("")}</tbody></table><div class="slip-barcode" aria-hidden="true"><div class="slip-bars"></div><span>GAMEPAY</span></div><div class="slip-keep">Keep this little slip for your records.</div></div><div class="slip-zigzag" aria-hidden="true"></div>`;
+  // Keep the Figma receipt order: Name sits right after Plan, before Payment.
+  const nameIdx=rows.findIndex(r=>r.label==="Name");
+  if(nameIdx>0){
+    const nameRow=rows.splice(nameIdx,1)[0];
+    const planIdx=rows.findIndex(r=>r.label==="Plan");
+    rows.splice(planIdx+1,0,nameRow);
+  }
+  previewFinalBox.innerHTML = `<div class="slip-card"><div class="preview-table-caption"><span>ORDER SUMMARY</span><b>READY TO SEND</b></div><table class="order-preview-table"><tbody>${rows.map(r=>r.html).join("")}</tbody></table><div class="slip-barcode" aria-hidden="true"><div class="slip-bars"></div><span>GAMEPAY</span></div><div class="slip-keep">Keep this little slip for your records.</div></div><div class="slip-zigzag" aria-hidden="true"></div>`;
 }
 function updatePreview(){
   const selectedPlan = currentProduct?.plans[currentPlanIndex];
