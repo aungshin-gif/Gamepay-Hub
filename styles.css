@@ -7457,8 +7457,11 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 }
 @media(max-width:560px){
   #orderStatusView{ border-radius:20px; padding:20px 14px 28px; }
-  #orderStatusView .fig-os-ref{ flex-direction:column; align-items:stretch; }
-  #orderStatusView .fig-os-refresh{ justify-content:center; }
+  #orderStatusView .fig-os-ref{ flex-direction:row; align-items:center; gap:10px; padding:12px 14px; }
+  #orderStatusView .fig-os-ref-meta{ flex:1 1 auto; }
+  #orderStatusView .fig-os-code b{ font-size:14px; }
+  #orderStatusView .fig-os-refresh{ justify-content:center; padding:9px 12px; font-size:12px; border-radius:10px; box-shadow:0 4px 10px rgba(35,40,29,.18); }
+  #orderStatusView .fig-os-refresh svg{ width:14px; height:14px; }
   #orderStatusView .fig-os-card{ padding:16px; gap:13px; }
   #orderStatusView .fig-os-status-icon{ width:46px; height:46px; }
   #orderStatusView .fig-os-status-icon svg{ width:23px; height:23px; }
@@ -7538,10 +7541,13 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
   display:inline-flex; align-items:center; gap:6px;
   font-size:11px; font-weight:500; line-height:16.5px; color:#555e6e;
 }
-#previewSection .pv3-dot{width:6px; height:6px; border-radius:50%; background:#7e8fa5; flex:none;}
-#previewSection .pv3-status:not(.is-done) .pv3-dot{animation:pv3Pulse 2s ease-in-out infinite;}
-@keyframes pv3Pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
-#previewSection .pv3-status.is-done .pv3-dot{background:#697a8a; animation:none;}
+#previewSection .pv3-dot{width:8px; height:8px; border-radius:50%; background:#22c55e; flex:none;
+  box-shadow:0 0 8px 2px rgba(34,197,94,.65), 0 0 2px 0 rgba(34,197,94,.9);}
+#previewSection .pv3-status:not(.is-done) .pv3-dot{animation:pv3Glow 1.6s ease-in-out infinite;}
+@keyframes pv3Glow{0%,100%{box-shadow:0 0 6px 1px rgba(34,197,94,.5), 0 0 2px 0 rgba(34,197,94,.8);}
+  50%{box-shadow:0 0 14px 4px rgba(34,197,94,.85), 0 0 3px 1px rgba(34,197,94,1);}}
+#previewSection .pv3-status.is-done .pv3-dot{background:#22c55e; animation:none;
+  box-shadow:0 0 8px 2px rgba(34,197,94,.55), 0 0 2px 0 rgba(34,197,94,.8);}
 #previewSection .pv3-replay{
   display:inline-flex; align-items:center; gap:6px;
   background:none; border:0; border-radius:8px; padding:0 8px; cursor:pointer;
@@ -7800,8 +7806,8 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 }
 #previewSection .pv3-totaltext span{display:block; font-size:10px; color:#596477;}
 #previewSection .pv3-totaltext b{display:block; margin-top:2px; white-space:nowrap; font-weight:400;}
-#previewSection .pv3-totaltext .pv3-tamt{font-size:20px; font-weight:600; letter-spacing:-.5px; color:#252a35;}
-#previewSection .pv3-totaltext .pv3-tks{font-size:12px; font-weight:500; margin-left:4px; color:#252a35;}
+#previewSection .pv3-totaltext .pv3-tamt{font-size:20px; font-weight:600; letter-spacing:-.5px; color:#111111;}
+#previewSection .pv3-totaltext .pv3-tks{font-size:12px; font-weight:500; margin-left:4px; color:#111111;}
 #previewSection .pv3-ctawrap{flex:none;}
 #previewSection #previewOrderBtn.pv3-confirm{
   margin-top:0 !important;
@@ -7884,4 +7890,22 @@ body.light-mode #previewSection #previewOrderBtn.pv3-confirm:disabled{
   #previewSection .pv3-paperwell{overflow:visible !important; margin:0 !important; padding:0 !important;}
   #previewSection .pv3-paper{transform:none !important; animation:none !important; box-shadow:none !important;}
   #previewSection .pv3-slip{border:1px solid #E2E8F0;}
+}
+
+/* v14: order-tracking plan logo + mobile smoothness.
+   The lag on phones came from three expensive paint effects:
+   (1) body background-attachment:fixed repaints the full-page gradient every
+   scroll frame, (2) every product .card is a live backdrop-blur(26px) surface,
+   (3) the sticky .categories bar blurs continuously while scrolling.
+   On mobile these are replaced with cheap equivalents; desktop is untouched. */
+.order-status-details .mo-plan-logo{display:inline-flex; align-items:center; justify-content:center;
+  width:24px; height:24px; border-radius:7px; overflow:hidden; vertical-align:-7px; margin-right:8px;
+  background:#f1f4f9; font-size:15px; line-height:1;}
+.order-status-details .mo-plan-logo img{width:100%; height:100%; object-fit:cover; display:block;}
+@media(max-width:760px){
+  body, body.light-mode{background-attachment:scroll !important;}
+  .card{backdrop-filter:none !important; -webkit-backdrop-filter:none !important;}
+  body:not(.light-mode) .card{
+    background:linear-gradient(135deg,rgba(26,54,104,.96),rgba(10,30,70,.97)) !important;}
+  .categories{backdrop-filter:none !important; -webkit-backdrop-filter:none !important;}
 }

@@ -64,7 +64,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=56">
+  <link rel="stylesheet" href="styles.css?v=57">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -4398,6 +4398,20 @@ async function subscribeAllMyOrdersRealtime(){
   data.forEach(o => ensureOrderChannel(o));
 }
 
+// Product logo for the order-tracking details table -- same icon the
+// product cards use, so the plan block matches the plans/products list.
+function productIconForOrderTracking(name){
+  try{
+    const list = (typeof products !== "undefined") ? products : [];
+    const p = list.find(x => String(x.name || "").toLowerCase() === String(name || "").toLowerCase());
+    if(!p || !p.icon) return "";
+    const inner = (p.iconType === "emoji")
+      ? escapePreviewText(p.icon)
+      : `<img src="${p.icon}" alt="" loading="lazy" decoding="async">`;
+    return `<span class="mo-plan-logo">${inner}</span>`;
+  }catch(e){ return ""; }
+}
+
 function renderStatusDetails(order){
   const box = document.getElementById("statusDetails");
   if(!box || !order) return;
@@ -4408,7 +4422,13 @@ function renderStatusDetails(order){
     ["Payment", order.payment_method],
     ["Placed", order.created_at ? formatOrderDate(order.created_at) : null]
   ].filter(([, v]) => v);
-  const trs = rows.map(([label, value]) => `<tr><th>${label}</th><td>${escapePreviewText(value)}</td></tr>`).join("");
+  const trs = rows.map(([label, value]) => {
+    let cell;
+    if(label === "Product") cell = productIconForOrderTracking(order.product_name) + escapePreviewText(value);
+    else if(label === "Plan") cell = escapePreviewText(stripTrailingPrice(value) || "—");
+    else cell = escapePreviewText(value);
+    return `<tr><th>${label}</th><td>${cell}</td></tr>`;
+  }).join("");
   box.innerHTML = `<div class="status-details-caption">Order Summary</div><table class="order-preview-table"><tbody>${trs}</tbody></table>`;
 }
 
