@@ -59,12 +59,16 @@
        Mono, exactly like the Figma design. Scoped via #previewSection CSS. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Figma "User greeting" News page fonts: headlines in Roboto Condensed,
+       body in Source Sans 3 (Noto Sans Myanmar fallback covers Burmese text).
+       Scoped via .np-* CSS. -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
   <!-- The ?v= query string busts the browser's cache for this file --
        GitHub Pages doesn't fingerprint asset URLs on its own, so without
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=61">
+  <link rel="stylesheet" href="styles.css?v=63">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -140,23 +144,37 @@
   </div>
 
   <div id="newsFeedView" class="news-feed-overlay hidden" role="dialog" aria-label="News">
-    <div class="news-feed-header">
-      <button id="newsFeedBackBtn" class="news-feed-back" type="button" aria-label="Close News">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-      </button>
-      <div class="news-feed-brand">
-        <img id="newsFeedLogo" class="news-feed-logo" alt="" />
-        <div>
-          <div class="news-feed-wordmark">GamePay Hub <span>News</span></div>
-          <div class="news-feed-tagline">Digital Premium, Games &amp; International Wallet Store</div>
+    <div class="np-topbar">
+      <div class="np-utilbar"><span>GAMEPAY HUB NEWS</span><span id="npEditionDate">Reference edition</span></div>
+      <div class="np-masthead">
+        <button id="newsFeedBackBtn" class="np-back" type="button" aria-label="Close News">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </button>
+        <div class="np-brand">
+          <img id="newsFeedLogo" class="np-logo" alt="Gamepay Hub" />
+          <span class="np-news-badge">NEWS</span>
+        </div>
+        <div class="np-masthead-actions">
+          <button id="npSearchBtn" class="np-icon-btn" type="button" aria-label="Search news">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+          </button>
+          <button id="npAccountBtn" class="np-account-btn" type="button">My account</button>
         </div>
       </div>
+      <div class="np-searchbar hidden" id="npSearchBar">
+        <input id="npSearchInput" type="search" placeholder="Search news articles" aria-label="Search news articles" />
+        <button id="npSearchClose" type="button">Close</button>
+      </div>
+      <nav class="np-tabs" aria-label="News sections">
+        <button class="np-tab active" data-tab="latest" type="button">Latest</button>
+        <button class="np-tab" data-tab="saved" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Saved</button>
+        <button class="np-tab" data-tab="offers" type="button">Offers &amp; Updates</button>
+      </nav>
     </div>
-    <script>document.getElementById("newsFeedLogo").src=document.querySelector(".compact-logo").src;</script>
-    <div class="news-feed-list" id="newsFeedList">
+    <div class="news-feed-list np-list" id="newsFeedList">
       <div class="news-feed-empty">Loading…</div>
     </div>
-    <div class="news-detail hidden" id="newsDetailView"></div>
+    <div class="news-detail np-detail hidden" id="newsDetailView"></div>
   </div>
 
   <div id="notiHubView" class="news-feed-overlay hidden" role="dialog" aria-label="Notifications">
@@ -5512,16 +5530,21 @@ document.getElementById("notiMenuOrders")?.addEventListener("click", () => { clo
 document.getElementById("notiMenuMessage")?.addEventListener("click", () => { closeNotiHub(); cameFromNotiHub = true; openSupportMessageView(); });
 
 // ---------------------------------------------------------------------
-// News: a read-only feed of posts the admin writes from the dashboard
-// (see news_posts in schema.sql). No likes, no comments -- just
-// headline, body, images, and when it was posted. Editorial layout
-// (a featured story up top, smaller article cards below) rather than a
-// plain stacked feed. Opens as a full-screen overlay on top of whatever
-// the customer was already doing, so closing it just returns to that
-// exact spot.
+// News: Figma "User greeting" newsroom ("Gamepay Hub NEWS").
+// Read-only feed of posts the admin writes from the dashboard
+// (news_posts in schema.sql). Opens as a full-screen overlay.
+// Tabs: Latest | Saved (bookmarks, this browser only) | Offers & Updates.
+// Detail view: full article with byline, figure, source/reference link,
+// copy-link share, save toggle, and Positive/Negative reactions.
+// Optional per-post fields (defensive -- hidden when absent until the
+// admin panel + news_posts columns provide them): excerpt, link_url,
+// link_label, caption, source, is_offer/category.
 // ---------------------------------------------------------------------
 let newsFeedLoaded = false;
 let newsPostsData = [];
+let npActiveTab = "latest";
+let npSearchQuery = "";
+
 function newsWhenText(post){
   const when = new Date(post.created_at);
   if(isNaN(when)) return "";
@@ -5535,88 +5558,265 @@ function newsWhenText(post){
   if(days < 7) return `${days}d ago`;
   return when.toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
 }
-const NEWS_EYEBROW = `<span class="news-hero-eyebrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>News</span>`;
-function newsPostMetaHtml(post, withAuthor){
-  const author = withAuthor ? `<span class="news-post-author">GamePay Hub</span><span class="news-post-dot">·</span>` : "";
-  return `<div class="news-post-meta">${author}<span class="news-post-time">${newsWhenText(post)}</span></div>`;
+function npDateText(post){
+  const when = new Date(post.created_at);
+  if(isNaN(when)) return "";
+  return when.toLocaleString(undefined, { day: "numeric", month: "short", year: "numeric" }) +
+    " · " + when.toLocaleString(undefined, { hour: "numeric", minute: "2-digit" });
 }
-// The primary image is shown at its natural proportions (never cropped)
-// so tall screenshots/collages -- very common in these posts -- are
-// never cut off. Extra images (2nd onward) are secondary, so a compact
-// cropped-square row is fine for those. Used on the detail view only --
-// list previews use a single cropped thumbnail, same as any news site's
-// overview page (the full images are what you get by opening the post).
-function newsHeroImagesHtml(images){
-  if(!images.length) return "";
-  const [first, ...rest] = images;
-  const restHtml = rest.length ? `
-    <div class="news-hero-extra-images">
-      ${rest.map(url => `<img class="news-hero-extra-img" src="${url}" alt="" loading="lazy">`).join("")}
-    </div>
-  ` : "";
-  return `
-    <div class="news-hero-images">
-      <img class="news-hero-img" src="${first}" alt="" loading="lazy">
-      ${restHtml}
-    </div>
-  `;
+function npReadTime(post){
+  const words = String(post.body || "").trim().split(/\s+/).filter(Boolean).length;
+  return `${Math.max(1, Math.round(words / 200))} min read`;
 }
-// List view: every post -- featured one included -- is a preview only
-// (thumbnail + headline + a clamped excerpt), never the full text. The
-// point of the list is to see what's out there at a glance; opening a
-// post is what gets you the details. The featured post just gets a
-// bigger thumbnail and headline, same as any news homepage's lead story.
-function newsHeroPreview(post){
-  const images = Array.isArray(post.images) ? post.images.slice(0, 8) : [];
-  const thumbHtml = images.length ? `<div class="news-hero-thumb-wrap"><img class="news-hero-thumb" src="${images[0]}" alt="" loading="lazy"></div>` : "";
+function npExcerpt(post, len){
+  const custom = String(post.excerpt || "").trim();
+  if(custom) return custom;
+  const body = String(post.body || "").trim().replace(/\s+/g, " ");
+  const n = len || 140;
+  return body.length > n ? body.slice(0, n).trimEnd() + "…" : body;
+}
+function npIsOffer(post){
+  return post.is_offer === true || String(post.category || "").toLowerCase() === "offer";
+}
+function npPostImages(post){
+  return Array.isArray(post.images) ? post.images.slice(0, 8) : [];
+}
+function npSavedIds(){
+  try { const v = JSON.parse(localStorage.getItem("gph-news-saved") || "[]"); return Array.isArray(v) ? v.map(String) : []; }
+  catch(e){ return []; }
+}
+function npIsSaved(id){
+  return npSavedIds().includes(String(id));
+}
+function npToggleSave(id){
+  const key = "gph-news-saved";
+  let ids = npSavedIds();
+  const sid = String(id);
+  ids = ids.includes(sid) ? ids.filter(x => x !== sid) : [...ids, sid];
+  try { localStorage.setItem(key, JSON.stringify(ids)); } catch(e){}
+  return ids.includes(sid);
+}
+function npGetReaction(id){
+  try { return localStorage.getItem("gph-news-reaction-" + id) || ""; } catch(e){ return ""; }
+}
+function npSetReaction(id, val){
+  try {
+    if(val) localStorage.setItem("gph-news-reaction-" + id, val);
+    else localStorage.removeItem("gph-news-reaction-" + id);
+  } catch(e){}
+}
+const NP_ICONS = {
+  clock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 13.5"/></svg>`,
+  bookmark: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>`,
+  bookmarkFill: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>`,
+  share: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>`,
+  external: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`,
+  thumbUp: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>`,
+  thumbDown: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/></svg>`
+};
+function npMetaHtml(post){
+  return `<div class="np-meta"><span>${escapePreviewText(npDateText(post))}</span><span class="np-meta-dot">·</span><span>Gamepay Hub</span><span class="np-meta-dot">·</span><span class="np-meta-read">${NP_ICONS.clock}${escapePreviewText(npReadTime(post))}</span></div>`;
+}
+function npSaveBtnHtml(post, cls){
+  const saved = npIsSaved(post.id);
+  return `<button type="button" class="${cls} ${saved ? "saved" : ""}" data-save-id="${post.id}" aria-pressed="${saved}" aria-label="${saved ? "Remove from saved" : "Save story"}">${saved ? NP_ICONS.bookmarkFill : NP_ICONS.bookmark}</button>`;
+}
+// ---- Latest tab ----
+function npHeroHtml(post){
+  const images = npPostImages(post);
+  const imgHtml = images.length ? `<div class="np-hero-imgwrap"><img class="np-hero-img" src="${images[0]}" alt="" loading="lazy"></div>` : "";
   return `
-    <article class="news-hero-card" data-post-id="${post.id}">
-      ${thumbHtml}
-      <div class="news-hero-body">
-        ${NEWS_EYEBROW}
-        <h2 class="news-hero-title">${escapePreviewText(post.title)}</h2>
-        ${newsPostMetaHtml(post, true)}
-        <div class="news-hero-excerpt">${escapePreviewText(post.body)}</div>
+    <article class="np-hero" data-post-id="${post.id}">
+      <div class="np-hero-text">
+        <h2 class="np-hero-title">${escapePreviewText(post.title)}</h2>
+        <p class="np-hero-excerpt">${escapePreviewText(npExcerpt(post, 160))}</p>
+        ${npMetaHtml(post)}
+        <span class="np-read-link">Read the story <span aria-hidden="true">→</span></span>
       </div>
-    </article>
-  `;
+      ${imgHtml}
+    </article>`;
 }
-function newsGridPreview(post){
-  const images = Array.isArray(post.images) ? post.images.slice(0, 8) : [];
-  const thumbHtml = images.length ? `<div class="news-grid-thumb-wrap"><img class="news-grid-thumb" src="${images[0]}" alt="" loading="lazy"></div>` : "";
+function npHeadlinesHtml(posts){
+  if(!posts.length) return "";
+  const rows = posts.slice(0, 3).map((p, i) => `
+    <button type="button" class="np-headline-row" data-post-id="${p.id}">
+      <span class="np-headline-num">${String(i + 1).padStart(2, "0")}</span>
+      <span class="np-headline-title">${escapePreviewText(p.title)}</span>
+    </button>`).join("");
   return `
-    <article class="news-grid-card" data-post-id="${post.id}">
-      ${thumbHtml}
-      <div class="news-grid-card-body">
-        <h3 class="news-grid-title">${escapePreviewText(post.title)}</h3>
-        ${newsPostMetaHtml(post, false)}
-        <div class="news-grid-excerpt">${escapePreviewText(post.body)}</div>
+    <aside class="np-headlines">
+      <h3 class="np-headlines-title">Latest headlines</h3>
+      ${rows}
+      <button type="button" class="np-headlines-more" data-goto-tab="saved">${NP_ICONS.bookmark}Your reading list <span aria-hidden="true">→</span></button>
+    </aside>`;
+}
+function npCardHtml(post){
+  const images = npPostImages(post);
+  const imgHtml = images.length ? `<div class="np-card-imgwrap"><img class="np-card-img" src="${images[0]}" alt="" loading="lazy"></div>` : "";
+  return `
+    <article class="np-card" data-post-id="${post.id}">
+      ${imgHtml}
+      <h3 class="np-card-title">${escapePreviewText(post.title)}</h3>
+      <p class="np-card-excerpt">${escapePreviewText(npExcerpt(post, 120))}</p>
+      <div class="np-card-foot">
+        ${npMetaHtml(post)}
+        ${npSaveBtnHtml(post, "np-save-btn")}
       </div>
-    </article>
-  `;
+    </article>`;
 }
-// Detail view: the full thing -- every image at full size (never
-// cropped), the complete body text. Reachable by tapping any preview.
-function newsDetailHtml(post){
-  const images = Array.isArray(post.images) ? post.images.slice(0, 8) : [];
+function npFooterHtml(){
   return `
-    <button type="button" class="news-detail-back" id="newsDetailBackBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-      Back to News
-    </button>
-    ${newsHeroImagesHtml(images)}
-    <div class="news-detail-body">
-      ${NEWS_EYEBROW}
-      <h1 class="news-detail-title">${escapePreviewText(post.title)}</h1>
-      ${newsPostMetaHtml(post, true)}
-      <div class="news-detail-text">${escapePreviewText(post.body)}</div>
-    </div>
-  `;
+    <footer class="np-footer">
+      <div class="np-footer-brand"><span class="np-footer-logo">Gamepay Hub</span><span class="np-news-badge sm">NEWS</span></div>
+      <nav class="np-footer-links" aria-label="Service">
+        <button type="button" data-np-link="store">Store</button>
+        <button type="button" data-np-link="orders">My orders</button>
+        <button type="button" data-np-link="account">My account</button>
+        <a href="https://t.me/angsthtun" target="_blank" rel="noopener">Contact</a>
+      </nav>
+      <p class="np-footer-note">Gamepay Hub News · Stories, dates and imagery are reference content.</p>
+    </footer>`;
 }
-function wireNewsCardClicks(container){
-  container.querySelectorAll("[data-post-id]").forEach(card => {
-    card.addEventListener("click", () => openNewsDetail(card.dataset.postId));
+function npEmptyHtml(title, text, ctaTab, ctaLabel){
+  return `
+    <div class="np-empty">
+      <h2 class="np-empty-title">${title}</h2>
+      <p class="np-empty-text">${text}</p>
+      ${ctaTab ? `<button type="button" class="np-empty-cta" data-goto-tab="${ctaTab}">${ctaLabel} <span aria-hidden="true">→</span></button>` : ""}
+    </div>`;
+}
+function npFilteredPosts(){
+  let posts = [...newsPostsData];
+  if(npActiveTab === "offers") posts = posts.filter(npIsOffer);
+  else if(npActiveTab === "saved"){ const ids = npSavedIds(); posts = posts.filter(p => ids.includes(String(p.id))); }
+  else posts = posts.filter(p => !npIsOffer(p));
+  const q = npSearchQuery.trim().toLowerCase();
+  if(q) posts = posts.filter(p => (String(p.title || "") + " " + String(p.body || "")).toLowerCase().includes(q));
+  return posts;
+}
+function renderNewsList(){
+  const list = document.getElementById("newsFeedList");
+  if(!list) return;
+  const posts = npFilteredPosts();
+  let html = "";
+  if(npActiveTab === "latest"){
+    html += `<div class="np-section-head"><h1>Latest news</h1><span class="np-section-sub">All stories, in one place.</span></div>`;
+    if(!posts.length){
+      html += npEmptyHtml("No stories yet", "Check back soon for the latest from Gamepay Hub.", "", "");
+    } else {
+      const [featured, ...rest] = posts;
+      html += `<div class="np-top"><div class="np-top-main">${npHeroHtml(featured)}</div>${npHeadlinesHtml(rest)}</div>`;
+      if(rest.length){
+        html += `<div class="np-more-head"><h2>More stories</h2><span class="np-section-sub">Reference edition</span></div>
+                 <div class="np-grid">${rest.map(npCardHtml).join("")}</div>`;
+      }
+    }
+  } else if(npActiveTab === "saved"){
+    html += `<div class="np-section-head"><h1>Saved stories</h1><span class="np-section-sub">${posts.length} ${posts.length === 1 ? "story" : "stories"}</span></div>`;
+    html += posts.length
+      ? `<div class="np-grid">${posts.map(npCardHtml).join("")}</div>`
+      : npEmptyHtml("Your reading list starts here.", "Save a story using its bookmark button to find it here.", "latest", "Explore the latest");
+  } else {
+    html += `<div class="np-section-head"><h1>Offers &amp; Updates</h1><span class="np-section-sub">${posts.length} ${posts.length === 1 ? "story" : "stories"}</span></div>`;
+    html += posts.length
+      ? `<div class="np-grid">${posts.map(npCardHtml).join("")}</div>`
+      : npEmptyHtml("No offers right now", "New offers and updates from Gamepay Hub will appear here.", "latest", "Explore the latest");
+  }
+  html += npFooterHtml();
+  list.innerHTML = html;
+  wireNewsList(list);
+}
+function wireNewsList(container){
+  container.querySelectorAll("[data-post-id]").forEach(el => {
+    el.addEventListener("click", (e) => {
+      if(e.target.closest("[data-save-id]") || e.target.closest("[data-goto-tab]")) return;
+      openNewsDetail(el.dataset.postId);
+    });
   });
+  container.querySelectorAll("[data-save-id]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const saved = npToggleSave(btn.dataset.saveId);
+      btn.classList.toggle("saved", saved);
+      btn.setAttribute("aria-pressed", String(saved));
+      btn.setAttribute("aria-label", saved ? "Remove from saved" : "Save story");
+      btn.innerHTML = saved ? NP_ICONS.bookmarkFill : NP_ICONS.bookmark;
+      if(npActiveTab === "saved") renderNewsList();
+    });
+  });
+  container.querySelectorAll("[data-goto-tab]").forEach(btn => {
+    btn.addEventListener("click", () => npSwitchTab(btn.dataset.gotoTab));
+  });
+  container.querySelectorAll("[data-np-link]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const dest = btn.dataset.npLink;
+      closeNewsFeed();
+      if(dest === "orders" && typeof openMyOrdersView === "function") openMyOrdersView();
+      else if(dest === "account" && typeof openAccountView === "function") openAccountView();
+      else if(typeof goToMainPage === "function") goToMainPage();
+    });
+  });
+}
+function npSwitchTab(tab){
+  npActiveTab = tab;
+  document.querySelectorAll(".np-tab").forEach(t => t.classList.toggle("active", t.dataset.tab === tab));
+  closeNewsDetail();
+  document.getElementById("newsFeedList")?.classList.remove("hidden");
+  renderNewsList();
+  document.getElementById("newsFeedList").scrollTop = 0;
+}
+// ---- Detail view ----
+function newsDetailHtml(post){
+  const images = npPostImages(post);
+  const [first, ...rest] = images;
+  const saved = npIsSaved(post.id);
+  const reaction = npGetReaction(post.id);
+  const caption = String(post.caption || "").trim();
+  const linkUrl = String(post.link_url || "").trim();
+  const linkLabel = String(post.link_label || "").trim() || "Visit the official page";
+  const source = String(post.source || "").trim();
+  const figureHtml = first ? `
+    <figure class="np-figure">
+      <div class="np-figure-imgwrap"><img class="np-figure-img" src="${first}" alt="" loading="lazy"></div>
+      ${caption ? `<figcaption class="np-figcaption">${escapePreviewText(caption)}</figcaption>` : ""}
+    </figure>` : "";
+  const extraHtml = rest.length ? `
+    <div class="np-extra-images">${rest.map(url => `<img class="np-extra-img" src="${url}" alt="" loading="lazy">`).join("")}</div>` : "";
+  const sourceHtml = (linkUrl || source) ? `
+    <section class="np-source">
+      <h2>Source &amp; reference</h2>
+      ${source ? `<p class="np-source-text">${escapePreviewText(source)}</p>` : ""}
+      ${linkUrl ? `<a class="np-source-link" href="${escapePreviewText(linkUrl)}" target="_blank" rel="noopener">${escapePreviewText(linkLabel)} ${NP_ICONS.external}</a>` : ""}
+    </section>` : "";
+  return `
+    <button type="button" class="np-detail-back" id="newsDetailBackBtn"><span aria-hidden="true">←</span> Back to news</button>
+    <article class="np-article">
+      <h1 class="np-article-title">${escapePreviewText(post.title)}</h1>
+      <p class="np-standfirst">${escapePreviewText(npExcerpt(post, 200))}</p>
+      <div class="np-byline">
+        <div class="np-byline-who"><strong>By Gamepay Hub</strong><span>${escapePreviewText(npDateText(post))} · ${escapePreviewText(npReadTime(post))}</span></div>
+        <div class="np-byline-actions">
+          <button type="button" id="npDetailSave" class="${saved ? "saved" : ""}" aria-pressed="${saved}">${saved ? NP_ICONS.bookmarkFill : NP_ICONS.bookmark}<span>Save story</span></button>
+          <button type="button" id="npDetailCopy">${NP_ICONS.share}<span>Copy link</span></button>
+        </div>
+      </div>
+      ${figureHtml}
+      ${extraHtml}
+      <div class="np-article-body">${escapePreviewText(post.body)}</div>
+      <div class="np-note-callout">Stories are adapted from supplied references and may not have been independently verified.</div>
+      ${sourceHtml}
+      <section class="np-reactions">
+        <h2>Your reaction</h2>
+        <p class="np-reactions-sub">How do you feel about this story?</p>
+        <div class="np-reaction-btns">
+          <button type="button" class="np-reaction-btn ${reaction === "positive" ? "selected" : ""}" data-reaction="positive">${NP_ICONS.thumbUp}<span>Positive</span></button>
+          <button type="button" class="np-reaction-btn ${reaction === "negative" ? "selected" : ""}" data-reaction="negative">${NP_ICONS.thumbDown}<span>Negative</span></button>
+        </div>
+        <p class="np-reaction-status" id="npReactionStatus">${reaction ? (reaction === "positive" ? "You reacted: Positive." : "You reacted: Negative.") : "No reaction selected."}</p>
+        <p class="np-reaction-note">Choose one reaction. Tap again to remove it. Your choice is saved on this browser only.</p>
+      </section>
+      <button type="button" class="np-detail-back np-detail-back-bottom" id="newsDetailBackBtn2"><span aria-hidden="true">←</span> Return to your list</button>
+    </article>`;
 }
 function openNewsDetail(postId){
   const post = newsPostsData.find(p => String(p.id) === String(postId));
@@ -5626,11 +5826,44 @@ function openNewsDetail(postId){
   detail.classList.remove("hidden");
   document.getElementById("newsFeedList").classList.add("hidden");
   detail.scrollTop = 0;
+  try { history.replaceState(null, "", "#news-" + post.id); } catch(e){}
   document.getElementById("newsDetailBackBtn")?.addEventListener("click", closeNewsDetail);
+  document.getElementById("newsDetailBackBtn2")?.addEventListener("click", closeNewsDetail);
+  document.getElementById("npDetailSave")?.addEventListener("click", function(){
+    const saved = npToggleSave(post.id);
+    this.classList.toggle("saved", saved);
+    this.setAttribute("aria-pressed", String(saved));
+    this.innerHTML = (saved ? NP_ICONS.bookmarkFill : NP_ICONS.bookmark) + "<span>Save story</span>";
+  });
+  document.getElementById("npDetailCopy")?.addEventListener("click", async function(){
+    const url = location.origin + location.pathname + "#news-" + post.id;
+    try { await navigator.clipboard.writeText(url); }
+    catch(e){
+      const ta = document.createElement("textarea");
+      ta.value = url; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); } catch(_){}
+      ta.remove();
+    }
+    const label = this.querySelector("span");
+    if(label){ label.textContent = "Copied!"; setTimeout(() => { label.textContent = "Copy link"; }, 1600); }
+  });
+  detail.querySelectorAll("[data-reaction]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const val = btn.dataset.reaction;
+      const next = npGetReaction(post.id) === val ? "" : val;
+      npSetReaction(post.id, next);
+      detail.querySelectorAll("[data-reaction]").forEach(b => b.classList.toggle("selected", b.dataset.reaction === next));
+      const status = document.getElementById("npReactionStatus");
+      if(status) status.textContent = next ? (next === "positive" ? "You reacted: Positive." : "You reacted: Negative.") : "No reaction selected.";
+    });
+  });
 }
 function closeNewsDetail(){
   document.getElementById("newsDetailView")?.classList.add("hidden");
   document.getElementById("newsFeedList")?.classList.remove("hidden");
+  try {
+    if(String(location.hash || "").startsWith("#news-")) history.replaceState(null, "", location.pathname + location.search);
+  } catch(e){}
 }
 async function loadNewsFeed(){
   const list = document.getElementById("newsFeedList");
@@ -5639,18 +5872,31 @@ async function loadNewsFeed(){
   list.innerHTML = '<div class="news-feed-empty">Loading…</div>';
   const { data, error } = await supabaseClient.from("news_posts").select("*").order("created_at", { ascending: false });
   if(error){ list.innerHTML = '<div class="news-feed-empty">Couldn\'t load News right now.</div>'; return; }
-  if(!data || !data.length){ list.innerHTML = '<div class="news-feed-empty">No posts yet -- check back soon.</div>'; return; }
+  if(!data || !data.length){ list.innerHTML = '<div class="news-feed-empty">No posts yet -- check back soon.</div>' + npFooterHtml(); return; }
   newsPostsData = data;
-  const [featured, ...rest] = data;
-  const gridHtml = rest.length ? `<div class="news-section-label">More News</div><div class="news-grid">${rest.map(newsGridPreview).join("")}</div>` : "";
-  list.innerHTML = newsHeroPreview(featured) + gridHtml;
-  wireNewsCardClicks(list);
+  renderNewsList();
   newsFeedLoaded = true;
+  // Deep link: #news-<id> opens that story directly.
+  const m = String(location.hash || "").match(/^#news-(.+)$/);
+  if(m && newsPostsData.some(p => String(p.id) === m[1])) openNewsDetail(m[1]);
 }
 function openNewsFeed(){
   document.getElementById("newsFeedView")?.classList.remove("hidden");
   document.body.classList.add("news-feed-open");
   closeNewsDetail();
+  // Reset to the Latest tab without rendering (loadNewsFeed renders once
+  // the posts arrive, so there is no empty-state flash in between).
+  npActiveTab = "latest";
+  npSearchQuery = "";
+  const si = document.getElementById("npSearchInput");
+  if(si) si.value = "";
+  document.getElementById("npSearchBar")?.classList.add("hidden");
+  document.querySelectorAll(".np-tab").forEach(t => t.classList.toggle("active", t.dataset.tab === "latest"));
+  document.getElementById("newsFeedList")?.classList.remove("hidden");
+  const logo = document.getElementById("newsFeedLogo");
+  if(logo && !logo.src){ const src = document.querySelector(".compact-logo")?.src; if(src) logo.src = src; }
+  const ed = document.getElementById("npEditionDate");
+  if(ed) ed.textContent = "Reference edition · " + new Date().toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
   loadNewsFeed();
 }
 function closeNewsFeed(){
@@ -5659,6 +5905,25 @@ function closeNewsFeed(){
 }
 document.getElementById("newsFeedBtn")?.addEventListener("click", openNewsFeed);
 document.getElementById("newsFeedBackBtn")?.addEventListener("click", closeNewsFeed);
+document.getElementById("npAccountBtn")?.addEventListener("click", () => {
+  closeNewsFeed();
+  if(typeof openAccountView === "function") openAccountView();
+});
+document.getElementById("npSearchBtn")?.addEventListener("click", () => {
+  document.getElementById("npSearchBar")?.classList.toggle("hidden");
+  document.getElementById("npSearchInput")?.focus();
+});
+document.getElementById("npSearchClose")?.addEventListener("click", () => {
+  document.getElementById("npSearchBar")?.classList.add("hidden");
+  const input = document.getElementById("npSearchInput");
+  if(input && input.value){ input.value = ""; npSearchQuery = ""; renderNewsList(); }
+});
+document.getElementById("npSearchInput")?.addEventListener("input", (e) => {
+  npSearchQuery = e.target.value || "";
+  renderNewsList();
+});
+document.querySelectorAll(".np-tab").forEach(t => t.addEventListener("click", () => npSwitchTab(t.dataset.tab)));
+
 
 function exitOrdersView(){
   document.getElementById("myOrdersView").classList.add("hidden");

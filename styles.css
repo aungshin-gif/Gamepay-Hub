@@ -6635,93 +6635,317 @@ body.news-feed-open{ overflow:hidden; }
 }
 .news-detail.hidden{ display:none; }
 .news-feed-empty{ text-align:center; color:var(--muted,#786f63); font-size:13.5px; padding:60px 16px; }
-.news-post-meta{ display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--muted,#786f63); }
-.news-post-author{ font-weight:800; color:var(--ink,#2b2621); }
-.news-post-dot{ opacity:.6; }
-/* A small solid-color category tag above the headline -- the "BREAKING
-   NEWS"-style masthead move real news sites (CNN especially) use, in
-   the site's own violet instead of CNN's red. Shared by preview and
-   detail views. */
-.news-hero-eyebrow{
-  display:inline-flex; align-items:center; gap:4px; margin-bottom:10px; padding:4px 10px 4px 8px; border-radius:3px;
-  background:#9470d4; color:#fff; font-size:10.5px; font-weight:900;
-  letter-spacing:.09em; text-transform:uppercase;
+/* ===== News: Figma "User greeting" newsroom ("Gamepay Hub NEWS") =====
+   Classic newsroom front page. Sharp corners everywhere (only the
+   Positive/Negative reaction buttons get an 8px radius). Hairline
+   dividers instead of cards. Roboto Condensed headlines, Source Sans 3
+   body (Noto Sans Myanmar fallback covers Burmese text). Scoped .np-* so
+   the shared .news-feed-overlay shell (also used by the noti hub) is
+   untouched. */
+.np-topbar{ flex:0 0 auto; background:#fff; border-top:3px solid #bf2430; }
+.np-utilbar{
+  display:none; align-items:center; justify-content:space-between;
+  max-width:1200px; margin:0 auto; padding:8px 24px;
+  font-size:13px; font-weight:600; letter-spacing:.06em; color:#505560;
+  border-bottom:1px solid #ecebf0;
 }
-.news-hero-eyebrow svg{ width:11px; height:11px; flex:0 0 auto; }
-
-/* ---- List view: every post is a preview (thumbnail + headline +
-   excerpt), never full text -- tap one to read it. Both card types
-   share one clean, neutral bordered-card treatment (no colored accent
-   lines) so the boundary between image and text reads the same way
-   everywhere; the featured post is simply bigger. ---- */
-.news-hero-card, .news-grid-card{
-  cursor:pointer; background:var(--surface,#fffdf8);
-  border:1px solid var(--border,rgba(43,38,30,.12)); border-radius:14px; overflow:hidden;
-  transition:border-color .15s, box-shadow .15s;
+.np-masthead{
+  display:flex; align-items:center; gap:12px;
+  max-width:1200px; margin:0 auto; padding:10px 16px;
+  padding-top:calc(10px + env(safe-area-inset-top,0px));
+  min-height:78px;
 }
-.news-hero-card:active, .news-grid-card:active{ background:var(--surface-2,#fbf6ec); }
-.news-hero-card{ max-width:600px; margin:0 auto 20px; }
-.news-hero-thumb-wrap, .news-grid-thumb-wrap{
+.np-back{
   display:flex; align-items:center; justify-content:center;
-  background:var(--surface-2,#fbf6ec); overflow:hidden;
+  width:44px; height:44px; border-radius:999px; flex:0 0 auto;
+  border:1px solid #e4e4ee; background:#fff; color:#202127; cursor:pointer;
 }
-.news-hero-thumb-wrap{ aspect-ratio:16/10; }
-.news-grid-thumb-wrap{ aspect-ratio:16/9; }
-.news-hero-thumb, .news-grid-thumb{ width:100%; height:100%; object-fit:contain; display:block; }
-/* Tinted violet (the site's own brand color) rather than flat white,
-   so the featured post still reads as a "spotlight" pick, not just a
-   bigger version of the same plain card -- but the excerpt keeps this
-   compact instead of the wall of full body text it used to hold. */
-.news-hero-body{ padding:18px 20px 20px; background:linear-gradient(160deg,#1c1030,#2a1547 65%,#1c1030); }
-.news-hero-body .news-post-meta{ color:rgba(230,215,255,.65); margin-bottom:10px; }
-.news-hero-body .news-post-author{ color:#fff; }
-.news-hero-title{ font-size:20px; font-weight:900; letter-spacing:-.01em; color:#fff; line-height:1.3; margin:0 0 8px; }
-.news-hero-excerpt{
-  font-size:13.5px; line-height:1.65; color:rgba(240,232,255,.85); white-space:pre-wrap; word-break:break-word;
-  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+.np-back svg{ width:20px; height:20px; }
+.np-brand{ display:flex; align-items:center; gap:10px; min-width:0; flex:1; }
+.np-logo{ width:34px; height:34px; border-radius:8px; flex:0 0 auto; }
+.np-news-badge{
+  background:#bf2430; color:#fff; font-family:"Roboto Condensed","Noto Sans Myanmar",sans-serif;
+  font-weight:800; font-size:12px; letter-spacing:.12em; padding:6px 8px; line-height:1;
 }
-.news-section-label{
-  max-width:680px; margin:0 auto 14px; padding:8px 2px 0;
-  font-size:11.5px; font-weight:900; letter-spacing:.08em; text-transform:uppercase;
-  color:#7650b8; border-top:1px solid var(--border,rgba(43,38,30,.12));
+.np-news-badge.sm{ font-size:11px; padding:4px 6px; }
+.np-masthead-actions{ display:flex; align-items:center; gap:10px; margin-left:auto; }
+.np-icon-btn{
+  display:flex; align-items:center; justify-content:center;
+  width:44px; height:44px; border-radius:999px; border:1px solid #e4e4ee;
+  background:#fff; color:#202127; cursor:pointer;
 }
-.news-grid{ display:flex; flex-direction:column; gap:14px; max-width:680px; margin:0 auto; }
-.news-grid-card-body{ padding:14px 16px 16px; }
-.news-grid-title{ font-size:15px; font-weight:900; letter-spacing:-.005em; color:var(--ink,#2b2621); line-height:1.35; margin:0 0 4px; }
-.news-grid-excerpt{
-  margin-top:6px; font-size:13px; line-height:1.6; color:var(--ink-soft,#4a4038); white-space:pre-wrap; word-break:break-word;
-  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+.np-icon-btn svg{ width:20px; height:20px; }
+.np-account-btn{
+  display:none; align-items:center; min-height:40px; padding:0 16px;
+  border:1px solid #d5d1db; background:#fff; color:#202127;
+  font-size:14px; font-weight:600; cursor:pointer;
 }
-
-/* ---- Detail view: the full post -- every image at full size (never
-   cropped), complete body text, plain light background for comfortable
-   reading (a dark panel is fine for a two-line excerpt, not a full
-   article). Reached by tapping any preview; "Back to News" returns to
-   the list without closing the whole overlay. ---- */
-.news-detail-back{
-  display:inline-flex; align-items:center; gap:6px; margin-bottom:16px; padding:0; border:none; background:none;
-  color:var(--ink,#2b2621); font-size:13.5px; font-weight:800; cursor:pointer;
+.np-account-btn:hover{ border-color:#a41e2a; }
+.np-searchbar{
+  display:flex; gap:8px; max-width:1200px; margin:0 auto; padding:0 16px 12px;
 }
-.news-detail-back svg{ width:16px; height:16px; }
-.news-hero-images{ background:var(--surface-2,#fbf6ec); border-radius:14px; overflow:hidden; }
-/* object-fit:contain (never cover) -- these are very often tall
-   screenshots/collages, and cropping to fill a box was cutting off
-   whatever was at the top or bottom. Letterboxing keeps the whole image
-   visible no matter its proportions. */
-.news-hero-img{ display:block; width:100%; max-height:520px; object-fit:contain; background:var(--surface-2,#fbf6ec); }
-.news-hero-extra-images{ display:flex; gap:6px; padding:6px; overflow-x:auto; background:var(--surface-2,#fbf6ec); }
-.news-hero-extra-img{ height:92px; width:auto; max-width:140px; object-fit:contain; border-radius:8px; background:var(--surface,#fffdf8); flex:0 0 auto; }
-.news-detail-body{ max-width:680px; margin:20px auto 0; }
-.news-detail-title{ font-size:22px; font-weight:900; letter-spacing:-.01em; color:var(--ink,#2b2621); line-height:1.3; margin:0 0 10px; }
-.news-detail-body .news-post-meta{ margin-bottom:16px; }
-.news-detail-text{ font-size:14.5px; line-height:1.8; color:var(--ink-soft,#4a4038); white-space:pre-wrap; word-break:break-word; }
-
+.np-searchbar.hidden{ display:none; }
+.np-searchbar input{
+  flex:1; min-height:44px; padding:0 14px; font-size:15px;
+  border:1px solid #d5d1db; background:#fff; color:#202127; font-family:inherit;
+}
+.np-searchbar button{
+  min-height:44px; padding:0 16px; border:1px solid #d5d1db; background:#f7f7f8;
+  font-size:14px; font-weight:600; color:#202127; cursor:pointer;
+}
+.np-tabs{
+  display:flex; gap:16px; align-items:stretch; overflow-x:auto;
+  background:#18191d; padding:0 16px; scrollbar-width:none;
+}
+.np-tabs::-webkit-scrollbar{ display:none; }
+.np-tab{
+  display:inline-flex; align-items:center; gap:7px; flex:0 0 auto;
+  min-height:48px; padding:0 4px; background:none; border:none;
+  border-bottom:3px solid transparent; color:#d2d2d7;
+  font-size:16px; font-weight:700; cursor:pointer; white-space:nowrap;
+  font-family:"Source Sans 3","Noto Sans Myanmar",sans-serif;
+}
+.np-tab svg{ width:16px; height:16px; }
+.np-tab:hover{ color:#fff; }
+.np-tab.active{ color:#fff; border-bottom-color:#ed3e4c; }
+/* Scrollable list area (keeps .news-feed-list flex/scroll behavior). */
+.np-list{ background:#fff; }
+.np-section-head{
+  max-width:1200px; margin:0 auto; padding:20px 16px 12px;
+  display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  border-bottom:2px solid #222329;
+}
+.np-section-head h1, .np-more-head h2{
+  font-family:"Roboto Condensed","Noto Sans Myanmar",sans-serif; font-weight:700;
+  color:#202127; margin:0; line-height:1.15;
+}
+.np-section-head h1{
+  font-size:32px; border-left:4px solid #bf2430; padding-left:10px;
+}
+.np-section-sub{ font-size:13px; color:#505560; white-space:nowrap; }
+.np-more-head{
+  max-width:1200px; margin:0 auto; padding:24px 16px 0;
+  display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+}
+.np-more-head h2{ font-size:26px; }
+.np-top{ max-width:1200px; margin:0 auto; padding:0 16px; }
+.np-top-main{ padding:28px 0; border-bottom:1px solid #cfcbd6; }
+/* Featured hero: stacks on mobile, 2 columns on sm+. */
+.np-hero{ display:grid; gap:20px; cursor:pointer; }
+.np-hero-title{
+  font-family:"Roboto Condensed","Noto Sans Myanmar",sans-serif; font-weight:700;
+  font-size:36px; line-height:1.15; color:#202127; margin:0 0 12px;
+}
+.np-hero-excerpt{ font-size:18px; line-height:1.55; color:#404550; margin:0 0 14px; }
+.np-meta{
+  display:flex; align-items:center; flex-wrap:wrap; gap:6px;
+  font-size:13px; color:#505560;
+}
+.np-meta-dot{ opacity:.55; }
+.np-meta-read{ display:inline-flex; align-items:center; gap:4px; }
+.np-meta-read svg{ width:13px; height:13px; }
+.np-read-link{
+  display:inline-flex; align-items:center; min-height:44px; margin-top:12px;
+  font-size:16px; font-weight:700; color:#b72131;
+}
+.np-hero-imgwrap{ background:#f5f5f6; }
+.np-hero-img{ display:block; width:100%; aspect-ratio:5/4; object-fit:contain; }
+/* Headlines sidebar: desktop only. */
+.np-headlines{ display:none; }
+.np-grid{
+  max-width:1200px; margin:0 auto; padding:8px 16px 0;
+  display:grid; gap:28px; grid-template-columns:1fr;
+}
+/* Flat cards: no box, no shadow, no radius -- hairline separated. */
+.np-card{ border-bottom:1px solid #dedee3; padding-bottom:20px; cursor:pointer; }
+.np-card-imgwrap{ background:#f5f4f1; margin-bottom:12px; }
+.np-card-img{ display:block; width:100%; aspect-ratio:16/10; object-fit:contain; }
+.np-card-title{
+  font-family:"Roboto Condensed","Noto Sans Myanmar",sans-serif; font-weight:700;
+  font-size:28px; line-height:1.2; color:#202127; margin:0 0 4px;
+}
+.np-card:hover .np-card-title{ text-decoration:underline; text-decoration-color:#d75059; text-underline-offset:4px; }
+.np-card-excerpt{ font-size:17px; line-height:1.75; color:#404550; margin:12px 0 0; }
+.np-card-foot{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:16px; }
+.np-save-btn{
+  display:flex; align-items:center; justify-content:center; flex:0 0 auto;
+  width:44px; height:44px; border:none; background:none; color:#59606d; cursor:pointer;
+}
+.np-save-btn svg{ width:20px; height:20px; }
+.np-save-btn:hover{ background:#f4f4f5; }
+.np-save-btn.saved{ color:#b72131; }
+/* Empty states. */
+.np-empty{ max-width:1200px; margin:0 auto; padding:48px 16px 64px; text-align:center; }
+.np-empty-title{
+  font-family:"Roboto Condensed","Noto Sans Myanmar",sans-serif; font-weight:700;
+  font-size:28px; color:#202127; margin:0 0 10px;
+}
+.np-empty-text{ font-size:16px; color:#505560; margin:0 0 18px; }
+.np-empty-cta{
+  display:inline-flex; align-items:center; min-height:44px; padding:0 18px;
+  font-size:14px; font-weight:700; color:#b72131; background:none;
+  border:1px solid #e2c4c7; cursor:pointer;
+}
+/* Footer. */
+.np-footer{
+  margin-top:40px; background:#18191d; border-top:3px solid #bf2430;
+  padding:28px 16px 40px; color:#c2c3cb;
+}
+.np-footer-brand{ display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.np-footer-logo{
+  font-family:"Roboto Condensed","Noto Sans Myanmar",sans-serif;
+  font-weight:800; font-size:28px; color:#fff;
+}
+.np-footer-links{ display:flex; flex-wrap:wrap; gap:8px 20px; margin-bottom:16px; }
+.np-footer-links button, .np-footer-links a{
+  background:none; border:none; padding:0; color:#e8e8ea; font-size:14px;
+  font-weight:600; cursor:pointer; text-decoration:none; min-height:44px;
+  font-family:"Source Sans 3","Noto Sans Myanmar",sans-serif;
+}
+.np-footer-note{ font-size:13px; line-height:1.7; color:#c2c3cb; margin:0; }
+/* ---- Detail view ---- */
+.np-detail{ background:#fff; }
+.np-detail-back{
+  display:flex; align-items:center; gap:6px; min-height:44px;
+  max-width:850px; margin:0 auto; padding:12px 16px 0; width:100%;
+  background:none; border:none; color:#b72131; font-size:14px; font-weight:600; cursor:pointer;
+  font-family:"Source Sans 3","Noto Sans Myanmar",sans-serif;
+}
+.np-detail-back-bottom{ padding-bottom:48px; }
+.np-article{ max-width:850px; margin:0 auto; padding:8px 16px 0; }
+.np-article-title{
+  font-family:"Roboto Condensed","Noto Sans Myanmar",sans-serif; font-weight:700;
+  font-size:36px; line-height:1.15; color:#202127; margin:8px 0 12px;
+}
+.np-standfirst{ font-size:18px; line-height:1.75; color:#404550; margin:0 0 18px; max-width:760px; }
+.np-byline{
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  border-top:1px solid #dedde3; border-bottom:1px solid #dedde3; padding:12px 0; margin-bottom:20px;
+}
+.np-byline-who{ display:flex; flex-direction:column; gap:3px; }
+.np-byline-who strong{ font-size:16px; color:#202127; }
+.np-byline-who span{ font-size:13px; color:#505560; }
+.np-byline-actions{ display:flex; gap:8px; }
+.np-byline-actions button{
+  display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:0 14px;
+  background:none; border:1px solid #e2e3e7; color:#b72131;
+  font-size:14px; font-weight:600; cursor:pointer;
+  font-family:"Source Sans 3","Noto Sans Myanmar",sans-serif;
+}
+.np-byline-actions button svg{ width:16px; height:16px; }
+.np-byline-actions button.saved{ color:#b72131; border-color:#eec3c6; background:#fdf3f3; }
+.np-figure{ margin:0 0 8px; }
+.np-figure-imgwrap{ background:#f5f5f6; padding:12px; }
+.np-figure-img{ display:block; width:100%; max-height:320px; object-fit:contain; }
+.np-figcaption{ font-size:13px; color:#505560; padding:8px 2px 0; }
+.np-extra-images{ display:flex; gap:8px; overflow-x:auto; padding:4px 2px 12px; }
+.np-extra-img{ height:92px; width:auto; max-width:150px; object-fit:contain; background:#f5f5f6; flex:0 0 auto; }
+.np-article-body{
+  font-size:18px; line-height:1.8; color:#30323a; white-space:pre-wrap; word-break:break-word;
+  max-width:700px; margin:16px 0 0;
+}
+.np-note-callout{
+  border-left:2px solid #c83342; background:#faf6f6; color:#695b60;
+  font-size:13px; line-height:1.85; padding:12px 14px; margin:20px 0 0; max-width:700px;
+}
+.np-source{ border-top:1px solid #dedde3; margin-top:28px; padding-top:18px; max-width:700px; }
+.np-source h2{
+  font-family:"Roboto Condensed","Noto Sans Myanmar",sans-serif; font-weight:700;
+  font-size:16px; color:#202127; margin:0 0 10px;
+}
+.np-source-text{ font-size:16px; color:#404550; margin:0 0 10px; }
+.np-source-link{
+  display:inline-flex; align-items:center; gap:7px; min-height:44px;
+  font-size:15px; font-weight:700; color:#b72131; text-decoration:underline;
+  text-underline-offset:3px;
+}
+.np-source-link svg{ width:15px; height:15px; }
+.np-reactions{ border-top:1px solid #dedde3; border-bottom:1px solid #dedde3; margin-top:28px; padding:24px 0; max-width:700px; }
+.np-reactions h2{
+  font-family:"Roboto Condensed","Noto Sans Myanmar",sans-serif; font-weight:700;
+  font-size:28px; color:#202127; margin:0 0 6px;
+}
+.np-reactions-sub{ font-size:16px; color:#505560; margin:0 0 16px; }
+.np-reaction-btns{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.np-reaction-btn{
+  display:flex; align-items:center; justify-content:center; gap:9px;
+  min-height:76px; padding:12px; background:#fff; border:2px solid #e2e3e7; border-radius:8px;
+  font-size:16px; font-weight:700; color:#353840; cursor:pointer;
+  font-family:"Source Sans 3","Noto Sans Myanmar",sans-serif;
+}
+.np-reaction-btn svg{ width:22px; height:22px; }
+.np-reaction-btn:hover{ border-color:#9398a2; background:#f7f7f8; }
+.np-reaction-btn.selected{ border-color:#b72131; background:#fdf3f3; color:#b72131; }
+.np-reaction-status{ font-size:14px; font-weight:600; color:#30323a; margin:14px 0 6px; }
+.np-reaction-note{ font-size:13px; color:#505560; margin:0; }
+/* ---- Responsive: sm+ ---- */
+@media(min-width:640px){
+  .np-utilbar{ display:flex; }
+  .np-masthead{ padding-left:24px; padding-right:24px; min-height:84px; }
+  .np-logo{ width:40px; height:40px; }
+  .np-news-badge{ font-size:21px; padding:4px 8px; }
+  .np-account-btn{ display:inline-flex; }
+  .np-tabs{ gap:32px; padding:0 24px; }
+  .np-section-head, .np-more-head, .np-top, .np-grid, .np-empty{ padding-left:24px; padding-right:24px; }
+  .np-hero{ grid-template-columns:0.9fr 1.1fr; gap:24px; align-items:start; }
+  .np-hero-title{ font-size:38px; }
+  .np-hero-img{ aspect-ratio:1/1; }
+  .np-grid{ grid-template-columns:1fr 1fr; }
+  .np-article-title{ font-size:50px; }
+  .np-figure-img{ max-height:420px; }
+  .np-footer{ padding-left:24px; padding-right:24px; }
+}
+@media(min-width:1024px){
+  .np-top{ display:grid; grid-template-columns:1fr 260px; gap:32px; }
+  .np-top-main{ border-bottom:none; }
+  .np-headlines{
+    display:block; border-left:1px solid #dedbe4; padding:12px 0 0 24px; margin:28px 0;
+  }
+  .np-headlines-title{ font-size:16px; font-weight:700; color:#202127; margin:0 0 6px; }
+  .np-headline-row{
+    display:flex; gap:12px; align-items:flex-start; width:100%; text-align:left;
+    background:none; border:none; border-bottom:1px solid #e8e4ec;
+    padding:16px 0; cursor:pointer; font-family:inherit;
+  }
+  .np-headline-num{
+    font-family:"Roboto Condensed","Noto Sans Myanmar",sans-serif; font-size:20px;
+    color:#a4a5ad; flex:0 0 auto; line-height:1.25;
+  }
+  .np-headline-title{ font-size:19px; font-weight:700; line-height:1.25; color:#202127; }
+  .np-headline-row:hover .np-headline-title{ text-decoration:underline; text-decoration-color:#d75059; text-underline-offset:3px; }
+  .np-headlines-more{
+    display:inline-flex; align-items:center; gap:7px; margin-top:14px; min-height:44px;
+    background:none; border:none; color:#b72131; font-size:14px; font-weight:600; cursor:pointer;
+    font-family:"Source Sans 3","Noto Sans Myanmar",sans-serif;
+  }
+  .np-headlines-more svg{ width:15px; height:15px; }
+  .np-grid{ grid-template-columns:1fr 1fr 1fr; }
+  .np-hero-title{ font-size:44px; }
+}
+/* Mobile compactness: single column, tight rhythm, hairlines do the work. */
 @media(max-width:480px){
-  .news-feed-header{ padding:12px 14px; }
-  .news-feed-list, .news-detail{ padding:12px 10px 50px; }
-  .news-hero-title{ font-size:17px; }
-  .news-detail-title{ font-size:19px; }
-  .news-hero-img{ max-height:340px; }
+  .np-masthead{ min-height:64px; padding:8px 12px; padding-top:calc(8px + env(safe-area-inset-top,0px)); gap:8px; }
+  .np-back, .np-icon-btn{ width:40px; height:40px; }
+  .np-logo{ width:30px; height:30px; }
+  .np-section-head h1{ font-size:26px; }
+  .np-section-head{ padding:16px 12px 10px; }
+  .np-top, .np-grid, .np-empty{ padding-left:12px; padding-right:12px; }
+  .np-more-head{ padding:20px 12px 0; }
+  .np-more-head h2{ font-size:22px; }
+  .np-top-main{ padding:20px 0; }
+  .np-hero{ gap:14px; }
+  .np-hero-title{ font-size:28px; }
+  .np-hero-excerpt{ font-size:16px; }
+  .np-card-title{ font-size:22px; }
+  .np-card-excerpt{ font-size:15px; }
+  .np-grid{ gap:20px; }
+  .np-article-title{ font-size:30px; }
+  .np-article{ padding-left:12px; padding-right:12px; }
+  .np-detail-back{ padding-left:12px; }
+  .np-standfirst{ font-size:16px; }
+  .np-article-body{ font-size:16px; }
+  .np-searchbar{ padding:0 12px 10px; }
+  .np-footer{ padding:24px 12px 36px; }
 }
 body.light-mode .coupon-discount-line span:last-child{ color:#0f7a3f; }
 
