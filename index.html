@@ -59,7 +59,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=50">
+  <link rel="stylesheet" href="styles.css?v=51">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -689,35 +689,38 @@
     </div>
 
         <div id="orderStatusView" class="hidden order-status-view">
-      <div class="preview-shell fig-os-shell">
-        <div class="dashboard-head"><button id="statusBackBtn" class="dashboard-back-btn" type="button">← Back to Store</button><span class="dashboard-chip">ORDER STATUS</span></div>
+            <div class="preview-shell fig-os-shell">
+        <nav class="fig-os-crumb fig-anim" style="--d:.02s" aria-label="Breadcrumb">
+          <button type="button" class="fig-os-crumb-link" id="crumbMyOrders">My orders</button>
+          <span class="fig-os-crumb-sep">›</span>
+          <span class="fig-os-crumb-here">Order tracking</span>
+        </nav>
 
-        <div class="fig-os-head fig-anim" style="--d:.02s">
-          <div class="fig-os-kicker">Clarity at every step</div>
-          <h2 class="fig-os-title">Your order, step by step.</h2>
-          <p class="fig-os-sub">From the first click to the final confirmation. All in one place.</p>
+        <div class="fig-os-head fig-anim" style="--d:.06s">
+          <h2 class="fig-os-title">Order tracking</h2>
+          <p class="fig-os-sub">Every step, all in one place.</p>
         </div>
 
-        <div class="fig-os-ref fig-anim" style="--d:.08s">
+        <div class="fig-os-ref fig-anim" style="--d:.10s">
           <div class="fig-os-ref-meta">
             <span class="fig-os-kicker">Order reference</span>
             <span class="fig-os-code"><b id="statusOrderCode">—</b><button id="copyOrderCodeBtn" class="fig-os-copy" type="button" aria-label="Copy order code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></span>
           </div>
-          <button id="refreshStatusBtn" class="fig-os-refresh" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Refresh status</button>
+          <button id="refreshStatusBtn" class="fig-os-refresh" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Refresh</button>
         </div>
 
         <div class="fig-os-card fig-anim" style="--d:.14s">
           <div class="fig-os-status-icon" id="statusIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12"/><path d="M6 22h12"/><path d="M7 2v4l5 5 5-5V2"/><path d="M7 22v-4l5-5 5 5v4"/></svg></div>
           <div class="fig-os-status-body">
-            <div class="fig-os-status-title" id="statusTitle">We're reviewing your order.</div>
-            <p class="fig-os-status-desc" id="statusDesc">Thanks for placing your order. Our team is verifying your payment before confirming.</p>
+            <div class="fig-os-status-title" id="statusTitle">Reviewing your order</div>
+            <p class="fig-os-status-desc" id="statusDesc">We're verifying your payment. Confirmation will follow.</p>
+            <span class="fig-os-pill" id="statusPill"><span class="fig-os-pill-dot" aria-hidden="true"></span><span id="statusPillText">In progress</span></span>
           </div>
-          <span class="fig-os-pill" id="statusPill">In progress</span>
         </div>
 
-        <div class="fig-os-rowhead fig-anim" style="--d:.20s"><span class="fig-os-section">Order journey</span><span class="fig-os-kicker" id="journeyCount">1 of 3 complete</span></div>
+        <div class="fig-os-rowhead fig-anim" style="--d:.20s"><span class="fig-os-section">Order journey</span><span class="fig-os-count" id="journeyCount">1 OF 3 COMPLETE</span></div>
         <div id="statusStepper" class="status-stepper fig-os-stepper fig-anim" style="--d:.24s">
-          <div class="status-step done" data-step="placed"><span class="status-step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="status-step-text"><span class="status-step-label">Order placed</span><span class="status-step-sub" id="placedDateLabel">—</span></span></div>
+          <div class="status-step done" data-step="placed"><span class="status-step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span><span class="status-step-text"><span class="status-step-label">Order placed</span><span class="status-step-sub" id="placedDateLabel">—</span></span></div>
           <div class="status-step-line done" data-line="1"></div>
           <div class="status-step current" data-step="review"><span class="status-step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12"/><path d="M6 22h12"/><path d="M7 2v4l5 5 5-5V2"/><path d="M7 22v-4l5-5 5 5v4"/></svg></span><span class="status-step-text"><span class="status-step-label" id="journeyTitle2">Under review</span><span class="status-step-sub" id="journeySub2">Verification in progress</span></span></div>
           <div class="status-step-line" data-line="2"></div>
@@ -727,28 +730,52 @@
         <div class="fig-os-notice fig-anim" style="--d:.30s">
           <span class="fig-os-notice-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
           <span class="fig-os-notice-text" id="figOsNoticeText">No action needed. Please don't send a second payment.</span>
-          <span class="fig-os-notice-side"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Preview status</span>
         </div>
 
-        <div class="fig-os-rowhead fig-anim" style="--d:.34s"><span class="fig-os-section">Order activity</span><span class="fig-os-kicker">Preview timeline</span></div>
-        <div class="fig-os-timeline fig-anim" style="--d:.38s" id="statusTimeline">
-          <div class="fig-os-tl-item done">
-            <span class="fig-os-tl-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div class="fig-os-tl-body"><b>Order received</b><span>Your subscription order has been recorded.</span></div>
-            <span class="fig-os-tl-time" id="tlPlacedTime">—</span>
+        <div class="fig-os-cols fig-anim" style="--d:.34s">
+          <div class="fig-os-collapse" id="detailsCollapse">
+            <button type="button" class="fig-os-collapse-head" id="detailsToggle" aria-expanded="false" aria-controls="detailsBody">
+              <span class="fig-os-collapse-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
+              <span class="fig-os-collapse-title"><b id="detailsProductName">Order</b><span>Details</span></span>
+              <span class="fig-os-collapse-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </button>
+            <div class="fig-os-collapse-body" id="detailsBody">
+              <div id="statusDetails" class="order-status-details"></div>
+            </div>
           </div>
-          <div class="fig-os-tl-item current" id="tlReviewItem">
-            <span class="fig-os-tl-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
-            <div class="fig-os-tl-body"><b id="tlReviewTitle">Payment review in progress</b><span id="tlReviewSub">Checking your payment details before confirmation.</span></div>
-            <span class="fig-os-tl-time fig-os-tl-now" id="tlReviewTime">Current</span>
+          <div class="fig-os-collapse" id="activityCollapse">
+            <button type="button" class="fig-os-collapse-head" id="activityToggle" aria-expanded="false" aria-controls="activityBody">
+              <span class="fig-os-collapse-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+              <span class="fig-os-collapse-title"><b>Order activity</b></span>
+              <span class="fig-os-collapse-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </button>
+            <div class="fig-os-collapse-body" id="activityBody">
+              <div class="fig-os-timeline" id="statusTimeline">
+                <div class="fig-os-tl-item done">
+                  <span class="fig-os-tl-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                  <div class="fig-os-tl-body"><b>Order received</b><span>Your order has been recorded.</span></div>
+                  <span class="fig-os-tl-time" id="tlPlacedTime">—</span>
+                </div>
+                <div class="fig-os-tl-item current" id="tlReviewItem">
+                  <span class="fig-os-tl-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+                  <div class="fig-os-tl-body"><b id="tlReviewTitle">Payment review in progress</b><span id="tlReviewSub">Checking your payment details before confirmation.</span></div>
+                  <span class="fig-os-tl-time fig-os-tl-now" id="tlReviewTime">Current</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div id="statusDetails" class="order-status-details fig-anim" style="--d:.42s"></div>
         <div id="statusReasonBox" class="status-reason-box hidden"><span class="status-reason-icon" id="statusReasonIcon"></span><span class="status-reason-text" id="statusReasonText"></span></div>
-        <div class="order-status-hint fig-anim" id="statusHint" style="--d:.46s">We're checking your payment. This page updates automatically — no need to refresh.</div>
-        <button id="openChatBtn" class="telegram-btn hidden" type="button"><svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Open Chat</button>
+
+        <div class="fig-os-support fig-anim" style="--d:.40s">
+          <span class="fig-os-support-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>Need a hand?</span>
+          <button type="button" class="fig-os-support-link" id="contactSupportBtn">Contact support <span class="fig-os-support-arrow">→</span></button>
+        </div>
+
+        <div class="fig-os-foot fig-anim" style="--d:.44s">© 2026 Gamepay Hub</div>
       </div>
+
     </div>
 
 
@@ -3991,11 +4018,11 @@ function setOrderStatusUI(status, reason){
   const title = document.getElementById("statusTitle");
   const desc = document.getElementById("statusDesc");
   const pill = document.getElementById("statusPill");
-  const hint = document.getElementById("statusHint");
-  const chatBtn = document.getElementById("openChatBtn");
+  const pillText = document.getElementById("statusPillText");
   const reasonBox = document.getElementById("statusReasonBox");
   const journeyCount = document.getElementById("journeyCount");
   const noticeText = document.getElementById("figOsNoticeText");
+  const prodName = document.getElementById("detailsProductName");
   const tlReviewItem = document.getElementById("tlReviewItem");
   const tlReviewTitle = document.getElementById("tlReviewTitle");
   const tlReviewSub = document.getElementById("tlReviewSub");
@@ -4005,40 +4032,35 @@ function setOrderStatusUI(status, reason){
     if(reason !== undefined) currentOrder.reject_reason = reason;
   }
   const rejectReason = reason !== undefined ? reason : currentOrder?.reject_reason;
+  if(prodName) prodName.textContent = currentOrder?.product_name || "Order";
   updateStatusStepper(status);
   reasonBox.classList.add("hidden");
   // Reset the Figma pill / timeline decorations before applying the state.
+  // The base .fig-os-pill style is the amber "In progress" treatment.
   pill.className = "fig-os-pill";
   tlReviewItem.classList.remove("done", "current", "bad");
   icon.classList.remove("flip");
   if(status === "approved" || status === "completed"){
     icon.innerHTML = FIG_OS_SVG.approved;
-    title.textContent = "Order approved.";
+    title.textContent = "Order completed";
     desc.textContent = "Your payment is confirmed. Open the chat to share your account details with our team.";
-    pill.textContent = "Completed";
+    pillText.textContent = "Completed";
     pill.classList.add("done");
-    hint.textContent = "Your order has been approved. Open the chat to share your account details with our team.";
     noticeText.textContent = "Your order is complete. Keep your order reference for your records.";
-    journeyCount.textContent = "3 of 3 complete";
+    journeyCount.textContent = "3 OF 3 COMPLETE";
     tlReviewItem.classList.add("done");
     tlReviewTitle.textContent = "Payment approved";
     tlReviewSub.textContent = "Your payment has been confirmed.";
     tlReviewTime.textContent = "Done";
     tlReviewTime.classList.remove("fig-os-tl-now");
-    chatBtn.classList.remove("hidden");
   } else if(status === "rejected"){
-    // A rejected order has nothing left to hand over and no delivery to
-    // discuss, so the order-specific chat is not offered here at all --
-    // "Message" (the general, non-order support chat under the Noti menu)
-    // is still reachable for anything else the customer wants to ask.
     icon.innerHTML = FIG_OS_SVG.rejected;
     title.textContent = "Order was rejected";
-    desc.textContent = "This order couldn't be completed. If you have questions, reach us through Message in the Noti menu.";
-    pill.textContent = "Rejected";
+    desc.textContent = "This order couldn't be completed. If you have questions, contact support below.";
+    pillText.textContent = "Rejected";
     pill.classList.add("bad");
-    hint.textContent = "If you have questions, reach us through Message in the Noti menu.";
     noticeText.textContent = "This order was rejected. Please don't send another payment for it.";
-    journeyCount.textContent = "1 of 3 complete";
+    journeyCount.textContent = "1 OF 3 COMPLETE";
     tlReviewItem.classList.add("bad");
     tlReviewTitle.textContent = "Payment review stopped";
     tlReviewSub.textContent = "This order was rejected before confirmation.";
@@ -4049,24 +4071,22 @@ function setOrderStatusUI(status, reason){
       document.getElementById("statusReasonText").textContent = rejectReason;
       reasonBox.classList.remove("hidden");
     }
-    chatBtn.classList.add("hidden");
   } else {
     icon.innerHTML = FIG_OS_SVG.pending;
     icon.classList.add("flip");
-    title.textContent = "We're reviewing your order.";
-    desc.textContent = "Thanks for placing your order. Our team is verifying your payment before confirming.";
-    pill.textContent = "In progress";
-    hint.textContent = "We're checking your payment. This page updates automatically — no need to refresh.";
+    title.textContent = "Reviewing your order";
+    desc.textContent = "We're verifying your payment. Confirmation will follow.";
+    pillText.textContent = "In progress";
     noticeText.textContent = "No action needed. Please don't send a second payment.";
-    journeyCount.textContent = "1 of 3 complete";
+    journeyCount.textContent = "1 OF 3 COMPLETE";
     tlReviewItem.classList.add("current");
     tlReviewTitle.textContent = "Payment review in progress";
     tlReviewSub.textContent = "Checking your payment details before confirmation.";
     tlReviewTime.textContent = "Current";
     tlReviewTime.classList.add("fig-os-tl-now");
-    chatBtn.classList.add("hidden");
   }
 }
+
 
 let unseenOrderUpdates = 0;
 function bumpUnseenBadge(){
@@ -4207,6 +4227,18 @@ function setStatusPlacedLabels(order){
 
 // One-time wiring for the Figma status header buttons (copy order code,
 // refresh the displayed status). Guarded so repeat visits don't stack handlers.
+function toggleFigCollapse(collapseId, btn){
+  const el = document.getElementById(collapseId);
+  if(!el) return;
+  const open = el.classList.toggle("open");
+  if(btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+}
+function toggleFigCollapse(collapseId, btn){
+  const el = document.getElementById(collapseId);
+  if(!el) return;
+  const open = el.classList.toggle("open");
+  if(btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+}
 function wireStatusButtons(){
   const copyBtn = document.getElementById("copyOrderCodeBtn");
   if(copyBtn && !copyBtn.dataset.wired){
@@ -4228,15 +4260,59 @@ function wireStatusButtons(){
   const refreshBtn = document.getElementById("refreshStatusBtn");
   if(refreshBtn && !refreshBtn.dataset.wired){
     refreshBtn.dataset.wired = "1";
-    refreshBtn.addEventListener("click", () => {
-      renderStatusDetails(currentOrder);
-      setOrderStatusUI(currentOrder?.status || "pending", currentOrder?.reject_reason);
+    refreshBtn.addEventListener("click", async () => {
+      // Genuine backend refresh: re-fetch this order's row (same RLS-scoped
+      // pattern the app already uses), then re-render from the fresh data.
+      if(refreshBtn.dataset.fetching) return;
+      refreshBtn.dataset.fetching = "1";
       refreshBtn.classList.remove("spin");
       void refreshBtn.offsetWidth;
       refreshBtn.classList.add("spin");
+      try{
+        const token = currentOrder?.access_token;
+        if(token && window.supabaseClient){
+          const { data, error } = await supabaseClient.from("orders").select("*").eq("access_token", token).maybeSingle();
+          if(!error && data && currentOrder){
+            currentOrder.status = data.status;
+            currentOrder.reject_reason = data.reject_reason;
+            currentOrder.product_name = data.product_name;
+            currentOrder.plan_name = data.plan_name;
+            currentOrder.amount = data.amount;
+            currentOrder.payment_method = data.payment_method;
+            currentOrder.created_at = data.created_at;
+            currentOrder.chat_closed = Boolean(data.chat_closed);
+          }
+        }
+      }catch(e){/* keep showing the last known state on failure */}
+      renderStatusDetails(currentOrder);
+      setStatusPlacedLabels(currentOrder);
+      setOrderStatusUI(currentOrder?.status || "pending", currentOrder?.reject_reason);
+      delete refreshBtn.dataset.fetching;
     });
   }
+  const detailsToggle = document.getElementById("detailsToggle");
+  if(detailsToggle && !detailsToggle.dataset.wired){
+    detailsToggle.dataset.wired = "1";
+    detailsToggle.addEventListener("click", () => toggleFigCollapse("detailsCollapse", detailsToggle));
+  }
+  const activityToggle = document.getElementById("activityToggle");
+  if(activityToggle && !activityToggle.dataset.wired){
+    activityToggle.dataset.wired = "1";
+    activityToggle.addEventListener("click", () => toggleFigCollapse("activityCollapse", activityToggle));
+  }
+  const crumbBtn = document.getElementById("crumbMyOrders");
+  if(crumbBtn && !crumbBtn.dataset.wired){
+    crumbBtn.dataset.wired = "1";
+    crumbBtn.addEventListener("click", () => { openMyOrdersView(); });
+  }
+  const supportBtn = document.getElementById("contactSupportBtn");
+  if(supportBtn && !supportBtn.dataset.wired){
+    supportBtn.dataset.wired = "1";
+    supportBtn.addEventListener("click", openChatView);
+  }
 }
+
+
 
 // Reuses the header's own logo <img> src instead of re-embedding the same
 // (large, base64) image a second time just for the chat avatar.
@@ -4436,11 +4512,8 @@ async function openSupportMessageView(){
   subscribeSupportRealtime();
 }
 
-document.getElementById("openChatBtn")?.addEventListener("click", openChatView);
-document.getElementById("statusBackBtn")?.addEventListener("click", () => {
-  document.getElementById("orderStatusView").classList.add("hidden");
-  closeOrder();
-});
+
+
 document.getElementById("chatBackBtn")?.addEventListener("click", () => {
   document.getElementById("chatView").classList.add("hidden");
   if(chatMode === "support"){
