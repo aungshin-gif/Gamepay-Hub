@@ -64,7 +64,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=55">
+  <link rel="stylesheet" href="styles.css?v=56">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -2589,6 +2589,10 @@ slipInput?.addEventListener("change", () => {
   const url = URL.createObjectURL(file);
   slipPreview.classList.remove("hidden");
   slipPreview.innerHTML = `<img src="${url}" alt="Payment slip preview"><span>${file.name}</span><span class="slip-remove" id="slipRemoveBtn">Remove</span>`;
+  // attach animation: pop the preview in + flash the box
+  slipPreview.classList.remove("slip-pop"); void slipPreview.offsetWidth; slipPreview.classList.add("slip-pop");
+  const slipBox = slipPreview.closest(".slip-upload-box");
+  if(slipBox){ slipBox.classList.remove("slip-flash"); void slipBox.offsetWidth; slipBox.classList.add("slip-flash"); }
   document.getElementById("slipRemoveBtn")?.addEventListener("click", () => {
     selectedSlipFile = null;
     slipInput.value = "";
@@ -3966,7 +3970,7 @@ function renderPreviewTable(message){
   }
   const plainVals={};
   const lines=String(message).split("\n");
-  const labels={"💌 Product":"Product","📄 Plan":"Plan","💳 Payment":"Payment","📱 Payment Phone":"Payment number","👤 Payment Name":"Payment name","🎟 Coupon Applied":"Coupon applied","💰 Total Amount":"Total amount","🔢 Custom Amount":"Custom amount","📝Note":"Note","👤Account":"Name","👤Username":"Username"};
+  const labels={"💌 Product":"Product","📄 Plan":"Plan","💳 Payment":"Payment","📱 Payment Phone":"Payment number","👤 Payment Name":"Payment name","🎟 Coupon Applied":"Coupon applied","💰 Total Amount":"Total amount","🔢 Custom Amount":"Custom amount","📝Note":"Note","👤Account":"Name","👤Username":"User"};
   // The "Name" value is the ordering user's account name (the Account field),
   // shown the way the Figma receipt shows "Name - <account>".
   const labelKeys=Object.keys(labels);
@@ -3999,7 +4003,7 @@ function renderPreviewTable(message){
   const payName = plainVals["Payment"] || "";
   const payNumber = plainVals["Payment number"] || "";
   const account = plainVals["Name"] || "";
-  const orderUsername = plainVals["Username"] || "";
+  const orderUsername = plainVals["User"] || "";
   const note = plainVals["Note"] || "";
   const coupon = plainVals["Coupon applied"] || "";
   const total = plainVals["Total amount"] || "";
@@ -4029,7 +4033,7 @@ function renderPreviewTable(message){
       `<div class="pv3-plan">${escapePreviewText(planLine) || dash}</div></div>` +
       `<div class="pv3-rows">` +
         `<div class="pv3-row"><span>Name<i aria-hidden="true">\u2013</i></span><b>${account ? escapePreviewText(account) : dash}</b></div>` +
-        (orderUsername ? `<div class="pv3-row"><span>Username<i aria-hidden="true">\u2013</i></span><b>${escapePreviewText(orderUsername)}</b></div>` : "") +
+        (orderUsername ? `<div class="pv3-row"><span>User<i aria-hidden="true">\u2013</i></span><b>${escapePreviewText(orderUsername)}</b></div>` : "") +
         `<div class="pv3-row"><span>Pay<i aria-hidden="true">\u2013</i></span><b>${escapePreviewText(payName) || dash}</b></div>` +
         `<div class="pv3-row"><span>Number<i aria-hidden="true">\u2013</i></span><b>${escapePreviewText(payNumber) || dash}</b></div>` +
         noteRow +
