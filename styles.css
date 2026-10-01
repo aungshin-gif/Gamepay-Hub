@@ -6234,6 +6234,11 @@ body.light-mode .slip-upload-label{ border-color:var(--border-strong,rgba(31,41,
 .slip-preview{ margin-top:8px; display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted,rgba(255,255,255,.74)); }
 .slip-preview img{ width:52px; height:52px; object-fit:cover; border-radius:8px; border:1px solid rgba(224,180,255,.3); }
 .slip-preview .slip-remove{ color:#ff9fc9; cursor:pointer; font-weight:800; font-size:11px; }
+/* Attach animation: preview pops in, box flashes a soft success ring */
+@keyframes slipPopIn{ from{ opacity:0; transform:translateY(10px) scale(.92); } to{ opacity:1; transform:none; } }
+.slip-preview.slip-pop{ animation:slipPopIn .38s cubic-bezier(.3,1.25,.5,1); }
+@keyframes slipBoxFlash{ 0%{ box-shadow:0 0 0 0 rgba(30,122,60,0); } 30%{ box-shadow:0 0 0 4px rgba(30,122,60,.35); } 100%{ box-shadow:0 0 0 0 rgba(30,122,60,0); } }
+.slip-upload-box.slip-flash{ animation:slipBoxFlash .7s ease; border-radius:12px; }
 
 /* Login / Sign up */
 .auth-header-actions{ display:flex; gap:6px; align-items:center; }
@@ -7726,7 +7731,7 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
     linear-gradient(105deg,#ffffff,#fafbfe 50%,#ffffff);
   background-size:3px 3px,100% 100%;
   padding:12px 20px;
-  color:#252a35;
+  color:#111111;
   font-family:"IBM Plex Mono",monospace;
   font-size:10px; line-height:1.5;
 }
@@ -7734,7 +7739,7 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
   text-align:center;
   font-family:"Geist","Noto Sans Myanmar",sans-serif;
   font-size:20px; font-weight:600; line-height:24px; letter-spacing:-.6px;
-  color:#252a35;
+  color:#111111;
 }
 #previewSection .pv3-cap{
   margin-top:2px; text-align:center;
@@ -7743,35 +7748,35 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
 }
 /* dashed section separators, exactly like Figma */
 #previewSection .pv3-sect{margin-top:6px; border-top:1px dashed #cdd2dc; padding-top:6px;}
-#previewSection .pv3-dt{display:flex; justify-content:space-between; gap:8px; font-size:10px; color:#252a35;}
+#previewSection .pv3-dt{display:flex; justify-content:space-between; gap:8px; font-size:10px; color:#111111;}
 #previewSection .pv3-voucher{margin-top:2px; text-align:center; font-size:9px; color:#596272;}
 #previewSection .pv3-itemrow{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
 #previewSection .pv3-itemrow b{
   font-family:"Geist","Noto Sans Myanmar",sans-serif;
-  font-size:14px; font-weight:600; color:#252a35; min-width:0; overflow-wrap:anywhere;
+  font-size:14px; font-weight:600; color:#111111; min-width:0; overflow-wrap:anywhere;
 }
 #previewSection .pv3-qty{flex:none; padding-top:2px; font-size:10px; color:#596272;}
 #previewSection .pv3-plan{margin-top:2px; font-size:10px; color:#596272; overflow-wrap:anywhere;}
 #previewSection .pv3-rows{margin-top:8px; display:grid; gap:6px; font-size:11px;}
 #previewSection .pv3-row{display:grid; grid-template-columns:52px minmax(0,1fr); gap:8px; align-items:baseline;}
-#previewSection .pv3-row > span{display:flex; justify-content:space-between; color:#252a35;}
+#previewSection .pv3-row > span{display:flex; justify-content:space-between; color:#111111;}
 #previewSection .pv3-row > span > i{font-style:normal;}
-#previewSection .pv3-row > b{font-weight:500; color:#252a35; min-width:0; overflow-wrap:anywhere;}
+#previewSection .pv3-row > b{font-weight:500; color:#111111; min-width:0; overflow-wrap:anywhere;}
 #previewSection .pv3-slip .preview-na{color:#B9BECB;}
 #previewSection .pv3-total{
   margin-top:6px; border-top:1px dashed #cdd2dc; border-bottom:1px dashed #cdd2dc;
   padding:8px 0; display:flex; align-items:center; justify-content:space-between; gap:12px;
 }
-#previewSection .pv3-total-l b{display:block; font-size:10px; font-weight:500; letter-spacing:1px; color:#252a35;}
+#previewSection .pv3-total-l b{display:block; font-size:10px; font-weight:500; letter-spacing:1px; color:#111111;}
 #previewSection .pv3-total-l span{display:block; font-size:8px; color:#596272; margin-top:2px;}
 #previewSection .pv3-amount{
   font-family:"Geist","Noto Sans Myanmar",sans-serif;
   font-size:25px; font-weight:600; line-height:32px; letter-spacing:-.7px;
-  color:#252a35; white-space:nowrap;
+  color:#111111; white-space:nowrap;
 }
 #previewSection .pv3-amount small{font-size:12px; font-weight:500; letter-spacing:normal; margin-left:6px;}
 #previewSection .pv3-barcode{margin-top:8px; text-align:center;}
-#previewSection .pv3-barcode svg{display:block; width:80%; height:16px; margin:0 auto; color:#252a35;}
+#previewSection .pv3-barcode svg{display:block; width:80%; height:16px; margin:0 auto; color:#111111;}
 #previewSection .pv3-barcode svg rect{fill:currentColor;}
 #previewSection .pv3-barcode > span{display:block; margin-top:6px; font-size:8px; letter-spacing:.4px; color:#596272;}
 /* zigzag tear-off edge: pure white, 10px cycle, 7px deep — like Figma */
