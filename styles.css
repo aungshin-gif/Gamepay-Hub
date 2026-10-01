@@ -7932,3 +7932,66 @@ body.light-mode #previewSection #previewOrderBtn.pv3-confirm:disabled{
     background:linear-gradient(135deg,rgba(26,54,104,.96),rgba(10,30,70,.97)) !important;}
   .categories{backdrop-filter:none !important; -webkit-backdrop-filter:none !important;}
 }
+
+/* My Orders -- Figma "User greeting" /orders screen: light app page reusing
+   the account appbar + bottom tab bar, soft pastel stat cards with status
+   icons, and white order-history cards. Inner order-detail view untouched. */
+.mo-headrow{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; }
+.mo-back-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  background:#fff; border:1px solid #E9E9F2; color:#23233A;
+  font-size:13px; font-weight:600; padding:9px 16px; border-radius:999px; cursor:pointer;
+}
+.mo-back-btn:active{ transform:scale(.97); }
+.mo-page-title{ font-size:20px; font-weight:800; color:#23233A; letter-spacing:-.01em; margin:0; }
+.mo-section-title{ font-size:17px; font-weight:800; color:#23233A; margin:20px 2px 10px; }
+
+/* Stat cards: soft pastel gradients with a 3D bottom edge, status icon on
+   top, big colored number, colored label. Tapping filters the list below. */
+.mo-fstats{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:14px; }
+.mo-fstat{
+  border:none; border-radius:18px; padding:14px 6px 12px; text-align:center; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; gap:2px; user-select:none;
+  transition:transform .12s ease; font-family:inherit;
+}
+.mo-fstat:active{ transform:scale(.95); }
+.mo-fstat.active{ outline:2px solid #7C5CFC; outline-offset:2px; }
+.mo-fstat-icon{ width:30px; height:30px; }
+.mo-fstat-icon svg{ width:100%; height:100%; display:block; }
+.mo-fstat-num{ font-size:30px; font-weight:800; line-height:1.25; }
+.mo-fstat-label{ font-size:13px; font-weight:600; }
+.mo-fstat.total{ background:linear-gradient(180deg,#F5F0FF,#EADFFF); color:#7C3AED; box-shadow:0 3px 0 #D9CBF7; }
+.mo-fstat.pending{ background:linear-gradient(180deg,#FDF6DE,#FAEDC2); color:#A16207; box-shadow:0 3px 0 #EBD9A4; }
+.mo-fstat.completed{ background:linear-gradient(180deg,#E2F7E9,#CDEFD8); color:#15803D; box-shadow:0 3px 0 #B2E0C0; }
+.mo-fstat.failed{ background:linear-gradient(180deg,#FDE9EC,#FAD9DE); color:#DC2645; box-shadow:0 3px 0 #F0BFC6; }
+@media(max-width:380px){
+  .mo-fstats{ gap:7px; }
+  .mo-fstat{ padding:10px 4px 9px; border-radius:14px; }
+  .mo-fstat-icon{ width:24px; height:24px; }
+  .mo-fstat-num{ font-size:23px; }
+  .mo-fstat-label{ font-size:11px; }
+}
+
+/* Order history cards: white, code + chevron, plan, date, divider,
+   status pill + amount. */
+.mo-flist{ display:flex; flex-direction:column; gap:12px; }
+.mo-flist .chat-empty{ color:#8A8AA3; }
+.mo-fcard{
+  background:#fff; border:1px solid #EEF0F6; border-radius:16px; padding:15px 16px;
+  box-shadow:0 2px 10px rgba(35,35,58,.05); cursor:pointer; transition:box-shadow .15s ease, transform .15s ease;
+}
+.mo-fcard:hover{ box-shadow:0 4px 18px rgba(35,35,58,.10); }
+.mo-fcard:active{ transform:scale(.995); }
+.mo-fcard-top{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.mo-fcard-code{ font-size:14px; font-weight:800; color:#23233A; display:flex; align-items:center; min-width:0; }
+.mo-fcard-chev{ width:18px; height:18px; color:#B9B9CC; flex:0 0 auto; }
+.mo-fcard-plan{ font-size:13px; color:#6E6E85; margin-top:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.mo-fcard-date{ font-size:12.5px; color:#9AA0B4; margin-top:3px; }
+.mo-fcard-div{ height:1px; background:#F1F1F6; margin:12px 0; }
+.mo-fcard-bottom{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.mo-fpill{ display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:700; padding:7px 13px; border-radius:999px; }
+.mo-fpill svg{ width:14px; height:14px; }
+.mo-fpill.pending{ background:#FDF3D7; color:#A16207; }
+.mo-fpill.approved,.mo-fpill.completed{ background:#DFF5E8; color:#0F7A3F; }
+.mo-fpill.rejected{ background:#FDE7EA; color:#D61E4D; }
+.mo-fcard-amount{ font-size:15px; font-weight:800; color:#23233A; white-space:nowrap; }
