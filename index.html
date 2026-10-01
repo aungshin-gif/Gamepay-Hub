@@ -677,91 +677,53 @@
 
 
         <div id="previewSection" class="hidden order-preview-view">
-      <div class="preview-shell fig-pv-shell">
-        <nav class="fig-pv-crumb fig-anim" style="--d:.02s" aria-label="Breadcrumb">
-          <button type="button" class="fig-pv-crumb-link" id="pvCrumbBack">&larr; My orders</button>
-          <span class="fig-pv-crumb-badge">Final review</span>
+      <div class="preview-shell pv3-shell">
+        <nav class="pv3-topbar" aria-label="Breadcrumb">
+          <button type="button" class="pv3-back" id="pvCrumbBack">&larr; My orders</button>
+          <button type="button" class="pv3-printslip" id="pvPrintSlipBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg><span>Print slip</span></button>
         </nav>
 
-        <div class="fig-pv-head fig-anim" style="--d:.06s">
-          <div class="fig-pv-headrow">
-            <div class="fig-pv-headtext">
-              <h2 class="fig-pv-title"><span class="fig-pv-t-desktop">Your order, on paper.</span><span class="fig-pv-t-mobile">Order preview</span></h2>
-              <p class="fig-pv-sub">One last look before you make it yours.</p>
-            </div>
-            <button type="button" class="fig-pv-printslip" id="pvPrintSlipBtn"><svg class="fig-pv-printer-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg><span>Print slip</span></button>
+        <section class="pv3-card" aria-label="Order preview">
+          <div class="pv3-statusline">
+            <span class="pv3-status" id="pvPrintingLabel"><span class="pv3-dot" aria-hidden="true"></span><span id="pvStatusText">Printing your preview&hellip;</span></span>
+            <button type="button" class="pv3-replay" id="pvReplayBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 2.6-6.3"/><path d="M3 4v5h5"/></svg><span>Replay</span></button>
           </div>
-        </div>
 
-        <div class="fig-pv-cols">
-          <div class="fig-pv-stagecol">
-            <div class="fig-pv-stage fig-anim" style="--d:.10s">
-              <div class="fig-pv-printer" id="pvPrinter">
-                <div class="fig-pv-machine">
-                  <div class="fig-pv-topface">
-                    <span class="fig-pv-machinelogo">gamepay.</span>
-                    <span class="fig-pv-chip" id="pvChip"><i class="fig-pv-chipdot" aria-hidden="true"></i><span id="pvChipText">READY</span><span class="fig-pv-eq" aria-hidden="true"><i></i><i></i><i></i></span></span>
-                  </div>
-                  <div class="fig-pv-frontface">
-                    <div class="fig-pv-station">RECEIPT STATION</div>
-                    <div class="fig-pv-machinesub">Printing while you look.</div>
-                  </div>
-                  <div class="fig-pv-controls">
-                    <button type="button" class="fig-pv-printbtn" id="pvPrintBtn"><svg class="fig-pv-printer-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg>PRINT</button>
-                    <span class="fig-pv-power" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v9"/><path d="M6.3 6.5a8 8 0 1 0 11.4 0"/></svg></span>
-                  </div>
-                  <div class="fig-pv-slot" aria-hidden="true"></div>
+          <div class="pv3-printer" id="pvPrinter">
+            <div class="pv3-machine">
+              <div class="pv3-machine-top">
+                <div class="pv3-brand">
+                  <span class="pv3-plus" aria-hidden="true">+</span>
+                  <span class="pv3-brandtext">gamepay.<small>RECEIPT STATION</small></span>
                 </div>
-                <div class="fig-pv-paperwell">
-                  <div class="fig-pv-backing" aria-hidden="true"><i></i><i></i></div>
-                  <div class="fig-pv-paper" id="pvPaper">
-                    <div id="previewFinalBox" class="preview-box preview-final-box"><div class="preview-empty">No order preview yet.</div></div>
-                  </div>
+                <div class="pv3-actions">
+                  <button type="button" class="pv3-printchip" id="pvPrintBtn"><span class="pv3-eq" aria-hidden="true"><i></i><i></i><i></i></span>PRINT</button>
+                  <span class="pv3-power" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v9"/><path d="M6.3 6.5a8 8 0 1 0 11.4 0"/></svg></span>
                 </div>
               </div>
-              <div class="fig-pv-statusline">
-                <span class="fig-pv-printing" id="pvPrintingLabel"><span class="fig-pv-dot" aria-hidden="true"></span><span id="pvStatusText">Printing your preview&hellip;</span></span>
-                <button type="button" class="fig-pv-replay hidden" id="pvReplayBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 2.6-6.3"/><path d="M3 4v5h5"/></svg><span>Replay</span></button>
+              <div class="pv3-slot" aria-hidden="true"><i class="pv3-vent"></i><i class="pv3-vent"></i></div>
+            </div>
+            <div class="pv3-paperwell">
+              <div class="pv3-backing" aria-hidden="true"><i></i><i></i></div>
+              <div class="pv3-paper" id="pvPaper">
+                <div id="previewFinalBox" class="preview-box preview-final-box"><div class="preview-empty">No order preview yet.</div></div>
               </div>
             </div>
           </div>
+        </section>
 
-          <aside class="fig-pv-panel fig-anim" style="--d:.14s" aria-label="Order summary">
-            <p class="fig-pv-eyebrow">Made for your everyday</p>
-            <h3 class="fig-pv-panel-title">A small upgrade. A whole lot of possibility.</h3>
-            <p class="fig-pv-panel-sub">Your plan, payment details and total &mdash; neatly printed, ready for your final check.</p>
-            <div class="fig-pv-card">
-              <div class="fig-pv-card-product" id="pvCardProduct">&mdash;</div>
-              <div class="fig-pv-card-plan" id="pvCardPlan">&mdash;</div>
-              <div class="fig-pv-card-rows">
-                <div class="fig-pv-card-row"><span>Payment method</span><b id="pvCardPay">&mdash;</b></div>
-                <div class="fig-pv-card-row"><span>Total amount</span><b class="fig-pv-card-total" id="pvCardTotal">&mdash;</b></div>
-              </div>
-            </div>
-            <button id="previewOrderBtn" class="fig-pv-confirm" type="button" disabled><span class="fig-pv-confirm-full">Confirm &amp; place order <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span><span class="fig-pv-confirm-short">Confirm order</span></button>
+        <section class="pv3-totalrow" aria-label="Total and confirmation">
+          <div class="pv3-totaltext"><span>Total amount</span><b id="pvTotalAmount">&mdash;</b></div>
+          <div class="pv3-ctawrap">
+            <button id="previewOrderBtn" class="pv3-confirm" type="button" disabled>Confirm order <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>
             <div id="previewProgressBar" class="order-progress-bar hidden"><div class="order-progress-fill"></div></div>
-            <p class="fig-pv-micro">Sent for review &mdash; track it live right after.</p>
-            <a class="fig-pv-needhand" href="https://t.me/angsthtun" target="_blank" rel="noopener">Need a hand? Contact support &rarr;</a>
-          </aside>
-        </div>
-
-        <footer class="fig-pv-foot fig-anim" style="--d:.26s">
-          <span class="fig-pv-foot-left"><svg class="fig-pv-foot-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/></svg>&copy; 2026 Gamepay Hub</span>
-          <span class="fig-pv-foot-right"><svg class="fig-pv-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Digital premium. Thoughtfully simple.</span>
-        </footer>
-      </div>
-
-      <div class="fig-pv-modalback hidden" id="pvModalBack">
-        <div class="fig-pv-modal" role="dialog" aria-modal="true" aria-labelledby="pvModalTitle">
-          <button type="button" class="fig-pv-modal-x" id="pvModalX" aria-label="Close">&times;</button>
-          <h3 class="fig-pv-modal-title" id="pvModalTitle">Confirm your order</h3>
-          <p class="fig-pv-muted">Your slip is ready for review. Once placed, you can track it live.</p>
-          <div class="fig-pv-modal-box" id="pvModalBox"></div>
-          <div class="fig-pv-modalrow">
-            <button type="button" class="fig-pv-ghostbtn" id="pvModalCancel">Not yet</button>
-            <button type="button" class="fig-pv-confirm" id="pvModalPlace">Place order &rarr;</button>
           </div>
-        </div>
+        </section>
+
+        <p class="pv3-micro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Preview only. No payment or order is submitted.</p>
+        <a class="pv3-support" href="https://t.me/angsthtun" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2" y="14" width="4" height="7" rx="2"/><rect x="18" y="14" width="4" height="7" rx="2"/></svg>Need a hand? Contact support &rarr;</a>
+
+        <footer class="pv3-foot">&copy; 2026 Gamepay Hub</footer>
       </div>
     </div>
 
@@ -2703,40 +2665,31 @@ previewBackBtn?.addEventListener("click", () => {
   orderView.classList.add("dashboard-active");
   updatePreview();
 });
-/* ---------- Figma preview: receipt printer, summary panel, confirm modal ---------- */
+/* ---------- Figma preview v3: light receipt printer + slip (current "User-greeting" design) ---------- */
 const pvPrinter = document.getElementById("pvPrinter");
 const pvPaper = document.getElementById("pvPaper");
 const pvPrintBtn = document.getElementById("pvPrintBtn");
-const pvChip = document.getElementById("pvChip");
-const pvChipText = document.getElementById("pvChipText");
 const pvPrintingLabel = document.getElementById("pvPrintingLabel");
 const pvStatusText = document.getElementById("pvStatusText");
 const pvReplayBtn = document.getElementById("pvReplayBtn");
-const pvModalBack = document.getElementById("pvModalBack");
-const pvModalBox = document.getElementById("pvModalBox");
-const pvModalCancel = document.getElementById("pvModalCancel");
-const pvModalX = document.getElementById("pvModalX");
-const pvModalPlace = document.getElementById("pvModalPlace");
 const pvCrumbBack = document.getElementById("pvCrumbBack");
 const pvPrintSlipBtn = document.getElementById("pvPrintSlipBtn");
-const pvCardProduct = document.getElementById("pvCardProduct");
-const pvCardPlan = document.getElementById("pvCardPlan");
-const pvCardPay = document.getElementById("pvCardPay");
-const pvCardTotal = document.getElementById("pvCardTotal");
-// Last parsed slip values, reused by the confirm modal summary box.
-let pvLastVals = {};
+const pvTotalAmount = document.getElementById("pvTotalAmount");
 
-function pvSetChip(printing){
-  if(pvChipText) pvChipText.textContent = printing ? "PRINT" : "READY";
-  pvChip?.classList.toggle("is-active", !!printing);
+// The equalizer bars on the PRINT chip animate while the slip is feeding.
+function pvSetPrinting(printing){
+  pvPrintBtn?.classList.toggle("is-active", !!printing);
 }
 function pvPrintingDone(){
+  // Keep the slip resting fully out of the slot: the feed animation only
+  // lives on .is-printing, so without .is-done the paper would snap back
+  // up and the slip would render blank (data in the DOM, nothing painted).
   pvPrinter?.classList.remove("is-printing");
-  pvSetChip(false);
-  if(pvStatusText) pvStatusText.textContent = "Your slip is ready";
+  pvPrinter?.classList.add("is-done");
+  pvSetPrinting(false);
+  if(pvStatusText) pvStatusText.textContent = "Preview ready";
   pvPrintingLabel?.classList.add("is-done");
   if(pvReplayBtn){
-    pvReplayBtn.classList.remove("hidden");
     pvReplayBtn.disabled = false;
     pvReplayBtn.classList.remove("is-busy");
   }
@@ -2745,47 +2698,30 @@ function pvPrintingDone(){
 function pvPlayPrint(){
   if(!pvPrinter) return;
   pvPrinter.classList.remove("is-printing");
+  pvPrinter.classList.remove("is-done");
   void pvPrinter.offsetWidth; // restart the CSS animation
   if(pvStatusText) pvStatusText.textContent = "Printing your preview\u2026";
   pvPrintingLabel?.classList.remove("is-done");
   if(pvReplayBtn){
-    pvReplayBtn.classList.remove("hidden");
     pvReplayBtn.disabled = true;
     pvReplayBtn.classList.add("is-busy");
   }
-  pvSetChip(true);
+  pvSetPrinting(true);
   const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(reduceMotion){ pvPrintingDone(); return; } // CSS keeps the slip visible
   pvPrinter.classList.add("is-printing");
 }
 pvPaper?.addEventListener("animationend", (e) => {
-  if(e.animationName === "figPvPaperOut") pvPrintingDone();
+  if(e.animationName === "pv3Feed") pvPrintingDone();
 });
 pvPrintBtn?.addEventListener("click", pvPlayPrint);
 pvReplayBtn?.addEventListener("click", () => { if(pvReplayBtn && !pvReplayBtn.disabled) pvPlayPrint(); });
 
-// Confirm modal: "Place order" runs the real submitOrder().
-function pvFillModalBox(){
-  if(!pvModalBox) return;
-  const v = pvLastVals || {};
-  if(!v.product){ pvModalBox.innerHTML = ""; return; }
-  pvModalBox.innerHTML =
-    `<div class="fig-pv-mbox-row"><b>${escapePreviewText(v.product)}</b><span>${escapePreviewText(v.plan || "")}</span></div>` +
-    `<div class="fig-pv-mbox-total"><span>Total amount</span><b>${escapePreviewText(v.total || "")}</b></div>`;
-}
-function pvOpenModal(){ pvFillModalBox(); pvModalBack?.classList.remove("hidden"); }
-function pvCloseModal(){ pvModalBack?.classList.add("hidden"); }
+// "Confirm order" places the order through the real submitOrder() flow.
 previewOrderBtn?.addEventListener("click", () => {
   if(!previewOrderBtn || previewOrderBtn.disabled) return;
-  pvOpenModal();
+  submitOrder();
 });
-pvModalCancel?.addEventListener("click", pvCloseModal);
-pvModalX?.addEventListener("click", pvCloseModal);
-pvModalBack?.addEventListener("click", (e) => { if(e.target === pvModalBack) pvCloseModal(); });
-document.addEventListener("keydown", (e) => {
-  if(e.key === "Escape" && pvModalBack && !pvModalBack.classList.contains("hidden")) pvCloseModal();
-});
-pvModalPlace?.addEventListener("click", () => { pvCloseModal(); submitOrder(); });
 
 // Breadcrumb "My orders" goes back to the dashboard (same as the old back button).
 function pvGoBack(){
@@ -3970,11 +3906,7 @@ function renderPreviewTable(message){
   const dash = '<span class="preview-na">\u2014</span>';
   if(!message){
     previewFinalBox.innerHTML = '<div class="preview-empty">No order preview yet.</div>';
-    pvLastVals = {};
-    if(pvCardProduct) pvCardProduct.textContent = "\u2014";
-    if(pvCardPlan) pvCardPlan.textContent = "\u2014";
-    if(pvCardPay) pvCardPay.textContent = "\u2014";
-    if(pvCardTotal) pvCardTotal.textContent = "\u2014";
+    if(pvTotalAmount) pvTotalAmount.textContent = "\u2014";
     return;
   }
   const plainVals={};
@@ -4015,50 +3947,37 @@ function renderPreviewTable(message){
   const note = plainVals["Note"] || "";
   const coupon = plainVals["Coupon applied"] || "";
   const total = plainVals["Total amount"] || "";
-  pvLastVals = { product, plan: planLine, total };
-  // Logos & badges for the slip rows, taken from the same data the page
-  // already uses: product icon, the plan's tier pill, payment logos.
-  let productLogo = "";
-  if(currentProduct){
-    productLogo = currentProduct.iconType === "emoji"
-      ? `<span class="preview-logo-emoji">${currentProduct.icon}</span>`
-      : (currentProduct.icon ? `<img class="preview-logo" src="${currentProduct.icon}" alt="" loading="lazy" decoding="async">` : "");
-  }
-  const selectedPlan = currentProduct?.plans?.[currentPlanIndex];
-  // Plan tier pill, exactly like the plan list: the shared planTier() +
-  // TIER_LABEL helpers and the .plan-tier-chip style; the --tier palette
-  // variables are re-declared for the preview table in styles.css.
-  const planTierKey = selectedPlan ? planTier(selectedPlan) : "";
-  const tierPill = (/^[a-z0-9]+$/.test(planTierKey) && (TIER_LABEL[planTierKey] || planTierKey))
-    ? ` <span class="preview-tier" data-tier="${planTierKey}"><span class="plan-tier-chip">${TIER_LABEL[planTierKey] || planTierKey}</span></span>`
-    : "";
-  const payMeta = (typeof paymentMeta !== "undefined" && paymentMeta[activePayment]) || null;
-  const paymentLogo = (payMeta && payMeta.logo)
-    ? `<img class="preview-logo" src="${payMeta.logo}" alt="" loading="lazy" decoding="async">` : "";
   const dt = pvSlipDate();
+  const qty = (typeof currentQty === "number" && currentQty > 0) ? currentQty : 1;
   const noteRow = note
-    ? `<div class="slip-row"><span>Note</span><b>${escapePreviewText(note)}</b></div>` : "";
+    ? `<div class="pv3-row"><span>Note</span><i>-</i><b>${escapePreviewText(note)}</b></div>` : "";
   const totalSub = coupon ? escapePreviewText(coupon) : "All included";
+  // "25,380 Ks" renders as a big "25,380" with a small "Ks", like the Figma total.
+  const totalParts = String(total).match(/^(.*?)\s*Ks\s*$/i);
+  const totalBig = escapePreviewText(totalParts ? totalParts[1].trim() : total);
+  const totalCur = totalParts ? " <small>Ks</small>" : "";
   previewFinalBox.innerHTML =
-    `<div class="slip-card">` +
-      `<div class="slip-head"><span class="slip-brand">gamepay.</span><span class="slip-date">${dt.date}<br>${dt.time}</span></div>` +
-      `<div class="slip-voucher"><span>VOUCHER NO.</span><b>${escapePreviewText(pvVoucherNo(message))}</b></div>` +
-      `<div class="slip-item">${productLogo}<div class="slip-item-text"><b>${escapePreviewText(product)}</b><span>${escapePreviewText(planLine)}${tierPill}</span></div></div>` +
-      `<div class="slip-rows">` +
-        `<div class="slip-row"><span>Name</span><b>${account ? escapePreviewText(account) : dash}</b></div>` +
-        `<div class="slip-row"><span>Pay</span><b>${paymentLogo}${escapePreviewText(payName) || dash}</b></div>` +
-        `<div class="slip-row"><span>Number</span><b>${escapePreviewText(payNumber) || dash}</b></div>` +
+    `<div class="pv3-slip">` +
+      `<div class="pv3-cap">ORDER PREVIEW</div>` +
+      `<div class="pv3-dt"><span>${dt.date}</span><span>${dt.time}</span></div>` +
+      `<div class="pv3-voucher">${escapePreviewText(pvVoucherNo(message))}</div>` +
+      `<div class="pv3-dash"></div>` +
+      `<div class="pv3-item"><b>${escapePreviewText(product) || dash}</b><span>&times; ${qty}</span></div>` +
+      `<div class="pv3-plan">${escapePreviewText(planLine) || dash}</div>` +
+      `<div class="pv3-rows">` +
+        `<div class="pv3-row"><span>Name</span><i>-</i><b>${account ? escapePreviewText(account) : dash}</b></div>` +
+        `<div class="pv3-row"><span>Pay</span><i>-</i><b>${escapePreviewText(payName) || dash}</b></div>` +
+        `<div class="pv3-row"><span>Number</span><i>-</i><b>${escapePreviewText(payNumber) || dash}</b></div>` +
         noteRow +
       `</div>` +
-      `<div class="slip-totalband"><div class="slip-total-left"><b>TOTAL</b><span>${totalSub}</span></div><b class="slip-amount">${escapePreviewText(total)}</b></div>` +
-      `<div class="slip-barcode" aria-hidden="true"><div class="slip-bars"></div><span>PREVIEW \u00b7 NOT PROOF OF PAYMENT</span></div>` +
-      `<div class="slip-keep">Keep this little slip for your records.<br>Not a payment confirmation.</div>` +
-    `</div>`;
-  // Summary panel card mirrors the slip's product/plan/payment/total.
-  if(pvCardProduct) pvCardProduct.textContent = product || "\u2014";
-  if(pvCardPlan) pvCardPlan.textContent = planLine || "\u2014";
-  if(pvCardPay) pvCardPay.textContent = payName || "\u2014";
-  if(pvCardTotal) pvCardTotal.textContent = total || "\u2014";
+      `<div class="pv3-dash"></div>` +
+      `<div class="pv3-total"><div class="pv3-total-l"><b>TOTAL</b><span>${totalSub}</span></div><div class="pv3-amount">${totalBig}${totalCur}</div></div>` +
+      `<div class="pv3-dash"></div>` +
+      `<div class="pv3-barcode" aria-hidden="true"><div class="pv3-bars"></div><span>PREVIEW \u00b7 NOT PROOF OF PAYMENT</span></div>` +
+    `</div>` +
+    `<div class="pv3-edge" aria-hidden="true"></div>`;
+  // The total row under the slip mirrors the slip's total.
+  if(pvTotalAmount) pvTotalAmount.textContent = total || "\u2014";
 }
 function updatePreview(){
   const selectedPlan = currentProduct?.plans[currentPlanIndex];
