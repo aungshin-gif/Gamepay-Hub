@@ -677,14 +677,88 @@
 
 
         <div id="previewSection" class="hidden order-preview-view">
-      <div class="preview-shell">
-        <div class="dashboard-head"><button id="previewBackBtn" class="dashboard-back-btn" type="button">← Back to Dashboard</button><span class="dashboard-chip preview-chip">FINAL REVIEW</span></div>
-        <div class="preview-title preview-page-title">Order Preview</div>
-        <div class="preview-page-sub">Check your plan, payment and total before sending the order.</div>
-        <div id="previewFinalBox" class="preview-box preview-final-box"><div class="preview-empty">No order preview yet.</div></div>
-        <button id="previewOrderBtn" class="telegram-btn" type="button" disabled>Confirm &amp; place order <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>
-        <div id="previewProgressBar" class="order-progress-bar hidden"><div class="order-progress-fill"></div></div>
-        <div class="checkout-trustline"><b>Live order tracking</b><span>•</span><span>Chat with support after approval</span></div>
+      <div class="preview-shell fig-pv-shell">
+        <nav class="fig-pv-crumb fig-anim" style="--d:.02s" aria-label="Breadcrumb">
+          <button type="button" class="fig-pv-crumb-link" id="pvCrumbBack">&larr; My orders</button>
+          <span class="fig-pv-crumb-badge">Final review</span>
+        </nav>
+
+        <div class="fig-pv-head fig-anim" style="--d:.06s">
+          <span class="fig-pv-kicker">The final check</span>
+          <h2 class="fig-pv-title">Your order, on paper.</h2>
+          <p class="fig-pv-sub">Give it one last look before it becomes official.</p>
+        </div>
+
+        <div class="fig-pv-stage fig-anim" style="--d:.10s">
+          <div class="fig-pv-printer" id="pvPrinter">
+            <div class="fig-pv-machine">
+              <div class="fig-pv-machine-top">
+                <span class="fig-pv-brand">gamepay<i>.</i></span>
+                <span class="fig-pv-station">Receipt station</span>
+              </div>
+              <div class="fig-pv-machine-mid">
+                <button type="button" class="fig-pv-printbtn" id="pvPrintBtn">Print</button>
+                <span class="fig-pv-power" aria-hidden="true"><i></i></span>
+              </div>
+              <div class="fig-pv-slot" aria-hidden="true"></div>
+            </div>
+            <div class="fig-pv-paperwell">
+              <div class="fig-pv-paper" id="pvPaper">
+                <div id="previewFinalBox" class="preview-box preview-final-box"><div class="preview-empty">No order preview yet.</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="fig-pv-statusline">
+            <span class="fig-pv-printing" id="pvPrintingLabel"><span class="fig-pv-spinner" aria-hidden="true"></span>Printing your preview&hellip;</span>
+            <button type="button" class="fig-pv-replay hidden" id="pvReplayBtn">&circlearrowright; Replay</button>
+          </div>
+          <div class="fig-pv-slipactions">
+            <button type="button" class="fig-pv-linkbtn" id="pvDownloadBtn">Download slip</button>
+            <span class="fig-pv-dotsep" aria-hidden="true">&middot;</span>
+            <button type="button" class="fig-pv-linkbtn" id="pvPrintSlipBtn">Print slip</button>
+          </div>
+        </div>
+
+        <section class="fig-pv-panel fig-anim" style="--d:.14s" aria-label="Order total">
+          <h3 class="fig-pv-panel-title">One last look before you make it yours</h3>
+          <p class="fig-pv-panel-sub" id="pvTotalMeta">&mdash;</p>
+          <div class="fig-pv-totalrow">
+            <span class="fig-pv-total-label">Total amount</span>
+            <span class="fig-pv-total-value" id="pvTotalAmount">&mdash;</span>
+          </div>
+          <button id="previewOrderBtn" class="fig-pv-confirm" type="button" disabled>Confirm order <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>
+          <div id="previewProgressBar" class="order-progress-bar hidden"><div class="order-progress-fill"></div></div>
+        </section>
+
+        <section class="fig-pv-check fig-anim" style="--d:.18s">
+          <h3 class="fig-pv-section">Everything in order?</h3>
+          <p class="fig-pv-muted">Spotted something off? Head back and fix it before you confirm.</p>
+          <button id="previewBackBtn" class="fig-pv-ghostbtn" type="button">&larr; Back to Dashboard</button>
+        </section>
+
+        <section class="fig-pv-help fig-anim" style="--d:.22s">
+          <h3 class="fig-pv-section">A little help?</h3>
+          <p class="fig-pv-muted">Our support team replies fast on Telegram and WhatsApp.</p>
+          <div class="fig-pv-help-links">
+            <a href="https://t.me/angsthtun" target="_blank" rel="noopener">Telegram</a>
+            <a href="https://wa.me/qr/PMHPHBAS33UHB1" target="_blank" rel="noopener">WhatsApp</a>
+          </div>
+        </section>
+
+        <footer class="fig-pv-foot fig-anim" style="--d:.26s">
+          <span>Gamepay Hub</span><span aria-hidden="true">&middot;</span><span>Digital top-up store</span>
+        </footer>
+      </div>
+
+      <div class="fig-pv-modalback hidden" id="pvModalBack">
+        <div class="fig-pv-modal" role="dialog" aria-modal="true" aria-labelledby="pvModalTitle">
+          <h3 class="fig-pv-modal-title" id="pvModalTitle">Ready to make it official?</h3>
+          <p class="fig-pv-muted" id="pvModalDesc">Your order will be sent for review. You can track it right after.</p>
+          <div class="fig-pv-modalrow">
+            <button type="button" class="fig-pv-ghostbtn" id="pvModalCancel">Not yet</button>
+            <button type="button" class="fig-pv-confirm" id="pvModalPlace">Place order</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -2617,6 +2691,7 @@ reviewOrderBtn?.addEventListener("click", () => {
   previewSection.classList.remove("hidden");
   document.body.classList.add("preview-mode");
   updatePreview();
+  pvPlayPrint();
 });
 previewBackBtn?.addEventListener("click", () => {
   previewSection.classList.add("hidden");
@@ -2625,7 +2700,92 @@ previewBackBtn?.addEventListener("click", () => {
   orderView.classList.add("dashboard-active");
   updatePreview();
 });
-previewOrderBtn?.addEventListener("click", submitOrder);
+/* ---------- Figma preview: receipt printer, confirm modal, slip actions ---------- */
+const pvPrinter = document.getElementById("pvPrinter");
+const pvPaper = document.getElementById("pvPaper");
+const pvPrintBtn = document.getElementById("pvPrintBtn");
+const pvPrintingLabel = document.getElementById("pvPrintingLabel");
+const pvReplayBtn = document.getElementById("pvReplayBtn");
+const pvModalBack = document.getElementById("pvModalBack");
+const pvModalCancel = document.getElementById("pvModalCancel");
+const pvModalPlace = document.getElementById("pvModalPlace");
+const pvCrumbBack = document.getElementById("pvCrumbBack");
+const pvDownloadBtn = document.getElementById("pvDownloadBtn");
+const pvPrintSlipBtn = document.getElementById("pvPrintSlipBtn");
+const pvTotalAmount = document.getElementById("pvTotalAmount");
+const pvTotalMeta = document.getElementById("pvTotalMeta");
+
+function pvPrintingDone(){
+  pvPrintingLabel?.classList.add("hidden");
+  pvReplayBtn?.classList.remove("hidden");
+}
+// (Re)start the receipt-printer animation: the slip slides out of the slot.
+function pvPlayPrint(){
+  if(!pvPrinter) return;
+  pvPrintingLabel?.classList.remove("hidden");
+  pvReplayBtn?.classList.add("hidden");
+  pvPrinter.classList.remove("is-printing");
+  void pvPrinter.offsetWidth; // restart the CSS animation
+  const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduceMotion){ pvPrintingDone(); return; } // CSS keeps the slip visible
+  pvPrinter.classList.add("is-printing");
+}
+pvPaper?.addEventListener("animationend", (e) => {
+  if(e.animationName === "figPvPaperOut") pvPrintingDone();
+});
+pvPrintBtn?.addEventListener("click", pvPlayPrint);
+pvReplayBtn?.addEventListener("click", pvPlayPrint);
+
+// "Ready to make it official?" confirm modal.
+function pvOpenModal(){ pvModalBack?.classList.remove("hidden"); }
+function pvCloseModal(){ pvModalBack?.classList.add("hidden"); }
+previewOrderBtn?.addEventListener("click", () => {
+  if(!previewOrderBtn || previewOrderBtn.disabled) return;
+  pvOpenModal();
+});
+pvModalCancel?.addEventListener("click", pvCloseModal);
+pvModalBack?.addEventListener("click", (e) => { if(e.target === pvModalBack) pvCloseModal(); });
+document.addEventListener("keydown", (e) => {
+  if(e.key === "Escape" && pvModalBack && !pvModalBack.classList.contains("hidden")) pvCloseModal();
+});
+pvModalPlace?.addEventListener("click", () => { pvCloseModal(); submitOrder(); });
+
+// Breadcrumb "My orders" goes back to the dashboard, like the back button.
+pvCrumbBack?.addEventListener("click", () => previewBackBtn?.click());
+
+// Slip actions: print uses the @media print rules (slip only); download
+// saves a small self-contained HTML copy of the slip.
+pvPrintSlipBtn?.addEventListener("click", () => window.print());
+pvDownloadBtn?.addEventListener("click", () => {
+  const slip = pvPaper ? pvPaper.innerHTML : "";
+  if(!slip.trim()) return;
+  const css = ".slip-card{background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:22px;font-family:Arial,Helvetica,sans-serif;max-width:440px;margin:24px auto;color:#0f172a}"
+    + ".slip-brandrow{display:flex;align-items:center;gap:10px;padding-bottom:12px;margin-bottom:12px;border-bottom:1px dashed #e2e8f0}"
+    + ".slip-logo{width:34px;height:34px;border-radius:9px;object-fit:cover;background:#0f172a}"
+    + ".slip-brandname{font-weight:800;font-size:15px;letter-spacing:.06em}"
+    + ".slip-ready{margin-left:auto;font-size:9px;font-weight:800;letter-spacing:.14em;color:#059669;border:1.5px solid #059669;border-radius:6px;padding:5px 9px}"
+    + ".slip-voucher{display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.12em;color:#94a3b8;margin:0 0 12px;text-transform:uppercase}"
+    + ".slip-voucher b{color:#0f172a}"
+    + ".preview-table-caption{font-size:11px;font-weight:800;letter-spacing:.16em;padding:0 0 10px;margin:0 0 4px;border-bottom:1px solid #f1f5f9}"
+    + ".order-preview-table{width:100%;border-collapse:collapse}"
+    + ".order-preview-table th,.order-preview-table td{padding:10px 2px;border-bottom:1px dashed #f1f5f9;text-align:left;vertical-align:middle}"
+    + ".order-preview-table th{width:34%;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8}"
+    + ".order-preview-table td{font-size:13.5px;font-weight:700;color:#1e293b}"
+    + ".order-preview-table tr:last-child td{font-size:19px;font-weight:800;color:#0f172a}"
+    + ".preview-logo{width:26px;height:26px;border-radius:7px;object-fit:cover;vertical-align:-7px;margin-right:8px}"
+    + ".slip-barcode{text-align:center;padding:16px 0 6px;margin-top:8px;border-top:1px dashed #e2e8f0}"
+    + ".slip-bars{height:44px;max-width:220px;margin:0 auto 8px;background:repeating-linear-gradient(90deg,#0f172a 0 2px,transparent 2px 5px,#0f172a 5px 6px,transparent 6px 10px,#0f172a 10px 13px,transparent 13px 16px)}"
+    + ".slip-barcode span{font-size:10px;font-weight:700;letter-spacing:.3em;color:#94a3b8}"
+    + ".slip-keep{text-align:center;font-size:11.5px;color:#94a3b8;padding:6px 0 2px}";
+  const doc = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gamepay order slip</title><style>' + css + '</style></head><body>' + slip + '</body></html>';
+  const blob = new Blob([doc], {type:"text/html"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "gamepay-order-slip.html";
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800);
+});
 
 /* ---------- Landing page <-> products page ---------- */
 const landingShell = document.getElementById("landingShell");
@@ -3765,10 +3925,30 @@ msg += "╰────────────────────╯\n";
 function escapePreviewText(value){
   return String(value || "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
 }
+// Stable voucher number per preview content, so the slip reads like a real
+// receipt and doesn't change on every re-render.
+let pvVoucherCache = { key: null, no: "" };
+function pvVoucherNo(message){
+  const key = String(message || "");
+  if(pvVoucherCache.key !== key){
+    const d = new Date();
+    const ymd = d.getFullYear() + String(d.getMonth()+1).padStart(2,"0") + String(d.getDate()).padStart(2,"0");
+    let h = 0;
+    for(let i=0;i<key.length;i++){ h = ((h*31) + key.charCodeAt(i)) >>> 0; }
+    pvVoucherCache = { key, no: "GP-" + ymd + "-" + String(1000 + (h % 9000)) };
+  }
+  return pvVoucherCache.no;
+}
 function renderPreviewTable(message){
   if(!previewFinalBox) return;
-  if(!message){ previewFinalBox.innerHTML = '<div class="preview-empty">No order preview yet.</div>'; return; }
+  if(!message){
+    previewFinalBox.innerHTML = '<div class="preview-empty">No order preview yet.</div>';
+    if(pvTotalAmount) pvTotalAmount.textContent = "\u2014";
+    if(pvTotalMeta) pvTotalMeta.textContent = "\u2014";
+    return;
+  }
   const rows=[];
+  const plainVals={};
   const lines=String(message).split("\n");
   const labels={"💌 Product":"Product","📄 Plan":"Plan","💳 Payment":"Payment","📱 Payment Phone":"Payment number","👤 Payment Name":"Payment name","🎟 Coupon Applied":"Coupon applied","💰 Total Amount":"Total amount","🔢 Custom Amount":"Custom amount","📝Note":"Note","👤Account":"Name"};
   // The "Name" row is the ordering user's account name (the Account field),
@@ -3817,7 +3997,7 @@ function renderPreviewTable(message){
       if(key === "📄 Plan") value = stripTrailingPrice(value);
       const prefix = cellPrefix[key] || "";
       const suffix = (key === "📄 Plan") ? tierPill : "";
-      if(value) rows.push({label:labels[key], html:`<tr><th>${labels[key]}</th><td>${prefix}${escapePreviewText(value)}${suffix}</td></tr>`});
+      if(value){ rows.push({label:labels[key], value, html:`<tr><th>${labels[key]}</th><td>${prefix}${escapePreviewText(value)}${suffix}</td></tr>`}); plainVals[labels[key]] = value; }
     }
   }
   // Keep the Figma receipt order: Name sits right after Plan, before Payment.
@@ -3832,7 +4012,18 @@ function renderPreviewTable(message){
     const planIdx=rows.findIndex(r=>r.label==="Plan");
     rows.splice(planIdx+1,0,nameRow);
   }
-  previewFinalBox.innerHTML = `<div class="slip-card"><div class="preview-table-caption"><span>ORDER SUMMARY</span><b>READY TO SEND</b></div><table class="order-preview-table"><tbody>${rows.map(r=>r.html).join("")}</tbody></table><div class="slip-barcode" aria-hidden="true"><div class="slip-bars"></div><span>GAMEPAY</span></div><div class="slip-keep">Keep this little slip for your records.</div></div><div class="slip-zigzag" aria-hidden="true"></div>`;
+  // Slip header uses the site's own logo (same .compact-logo asset as the header).
+  const logoSrc = (typeof siteLogoSrc === "function") ? siteLogoSrc() : "";
+  const slipHead = logoSrc
+    ? `<div class="slip-brandrow"><img class="slip-logo" src="${logoSrc}" alt="Gamepay Hub"><span class="slip-brandname">GAMEPAY HUB</span><b class="slip-ready">READY TO SEND</b></div>`
+    : `<div class="slip-brandrow"><span class="slip-brandname">GAMEPAY HUB</span><b class="slip-ready">READY TO SEND</b></div>`;
+  previewFinalBox.innerHTML = `<div class="slip-card">${slipHead}<div class="slip-voucher"><span>Voucher no.</span><b>${escapePreviewText(pvVoucherNo(message))}</b></div><div class="preview-table-caption"><span>ORDER SUMMARY</span></div><table class="order-preview-table"><tbody>${rows.map(r=>r.html).join("")}</tbody></table><div class="slip-barcode" aria-hidden="true"><div class="slip-bars"></div><span>GAMEPAY</span></div><div class="slip-keep">Keep this little slip for your records.</div></div><div class="slip-zigzag" aria-hidden="true"></div>`;
+  // Summary panel mirrors the slip's product/plan/total.
+  if(pvTotalAmount) pvTotalAmount.textContent = plainVals["Total amount"] || "\u2014";
+  if(pvTotalMeta){
+    const bits = [plainVals["Product"], plainVals["Plan"]].filter(Boolean);
+    pvTotalMeta.textContent = bits.length ? bits.join(" \u00b7 ") : "Review the slip above for details.";
+  }
 }
 function updatePreview(){
   const selectedPlan = currentProduct?.plans[currentPlanIndex];

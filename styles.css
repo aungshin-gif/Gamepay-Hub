@@ -7465,3 +7465,545 @@ body.light-mode #previewSection .checkout-trustline b{color:#5B4A86!important;}
   #orderStatusView .fig-os-stepper .status-step-sub{ font-size:10px; }
   #orderStatusView .fig-os-support{ flex-direction:column; align-items:flex-start; gap:8px; }
 }
+
+/* =====================================================================
+   figma-preview-full — Order Preview page rebuilt to the Figma Make
+   "User-greeting" design: receipt printer, paper slip, summary panel.
+   This block is last in source order and uses #previewSection scoping
+   so it wins over the legacy dark-glass preview styles above.
+   Palette: slate/white paper aesthetic from the Figma.
+   ===================================================================== */
+
+/* ---------- Page shell ---------- */
+#previewSection.order-preview-view{
+  background:#F8FAFC !important;
+  background-image:radial-gradient(1200px 500px at 50% -80px,#FFFFFF 0%,#F8FAFC 60%) !important;
+  color:#0F172A !important;
+  padding:clamp(14px,4vw,32px) clamp(12px,4vw,24px) 48px !important;
+  font-family:"Plus Jakarta Sans",Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+body.light-mode #previewSection.order-preview-view{
+  background:#F8FAFC !important;
+  background-image:radial-gradient(1200px 500px at 50% -80px,#FFFFFF 0%,#F8FAFC 60%) !important;
+  color:#0F172A !important;
+}
+#previewSection .fig-pv-shell{
+  width:min(560px,100%);
+  margin:0 auto;
+}
+/* Staggered entrance, same rhythm as the order-status rebuild */
+@keyframes figPvRise{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
+#previewSection .fig-anim{ animation:figPvRise .5s cubic-bezier(.22,.8,.3,1) both; animation-delay:var(--d,0s); }
+
+/* ---------- Breadcrumb ---------- */
+#previewSection .fig-pv-crumb{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  margin:2px 2px 0;
+}
+#previewSection .fig-pv-crumb-link{
+  background:none; border:0; padding:4px 2px; cursor:pointer;
+  font-family:inherit; font-size:13px; font-weight:600; color:#64748B;
+}
+#previewSection .fig-pv-crumb-link:hover{ color:#0F172A; text-decoration:underline; }
+#previewSection .fig-pv-crumb-badge{
+  font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  color:#64748B; background:#FFFFFF; border:1px solid #E2E8F0;
+  border-radius:999px; padding:6px 12px; white-space:nowrap;
+}
+
+/* ---------- Hero ---------- */
+#previewSection .fig-pv-head{ margin:18px 2px 20px; text-align:left; }
+#previewSection .fig-pv-kicker{
+  display:block; font-size:11px; font-weight:800; letter-spacing:.18em;
+  text-transform:uppercase; color:#94A3B8; margin-bottom:8px;
+}
+#previewSection .fig-pv-title{
+  font-family:Archivo,"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  font-weight:800; font-size:clamp(30px,7vw,40px); letter-spacing:-.022em;
+  color:#0F172A; margin:0 0 8px; line-height:1.04;
+}
+#previewSection .fig-pv-sub{
+  font-size:13.5px; line-height:1.55; color:#64748B; margin:0; max-width:44ch;
+}
+
+/* ---------- Printer stage ---------- */
+#previewSection .fig-pv-stage{ margin:6px 0 4px; }
+#previewSection .fig-pv-printer{ position:relative; max-width:420px; margin:0 auto; }
+
+/* Machine body */
+#previewSection .fig-pv-machine{
+  position:relative; z-index:2;
+  background:linear-gradient(165deg,#2B3547 0%,#1E293B 55%,#16202F 100%);
+  border-radius:22px 22px 14px 14px;
+  padding:18px 20px 0;
+  box-shadow:0 24px 44px rgba(15,23,42,.22), inset 0 1px 0 rgba(255,255,255,.12);
+}
+#previewSection .fig-pv-machine-top{
+  display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+}
+#previewSection .fig-pv-brand{
+  font-family:Archivo,Inter,system-ui,sans-serif; font-weight:800; font-size:21px;
+  letter-spacing:-.02em; color:#F8FAFC;
+}
+#previewSection .fig-pv-brand i{ font-style:normal; color:#38BDF8; }
+#previewSection .fig-pv-station{
+  font-size:10px; font-weight:800; letter-spacing:.22em; text-transform:uppercase;
+  color:#94A3B8;
+}
+#previewSection .fig-pv-machine-mid{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 2px 16px;
+}
+#previewSection .fig-pv-printbtn{
+  font-family:inherit; font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+  color:#0F172A; background:linear-gradient(180deg,#FFFFFF,#E2E8F0);
+  border:0; border-radius:999px; padding:10px 26px; cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,.25), inset 0 1px 0 #FFFFFF;
+  transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+#previewSection .fig-pv-printbtn:hover{ filter:brightness(1.04); }
+#previewSection .fig-pv-printbtn:active{ transform:translateY(1px) scale(.98); }
+#previewSection .fig-pv-power{
+  width:34px; height:34px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#475569,#1E293B 70%);
+  border:1px solid rgba(255,255,255,.14);
+  display:grid; place-items:center;
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.5);
+}
+#previewSection .fig-pv-power i{
+  width:9px; height:9px; border-radius:50%; background:#34D399;
+  box-shadow:0 0 8px #34D399, 0 0 2px #34D399;
+  animation:figPvPowerBlink 2.6s ease-in-out infinite;
+}
+@keyframes figPvPowerBlink{ 0%,100%{ opacity:1; } 50%{ opacity:.55; } }
+/* Paper slot */
+#previewSection .fig-pv-slot{
+  height:14px; margin:0 -20px; border-radius:0 0 6px 6px;
+  background:linear-gradient(180deg,#0B1220,#05080F);
+  box-shadow:inset 0 3px 6px rgba(0,0,0,.85), 0 1px 0 rgba(255,255,255,.08);
+  position:relative;
+}
+#previewSection .fig-pv-slot::after{
+  content:""; position:absolute; left:8%; right:8%; top:5px; height:2px; border-radius:2px;
+  background:rgba(148,163,184,.25);
+}
+
+/* Paper well: the slip slides out of the slot into this area */
+#previewSection .fig-pv-paperwell{
+  position:relative; z-index:1;
+  margin:-4px 26px 0;
+  overflow:hidden;
+}
+#previewSection .fig-pv-paper{
+  transform:translateY(-103%);
+  will-change:transform;
+}
+#pvPrinter.is-printing #pvPaper{
+  animation:figPvPaperOut 2.6s cubic-bezier(.32,.72,.28,1) .15s forwards;
+}
+@keyframes figPvPaperOut{
+  from{ transform:translateY(-103%); }
+  to{ transform:translateY(0); }
+}
+
+/* Status line under the printer */
+#previewSection .fig-pv-statusline{
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  min-height:30px; margin:10px 0 2px;
+  font-size:12.5px; font-weight:600; color:#64748B;
+}
+#previewSection .fig-pv-printing{ display:inline-flex; align-items:center; gap:8px; }
+#previewSection .fig-pv-spinner{
+  width:14px; height:14px; border-radius:50%;
+  border:2px solid #CBD5E1; border-top-color:#0F172A;
+  animation:figPvSpin .8s linear infinite;
+}
+@keyframes figPvSpin{ to{ transform:rotate(360deg); } }
+#previewSection .fig-pv-replay{
+  font-family:inherit; font-size:12.5px; font-weight:700; color:#0F172A;
+  background:#FFFFFF; border:1px solid #E2E8F0; border-radius:999px;
+  padding:7px 16px; cursor:pointer;
+  box-shadow:0 2px 8px rgba(15,23,42,.06);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+#previewSection .fig-pv-replay:hover{ transform:translateY(-1px); box-shadow:0 4px 12px rgba(15,23,42,.10); }
+
+/* Slip actions */
+#previewSection .fig-pv-slipactions{
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  margin:2px 0 18px;
+}
+#previewSection .fig-pv-linkbtn{
+  background:none; border:0; padding:4px 2px; cursor:pointer;
+  font-family:inherit; font-size:13px; font-weight:700; color:#0F172A;
+  text-decoration:underline; text-underline-offset:3px; text-decoration-color:#CBD5E1;
+}
+#previewSection .fig-pv-linkbtn:hover{ text-decoration-color:#0F172A; }
+#previewSection .fig-pv-dotsep{ color:#CBD5E1; }
+
+/* ---------- Receipt slip (rendered by renderPreviewTable) ---------- */
+#previewSection .fig-pv-shell .preview-final-box{
+  min-height:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+  animation:none !important;
+  padding:0 !important;
+  overflow:visible !important;
+  position:static !important;
+}
+#previewSection .fig-pv-shell .preview-final-box::before{ display:none !important; }
+#previewSection .fig-pv-shell .slip-card{
+  background:#FFFFFF;
+  border:1px solid #E2E8F0;
+  border-bottom:0;
+  border-radius:4px 4px 0 0;
+  padding:20px 20px 14px;
+  box-shadow:0 18px 36px rgba(15,23,42,.10);
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  animation:none;
+}
+#previewSection .fig-pv-shell .slip-brandrow{
+  display:flex; align-items:center; gap:10px;
+  padding-bottom:12px; margin-bottom:12px;
+  border-bottom:1px dashed #E2E8F0;
+}
+#previewSection .fig-pv-shell .slip-logo{
+  width:34px; height:34px; border-radius:9px; object-fit:cover; flex:0 0 auto;
+  background:#0F172A;
+}
+#previewSection .fig-pv-shell .slip-brandname{
+  font-family:Archivo,Inter,system-ui,sans-serif; font-weight:800; font-size:15px;
+  letter-spacing:.06em; color:#0F172A;
+}
+#previewSection .fig-pv-shell .slip-ready{
+  margin-left:auto; flex:0 0 auto;
+  font-size:9px; font-weight:800; letter-spacing:.14em;
+  color:#059669; border:1.5px solid #059669; border-radius:6px;
+  padding:5px 9px; transform:rotate(-2deg); white-space:nowrap;
+  background:rgba(5,150,105,.06);
+}
+#previewSection .fig-pv-shell .slip-voucher{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  font-size:10.5px; font-weight:700; letter-spacing:.12em; color:#94A3B8;
+  margin:0 0 12px; text-transform:uppercase;
+}
+#previewSection .fig-pv-shell .slip-voucher b{
+  font-size:12px; letter-spacing:.08em; color:#0F172A; font-weight:800;
+}
+#previewSection .fig-pv-shell .preview-table-caption{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 0 10px; margin:0 0 4px;
+  border-bottom:1px solid #F1F5F9;
+  font-size:11px; font-weight:800; letter-spacing:.16em; color:#0F172A;
+  background:none; animation:none;
+}
+#previewSection .fig-pv-shell .preview-table-caption::after{ display:none; }
+#previewSection .fig-pv-shell .order-preview-table{ width:100%; border-collapse:collapse; }
+#previewSection .fig-pv-shell .order-preview-table th,
+#previewSection .fig-pv-shell .order-preview-table td{
+  padding:10px 2px; border-bottom:1px dashed #F1F5F9; vertical-align:middle; text-align:left;
+}
+#previewSection .fig-pv-shell .order-preview-table th{
+  width:34%; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:#94A3B8;
+}
+#previewSection .fig-pv-shell .order-preview-table td{
+  font-size:13.5px; font-weight:700; color:#1E293B; overflow-wrap:anywhere;
+}
+#previewSection .fig-pv-shell .order-preview-table tbody tr{ animation:none; }
+#previewSection .fig-pv-shell .order-preview-table tbody tr:hover{ background:none; transform:none; }
+#previewSection .fig-pv-shell .order-preview-table tr:last-child th,
+#previewSection .fig-pv-shell .order-preview-table tr:last-child td{ border-bottom:0; }
+#previewSection .fig-pv-shell .order-preview-table tr:last-child td{
+  font-size:19px; font-weight:800; color:#0F172A;
+}
+#previewSection .fig-pv-shell .order-preview-table .preview-logo{
+  width:26px; height:26px; border-radius:7px; object-fit:cover;
+  vertical-align:-7px; margin-right:8px; background:#F1F5F9;
+}
+#previewSection .fig-pv-shell .order-preview-table .preview-logo-emoji{
+  font-size:19px; vertical-align:-3px; margin-right:8px;
+}
+#previewSection .fig-pv-shell .order-preview-table .preview-na{ opacity:.4; font-weight:700; }
+#previewSection .fig-pv-shell .slip-barcode{
+  text-align:center; padding:16px 0 6px; margin-top:8px;
+  border-top:1px dashed #E2E8F0;
+}
+#previewSection .fig-pv-shell .slip-bars{
+  height:44px; max-width:220px; margin:0 auto 8px;
+  background:repeating-linear-gradient(90deg,#0F172A 0 2px,transparent 2px 5px,#0F172A 5px 6px,transparent 6px 10px,#0F172A 10px 13px,transparent 13px 16px);
+}
+#previewSection .fig-pv-shell .slip-barcode span{
+  font-size:10px; font-weight:700; letter-spacing:.3em; color:#94A3B8;
+}
+#previewSection .fig-pv-shell .slip-keep{
+  text-align:center; font-size:11.5px; color:#94A3B8; padding:6px 0 2px;
+}
+#previewSection .fig-pv-shell .slip-zigzag{
+  height:12px; margin:0;
+  background:linear-gradient(-45deg,transparent 8px,#FFFFFF 0) 0 0/16px 16px repeat-x,
+             linear-gradient(45deg,transparent 8px,#FFFFFF 0) 8px 0/16px 16px repeat-x;
+  filter:drop-shadow(0 6px 8px rgba(15,23,42,.08));
+}
+
+/* ---------- Summary panel ---------- */
+#previewSection .fig-pv-panel{
+  background:#FFFFFF; border:1px solid #E2E8F0; border-radius:20px;
+  padding:22px 20px; margin:18px 0 0;
+  box-shadow:0 12px 28px rgba(15,23,42,.07);
+}
+#previewSection .fig-pv-panel-title{
+  font-family:Archivo,Inter,system-ui,sans-serif;
+  font-size:19px; font-weight:800; letter-spacing:-.01em; color:#0F172A;
+  margin:0 0 6px;
+}
+#previewSection .fig-pv-panel-sub{
+  font-size:13px; color:#64748B; margin:0 0 16px; line-height:1.5;
+}
+#previewSection .fig-pv-totalrow{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:#F8FAFC; border:1px solid #F1F5F9; border-radius:14px;
+  padding:14px 16px; margin-bottom:16px;
+}
+#previewSection .fig-pv-total-label{
+  font-size:11px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#94A3B8;
+}
+#previewSection .fig-pv-total-value{
+  font-family:Archivo,Inter,system-ui,sans-serif;
+  font-size:24px; font-weight:800; letter-spacing:-.02em; color:#0F172A;
+  white-space:nowrap;
+}
+#previewSection .fig-pv-confirm{
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  width:100%; border:0; border-radius:14px; cursor:pointer;
+  font-family:inherit; font-size:15px; font-weight:800; color:#FFFFFF;
+  background:linear-gradient(165deg,#2B3547,#0F172A);
+  padding:15px 18px;
+  box-shadow:0 12px 24px rgba(15,23,42,.22), inset 0 1px 0 rgba(255,255,255,.14);
+  transition:transform .15s ease, filter .15s ease, opacity .15s ease;
+}
+#previewSection .fig-pv-confirm:hover:not(:disabled){ filter:brightness(1.12); transform:translateY(-1px); }
+#previewSection .fig-pv-confirm:active:not(:disabled){ transform:translateY(0); }
+#previewSection .fig-pv-confirm:disabled{
+  opacity:.45; cursor:not-allowed; box-shadow:none;
+}
+#previewSection .fig-pv-confirm .btn-icon{ width:18px; height:18px; }
+#previewSection .order-progress-bar{ margin-top:12px; }
+
+/* ---------- "Everything in order?" card ---------- */
+#previewSection .fig-pv-check{
+  background:#FFFFFF; border:1px solid #E2E8F0; border-radius:20px;
+  padding:20px; margin:14px 0 0;
+  box-shadow:0 8px 20px rgba(15,23,42,.05);
+}
+#previewSection .fig-pv-section{
+  font-family:Archivo,Inter,system-ui,sans-serif;
+  font-size:17px; font-weight:800; letter-spacing:-.01em; color:#0F172A;
+  margin:0 0 6px;
+}
+#previewSection .fig-pv-muted{
+  font-size:13px; line-height:1.55; color:#64748B; margin:0 0 14px;
+}
+#previewSection .fig-pv-ghostbtn{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:inherit; font-size:13.5px; font-weight:700; color:#0F172A;
+  background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px;
+  padding:11px 18px; cursor:pointer;
+  transition:background .15s ease, transform .15s ease;
+}
+#previewSection .fig-pv-ghostbtn:hover{ background:#F1F5F9; transform:translateY(-1px); }
+
+/* ---------- Help ---------- */
+#previewSection .fig-pv-help{
+  background:#FFFFFF; border:1px solid #E2E8F0; border-radius:20px;
+  padding:20px; margin:14px 0 0;
+  box-shadow:0 8px 20px rgba(15,23,42,.05);
+}
+#previewSection .fig-pv-help-links{ display:flex; gap:10px; flex-wrap:wrap; }
+#previewSection .fig-pv-help-links a{
+  font-size:13px; font-weight:700; color:#0F172A; text-decoration:none;
+  border:1px solid #E2E8F0; border-radius:999px; padding:9px 18px; background:#F8FAFC;
+  transition:background .15s ease, transform .15s ease;
+}
+#previewSection .fig-pv-help-links a:hover{ background:#FFFFFF; transform:translateY(-1px); }
+
+/* ---------- Footer ---------- */
+#previewSection .fig-pv-foot{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  margin:26px 0 6px; font-size:12px; color:#94A3B8;
+}
+
+/* ---------- Modal ---------- */
+#previewSection .fig-pv-modalback{
+  position:fixed; inset:0; z-index:120;
+  background:rgba(15,23,42,.5);
+  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center; padding:20px;
+  animation:figPvFade .2s ease both;
+}
+#previewSection .fig-pv-modalback.hidden{ display:none; }
+@keyframes figPvFade{ from{ opacity:0; } to{ opacity:1; } }
+#previewSection .fig-pv-modal{
+  width:min(400px,100%); background:#FFFFFF; border-radius:22px;
+  padding:26px 24px; text-align:center;
+  box-shadow:0 30px 60px rgba(15,23,42,.3);
+  animation:figPvPop .28s cubic-bezier(.22,.9,.3,1.2) both;
+}
+@keyframes figPvPop{ from{ opacity:0; transform:translateY(14px) scale(.97); } to{ opacity:1; transform:none; } }
+#previewSection .fig-pv-modal-title{
+  font-family:Archivo,Inter,system-ui,sans-serif;
+  font-size:21px; font-weight:800; letter-spacing:-.01em; color:#0F172A;
+  margin:0 0 8px;
+}
+#previewSection .fig-pv-modal .fig-pv-muted{ margin-bottom:20px; }
+#previewSection .fig-pv-modalrow{
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+}
+#previewSection .fig-pv-modalrow .fig-pv-ghostbtn,
+#previewSection .fig-pv-modalrow .fig-pv-confirm{ justify-content:center; }
+
+/* ---------- Responsive ---------- */
+@media (max-width:520px){
+  #previewSection .fig-pv-printer{ max-width:340px; }
+  #previewSection .fig-pv-paperwell{ margin-left:18px; margin-right:18px; }
+  #previewSection .fig-pv-shell .slip-card{ padding:16px 14px 12px; }
+  #previewSection .fig-pv-shell .order-preview-table th{ width:36%; font-size:9px; }
+  #previewSection .fig-pv-shell .order-preview-table td{ font-size:12.5px; }
+  #previewSection .fig-pv-shell .order-preview-table tr:last-child td{ font-size:17px; }
+  #previewSection .fig-pv-panel{ padding:18px 16px; }
+  #previewSection .fig-pv-total-value{ font-size:21px; }
+  #previewSection .fig-pv-modalrow{ grid-template-columns:1fr; }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  #previewSection .fig-anim{ animation:none; }
+  #pvPrinter.is-printing #pvPaper{ animation:none; }
+  #previewSection .fig-pv-paper{ transform:none; }
+  #previewSection .fig-pv-spinner{ animation-duration:2s; }
+  #previewSection .fig-pv-power i{ animation:none; }
+}
+
+/* ---------- Print: only the slip ---------- */
+@media print{
+  body > *:not(#previewSection){ display:none !important; }
+  #previewSection.order-preview-view{
+    position:static !important; inset:auto !important; overflow:visible !important;
+    padding:0 !important; background:#FFFFFF !important; display:block !important;
+  }
+  #previewSection .fig-pv-crumb,
+  #previewSection .fig-pv-head,
+  #previewSection .fig-pv-machine,
+  #previewSection .fig-pv-statusline,
+  #previewSection .fig-pv-slipactions,
+  #previewSection .fig-pv-panel,
+  #previewSection .fig-pv-check,
+  #previewSection .fig-pv-help,
+  #previewSection .fig-pv-foot,
+  #previewSection .fig-pv-modalback{ display:none !important; }
+  #previewSection .fig-pv-paperwell{ margin:0; overflow:visible; }
+  #previewSection .fig-pv-paper{ transform:none !important; animation:none !important; }
+  #previewSection .fig-pv-shell .slip-card{ box-shadow:none; }
+}
+
+/* ===== figma-preview-full: light-mode (the app's permanent theme) =====
+   The legacy light skin above targets the same slip class names with
+   `body.light-mode #previewSection …` selectors; these (1,3,1) rules keep
+   the Figma rebuild on top of them. */
+body.light-mode #previewSection.order-preview-view{
+  background:#F8FAFC !important;
+  background-image:radial-gradient(1200px 500px at 50% -80px,#FFFFFF 0%,#F8FAFC 60%) !important;
+  color:#0F172A !important;
+}
+body.light-mode #previewSection .fig-pv-shell .slip-card{
+  background:#FFFFFF !important;
+  border:1px solid #E2E8F0 !important;
+  border-bottom:0 !important;
+  border-radius:4px 4px 0 0 !important;
+  box-shadow:0 18px 36px rgba(15,23,42,.10) !important;
+  overflow:visible !important;
+  padding:20px 20px 14px !important;
+}
+body.light-mode #previewSection .fig-pv-shell .preview-table-caption{
+  background:none !important;
+  border-bottom:1px solid #F1F5F9 !important;
+  color:#0F172A !important;
+  padding:0 0 10px !important;
+  margin:0 0 4px !important;
+  animation:none !important;
+  font-size:11px !important;
+  letter-spacing:.16em !important;
+}
+body.light-mode #previewSection .fig-pv-shell .preview-table-caption::after{ display:none !important; }
+body.light-mode #previewSection .fig-pv-shell .order-preview-table th{
+  color:#94A3B8 !important; font-size:10px !important; padding:10px 2px !important;
+  border-bottom:1px dashed #F1F5F9 !important; background:none !important;
+}
+body.light-mode #previewSection .fig-pv-shell .order-preview-table td{
+  color:#1E293B !important; font-size:13.5px !important; padding:10px 2px !important;
+  border-bottom:1px dashed #F1F5F9 !important; background:none !important;
+}
+body.light-mode #previewSection .fig-pv-shell .order-preview-table tr:last-child td{
+  color:#0F172A !important; font-size:19px !important;
+}
+body.light-mode #previewSection .fig-pv-shell .slip-barcode{
+  padding:16px 0 6px !important; margin:8px 0 0 !important;
+  border-top:1px dashed #E2E8F0 !important; text-align:center;
+}
+body.light-mode #previewSection .fig-pv-shell .slip-bars{
+  height:44px !important; max-width:220px !important; margin:0 auto 8px !important;
+  background:repeating-linear-gradient(90deg,#0F172A 0 2px,transparent 2px 5px,#0F172A 5px 6px,transparent 6px 10px,#0F172A 10px 13px,transparent 13px 16px) !important;
+}
+body.light-mode #previewSection .fig-pv-shell .slip-barcode span{
+  font-size:10px !important; font-weight:700 !important; letter-spacing:.3em !important;
+  color:#94A3B8 !important;
+}
+body.light-mode #previewSection .fig-pv-shell .slip-keep{
+  padding:6px 0 2px !important; text-align:center;
+  font-size:11.5px !important; color:#94A3B8 !important;
+}
+body.light-mode #previewSection .fig-pv-shell .slip-zigzag{
+  height:12px !important; margin:0 !important;
+  background:linear-gradient(-45deg,transparent 8px,#FFFFFF 0) 0 0/16px 16px repeat-x,
+             linear-gradient(45deg,transparent 8px,#FFFFFF 0) 8px 0/16px 16px repeat-x !important;
+  filter:drop-shadow(0 6px 8px rgba(15,23,42,.08));
+}
+
+/* Confirm + back buttons: beat the legacy light-mode CTA rules above. */
+body.light-mode #previewSection #previewOrderBtn.fig-pv-confirm{
+  width:100% !important; max-width:none !important; margin:0 !important;
+  color:#FFFFFF !important;
+  background:linear-gradient(165deg,#2B3547,#0F172A) !important;
+  border:0 !important; border-radius:14px !important;
+  font-size:15px !important; font-weight:800 !important;
+  padding:15px 18px !important;
+  box-shadow:0 12px 24px rgba(15,23,42,.22), inset 0 1px 0 rgba(255,255,255,.14) !important;
+  text-shadow:none !important;
+  display:flex !important; align-items:center; justify-content:center; gap:10px;
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif !important;
+}
+body.light-mode #previewSection #previewOrderBtn.fig-pv-confirm:hover:not(:disabled){
+  background:linear-gradient(165deg,#2B3547,#0F172A) !important;
+  filter:brightness(1.12) !important; transform:translateY(-1px) !important;
+  box-shadow:0 12px 24px rgba(15,23,42,.22), inset 0 1px 0 rgba(255,255,255,.14) !important;
+}
+body.light-mode #previewSection #previewOrderBtn.fig-pv-confirm:disabled{
+  background:linear-gradient(165deg,#2B3547,#0F172A) !important;
+  color:#FFFFFF !important; opacity:.45 !important; box-shadow:none !important;
+  transform:none !important;
+}
+body.light-mode #previewSection #previewBackBtn.fig-pv-ghostbtn{
+  color:#0F172A !important; background:#F8FAFC !important;
+  border:1px solid #E2E8F0 !important; border-radius:12px !important;
+  font-size:13.5px !important; font-weight:700 !important;
+  padding:11px 18px !important; text-shadow:none !important;
+  box-shadow:none !important; animation:none !important;
+  display:inline-flex !important; align-items:center; gap:8px;
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif !important;
+}
+body.light-mode #previewSection #previewBackBtn.fig-pv-ghostbtn:hover{
+  background:#F1F5F9 !important; transform:translateY(-1px) !important;
+  box-shadow:none !important;
+}
