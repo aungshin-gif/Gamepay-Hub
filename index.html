@@ -64,7 +64,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=59">
+  <link rel="stylesheet" href="styles.css?v=60">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -865,8 +865,8 @@
            and white order-history cards. Inner order-detail view untouched. -->
       <div class="acct-screen">
         <div class="acct-col mo-col">
-          <header class="acct-appbar">
-            <div class="acct-appbar-brand"><span class="acct-appbar-plus">+</span><span class="acct-appbar-word">gamepay.</span></div>
+          <header class="acct-appbar mo-appbar">
+            <div class="acct-appbar-brand"><img class="mo-brand-logo" id="moBrandLogo" alt="Gamepay Hub"></div>
             <div class="acct-appbar-actions">
               <button type="button" class="acct-icon-btn" id="moBellBtn" aria-label="Notifications">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
@@ -5347,9 +5347,16 @@ async function openMyOrdersView(){
   myOrdersList.innerHTML = skeletonRows(4);
   document.getElementById("myOrdersStats")?.classList.add("hidden");
   window.scrollTo(0, 0);
-  // Appbar avatar shows the account initial, same as the account page.
+  // Appbar brand shows the Gamepay Hub logo (logo only, no wordmark); the
+  // avatar shows the user's uploaded photo when set, else the initial.
+  const moLogo = document.getElementById("moBrandLogo");
+  if(moLogo){ const src = (typeof siteLogoSrc === "function") ? siteLogoSrc() : ""; if(src) moLogo.src = src; }
   const moAv = document.getElementById("moHeaderAvatar");
-  if(moAv) moAv.textContent = currentUser ? (getDisplayName()[0]?.toUpperCase() || "?") : "?";
+  if(moAv){
+    const moPhoto = currentUser?.user_metadata?.avatar_url || null;
+    if(moPhoto) moAv.innerHTML = `<img src="${moPhoto}" alt="">`;
+    else moAv.textContent = currentUser ? (getDisplayName()[0]?.toUpperCase() || "?") : "?";
+  }
 
   if(!supabaseClient){
     myOrdersList.innerHTML = `<div class="chat-empty">Backend not configured yet.</div>`;

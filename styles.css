@@ -8062,3 +8062,33 @@ body.light-mode #previewSection #previewOrderBtn.pv3-confirm:disabled{
 .mo-fpill.approved,.mo-fpill.completed{ background:#DFF5E8; color:#0F7A3F; }
 .mo-fpill.rejected{ background:#FDE7EA; color:#D61E4D; }
 .mo-fcard-amount{ font-size:15px; font-weight:800; color:#23233A; white-space:nowrap; }
+
+/* My Orders -- compact pass: logo-only brand, tighter vertical rhythm, and
+   shorter stat cards. Scoped to the orders page; the account page keeps its
+   own v15 header untouched. */
+.mo-appbar{ padding:2px 2px 0; }
+.mo-brand-logo{ height:32px; width:auto; display:block; border-radius:9px; }
+.mo-headrow{ margin-top:8px; }
+.mo-back-btn{ padding:7px 14px; font-size:12.5px; }
+.mo-page-title{ font-size:18px; }
+.mo-fstats{ gap:8px; margin-top:10px; }
+.mo-fstat{ padding:10px 4px 8px; border-radius:14px; gap:1px; }
+.mo-fstat-icon{ width:22px; height:22px; }
+.mo-fstat-num{ font-size:22px; line-height:1.2; }
+.mo-fstat-label{ font-size:11px; }
+.mo-fstat.total{ box-shadow:0 2px 0 #D9CBF7; }
+.mo-fstat.pending{ box-shadow:0 2px 0 #EBD9A4; }
+.mo-fstat.completed{ box-shadow:0 2px 0 #B2E0C0; }
+.mo-fstat.failed{ box-shadow:0 2px 0 #F0BFC6; }
+.mo-section-title{ margin:14px 2px 8px; font-size:16px; }
+.mo-flist{ gap:10px; }
+.mo-fcard{ padding:12px 14px; border-radius:14px; }
+.mo-fcard-div{ margin:9px 0; }
+@media(max-width:380px){
+  .mo-brand-logo{ height:28px; }
+  .mo-fstats{ gap:6px; }
+  .mo-fstat{ padding:8px 3px 7px; border-radius:12px; }
+  .mo-fstat-icon{ width:19px; height:19px; }
+  .mo-fstat-num{ font-size:19px; }
+  .mo-fstat-label{ font-size:10px; }
+}
