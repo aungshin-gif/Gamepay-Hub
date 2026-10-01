@@ -3821,6 +3821,11 @@ function renderPreviewTable(message){
     }
   }
   // Keep the Figma receipt order: Name sits right after Plan, before Payment.
+  // The row is always shown -- when the Account field is still empty it shows
+  // a muted dash, so the row can never silently disappear from the slip.
+  if(!rows.some(r=>r.label==="Name")){
+    rows.push({label:"Name", html:`<tr><th>Name</th><td><span class="preview-na">—</span></td></tr>`});
+  }
   const nameIdx=rows.findIndex(r=>r.label==="Name");
   if(nameIdx>0){
     const nameRow=rows.splice(nameIdx,1)[0];
