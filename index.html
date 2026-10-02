@@ -3187,7 +3187,7 @@ function renderGpCarousel(){
   const cards = list.map(gpCardHtml).join("");
   carousel.innerHTML = list.length
     ? cards.repeat(6)
-    : `<div class="gp-empty">No discounted plans in this category yet.</div>`;
+    : `<div class="gp-empty">No discounted plans in this category yet.<br><button type="button" onclick="window.gpReloadDiscounts()" style="margin-top:8px;padding:6px 12px;border:1px solid #d8c9eb;border-radius:8px;background:#fff;color:#6231c8;font-size:12px;cursor:pointer;">Retry</button></div>`;
   document.getElementById("gpCount").textContent = list.length;
   document.getElementById("gpFound").textContent = `${list.length} discounted products found`;
   carousel.querySelectorAll("[data-gp-view-plans]").forEach(btn => {
@@ -3841,7 +3841,7 @@ if(document.readyState === "loading"){
       });
     }
 
-    async function loadStockOverrides(){
+    async function loadStockOverrides(retryCount = 0){
       if(!supabaseClient){
         gpOverridesReady = true;
         if(typeof gpRenderCarousel === "function") gpRenderCarousel();
@@ -3849,20 +3849,33 @@ if(document.readyState === "loading"){
       }
       try{
         const { data, error } = await supabaseClient.from("stock_overrides").select("*");
-        if(error || !data || !data.length) return;
-        applyStockOverrides(data);
-        renderProducts();
-        renderHotProducts();
-        if(typeof gpRenderCarousel === "function") gpRenderCarousel();
-        renderCatalogDiscounts();
-        if(currentProduct) renderOrder();
+        if(error) throw error;
+        if(data && data.length){
+          applyStockOverrides(data);
+          renderProducts();
+          renderHotProducts();
+          if(typeof gpRenderCarousel === "function") gpRenderCarousel();
+          renderCatalogDiscounts();
+          if(currentProduct) renderOrder();
+        }
       }catch(err){
         console.error("Stock override fetch failed:", err);
+        // Retry up to 2 times with delay
+        if(retryCount < 2){
+          await new Promise(r => setTimeout(r, 1000 * (retryCount + 1)));
+          return loadStockOverrides(retryCount + 1);
+        }
       }finally{
         gpOverridesReady = true;
         if(typeof gpRenderCarousel === "function") gpRenderCarousel();
       }
     }
+    // Manual retry for debugging / user-triggered refresh
+    window.gpReloadDiscounts = function(){
+      gpOverridesReady = false;
+      if(typeof gpRenderCarousel === "function") gpRenderCarousel();
+      loadStockOverrides();
+    };
 
     // Admin can flag a product "Hot" from the Stock list without a code
     // deploy. Only ever turns the flame badge ON -- a product already
