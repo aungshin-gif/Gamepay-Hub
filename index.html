@@ -154,8 +154,9 @@
           <button id="npSearchBtn" class="np-icon-btn" type="button" aria-label="Search news">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
           </button>
-          <button id="newsFeedBackBtn" class="np-icon-btn" type="button" aria-label="Close news">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+          <button id="newsFeedBackBtn" class="np-back-btn" type="button" aria-label="Back to main page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            <span>Back</span>
           </button>
         </div>
       </div>
@@ -463,13 +464,9 @@
               Discount plans
               <span class="gp-count" id="gpCount">0</span>
             </h2>
-            <div class="gp-controls">
-              <button id="gpPrev" type="button" aria-label="Previous products">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-              </button>
-              <button id="gpNext" type="button" aria-label="Next products">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </button>
+            <div class="gp-marquee-badge" aria-hidden="true">
+              <span class="gp-marquee-dot"></span>
+              <span>Live discounts</span>
             </div>
           </div>
           <div class="gp-tabs" id="gpTabs" role="tablist" aria-label="Product categories">
@@ -479,8 +476,8 @@
             <button class="gp-tab" data-cat="Learning &amp; design" type="button" role="tab" aria-selected="false">Learning &amp; design</button>
           </div>
           <p class="gp-sr" id="gpFound" aria-live="polite"></p>
-          <div class="gp-carousel-view" id="gpCarouselView">
-            <div class="gp-carousel-track" id="gpCarousel" aria-label="Discounted products"></div>
+          <div class="gp-marquee-view" id="gpCarouselView">
+            <div class="gp-marquee-track" id="gpCarousel" aria-label="Discounted products"></div>
           </div>
         </section>
 
@@ -3188,16 +3185,17 @@ function renderGpCarousel(){
     return;
   }
   const list = gpFiltered();
+  /* Marquee: render the set 6x (two identical halves of 3) so the
+     -50% keyframe loop is seamless and the track stays wide. */
+  const cards = list.map(gpCardHtml).join("");
   carousel.innerHTML = list.length
-    ? list.map(gpCardHtml).join("")
+    ? cards.repeat(6)
     : `<div class="gp-empty">No discounted plans in this category yet.</div>`;
   document.getElementById("gpCount").textContent = list.length;
   document.getElementById("gpFound").textContent = `${list.length} discounted products found`;
   carousel.querySelectorAll("[data-gp-view-plans]").forEach(btn => {
     btn.addEventListener("click", () => showProductsPage());
   });
-  gpPage = 0;
-  gpApplyPage(false);
 }
 
 gpRenderCarousel = renderGpCarousel;
@@ -3215,51 +3213,9 @@ document.getElementById("gpTabs")?.addEventListener("click", (e) => {
   renderGpCarousel();
 });
 
-/* ---- Carousel: paged slide (transform, not scroll) ---- */
-const prevBtn = document.getElementById("gpPrev");
-const nextBtn = document.getElementById("gpNext");
-const gpView = document.getElementById("gpCarouselView");
-let gpPage = 0;
-function gpMaxOffset(){
-  if(!gpView || !carousel) return 0;
-  return Math.max(0, carousel.scrollWidth - gpView.clientWidth);
-}
-function gpApplyPage(animate = true){
-  if(!gpView || !carousel) return;
-  const max = gpMaxOffset();
-  const pages = Math.max(1, Math.ceil((max + gpView.clientWidth) / gpView.clientWidth));
-  if(gpPage > pages - 1) gpPage = pages - 1;
-  if(gpPage < 0) gpPage = 0;
-  const offset = Math.min(gpPage * gpView.clientWidth, max);
-  if(!animate) carousel.style.transition = "none";
-  carousel.style.transform = `translateX(${-offset}px)`;
-  if(!animate){
-    void carousel.offsetWidth; /* reflow */
-    carousel.style.transition = "";
-  }
-}
-function gpGoPage(dir){
-  if(!gpView || !carousel) return;
-  const max = gpMaxOffset();
-  if(max <= 0) return;
-  const pages = Math.max(1, Math.ceil((max + gpView.clientWidth) / gpView.clientWidth));
-  gpPage = (gpPage + dir + pages) % pages; /* wrap around */
-  gpApplyPage(true);
-}
-prevBtn?.addEventListener("click", () => gpGoPage(-1));
-nextBtn?.addEventListener("click", () => gpGoPage(1));
-/* touch swipe pages the carousel */
-let gpTouchX = null;
-gpView?.addEventListener("touchstart", (e) => {
-  gpTouchX = e.touches[0].clientX;
-}, { passive: true });
-gpView?.addEventListener("touchend", (e) => {
-  if(gpTouchX === null) return;
-  const dx = e.changedTouches[0].clientX - gpTouchX;
-  gpTouchX = null;
-  if(Math.abs(dx) > 40) gpGoPage(dx < 0 ? 1 : -1);
-}, { passive: true });
-window.addEventListener("resize", () => gpApplyPage(false));
+/* ---- Discount marquee: pure CSS loop (see .gp-marquee-track) ----
+   No JS driving needed; the track renders 6 copies and the keyframes
+   translate -50% for a seamless infinite glide. Pauses on hover/touch. */
 
 /* ---- Hero banner rotation ---- */
 const slides = [...document.querySelectorAll("#gpBanner .gp-slide")];
@@ -3338,9 +3294,9 @@ const payRows = `
   </div>
   <p class="gp-pay-label">Other currencies</p>
   <div class="gp-pay-grid">
-    <div class="gp-pay-pill"><span class="gp-cur-ico">$</span><strong>US Dollar</strong></div>
-    <div class="gp-pay-pill"><span class="gp-cur-ico">&pound;</span><strong>British Pound</strong></div>
-    <div class="gp-pay-pill"><span class="gp-cur-ico">&euro;</span><strong>Euro</strong></div>
+    <div class="gp-pay-pill"><img src="assets/currency-usd.png" alt="US Dollar" loading="lazy"><strong>US Dollar</strong></div>
+    <div class="gp-pay-pill"><img src="assets/currency-gbp.jpg" alt="British Pound" loading="lazy"><strong>British Pound</strong></div>
+    <div class="gp-pay-pill"><img src="assets/currency-eur.png" alt="Euro" loading="lazy"><strong>Euro</strong></div>
   </div>
   <p class="gp-pay-note">Visa &amp; Mastercard products are sold separately. They are not listed here as checkout payment methods.</p>`;
 
@@ -3424,7 +3380,14 @@ const moreBtn = document.getElementById("gpMoreFaq");
 const moreWrap = document.getElementById("gpFaqMore");
 moreBtn?.addEventListener("click", () => {
   const hidden = moreWrap.hidden;
-  moreWrap.hidden = !hidden;
+  if(hidden){
+    moreWrap.hidden = false;
+    void moreWrap.offsetWidth; /* reflow so the pop animation restarts */
+    moreWrap.classList.add("show");
+  }else{
+    moreWrap.classList.remove("show");
+    moreWrap.hidden = true;
+  }
   moreBtn.setAttribute("aria-expanded", hidden ? "true" : "false");
   moreBtn.querySelector("span").textContent = hidden ? "Show fewer questions" : "View 4 more questions";
 });
@@ -3791,7 +3754,11 @@ if(document.readyState === "loading"){
     }
 
     async function loadStockOverrides(){
-      if(!supabaseClient) return;
+      if(!supabaseClient){
+        gpOverridesReady = true;
+        if(typeof gpRenderCarousel === "function") gpRenderCarousel();
+        return;
+      }
       try{
         const { data, error } = await supabaseClient.from("stock_overrides").select("*");
         if(error || !data || !data.length) return;
