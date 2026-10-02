@@ -2035,6 +2035,22 @@ let stockActiveCategory = "All";
 let stockExpandedProducts = new Set(); // product ids currently expanded -- collapsed by default, same tap-to-open feel as the storefront's own product cards
 
 function stockRowKey(productId, planName){ return productId + "::" + planName; }
+// Same fuzzy key as the storefront (index.html normPlanKey): plan names get
+// cosmetic edits over time (v11 stripped the ChatGPT emoji prefixes), so an
+// exact-string match silently orphans rows saved under an older name -- that
+// is how the admin's own ChatGPT discounts "disappeared" from this panel
+// while the storefront kept applying them. Both sides normalize the same way.
+function normKeyStr(s){
+  return String(s || "")
+    .replace(/[\p{Extended_Pictographic}\uFE00-\uFE0F]/gu, "")
+    .replace(/\u200D/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+function normPlanKey(productId, planName){
+  return normKeyStr(productId) + "::" + normKeyStr(planName);
+}
 
 async function loadStockView(){
   const list = document.getElementById("stockList");
@@ -2045,7 +2061,7 @@ async function loadStockView(){
   ]);
   if(error){ list.innerHTML = `<div class="empty-note">${error.message}</div>`; return; }
   stockOverridesCache = {};
-  (data || []).forEach(row => { stockOverridesCache[stockRowKey(row.product_id, row.plan_name)] = row; });
+  (data || []).forEach(row => { stockOverridesCache[normPlanKey(row.product_id, row.plan_name)] = row; });
   productOverridesCache = {};
   if(!hotError) (hotRows || []).forEach(row => { productOverridesCache[row.product_id] = row; });
   renderStockCategoryChips();
@@ -2166,7 +2182,7 @@ function computeNowPrice(price, pct){
 }
 
 function renderStockPlanRow(product, plan){
-  const key = stockRowKey(product.id, plan.name);
+  const key = normPlanKey(product.id, plan.name);
   const override = stockOverridesCache[key];
   const outOfStock = override ? override.out_of_stock : plan.outOfStock;
   const lowStock = override ? override.low_stock : false;
@@ -2261,7 +2277,7 @@ function wireStockPlanRow(rowEl, { product, plan }){
   // this plan has never been overridden) instead of reloading the whole
   // Stock list -- cheap to back out of a typo without losing your place.
   discardBtn.addEventListener("click", () => {
-    const key = stockRowKey(product.id, plan.name);
+    const key = normPlanKey(product.id, plan.name);
     const override = stockOverridesCache[key];
     if(priceInput) priceInput.value = override && override.price != null ? override.price : (plan.price ?? "");
     if(discountInput) discountInput.value = override?.discount_percent || "";
@@ -2277,10 +2293,15 @@ function wireStockPlanRow(rowEl, { product, plan }){
   });
 
   saveBtn.addEventListener("click", async () => {
-    const key = stockRowKey(product.id, plan.name);
+    const key = normPlanKey(product.id, plan.name);
+    const existing = stockOverridesCache[key];
     const row = {
       product_id: product.id,
-      plan_name: plan.name,
+      // Reuse the stored plan_name when this plan already has a row saved
+      // under an older cosmetic name (e.g. with an emoji prefix) -- the
+      // upsert conflicts on (product_id, plan_name), so saving under the
+      // current name would insert a duplicate instead of updating.
+      plan_name: existing ? existing.plan_name : plan.name,
       price: priceInput ? (priceInput.value === "" ? null : Number(priceInput.value)) : null,
       discount_percent: discountInput ? (discountInput.value === "" ? null : Math.min(95, Math.max(0, Number(discountInput.value)))) : null,
       out_of_stock: outChip.classList.contains("on"),
