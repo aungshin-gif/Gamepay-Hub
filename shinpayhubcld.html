@@ -363,6 +363,20 @@
           <div class="card-title" id="newsFormTitle"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/></svg>New Post</div>
           <input id="newsTitleInput" type="text" placeholder="Headline" maxlength="140" />
           <textarea id="newsBodyInput" class="broadcast-textarea" placeholder="Write the post here. Line breaks are kept exactly as you type them."></textarea>
+          <div class="news-field-label">Summary <span class="news-field-opt">(optional)</span></div>
+          <input id="newsExcerptInput" type="text" maxlength="200" placeholder="Short summary shown under the headline" />
+          <div class="news-hint">Leave empty to automatically use the first lines of the post text.</div>
+          <div class="news-field-label">Post type</div>
+          <label class="news-check-row"><input id="newsIsOfferInput" type="checkbox" /><span>Show under <strong>Offers &amp; Updates</strong> instead of Latest news</span></label>
+          <div class="news-field-label">Image caption <span class="news-field-opt">(optional)</span></div>
+          <input id="newsCaptionInput" type="text" maxlength="160" placeholder="Caption shown under the main image" />
+          <div class="news-field-label">Source &amp; reference <span class="news-field-opt">(optional)</span></div>
+          <input id="newsSourceInput" type="text" maxlength="200" placeholder="e.g. Adapted from the official announcement" />
+          <div class="news-field-label">External link <span class="news-field-opt">(optional)</span></div>
+          <div class="news-link-row">
+            <input id="newsLinkUrlInput" type="url" inputmode="url" placeholder="Link URL — https://…" />
+            <input id="newsLinkLabelInput" type="text" maxlength="60" placeholder="Button label — e.g. Visit the official page" />
+          </div>
           <div class="news-field-label">Images <span id="newsImageCount">(0/8)</span></div>
           <div id="newsImageGrid" class="news-image-grid"></div>
           <input id="newsImageInput" type="file" accept="image/*" multiple style="margin-top:6px;" />
@@ -2376,6 +2390,12 @@ function resetNewsForm(){
   newsExistingImages = [];
   document.getElementById("newsTitleInput").value = "";
   document.getElementById("newsBodyInput").value = "";
+  document.getElementById("newsExcerptInput").value = "";
+  document.getElementById("newsIsOfferInput").checked = false;
+  document.getElementById("newsCaptionInput").value = "";
+  document.getElementById("newsSourceInput").value = "";
+  document.getElementById("newsLinkUrlInput").value = "";
+  document.getElementById("newsLinkLabelInput").value = "";
   document.getElementById("newsPublishBtn").textContent = "Publish";
   document.getElementById("newsCancelEditBtn").classList.add("hidden");
   document.getElementById("newsFormMsg").textContent = "";
@@ -2390,6 +2410,20 @@ document.getElementById("newsPublishBtn")?.addEventListener("click", async () =>
   const title = titleInput.value.trim();
   const body = bodyInput.value.trim();
   if(!title || !body){ msg.textContent = "Headline and post text are both required."; msg.style.color = "var(--bad)"; return; }
+  // Optional Figma-newsroom fields -- empty becomes null so old posts and
+  // posts without these values render exactly as before on the storefront.
+  const nullIfEmpty = v => { const t = v.trim(); return t ? t : null; };
+  let linkUrl = nullIfEmpty(document.getElementById("newsLinkUrlInput").value);
+  if(linkUrl && !/^[a-z][a-z0-9+.-]*:/i.test(linkUrl)) linkUrl = "https://" + linkUrl;
+  const payload = {
+    title, body,
+    excerpt: nullIfEmpty(document.getElementById("newsExcerptInput").value),
+    is_offer: document.getElementById("newsIsOfferInput").checked,
+    caption: nullIfEmpty(document.getElementById("newsCaptionInput").value),
+    source: nullIfEmpty(document.getElementById("newsSourceInput").value),
+    link_url: linkUrl,
+    link_label: nullIfEmpty(document.getElementById("newsLinkLabelInput").value),
+  };
 
   const btn = document.getElementById("newsPublishBtn");
   btn.disabled = true;
@@ -2408,12 +2442,12 @@ document.getElementById("newsPublishBtn")?.addEventListener("click", async () =>
     const images = [...newsExistingImages, ...uploadedUrls];
 
     if(newsEditingId){
-      const { error } = await sb.from("news_posts").update({ title, body, images, updated_at: new Date().toISOString() }).eq("id", newsEditingId);
+      const { error } = await sb.from("news_posts").update({ ...payload, images, updated_at: new Date().toISOString() }).eq("id", newsEditingId);
       if(error) throw error;
       showAdminToast("Post updated.");
     } else {
       const { data: { user } } = await sb.auth.getUser();
-      const { error } = await sb.from("news_posts").insert({ title, body, images, created_by: user?.id || null });
+      const { error } = await sb.from("news_posts").insert({ ...payload, images, created_by: user?.id || null });
       if(error) throw error;
       showAdminToast("Post published.");
     }
@@ -2438,8 +2472,8 @@ async function loadNewsPosts(){
     <div class="news-post-row" data-id="${p.id}">
       ${p.images?.[0] ? `<img class="news-post-thumb" src="${p.images[0]}" alt="">` : `<div class="news-post-thumb news-post-thumb-empty"></div>`}
       <div class="news-post-row-body">
-        <div class="news-post-row-title">${escapeHtml(p.title)}</div>
-        <div class="news-post-row-meta">${new Date(p.created_at).toLocaleString()} · ${p.images?.length || 0} image${(p.images?.length||0)===1?"":"s"}</div>
+        <div class="news-post-row-title">${escapeHtml(p.title)}${p.is_offer ? `<span class="news-offer-badge">Offer</span>` : ""}</div>
+        <div class="news-post-row-meta">${new Date(p.created_at).toLocaleString()} · ${p.images?.length || 0} image${(p.images?.length||0)===1?"":"s"}${p.excerpt ? " · summary" : ""}${p.link_url ? " · link" : ""}</div>
       </div>
       <div class="news-post-row-actions">
         <button type="button" class="ghost news-edit-btn" data-id="${p.id}">Edit</button>
@@ -2459,6 +2493,12 @@ function editNewsPost(id){
   newsExistingImages = [...(post.images || [])];
   document.getElementById("newsTitleInput").value = post.title;
   document.getElementById("newsBodyInput").value = post.body;
+  document.getElementById("newsExcerptInput").value = post.excerpt || "";
+  document.getElementById("newsIsOfferInput").checked = !!post.is_offer;
+  document.getElementById("newsCaptionInput").value = post.caption || "";
+  document.getElementById("newsSourceInput").value = post.source || "";
+  document.getElementById("newsLinkUrlInput").value = post.link_url || "";
+  document.getElementById("newsLinkLabelInput").value = post.link_label || "";
   document.getElementById("newsPublishBtn").textContent = "Update";
   document.getElementById("newsCancelEditBtn").classList.remove("hidden");
   renderNewsImageGrid();
