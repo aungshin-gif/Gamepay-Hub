@@ -4403,7 +4403,7 @@ planList.style.display = plansOpen ? "grid" : "none";
   }).forEach(({plan,index}) => {
     const el = document.createElement("div");
   el.className =
-  "plan-option" +
+  "plan-option figma-card" +
   (index === currentPlanIndex ? " active" : "") +
   (plan.bestSeller ? " best-seller" : "") +
   (plan.discount || plan.discountPercent ? " discount" : "") +
@@ -4462,12 +4462,48 @@ el.className += accessClass;
     el.dataset.tier = tier;
     el.classList.add("has-tier");
   }
+// Figma "User greeting" plan card icons (Lucide)
+const _svgWrap = (inner, vb) => `<svg viewBox="${vb||"0 0 24 24"}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+const ICON_MAIL = _svgWrap('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>');
+const ICON_LOCK = _svgWrap('<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>');
+const ICON_USERS = _svgWrap('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>');
+const ICON_USER = _svgWrap('<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>');
+const ICON_KEY = _svgWrap('<path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/>');
+const ICON_CLOCK = _svgWrap('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>');
+const ICON_X = _svgWrap('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>', "0 0 24 24");
+// Choose account-type icon
+const _accLower = String(typeOf(plan) || "").toLowerCase();
+const accIcon = /share/.test(_accLower) ? ICON_USERS : /private/.test(_accLower) ? ICON_LOCK : /code|redeem|key/.test(_accLower) ? ICON_KEY : /individual|head/.test(_accLower) ? ICON_USER : ICON_MAIL;
+const accLabel = typeOf(plan) || (plan.ownMail ? "Own Mail" : "Standard");
+// Tier badge (Figma pastel + diamond dot via CSS)
+const tierBadgeLabel = TIER_LABEL[tier] || tier || "";
+const tierBadgeHtml = tier ? `<span class="plan-tier-badge" data-tier="${tier}" aria-label="${tierBadgeLabel}">${tierBadgeLabel}</span>` : `<span></span>`;
+// Discount: Figma shows "Special offer" text + strikethrough, no -X% badge
+const hasDiscount = Boolean(plan.discount || plan.discountPercent);
+const origPriceHtml = hasDiscount && plan.originalPrice ? `<s>${formatKs(plan.originalPrice)}</s>` : "";
+// Price number split
+const _priceNum = priceText.replace(/\s*Ks\s*$/i, "");
+const _isCustom = /custom|contact|dm/i.test(priceText);
 el.innerHTML = `
-  ${watermark}
-  ${plan.outOfStock ? '<span class="out-stock-badge">⛔ Out of Stock</span>' : (plan.lowStock ? '<span class="low-stock-badge">⚠️ Low Stock</span>' : '')}
-  ${(plan.discount || plan.discountPercent) ? `<span class="discount-badge"><svg class="discount-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8Z"/><circle cx="7" cy="7" r=".6" fill="currentColor"/></svg>${plan.discountPercent ? "-" + plan.discountPercent + "%" : "Discount"}</span>` : ''}
-  ${plan.bestSeller ? '<span class="best-seller-badge">🔥 Best Seller</span>' : ''}
-  <div class="plan-professional"><div class="plan-primary-line"><span class="plan-field-label">Plan</span><strong class="plan-professional-name">${planName}</strong><span class="plan-chip-row">${tierChipFor(tier)}${typeOf(plan) ? "" : ownMailLabel}</span></div><div class="plan-type-line">${typeOf(plan) ? `<span class="plan-field-label">Type</span><strong class="plan-type-value">${typeOf(plan)}</strong>` : ""}</div><div class="plan-secondary-line${plan.noDuration ? " no-duration" : ""}">${plan.noDuration ? "" : `<div><span class="plan-field-label">Duration</span><strong>${durationText}</strong></div>`}<div class="plan-price-block"><span class="plan-field-label">Price</span>${plan.discountPercent ? `<s class="plan-price-original">${formatKs(plan.originalPrice)}</s>` : ''}<strong>${priceText}</strong></div></div></div>
+  <div class="plan-card-top">
+    ${tierBadgeHtml}
+    <input type="radio" class="plan-card-radio" name="plan-radio-${currentProduct.id}" ${index === currentPlanIndex ? "checked" : ""} ${plan.outOfStock ? "disabled" : ""} tabindex="-1" aria-hidden="true">
+  </div>
+  <h3 class="plan-card-name font-plan-heading">${planName}</h3>
+  <div class="plan-card-row">
+    <span class="plan-icon-chip">${accIcon}</span>
+    <span>${accLabel}</span>
+  </div>
+  <div class="plan-card-offer">
+    ${plan.outOfStock
+      ? `<span class="unavailable-pill">${ICON_X} Unavailable</span>`
+      : (hasDiscount ? `<span class="special-offer">Special offer</span>` : ``)}
+  </div>
+  <div class="plan-card-footer">
+    ${plan.noDuration ? `` : `<div class="plan-card-duration"><span class="plan-icon-chip clock">${ICON_CLOCK}</span><span>${durationText}</span></div>`}
+    <span class="plan-card-price-original">${origPriceHtml}</span>
+    <div class="plan-card-price">${_isCustom ? `<span style="font-size:14px;font-weight:700;">${priceText}</span>` : `${_priceNum}<span class="ks">Ks</span>`}</div>
+  </div>
 `;
 if(plan.outOfStock){
   el.onclick = null;

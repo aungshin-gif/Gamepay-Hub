@@ -9257,3 +9257,130 @@ body.light-mode .gp-bottomnav button.is-active{
 @media (prefers-reduced-motion:reduce){
   .gp-pay-pill{ animation:none; }
 }
+
+/* ===== Figma "User greeting" Plans page — plan cards (v56) ===== */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+.font-plan-heading{ font-family:'Sora','Noto Sans Myanmar',sans-serif; }
+.font-plans{ font-family:'Manrope','Noto Sans Myanmar',sans-serif; }
+
+/* Tier badge with diamond dot */
+.plan-tier-badge{
+  display:inline-flex; align-items:center; gap:8px;
+  min-height:28px; padding:0 10px;
+  border-radius:7px; border:1px solid;
+  font-family:'Sora','Noto Sans Myanmar',sans-serif;
+  font-size:10px; font-weight:600; line-height:16px;
+  letter-spacing:0.08em; text-transform:uppercase;
+  box-shadow:0 1px 2px rgba(48,40,55,0.05);
+  white-space:nowrap;
+}
+.plan-tier-badge::before{
+  content:""; width:6px; height:6px;
+  transform:rotate(45deg); border-radius:1px;
+  background:currentColor; opacity:0.75; flex-shrink:0;
+}
+/* Badge color tokens — same plan name = same color */
+.plan-tier-badge[data-tier="go"]{ border-color:#e9c16f; background:#ffe391; color:#75510e; }
+.plan-tier-badge[data-tier="plus"]{ border-color:#a8c9f5; background:#d4e7ff; color:#255b9e; }
+.plan-tier-badge[data-tier="pro"],
+.plan-tier-badge[data-tier="proplus"]{ border-color:#c7acf1; background:#e4d5ff; color:#693a9d; }
+.plan-tier-badge[data-tier="team"]{ border-color:#98d5e4; background:#c6edf5; color:#246376; }
+.plan-tier-badge[data-tier="individual"]{ border-color:#98d4b5; background:#c9efdb; color:#2e694b; }
+.plan-tier-badge[data-tier="family"]{ border-color:#98d5e4; background:#c6edf5; color:#246376; }
+.plan-tier-badge[data-tier="education"]{ border-color:#a8c9f5; background:#d4e7ff; color:#255b9e; }
+.plan-tier-badge[data-tier="business"]{ border-color:#edb791; background:#ffdcc2; color:#914b25; }
+.plan-tier-badge[data-tier="premium"]{ border-color:#efaacf; background:#ffd6ea; color:#96326d; }
+.plan-tier-badge[data-tier="vip"]{ border-color:#e9c16f; background:#ffe391; color:#75510e; }
+.plan-tier-badge[data-tier="max"]{ border-color:#c7acf1; background:#e4d5ff; color:#693a9d; }
+.plan-tier-badge[data-tier="ultra"]{ border-color:#efaacf; background:#ffd6ea; color:#96326d; }
+.plan-tier-badge[data-tier="basic"],
+.plan-tier-badge[data-tier="core"],
+.plan-tier-badge[data-tier="standard"],
+.plan-tier-badge[data-tier="link"],
+.plan-tier-badge[data-tier="hobby"]{ border-color:#d8cfe4; background:#f4f0f9; color:#6b5a7d; }
+
+/* Icon chips (24px) */
+.plan-icon-chip{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:24px; height:24px; border-radius:6px; flex-shrink:0;
+  border:1px solid #e4d7f3; background:#f4edff; color:#7343a5;
+}
+.plan-icon-chip svg{ width:14px; height:14px; }
+.plan-icon-chip.clock{
+  border-color:#ddcef0;
+  background:linear-gradient(135deg,#ffffff 0%,#ece2fb 100%);
+  box-shadow:0 2px 0 #e3d6f1;
+}
+.plan-icon-chip.clock svg{ width:17px; height:17px; }
+
+/* Figma plan card */
+.plan-option.figma-card{
+  position:relative; display:flex; flex-direction:column;
+  min-height:220px; padding:12px;
+  border-radius:12px; border:1px solid #e2d8eb; background:#ffffff;
+  font-family:'Manrope','Noto Sans Myanmar',sans-serif;
+  cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  text-align:left; color:#2d223c;
+}
+.plan-option.figma-card:hover{ border-color:#bb9bdb; }
+.plan-option.figma-card.active{
+  border-color:#8351ce; background:#faf7ff;
+  box-shadow:0 0 0 1px #8351ce, 0 5px 16px rgba(98,49,200,0.06);
+}
+.plan-option.figma-card.out-stock{
+  border:1px dashed #dfaab4; background:#fff8fa; color:#68505b;
+  cursor:not-allowed;
+}
+.plan-card-top{
+  display:flex; align-items:center; justify-content:space-between;
+  min-height:28px; margin-bottom:8px;
+}
+.plan-card-radio{
+  width:16px; height:16px; accent-color:#6231c8; cursor:pointer; flex-shrink:0;
+}
+.plan-card-name{
+  font-family:'Sora','Noto Sans Myanmar',sans-serif;
+  font-size:15px; font-weight:600; line-height:20px; color:#31213f;
+  margin:0 0 8px 0;
+}
+.plan-card-row{
+  display:flex; align-items:center; gap:6px;
+  font-size:12px; font-weight:600; line-height:20px; color:#4d365e;
+  margin:8px 0;
+}
+.plan-card-offer{
+  min-height:24px; margin-bottom:8px;
+  display:flex; align-items:center;
+}
+.plan-card-offer .special-offer{
+  font-size:10px; font-weight:600; color:#537969;
+}
+.plan-card-offer .unavailable-pill{
+  display:inline-flex; align-items:center; gap:4px;
+  border:1px solid #f0c3cc; background:#ffe7ed; color:#a72948;
+  border-radius:6px; padding:6px 4px;
+  font-size:10px; font-weight:700; line-height:12px;
+}
+.plan-card-offer .unavailable-pill svg{ width:11px; height:11px; }
+.plan-card-footer{
+  margin-top:auto; border-top:1px solid #eee6f4; padding-top:8px;
+}
+.plan-card-duration{
+  display:flex; align-items:center; gap:6px;
+  font-size:12px; font-weight:700; line-height:20px; color:#4d365e;
+  margin-bottom:4px;
+}
+.plan-card-price-original{
+  display:block; min-height:16px;
+  font-size:11px; line-height:16px; color:#a08bac;
+}
+.plan-card-price-original s{ text-decoration:line-through; }
+.plan-card-price{
+  font-size:24px; font-weight:800; line-height:32px; color:#542697;
+  font-variant-numeric:tabular-nums;
+}
+.plan-card-price .ks{
+  font-size:11px; font-weight:500; margin-left:4px;
+}
+.plan-option.figma-card.out-stock .plan-card-price{ color:#9a8ba5; }
