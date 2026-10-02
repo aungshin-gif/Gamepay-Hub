@@ -8780,7 +8780,8 @@ body.light-mode .gp-bottomnav button.is-active{
 @media(min-width:640px){ .gp-card{ width:160px; } }
 .gp-card-band{
   position:relative; height:56px;
-  display:flex; align-items:center; justify-content:center;
+  display:flex; align-items:center; justify-content:flex-start;
+  padding-left:12px;
   border-bottom:1px solid #eee6f8;
 }
 .gp-card-logo{
@@ -8790,7 +8791,7 @@ body.light-mode .gp-bottomnav button.is-active{
 }
 .gp-card-logo img{ width:30px; height:30px; object-fit:contain; }
 .gp-card-save{
-  position:absolute; top:6px; left:6px;
+  position:absolute; top:6px; right:6px;
   display:inline-flex; align-items:center; gap:3px;
   background:linear-gradient(180deg,#7d44d8,#5e2cbc);
   color:#fff;
@@ -9192,6 +9193,20 @@ body.light-mode .gp-bottomnav button.is-active{
 .gp-dialog-links button svg{ width:16px; height:16px; }
 .gp-dialog-links a:hover,
 .gp-dialog-links button:hover{ border-color:#6231c8; }
+@media(max-width:640px){
+  .gp-dialog{ padding:18px 16px; max-height:78vh; border-radius:16px; }
+  .gp-dialog h3{ font-size:16px; margin-bottom:4px; }
+  .gp-dialog-body{ font-size:12px; line-height:1.55; }
+  .gp-dialog-body p{ margin-bottom:8px; }
+  .gp-pay-grid{ gap:8px; }
+  .gp-pay-pill{ padding:8px; gap:8px; border-radius:10px; }
+  .gp-pay-pill img{ width:28px !important; height:28px !important; }
+  .gp-pay-pill strong{ font-size:11px; }
+  .gp-pay-label{ font-size:11px !important; margin:10px 0 6px !important; }
+  .gp-pay-head{ margin-bottom:6px !important; }
+  .gp-pay-desc{ font-size:12px !important; margin-bottom:8px !important; }
+  .gp-pay-note{ font-size:11px !important; margin-top:8px !important; }
+}
 .gp-dialog-close{
   position:absolute; top:12px; right:12px;
   width:36px; height:36px; border-radius:50%;
