@@ -581,13 +581,15 @@
         </section>
 
         <section class="gp-community gp-reveal" aria-label="Community">
-          <span class="gp-tele-ico"><img src="assets/icon-telegram.jpg" alt="Telegram" loading="lazy" decoding="async"></span>
-          <span class="gp-kicker">THE GAMEPAY COMMUNITY</span>
-          <h2>New plans. Fresh updates.</h2>
-          <a class="gp-btn gp-btn-primary" href="https://t.me/gamepaydyet" target="_blank" rel="noopener">
+          <span class="gp-comm-logo"><img id="gpCommLogo" src="" alt="Gamepay Hub" loading="lazy" decoding="async"></span>
+          <div class="gp-comm-copy">
+            <span class="gp-kicker">THE GAMEPAY COMMUNITY</span>
+            <h2>New plans. Fresh updates.</h2>
+            <p>Join our Telegram for exclusive offers &amp; stock alerts.</p>
+          </div>
+          <a class="gp-btn gp-btn-primary gp-comm-btn" href="https://t.me/gamepaydyet" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            <span>Join channel</span>
-            <svg class="gp-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            <span>Join Telegram</span>
           </a>
         </section>
       </main>
@@ -3153,7 +3155,10 @@ function gpFiltered(){
 function gpCardHtml(product){
   const cheapest = getCheapestPlan(product);
   const price = cheapest ? Number(cheapest.price) : 0;
-  const discountPct = cheapest?.discountPercent || 0;
+  /* Badge shows the best discount across ALL plans, not just the cheapest —
+     otherwise a product qualifies for the carousel (one plan discounted)
+     but shows no badge (cheapest plan not discounted). */
+  const discountPct = Math.max(0, ...((product.plans || []).map(p => Number(p.discountPercent) || 0)));
   const original = cheapest?.originalPrice;
   const band = GP_BAND[product.category] || ["#f2ebfc", "#d8c4f0"];
   const catLabel = gpCatLabel(product.category);
@@ -3232,6 +3237,16 @@ function gpStartBanner(){
   }
 }
 gpStartBanner();
+
+/* ---- Community card logo: use the real site logo ---- */
+(function gpCommLogo(){
+  const img = document.getElementById("gpCommLogo");
+  if(!img) return;
+  try{
+    const src = (typeof siteLogoSrc === "function") ? siteLogoSrc() : "";
+    if(src) img.src = src;
+  }catch(e){}
+})();
 
 /* ---- Hero banners from backend (Supabase) ----
    Admin-uploaded slides appear FIRST; the 3 GitHub images stay as fallback. */
