@@ -697,6 +697,12 @@ create table if not exists public.news_posts (
   title text not null,
   body text not null,
   images text[] not null default '{}',
+  excerpt text,
+  link_url text,
+  link_label text,
+  caption text,
+  source text,
+  is_offer boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by uuid references auth.users(id) on delete set null
