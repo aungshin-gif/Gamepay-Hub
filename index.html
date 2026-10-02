@@ -3134,6 +3134,7 @@ function gpCatLabel(category){
 /* A product belongs in "Discount plans" only when at least one of its
    plans carries an admin discount. */
 function gpHasDiscount(product){
+  if(Number(product._maxDiscount) > 0) return true;
   return (product.plans || []).some(p => Number(p.discountPercent) > 0);
 }
 /* Set true once stock_overrides have been applied (or the fetch settled),
@@ -3150,7 +3151,7 @@ function gpCardHtml(product){
   /* Badge shows the best discount across ALL plans, not just the cheapest —
      otherwise a product qualifies for the carousel (one plan discounted)
      but shows no badge (cheapest plan not discounted). */
-  const discountPct = Math.max(0, ...((product.plans || []).map(p => Number(p.discountPercent) || 0)));
+  const discountPct = Math.max(0, Number(product._maxDiscount) || 0, ...((product.plans || []).map(p => Number(p.discountPercent) || 0)));
   const original = cheapest?.originalPrice;
   const band = GP_BAND[product.category] || ["#f2ebfc", "#d8c4f0"];
   const catLabel = gpCatLabel(product.category);
@@ -3788,11 +3789,32 @@ if(document.readyState === "loading"){
       if(!rows || !rows.length) return;
       const byKey = new Map();
       const byKeyNoPrice = new Map();
+      // BULLETPROOF: product-level discount map (by product_id only).
+      // If plan-name matching fails, fall back to the product's max discount.
+      const byProduct = new Map();
       rows.forEach(r => {
         byKey.set(normPlanKey(r.product_id, r.plan_name), r);
         byKeyNoPrice.set(normPlanKeyNoPrice(r.product_id, r.plan_name), r);
+        const pid = normKeyStr(r.product_id);
+        const pct = Number(r.discount_percent) || 0;
+        if(pct > 0){
+          const cur = byProduct.get(pid);
+          if(!cur || pct > Number(cur.discount_percent)){
+            byProduct.set(pid, r);
+          }
+        }
       });
       products.forEach(product => {
+        // BULLETPROOF: store product-level max discount for carousel inclusion.
+        // This ensures the product appears in Discount plans even if no
+        // individual plan name matched (data quality issue in Supabase).
+        const prodRow = byProduct.get(normKeyStr(product.id));
+        if(prodRow){
+          product._maxDiscount = Math.max(
+            Number(product._maxDiscount) || 0,
+            Number(prodRow.discount_percent) || 0
+          );
+        }
         product.plans.forEach(plan => {
           // Same idea as _catalogPrice below -- the lookup key must stay
           // the plan's original name even after a discount rewrites
