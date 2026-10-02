@@ -3316,22 +3316,33 @@ gpScroll();
 })();
 
 /* ---- Dialog ---- */
-const backdrop = document.getElementById("gpDialogBackdrop");
-const dlgTitle = document.getElementById("gpDialogTitle");
-const dlgBody = document.getElementById("gpDialogBody");
+let backdrop = null, dlgTitle = null, dlgBody = null;
+function gpEnsureDialog(){
+  if(backdrop) return;
+  backdrop = document.getElementById("gpDialogBackdrop");
+  dlgTitle = document.getElementById("gpDialogTitle");
+  dlgBody = document.getElementById("gpDialogBody");
+  document.getElementById("gpDialogClose")?.addEventListener("click", gpCloseDialog);
+  backdrop?.addEventListener("click", (e) => { if(e.target === backdrop) gpCloseDialog(); });
+}
+if(document.readyState === "loading"){
+  document.addEventListener("DOMContentLoaded", gpEnsureDialog);
+}else{
+  gpEnsureDialog();
+}
 function gpOpenDialog(title, bodyHtml){
+  gpEnsureDialog();
   dlgTitle.textContent = title;
   dlgBody.innerHTML = bodyHtml;
   backdrop.hidden = false;
   document.body.style.overflow = "hidden";
 }
 function gpCloseDialog(){
+  if(!backdrop) return;
   backdrop.hidden = true;
   document.body.style.overflow = "";
 }
-document.getElementById("gpDialogClose")?.addEventListener("click", gpCloseDialog);
-backdrop?.addEventListener("click", (e) => { if(e.target === backdrop) gpCloseDialog(); });
-document.addEventListener("keydown", (e) => { if(e.key === "Escape" && !backdrop.hidden) gpCloseDialog(); });
+document.addEventListener("keydown", (e) => { if(e.key === "Escape" && backdrop && !backdrop.hidden) gpCloseDialog(); });
 
 const TG_SUPPORT = "https://t.me/angsthtun";
 const TG_CHANNEL = "https://t.me/gamepaydyet";
