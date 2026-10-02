@@ -3155,7 +3155,10 @@ function gpFiltered(){
 function gpCardHtml(product){
   const cheapest = getCheapestPlan(product);
   const price = cheapest ? Number(cheapest.price) : 0;
-  const discountPct = cheapest?.discountPercent || 0;
+  /* Badge shows the best discount across ALL plans, not just the cheapest —
+     otherwise a product qualifies for the carousel (one plan discounted)
+     but shows no badge (cheapest plan not discounted). */
+  const discountPct = Math.max(0, ...((product.plans || []).map(p => Number(p.discountPercent) || 0)));
   const original = cheapest?.originalPrice;
   const band = GP_BAND[product.category] || ["#f2ebfc", "#d8c4f0"];
   const catLabel = gpCatLabel(product.category);
