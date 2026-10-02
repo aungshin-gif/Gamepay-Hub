@@ -573,7 +573,7 @@
                   </button><div class="gp-faq-panel"><div class="gp-faq-panel-in"><p>Message support right away with your order ID — the warranty terms are listed on each plan.</p></div></div></div>
               </div>
             </div>
-            <button class="gp-more" id="gpMoreFaq" type="button">View 4 more questions</button>
+            <button class="gp-more" id="gpMoreFaq" type="button" aria-expanded="false"><span>View 4 more questions</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
             <div class="gp-study">
               <span class="gp-study-ico">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
@@ -3276,7 +3276,8 @@ const progress = document.getElementById("gpProgress");
 function gpScroll(){
   const h = document.documentElement;
   const max = h.scrollHeight - h.clientHeight;
-  progress.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+  const p = max > 0 ? h.scrollTop / max : 0;
+  progress.style.transform = `scaleX(${p})`;
 }
 window.addEventListener("scroll", gpScroll, { passive: true });
 gpScroll();
@@ -3321,15 +3322,27 @@ document.addEventListener("keydown", (e) => { if(e.key === "Escape" && !backdrop
 const TG_SUPPORT = "https://t.me/angsthtun";
 const TG_CHANNEL = "https://t.me/gamepaydyet";
 const linkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>';
-const payCheckSvg = '<span class="gp-pay-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>';
 const payRows = `
-  <div class="gp-pay-methods">
-    <div class="gp-pay-row"><span class="gp-pay-logo"><img src="assets/unnamed.png" alt="KBZPay" loading="lazy"></span><div class="gp-pay-name"><strong>KBZPay</strong><small>Local wallet · instant</small></div>${payCheckSvg}</div>
-    <div class="gp-pay-row"><span class="gp-pay-logo"><img src="assets/unnamed (1).png" alt="WavePay" loading="lazy"></span><div class="gp-pay-name"><strong>WavePay</strong><small>Local wallet · instant</small></div>${payCheckSvg}</div>
-    <div class="gp-pay-row"><span class="gp-pay-logo"><img src="assets/unnamed (2).png" alt="AYA Pay" loading="lazy"></span><div class="gp-pay-name"><strong>AYA Pay</strong><small>Local wallet · instant</small></div>${payCheckSvg}</div>
-    <div class="gp-pay-row"><span class="gp-pay-logo"><img src="assets/uabpay-black.png" alt="UABPay" loading="lazy"></span><div class="gp-pay-name"><strong>UABPay</strong><small>Local wallet · instant</small></div>${payCheckSvg}</div>
-    <div class="gp-pay-row"><span class="gp-pay-logo"><img src="assets/currency-usd.png" alt="USD" loading="lazy"></span><div class="gp-pay-name"><strong>USD / GBP / EUR</strong><small>Other currencies accepted</small></div>${payCheckSvg}</div>
-  </div>`;
+  <div class="gp-pay-head">
+    <span class="gp-pay-kicker-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
+    <span class="gp-pay-kicker">Payment, without the confusion</span>
+  </div>
+  <p class="gp-pay-desc">Follow the instructions for your selected plan. Your payment is reviewed before the order is confirmed.</p>
+  <p class="gp-pay-label">Payment options</p>
+  <div class="gp-pay-grid">
+    <div class="gp-pay-pill"><img src="assets/unnamed.png" alt="KBZPay" loading="lazy"><strong>KBZPay</strong></div>
+    <div class="gp-pay-pill"><img src="assets/unnamed (1).png" alt="WavePay" loading="lazy"><strong>WavePay</strong></div>
+    <div class="gp-pay-pill"><img src="assets/unnamed (2).png" alt="AYA Pay" loading="lazy"><strong>AYA Pay</strong></div>
+    <div class="gp-pay-pill"><img src="assets/uabpay-black.png" alt="UABPay" loading="lazy"><strong>UABPay</strong></div>
+    <div class="gp-pay-pill"><img src="assets/23.png" alt="Binance" loading="lazy"><strong>Binance</strong></div>
+  </div>
+  <p class="gp-pay-label">Other currencies</p>
+  <div class="gp-pay-grid">
+    <div class="gp-pay-pill"><span class="gp-cur-ico">$</span><strong>US Dollar</strong></div>
+    <div class="gp-pay-pill"><span class="gp-cur-ico">&pound;</span><strong>British Pound</strong></div>
+    <div class="gp-pay-pill"><span class="gp-cur-ico">&euro;</span><strong>Euro</strong></div>
+  </div>
+  <p class="gp-pay-note">Visa &amp; Mastercard products are sold separately. They are not listed here as checkout payment methods.</p>`;
 
 document.getElementById("gpHelpBtn")?.addEventListener("click", () => gpOpenDialog(
   "Help",
@@ -3412,7 +3425,8 @@ const moreWrap = document.getElementById("gpFaqMore");
 moreBtn?.addEventListener("click", () => {
   const hidden = moreWrap.hidden;
   moreWrap.hidden = !hidden;
-  moreBtn.textContent = hidden ? "Show fewer questions" : "View 4 more questions";
+  moreBtn.setAttribute("aria-expanded", hidden ? "true" : "false");
+  moreBtn.querySelector("span").textContent = hidden ? "Show fewer questions" : "View 4 more questions";
 });
 
 /* ---- Initial render ---- */
