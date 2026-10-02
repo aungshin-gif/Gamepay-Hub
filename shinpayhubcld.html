@@ -70,6 +70,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/></svg>
         News
       </div>
+      <div class="admin-nav-item" id="navHeroBtn" data-view="hero">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
+        Hero Banners
+      </div>
       <div class="admin-nav-item" id="navAvatarsBtn" data-view="avatars">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="10" r="2.2"/><path d="m21 16-5.2-5.2a2 2 0 0 0-2.8 0L4 19"/></svg>
         Avatars
@@ -392,6 +396,37 @@
         </div>
       </div>
 
+      <div id="heroView" class="hidden">
+        <div class="top-row">
+          <div>
+            <h1>Hero Banners</h1>
+            <div class="sub">Main-heading slides on the storefront. Your uploads appear first; the 3 built-in GitHub images stay as fallback. 16:9 images look best.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title" id="heroFormTitle">New Banner</div>
+          <div id="heroPreviewWrap" class="hidden" style="margin-bottom:10px">
+            <img id="heroPreviewImg" alt="" style="width:100%;max-height:180px;object-fit:cover;border-radius:10px;border:1px solid var(--border)" />
+          </div>
+          <input id="heroImageInput" type="file" accept="image/*" />
+          <input id="heroAltInput" type="text" maxlength="120" placeholder="Alt text — e.g. New Year Sale" />
+          <input id="heroLinkInput" type="url" inputmode="url" placeholder="Link URL (optional) — https://…" />
+          <div class="row" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <label style="display:flex;gap:6px;align-items:center;font-size:13px">Order <input id="heroOrderInput" type="number" value="0" min="0" style="width:70px" /></label>
+            <label class="news-check-row"><input id="heroActiveInput" type="checkbox" checked /><span>Active (shown on site)</span></label>
+          </div>
+          <div class="row" style="display:flex;gap:10px;margin-top:10px">
+            <button id="heroSaveBtn" class="primary">Save Banner</button>
+            <button id="heroCancelBtn" class="ghost hidden">Cancel</button>
+          </div>
+          <div id="heroFormMsg" class="form-msg"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Banners</div>
+          <div id="heroBannersList"><div class="empty-note">Loading…</div></div>
+        </div>
+      </div>
+
       <div id="avatarsView" class="hidden">
         <div class="top-row">
           <div>
@@ -599,6 +634,7 @@ const broadcastView = document.getElementById("broadcastView");
 const messagesView = document.getElementById("messagesView");
 const referralsView = document.getElementById("referralsView");
 const newsView = document.getElementById("newsView");
+const heroView = document.getElementById("heroView");
 const avatarsView = document.getElementById("avatarsView");
 const navHomeBtn = document.getElementById("navHomeBtn");
 const navSettingsBtn = document.getElementById("navSettingsBtn");
@@ -609,10 +645,11 @@ const navBroadcastBtn = document.getElementById("navBroadcastBtn");
 const navMessagesBtn = document.getElementById("navMessagesBtn");
 const navReferralsBtn = document.getElementById("navReferralsBtn");
 const navNewsBtn = document.getElementById("navNewsBtn");
+const navHeroBtn = document.getElementById("navHeroBtn");
 const navAvatarsBtn = document.getElementById("navAvatarsBtn");
 
-const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView, stockView, broadcastView, messagesView, referralsView, newsView, avatarsView];
-const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn, navStockBtn, navBroadcastBtn, navMessagesBtn, navReferralsBtn, navNewsBtn, navAvatarsBtn];
+const ALL_VIEWS = [dashboardHomeView, orderDetailView, settingsView, usersView, couponsView, stockView, broadcastView, messagesView, referralsView, newsView, heroView, avatarsView];
+const ALL_NAV_BTNS = [navHomeBtn, navSettingsBtn, navUsersBtn, navCouponsBtn, navStockBtn, navBroadcastBtn, navMessagesBtn, navReferralsBtn, navNewsBtn, navHeroBtn, navAvatarsBtn];
 
 function showDashboardHome(){
   ALL_VIEWS.forEach(v => v.classList.add("hidden"));
@@ -665,6 +702,13 @@ function showNewsView(){
   newsView.classList.remove("hidden");
   navNewsBtn.classList.add("active");
   loadNewsPosts();
+}
+function showHeroView(){
+  ALL_VIEWS.forEach(v => v.classList.add("hidden"));
+  ALL_NAV_BTNS.forEach(b => b.classList.remove("active"));
+  heroView.classList.remove("hidden");
+  navHeroBtn.classList.add("active");
+  loadHeroBanners();
 }
 function showMessagesView(){
   ALL_VIEWS.forEach(v => v.classList.add("hidden"));
@@ -798,6 +842,7 @@ navCouponsBtn.addEventListener("click", showCouponsView);
 navStockBtn.addEventListener("click", showStockView);
 navBroadcastBtn.addEventListener("click", showBroadcastView);
 navNewsBtn.addEventListener("click", showNewsView);
+navHeroBtn.addEventListener("click", showHeroView);
 navMessagesBtn.addEventListener("click", showMessagesView);
 navReferralsBtn.addEventListener("click", showReferralsView);
 navAvatarsBtn.addEventListener("click", showAvatarsView);
@@ -2556,6 +2601,157 @@ async function deleteNewsPost(id){
   showAdminToast("Post deleted.");
   if(newsEditingId === id) resetNewsForm();
   loadNewsPosts();
+}
+
+/* ============ Hero Banners ============ */
+let heroBannersCache = [];
+let heroEditingId = null;
+let heroImageFile = null;
+
+document.getElementById("heroImageInput")?.addEventListener("change", (e) => {
+  heroImageFile = e.target.files?.[0] || null;
+  const wrap = document.getElementById("heroPreviewWrap");
+  const img = document.getElementById("heroPreviewImg");
+  if(heroImageFile && img){
+    img.src = URL.createObjectURL(heroImageFile);
+    wrap.classList.remove("hidden");
+  }else if(wrap){
+    wrap.classList.add("hidden");
+  }
+});
+
+function resetHeroForm(){
+  heroEditingId = null;
+  heroImageFile = null;
+  document.getElementById("heroImageInput").value = "";
+  document.getElementById("heroAltInput").value = "";
+  document.getElementById("heroLinkInput").value = "";
+  document.getElementById("heroOrderInput").value = "0";
+  document.getElementById("heroActiveInput").checked = true;
+  document.getElementById("heroPreviewWrap").classList.add("hidden");
+  document.getElementById("heroFormTitle").textContent = "New Banner";
+  document.getElementById("heroSaveBtn").textContent = "Save Banner";
+  document.getElementById("heroCancelBtn").classList.add("hidden");
+  document.getElementById("heroFormMsg").textContent = "";
+}
+document.getElementById("heroCancelBtn")?.addEventListener("click", resetHeroForm);
+
+document.getElementById("heroSaveBtn")?.addEventListener("click", async () => {
+  const msg = document.getElementById("heroFormMsg");
+  const alt = document.getElementById("heroAltInput").value.trim();
+  const linkUrl = document.getElementById("heroLinkInput").value.trim();
+  const sortOrder = parseInt(document.getElementById("heroOrderInput").value, 10) || 0;
+  const isActive = document.getElementById("heroActiveInput").checked;
+  const btn = document.getElementById("heroSaveBtn");
+
+  if(!heroEditingId && !heroImageFile){
+    msg.textContent = "Choose an image first."; msg.style.color = "var(--bad)"; return;
+  }
+  btn.disabled = true;
+  msg.textContent = "Saving…"; msg.style.color = "var(--muted)";
+  try{
+    let imageUrl = null;
+    if(heroImageFile){
+      const ext = (heroImageFile.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `banner-${crypto.randomUUID()}.${ext}`;
+      const { error: upErr } = await sb.storage.from("hero-images").upload(path, heroImageFile);
+      if(upErr) throw upErr;
+      const { data: pub } = sb.storage.from("hero-images").getPublicUrl(path);
+      imageUrl = pub.publicUrl;
+    }
+    const payload = {
+      alt_text: alt || null,
+      link_url: linkUrl || null,
+      sort_order: sortOrder,
+      is_active: isActive,
+      updated_at: new Date().toISOString(),
+    };
+    if(imageUrl) payload.image_url = imageUrl;
+    if(heroEditingId){
+      const { error } = await sb.from("hero_banners").update(payload).eq("id", heroEditingId);
+      if(error) throw error;
+      showAdminToast("Banner updated.");
+    }else{
+      const { error } = await sb.from("hero_banners").insert({ ...payload, image_url: imageUrl });
+      if(error) throw error;
+      showAdminToast("Banner added.");
+    }
+    resetHeroForm();
+    loadHeroBanners();
+  }catch(err){
+    msg.textContent = err.message || "Something went wrong."; msg.style.color = "var(--bad)";
+  }finally{
+    btn.disabled = false;
+  }
+});
+
+async function loadHeroBanners(){
+  const list = document.getElementById("heroBannersList");
+  list.innerHTML = '<div class="empty-note">Loading…</div>';
+  const { data, error } = await sb.from("hero_banners")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
+  if(error){ list.innerHTML = `<div class="empty-note">${escapeHtml(error.message)}</div>`; return; }
+  heroBannersCache = data || [];
+  if(!heroBannersCache.length){
+    list.innerHTML = '<div class="empty-note">No banners yet. Upload one above — it will appear on the storefront first, before the built-in images.</div>';
+    return;
+  }
+  list.innerHTML = heroBannersCache.map(b => `
+    <div class="news-post-row" data-id="${b.id}">
+      ${b.image_url ? `<img class="news-post-thumb" src="${escapeHtml(b.image_url)}" alt="" style="object-fit:cover">` : `<div class="news-post-thumb news-post-thumb-empty"></div>`}
+      <div class="news-post-row-body">
+        <div class="news-post-row-title">${escapeHtml(b.alt_text || "Banner")}${b.is_active ? "" : ` <span class="news-offer-badge" style="background:#666">Hidden</span>`}</div>
+        <div class="news-post-row-meta">Order ${b.sort_order}${b.link_url ? " · has link" : ""} · ${new Date(b.created_at).toLocaleString()}</div>
+      </div>
+      <div class="news-post-row-actions">
+        <button type="button" class="ghost hero-toggle-btn" data-id="${b.id}">${b.is_active ? "Hide" : "Show"}</button>
+        <button type="button" class="ghost hero-edit-btn" data-id="${b.id}">Edit</button>
+        <button type="button" class="ghost hero-del-btn" data-id="${b.id}" style="color:var(--bad)">Delete</button>
+      </div>
+    </div>`).join("");
+  list.querySelectorAll(".hero-edit-btn").forEach(btn => btn.addEventListener("click", () => editHeroBanner(btn.dataset.id)));
+  list.querySelectorAll(".hero-del-btn").forEach(btn => btn.addEventListener("click", () => deleteHeroBanner(btn.dataset.id)));
+  list.querySelectorAll(".hero-toggle-btn").forEach(btn => btn.addEventListener("click", () => toggleHeroBanner(btn.dataset.id)));
+}
+
+function editHeroBanner(id){
+  const b = heroBannersCache.find(x => x.id === id);
+  if(!b) return;
+  heroEditingId = id;
+  heroImageFile = null;
+  document.getElementById("heroImageInput").value = "";
+  document.getElementById("heroAltInput").value = b.alt_text || "";
+  document.getElementById("heroLinkInput").value = b.link_url || "";
+  document.getElementById("heroOrderInput").value = b.sort_order || 0;
+  document.getElementById("heroActiveInput").checked = !!b.is_active;
+  const wrap = document.getElementById("heroPreviewWrap");
+  const img = document.getElementById("heroPreviewImg");
+  if(b.image_url && img){ img.src = b.image_url; wrap.classList.remove("hidden"); }
+  document.getElementById("heroFormTitle").textContent = "Edit Banner";
+  document.getElementById("heroSaveBtn").textContent = "Update";
+  document.getElementById("heroCancelBtn").classList.remove("hidden");
+  document.getElementById("heroFormMsg").textContent = "";
+  document.getElementById("heroFormTitle").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+async function toggleHeroBanner(id){
+  const b = heroBannersCache.find(x => x.id === id);
+  if(!b) return;
+  const { error } = await sb.from("hero_banners").update({ is_active: !b.is_active, updated_at: new Date().toISOString() }).eq("id", id);
+  if(error){ showAdminToast("Could not update: " + error.message, true); return; }
+  loadHeroBanners();
+}
+
+async function deleteHeroBanner(id){
+  const ok = await showAdminConfirm("Delete this banner? This can't be undone.", { title: "Delete banner?", confirmText: "Delete" });
+  if(!ok) return;
+  const { error } = await sb.from("hero_banners").delete().eq("id", id);
+  if(error){ showAdminToast("Could not delete: " + error.message, true); return; }
+  showAdminToast("Banner deleted.");
+  if(heroEditingId === id) resetHeroForm();
+  loadHeroBanners();
 }
 
 // Stay signed in across refreshes.

@@ -581,15 +581,13 @@
         </section>
 
         <section class="gp-community gp-reveal" aria-label="Community">
-          <span class="gp-comm-logo"><img src="assets/icon.png" alt="Gamepay Hub" loading="lazy" decoding="async"></span>
-          <div class="gp-comm-copy">
-            <span class="gp-kicker">THE GAMEPAY COMMUNITY</span>
-            <h2>New plans. Fresh updates.</h2>
-            <p>Join our Telegram for exclusive offers &amp; stock alerts.</p>
-          </div>
-          <a class="gp-btn gp-btn-primary gp-comm-btn" href="https://t.me/gamepaydyet" target="_blank" rel="noopener">
+          <span class="gp-tele-ico"><img src="assets/icon-telegram.jpg" alt="Telegram" loading="lazy" decoding="async"></span>
+          <span class="gp-kicker">THE GAMEPAY COMMUNITY</span>
+          <h2>New plans. Fresh updates.</h2>
+          <a class="gp-btn gp-btn-primary" href="https://t.me/gamepaydyet" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            <span>Join Telegram</span>
+            <span>Join channel</span>
+            <svg class="gp-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
           </a>
         </section>
       </main>
@@ -3220,14 +3218,65 @@ document.getElementById("gpTabs")?.addEventListener("click", (e) => {
    translate -50% for a seamless infinite glide. Pauses on hover/touch. */
 
 /* ---- Hero banner rotation ---- */
-const slides = [...document.querySelectorAll("#gpBanner .gp-slide")];
-if(slides.length > 1){
-  let bi = 0;
-  setInterval(() => {
-    bi = (bi + 1) % slides.length;
-    slides.forEach((s, n) => s.classList.toggle("is-active", n === bi));
-  }, 6000);
+let gpBannerTimer = null;
+function gpStartBanner(){
+  const slides = [...document.querySelectorAll("#gpBanner .gp-slide")];
+  if(gpBannerTimer) clearInterval(gpBannerTimer);
+  if(slides.length > 1){
+    let bi = slides.findIndex(s => s.classList.contains("is-active"));
+    if(bi < 0) bi = 0;
+    gpBannerTimer = setInterval(() => {
+      bi = (bi + 1) % slides.length;
+      slides.forEach((s, n) => s.classList.toggle("is-active", n === bi));
+    }, 6000);
+  }
 }
+gpStartBanner();
+
+/* ---- Hero banners from backend (Supabase) ----
+   Admin-uploaded slides appear FIRST; the 3 GitHub images stay as fallback. */
+(async function gpHeroBanners(){
+  try{
+    if(typeof supabaseClient === "undefined" || !supabaseClient) return;
+    const { data, error } = await supabaseClient
+      .from("hero_banners")
+      .select("image_url,link_url,alt_text")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false })
+      .limit(10);
+    if(error || !data || !data.length) return;
+    const banner = document.getElementById("gpBanner");
+    if(!banner) return;
+    banner.querySelectorAll(".gp-slide.is-active").forEach(s => s.classList.remove("is-active"));
+    const frag = document.createDocumentFragment();
+    let added = 0;
+    data.forEach(b => {
+      if(!b.image_url) return;
+      const img = document.createElement("img");
+      img.src = b.image_url;
+      img.alt = b.alt_text || "Gamepay Hub promotion";
+      img.loading = "lazy"; img.decoding = "async";
+      img.style.cssText = "width:100%;height:100%;object-fit:contain;";
+      let slide;
+      if(b.link_url){
+        slide = document.createElement("a");
+        slide.href = b.link_url;
+        slide.target = "_blank"; slide.rel = "noopener";
+        slide.setAttribute("aria-label", img.alt);
+        slide.appendChild(img);
+      }else{
+        slide = img;
+      }
+      slide.className = "gp-slide" + (added === 0 ? " is-active" : "");
+      frag.appendChild(slide);
+      added++;
+    });
+    if(!added) return;
+    banner.prepend(frag);
+    gpStartBanner();
+  }catch(e){ /* GitHub fallback stays */ }
+})();
 
 /* ---- Scroll progress ---- */
 const progress = document.getElementById("gpProgress");
