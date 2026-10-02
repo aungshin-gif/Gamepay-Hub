@@ -8442,25 +8442,30 @@ body.light-mode .gp-bottomnav button.is-active{
   white-space:nowrap !important; border:0 !important;
 }
 
-/* Scroll progress bar */
+/* Scroll progress bar (Figma: 2px purple, scaleX-driven) */
 .gp-progress{
-  position:fixed; top:0; left:0; z-index:90;
-  height:2px; width:0%;
+  position:fixed; top:0; left:0; right:0; z-index:90;
+  height:2px;
   background:#6231c8;
+  transform-origin:left center;
+  transform:scaleX(0);
+}
+@media (prefers-reduced-motion:reduce){
+  .gp-progress{ display:none; }
 }
 
-/* Scroll-triggered 3D reveal (Figma-style entrance motion) */
+/* Scroll-triggered 3D reveal (Figma: fade + rise + tilt, 1000px perspective) */
 .gp-reveal{ opacity:1; }
 .js .gp-reveal{
   opacity:0;
-  transform:translateY(28px) perspective(900px) rotateX(6deg);
+  transform:translateY(28px) perspective(1000px) rotateX(6deg);
   transform-origin:center top;
-  transition:opacity .7s cubic-bezier(.22,.8,.24,1), transform .7s cubic-bezier(.22,.8,.24,1);
+  transition:opacity .5s ease-out, transform .5s ease-out;
   will-change:opacity, transform;
 }
 .gp-reveal.is-visible{
   opacity:1;
-  transform:translateY(0) perspective(900px) rotateX(0deg);
+  transform:translateY(0) perspective(1000px) rotateX(0deg);
 }
 /* stagger siblings */
 .gp-reveal[data-gp-delay="1"]{ transition-delay:.08s; }
@@ -8471,15 +8476,14 @@ body.light-mode .gp-bottomnav button.is-active{
   .gp-reveal{ opacity:1; transform:none; transition:none; }
 }
 
-/* 3D tilt on product cards (desktop hover) */
+/* 3D tilt on product cards (Figma: subtle mouse-follow tilt, no shadow change) */
 @media (hover:hover) and (min-width:768px){
   .gp-card{
-    transition:transform .25s ease, box-shadow .25s ease;
+    transition:transform .25s ease;
     transform-style:preserve-3d;
   }
   .gp-card:hover{
-    transform:translateY(-6px) perspective(700px) rotateX(4deg) rotateY(-4deg);
-    box-shadow:0 10px 0 #e7dff0, 0 22px 40px #6231c82e;
+    transform:translateY(-5px) perspective(1000px) rotateX(2deg) rotateY(-2deg);
   }
 }
 /* staggered entrance when carousel cards render */
@@ -8757,6 +8761,7 @@ body.light-mode .gp-bottomnav button.is-active{
 .gp-card-name{
   margin:0; font-size:14px; font-weight:700; color:#20182b;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  min-height:20px;
 }
 .gp-card-from{
   font-size:11px; color:#51475f; min-height:15px;
@@ -8772,12 +8777,14 @@ body.light-mode .gp-bottomnav button.is-active{
 .gp-card-btn{
   margin:8px 10px 10px;
   min-height:40px;
-  display:flex; align-items:center; justify-content:center; gap:8px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:8px; padding:0 12px;
   background:#6231c8; border:none; border-radius:8px;
   color:#fff; font-size:11.5px; font-weight:700; cursor:pointer;
   font-family:inherit;
+  transition:background .2s ease;
 }
-.gp-card-btn svg{ width:14px; height:14px; }
+.gp-card-btn svg{ width:15px; height:15px; flex:0 0 auto; }
 .gp-card-btn:hover{ background:#4c229f; }
 .gp-empty{
   padding:32px 16px; text-align:center; color:#6c5b7d; font-size:13px;
@@ -8899,33 +8906,37 @@ body.light-mode .gp-bottomnav button.is-active{
 .gp-faq{ display:flex; flex-direction:column; gap:10px; margin-top:12px; }
 .gp-faq-item{
   background:#fff; border:1px solid #e1d6ed; border-radius:12px; overflow:hidden;
+  box-shadow:0 4px 0 #e5dbf0, 0 8px 18px rgba(98,49,200,.06);
   transition:border-color .25s ease, box-shadow .25s ease;
 }
 .gp-faq-item.open{
-  border-color:#c9aef0;
-  box-shadow:0 8px 22px rgba(98,49,200,.1);
+  border-color:#b698df;
+  box-shadow:0 4px 0 #d9c6f2, 0 12px 26px rgba(98,49,200,.12);
 }
 .gp-faq-head{
   display:flex; align-items:center; gap:10px; width:100%;
-  padding:14px; cursor:pointer; background:none; border:none;
+  min-height:64px; padding:12px;
+  cursor:pointer; background:none; border:none;
   font-family:inherit; text-align:left;
 }
 .gp-faq-ico{
   flex:0 0 auto; width:36px; height:36px; border-radius:10px;
   background:linear-gradient(180deg,#f9f5ff,#e8d9fc);
+  box-shadow:0 3px 0 #d2bde9;
   display:grid; place-items:center;
   transition:transform .3s cubic-bezier(.22,.8,.24,1);
 }
-.gp-faq-item.open .gp-faq-ico{ transform:scale(1.08) rotate(-6deg); }
+.gp-faq-item.open .gp-faq-ico{ transform:scale(1.06); }
 .gp-faq-ico svg{ width:18px; height:18px; color:#6231c8; }
-.gp-faq-q{ flex:1; font-size:13px; font-weight:600; color:#342044; }
+.gp-faq-q{ flex:1; font-size:13px; font-weight:600; color:#342044; line-height:20px; }
 .gp-faq-chev{
   flex:0 0 auto; width:28px; height:28px; border-radius:50%;
   background:#f4edfc; display:grid; place-items:center;
   transition:transform .3s cubic-bezier(.22,.8,.24,1), background .25s ease;
 }
-.gp-faq-chev svg{ width:14px; height:14px; color:#7954a4; }
-.gp-faq-item.open .gp-faq-chev{ transform:rotate(180deg); background:#e6d6fb; }
+.gp-faq-chev svg{ width:15px; height:15px; color:#7954a4; transition:color .25s ease; }
+.gp-faq-item.open .gp-faq-chev{ transform:rotate(180deg); background:#6231c8; }
+.gp-faq-item.open .gp-faq-chev svg{ color:#fff; }
 /* smooth expand/collapse */
 .gp-faq-panel{
   display:grid; grid-template-rows:0fr;
@@ -8933,9 +8944,15 @@ body.light-mode .gp-bottomnav button.is-active{
 }
 .gp-faq-item.open .gp-faq-panel{ grid-template-rows:1fr; }
 .gp-faq-panel-in{ overflow:hidden; min-height:0; }
+.gp-faq-panel-in::before{
+  content:""; display:block; height:1px; margin:0 12px;
+  background:#ece2f5;
+  opacity:0; transition:opacity .3s ease;
+}
+.gp-faq-item.open .gp-faq-panel-in::before{ opacity:1; }
 .gp-faq-panel p{
-  margin:0; padding:0 14px 14px 60px;
-  font-size:12px; line-height:1.65; color:#51475f;
+  margin:0; padding:12px 14px 14px 60px;
+  font-size:13px; line-height:24px; color:#64536f;
 }
 .gp-faq-panel p a{ color:#6231c8; font-weight:600; }
 @media (prefers-reduced-motion:reduce){
@@ -8943,13 +8960,17 @@ body.light-mode .gp-bottomnav button.is-active{
   .gp-faq-chev, .gp-faq-ico{ transition:none; }
 }
 .gp-more{
-  align-self:center; margin-top:12px;
-  background:none; border:1px solid #d4c2ed; border-radius:999px;
-  padding:10px 20px; cursor:pointer;
-  font-size:12px; font-weight:600; color:#6231c8;
+  width:100%; margin-top:12px; min-height:44px;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  background:#fff; border:1px solid #dfd2ef; border-radius:12px;
+  cursor:pointer;
+  font-size:12px; font-weight:700; color:#6231c8;
   font-family:inherit;
+  transition:background .2s ease;
 }
-.gp-more:hover{ background:#fff; }
+.gp-more svg{ width:16px; height:16px; transition:transform .25s ease; }
+.gp-more:hover{ background:#f5effc; }
+.gp-more[aria-expanded="true"] svg{ transform:rotate(180deg); }
 .gp-study{
   display:flex; gap:12px; align-items:center;
   background:#eee5fa; border:1px solid #dbccef; border-radius:16px;
@@ -9093,34 +9114,43 @@ body.light-mode .gp-bottomnav button.is-active{
   display:grid; place-items:center; color:#6231c8;
 }
 .gp-dialog-close svg{ width:16px; height:16px; }
-.gp-pay-methods{ display:flex; flex-direction:column; gap:10px; margin-top:14px; }
-.gp-pay-methods .gp-pay-row{
-  display:flex; align-items:center; gap:14px;
-  border:1px solid #e6d9f5; border-radius:16px; padding:12px 14px;
-  background:linear-gradient(180deg,#ffffff 0%,#faf7ff 100%);
-  box-shadow:0 3px 0 #ece2f7, 0 8px 18px rgba(98,49,200,.07);
-  animation:gp-card-in .45s cubic-bezier(.22,.8,.24,1) backwards;
-}
-.gp-pay-methods .gp-pay-row:nth-child(2){ animation-delay:.06s; }
-.gp-pay-methods .gp-pay-row:nth-child(3){ animation-delay:.12s; }
-.gp-pay-methods .gp-pay-row:nth-child(4){ animation-delay:.18s; }
-.gp-pay-methods .gp-pay-row:nth-child(5){ animation-delay:.24s; }
-.gp-pay-methods .gp-pay-row:nth-child(n+6){ animation-delay:.3s; }
-.gp-pay-methods .gp-pay-logo{
-  flex:0 0 auto; width:46px; height:46px; border-radius:12px;
-  background:#fff; border:1px solid #eee6f8;
-  display:grid; place-items:center; overflow:hidden;
-  box-shadow:0 2px 8px rgba(98,49,200,.1);
-}
-.gp-pay-methods .gp-pay-logo img{ width:38px; height:38px; object-fit:contain; }
-.gp-pay-methods .gp-pay-name{ flex:1; min-width:0; }
-.gp-pay-methods strong{ font-size:14px; font-weight:700; color:#2b2140; display:block; }
-.gp-pay-methods small{ display:block; font-size:11.5px; color:#7a6c8f; font-weight:500; margin-top:2px; }
-.gp-pay-methods .gp-pay-check{
-  flex:0 0 auto; width:26px; height:26px; border-radius:50%;
+/* Payment popup (Figma) */
+.gp-pay-head{ display:flex; align-items:center; gap:10px; margin:14px 0 8px; }
+.gp-pay-kicker-ico{
+  flex:0 0 auto; width:34px; height:34px; border-radius:10px;
   background:#f1e9fd; display:grid; place-items:center; color:#6231c8;
 }
-.gp-pay-methods .gp-pay-check svg{ width:13px; height:13px; }
+.gp-pay-kicker-ico svg{ width:17px; height:17px; }
+.gp-pay-kicker{
+  font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+  color:#6231c8;
+}
+.gp-pay-desc{ font-size:13px; line-height:1.6; color:#6c5b7d; margin:0 0 4px; }
+.gp-pay-label{ font-size:13px; font-weight:700; color:#342044; margin:16px 0 10px; }
+.gp-pay-grid{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+}
+@media(max-width:380px){ .gp-pay-grid{ grid-template-columns:repeat(2,1fr); } }
+.gp-pay-pill{
+  display:flex; align-items:center; gap:10px;
+  background:#fff; border:1px solid #e3d6f0; border-radius:12px;
+  padding:12px;
+  animation:gp-card-in .45s cubic-bezier(.22,.8,.24,1) backwards;
+}
+.gp-pay-grid .gp-pay-pill:nth-child(2){ animation-delay:.05s; }
+.gp-pay-grid .gp-pay-pill:nth-child(3){ animation-delay:.1s; }
+.gp-pay-grid .gp-pay-pill:nth-child(4){ animation-delay:.15s; }
+.gp-pay-grid .gp-pay-pill:nth-child(5){ animation-delay:.2s; }
+.gp-pay-grid .gp-pay-pill:nth-child(n+6){ animation-delay:.25s; }
+.gp-pay-pill img{ width:34px; height:34px; border-radius:8px; object-fit:contain; flex:0 0 auto; }
+.gp-pay-pill strong{ font-size:15px; font-weight:700; color:#2b2140; }
+.gp-cur-ico{
+  flex:0 0 auto; width:34px; height:34px; border-radius:8px;
+  background:#f1e9fd; color:#6231c8;
+  display:grid; place-items:center;
+  font-size:17px; font-weight:800;
+}
+.gp-pay-note{ font-size:12px; line-height:1.6; color:#8a7f96; margin:16px 0 0; }
 @media (prefers-reduced-motion:reduce){
-  .gp-pay-methods .gp-pay-row{ animation:none; }
+  .gp-pay-pill{ animation:none; }
 }
