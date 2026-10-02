@@ -107,7 +107,7 @@
 
 
 
-
+<script>document.documentElement.classList.add("js");</script>
 
 
 
@@ -417,7 +417,7 @@
       </header>
 
       <main class="gp-main">
-        <section class="gp-hero" aria-label="Store promotions">
+        <section class="gp-hero gp-reveal" aria-label="Store promotions">
           <h1 class="gp-sr">Gamepay Hub digital premium store</h1>
           <div class="gp-banner" id="gpBanner">
             <img class="gp-slide is-active" src="assets/hero-digital-premium.jpg" alt="Gamepay Hub digital premium store" fetchpriority="high" decoding="async">
@@ -441,7 +441,7 @@
           </div>
         </section>
 
-        <section class="gp-services" aria-label="Store services">
+        <section class="gp-services gp-reveal" data-gp-delay="1" aria-label="Store services">
           <button class="gp-service" id="gpFlexPay" type="button">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
             <span>Flexible payments</span>
@@ -456,7 +456,7 @@
           </button>
         </section>
 
-        <section class="gp-discount" id="gpProducts" aria-label="Discount plans">
+        <section class="gp-discount gp-reveal" id="gpProducts" aria-label="Discount plans">
           <div class="gp-discount-head">
             <h2>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
@@ -464,9 +464,6 @@
               <span class="gp-count" id="gpCount">0</span>
             </h2>
             <div class="gp-controls">
-              <button id="gpPause" type="button" aria-label="Pause product motion" aria-pressed="false">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="10" y1="5" x2="10" y2="19"/><line x1="14" y1="5" x2="14" y2="19"/></svg>
-              </button>
               <button id="gpPrev" type="button" aria-label="Previous products">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
               </button>
@@ -482,10 +479,12 @@
             <button class="gp-tab" data-cat="Learning &amp; design" type="button" role="tab" aria-selected="false">Learning &amp; design</button>
           </div>
           <p class="gp-sr" id="gpFound" aria-live="polite"></p>
-          <div class="gp-carousel" id="gpCarousel" aria-label="Products"></div>
+          <div class="gp-carousel-view" id="gpCarouselView">
+            <div class="gp-carousel-track" id="gpCarousel" aria-label="Discounted products"></div>
+          </div>
         </section>
 
-        <button class="gp-paystrip" id="gpPayStrip" type="button">
+        <button class="gp-paystrip gp-reveal" id="gpPayStrip" type="button">
           <span class="gp-pay-ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
           </span>
@@ -498,7 +497,7 @@
           <svg class="gp-pay-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
 
-        <section class="gp-help" aria-label="Help">
+        <section class="gp-help gp-reveal" aria-label="Help">
           <div class="gp-help-card">
             <span class="gp-help-ico">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
@@ -526,82 +525,55 @@
             <h3>Before you order</h3>
             <p class="gp-guide-sub">Tap to unfold an answer.</p>
             <div class="gp-faq" id="gpFaq">
-              <details class="gp-faq-item">
-                <summary>
+              <div class="gp-faq-item"><button class="gp-faq-head" type="button" aria-expanded="false">
                   <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
                   <span class="gp-faq-q">How do I place an order?</span>
                   <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
-                </summary>
-                <p>Choose a product, compare its plans, and check the account type and duration. Then follow the payment instructions and submit your payment details for manual confirmation.</p>
-              </details>
-              <details class="gp-faq-item">
-                <summary>
+                </button><div class="gp-faq-panel"><div class="gp-faq-panel-in"><p>Choose a product, compare its plans, and check the account type and duration. Then follow the payment instructions and submit your payment details for manual confirmation.</p></div></div></div>
+              <div class="gp-faq-item"><button class="gp-faq-head" type="button" aria-expanded="false">
                   <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></span>
                   <span class="gp-faq-q">Can I renew my subscription?</span>
                   <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
-                </summary>
-                <p>Renewal depends on the individual plan. Check the plan note before ordering, or contact support to confirm.</p>
-              </details>
-              <details class="gp-faq-item">
-                <summary>
+                </button><div class="gp-faq-panel"><div class="gp-faq-panel-in"><p>Renewal depends on the individual plan. Check the plan note before ordering, or contact support to confirm.</p></div></div></div>
+              <div class="gp-faq-item"><button class="gp-faq-head" type="button" aria-expanded="false">
                   <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
                   <span class="gp-faq-q">How do student discounts work?</span>
                   <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
-                </summary>
-                <p>Student offers may apply to selected products and periods. Contact support with your request to check current availability.</p>
-              </details>
-              <details class="gp-faq-item">
-                <summary>
+                </button><div class="gp-faq-panel"><div class="gp-faq-panel-in"><p>Student offers may apply to selected products and periods. Contact support with your request to check current availability.</p></div></div></div>
+              <div class="gp-faq-item"><button class="gp-faq-head" type="button" aria-expanded="false">
                   <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg></span>
                   <span class="gp-faq-q">Where can I see new stock and updates?</span>
                   <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
-                </summary>
-                <p>Join the official Telegram channel for new stock, offers, and service announcements.</p>
-              </details>
-              <details class="gp-faq-item">
-                <summary>
+                </button><div class="gp-faq-panel"><div class="gp-faq-panel-in"><p>Join the official Telegram channel for new stock, offers, and service announcements.</p></div></div></div>
+              <div class="gp-faq-item"><button class="gp-faq-head" type="button" aria-expanded="false">
                   <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
                   <span class="gp-faq-q">My order was rejected. What should I do?</span>
                   <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
-                </summary>
-                <p>Open the order in My orders and message support from there with your payment details so we can sort it out.</p>
-              </details>
+                </button><div class="gp-faq-panel"><div class="gp-faq-panel-in"><p>Open the order in My orders and message support from there with your payment details so we can sort it out.</p></div></div></div>
               <div id="gpFaqMore" hidden>
-                <details class="gp-faq-item">
-                  <summary>
+                <div class="gp-faq-item"><button class="gp-faq-head" type="button" aria-expanded="false">
                     <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
                     <span class="gp-faq-q">How will I receive access, and how long does it take?</span>
                     <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
-                  </summary>
-                  <p>Access details are delivered after manual payment confirmation, usually the same day. You will be notified when your order is ready.</p>
-                </details>
-                <details class="gp-faq-item">
-                  <summary>
+                  </button><div class="gp-faq-panel"><div class="gp-faq-panel-in"><p>Access details are delivered after manual payment confirmation, usually the same day. You will be notified when your order is ready.</p></div></div></div>
+                <div class="gp-faq-item"><button class="gp-faq-head" type="button" aria-expanded="false">
                     <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
                     <span class="gp-faq-q">Is this my own account or a shared account?</span>
                     <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
-                  </summary>
-                  <p>It depends on the plan — each plan states whether it is Own Mail or a shared account. Check the plan's account type before ordering.</p>
-                </details>
-                <details class="gp-faq-item">
-                  <summary>
+                  </button><div class="gp-faq-panel"><div class="gp-faq-panel-in"><p>It depends on the plan — each plan states whether it is Own Mail or a shared account. Check the plan's account type before ordering.</p></div></div></div>
+                <div class="gp-faq-item"><button class="gp-faq-head" type="button" aria-expanded="false">
                     <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
                     <span class="gp-faq-q">Which payment methods can I use?</span>
                     <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
-                  </summary>
-                  <p>KBZPay, WavePay, AYA Pay and other local wallets, plus USD, GBP and EUR options. See Payment options for the full list.</p>
-                </details>
-                <details class="gp-faq-item">
-                  <summary>
+                  </button><div class="gp-faq-panel"><div class="gp-faq-panel-in"><p>KBZPay, WavePay, AYA Pay and other local wallets, plus USD, GBP and EUR options. See Payment options for the full list.</p></div></div></div>
+                <div class="gp-faq-item"><button class="gp-faq-head" type="button" aria-expanded="false">
                     <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
                     <span class="gp-faq-q">What if I cannot sign in or my access stops working?</span>
                     <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
-                  </summary>
-                  <p>Message support right away with your order ID — the warranty terms are listed on each plan.</p>
-                </details>
+                  </button><div class="gp-faq-panel"><div class="gp-faq-panel-in"><p>Message support right away with your order ID — the warranty terms are listed on each plan.</p></div></div></div>
               </div>
             </div>
-            <button class="gp-more" id="gpMoreFaq" type="button">View 4 more questions</button>
+            <button class="gp-more" id="gpMoreFaq" type="button" aria-expanded="false"><span>View 4 more questions</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
             <div class="gp-study">
               <span class="gp-study-ico">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
@@ -611,7 +583,7 @@
           </div>
         </section>
 
-        <section class="gp-community" aria-label="Community">
+        <section class="gp-community gp-reveal" aria-label="Community">
           <span class="gp-tele-ico"><img src="assets/icon-telegram.jpg" alt="Telegram" loading="lazy" decoding="async"></span>
           <span class="gp-kicker">THE GAMEPAY COMMUNITY</span>
           <h2>New plans. Fresh updates.</h2>
@@ -623,7 +595,7 @@
         </section>
       </main>
 
-      <footer class="gp-footer">
+      <footer class="gp-footer gp-reveal">
         <div class="gp-foot-grid">
           <div class="gp-foot-brand">
             <span class="gp-foot-logo"><img id="gpFootLogo" alt="Gamepay Hub logo" width="56" height="56"></span>
@@ -3132,6 +3104,7 @@ document.getElementById("backToLandingBtn")?.addEventListener("click", showLandi
  ===================================================================== */
 /* Figma landing guard -- the elements below only exist in the landing markup. */
 let gpRenderCarousel = null; // set when the landing markup exists
+let gpOverridesReady = false; // set true once stock_overrides settle
 if(document.getElementById("gpCarousel")){
 const carousel = document.getElementById("gpCarousel");
 
@@ -3167,9 +3140,17 @@ function gpCatLabel(category){
   return "Learning & design";
 }
 
+/* A product belongs in "Discount plans" only when at least one of its
+   plans carries an admin discount. */
+function gpHasDiscount(product){
+  return (product.plans || []).some(p => Number(p.discountPercent) > 0);
+}
+/* Set true once stock_overrides have been applied (or the fetch settled),
+   so the carousel doesn't flash an empty state before discounts are known. */
+
 function gpFiltered(){
   const group = GP_CAT_GROUPS[gpActiveCat];
-  return products.filter(p => !p.isGuide && (!group || group.includes(p.category)));
+  return products.filter(p => !p.isGuide && gpHasDiscount(p) && (!group || group.includes(p.category)));
 }
 
 function gpCardHtml(product){
@@ -3200,15 +3181,23 @@ function gpCardHtml(product){
 }
 
 function renderGpCarousel(){
+  if(!gpOverridesReady){
+    carousel.innerHTML = `<div class="gp-card gp-skel"><div class="gp-card-band"></div><div class="gp-card-body"><span class="gp-skel-line"></span><span class="gp-skel-line short"></span></div></div>
+      <div class="gp-card gp-skel"><div class="gp-card-band"></div><div class="gp-card-body"><span class="gp-skel-line"></span><span class="gp-skel-line short"></span></div></div>
+      <div class="gp-card gp-skel"><div class="gp-card-band"></div><div class="gp-card-body"><span class="gp-skel-line"></span><span class="gp-skel-line short"></span></div></div>`;
+    return;
+  }
   const list = gpFiltered();
   carousel.innerHTML = list.length
     ? list.map(gpCardHtml).join("")
-    : `<div class="gp-empty">No products in this category yet.</div>`;
+    : `<div class="gp-empty">No discounted plans in this category yet.</div>`;
   document.getElementById("gpCount").textContent = list.length;
-  document.getElementById("gpFound").textContent = `${list.length} products found`;
+  document.getElementById("gpFound").textContent = `${list.length} discounted products found`;
   carousel.querySelectorAll("[data-gp-view-plans]").forEach(btn => {
     btn.addEventListener("click", () => showProductsPage());
   });
+  gpPage = 0;
+  gpApplyPage(false);
 }
 
 gpRenderCarousel = renderGpCarousel;
@@ -3226,36 +3215,51 @@ document.getElementById("gpTabs")?.addEventListener("click", (e) => {
   renderGpCarousel();
 });
 
-/* ---- Carousel controls + autoplay ---- */
+/* ---- Carousel: paged slide (transform, not scroll) ---- */
 const prevBtn = document.getElementById("gpPrev");
 const nextBtn = document.getElementById("gpNext");
-const pauseBtn = document.getElementById("gpPause");
-let gpPaused = false;
-let gpTimer = null;
-function gpStep(dir){
-  const card = carousel.querySelector(".gp-card");
-  const step = card ? card.offsetWidth + 12 : 200;
-  carousel.scrollBy({ left: dir * step * 2, behavior: "smooth" });
+const gpView = document.getElementById("gpCarouselView");
+let gpPage = 0;
+function gpMaxOffset(){
+  if(!gpView || !carousel) return 0;
+  return Math.max(0, carousel.scrollWidth - gpView.clientWidth);
 }
-prevBtn?.addEventListener("click", () => gpStep(-1));
-nextBtn?.addEventListener("click", () => gpStep(1));
-function gpAutoplay(){
-  clearInterval(gpTimer);
-  if(gpPaused) return;
-  gpTimer = setInterval(() => {
-    if(carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 8){
-      carousel.scrollTo({ left: 0, behavior: "smooth" });
-    } else {
-      gpStep(1);
-    }
-  }, 4000);
+function gpApplyPage(animate = true){
+  if(!gpView || !carousel) return;
+  const max = gpMaxOffset();
+  const pages = Math.max(1, Math.ceil((max + gpView.clientWidth) / gpView.clientWidth));
+  if(gpPage > pages - 1) gpPage = pages - 1;
+  if(gpPage < 0) gpPage = 0;
+  const offset = Math.min(gpPage * gpView.clientWidth, max);
+  if(!animate) carousel.style.transition = "none";
+  carousel.style.transform = `translateX(${-offset}px)`;
+  if(!animate){
+    void carousel.offsetWidth; /* reflow */
+    carousel.style.transition = "";
+  }
 }
-pauseBtn?.addEventListener("click", () => {
-  gpPaused = !gpPaused;
-  pauseBtn.setAttribute("aria-pressed", gpPaused ? "true" : "false");
-  pauseBtn.setAttribute("aria-label", gpPaused ? "Resume product motion" : "Pause product motion");
-  gpAutoplay();
-});
+function gpGoPage(dir){
+  if(!gpView || !carousel) return;
+  const max = gpMaxOffset();
+  if(max <= 0) return;
+  const pages = Math.max(1, Math.ceil((max + gpView.clientWidth) / gpView.clientWidth));
+  gpPage = (gpPage + dir + pages) % pages; /* wrap around */
+  gpApplyPage(true);
+}
+prevBtn?.addEventListener("click", () => gpGoPage(-1));
+nextBtn?.addEventListener("click", () => gpGoPage(1));
+/* touch swipe pages the carousel */
+let gpTouchX = null;
+gpView?.addEventListener("touchstart", (e) => {
+  gpTouchX = e.touches[0].clientX;
+}, { passive: true });
+gpView?.addEventListener("touchend", (e) => {
+  if(gpTouchX === null) return;
+  const dx = e.changedTouches[0].clientX - gpTouchX;
+  gpTouchX = null;
+  if(Math.abs(dx) > 40) gpGoPage(dx < 0 ? 1 : -1);
+}, { passive: true });
+window.addEventListener("resize", () => gpApplyPage(false));
 
 /* ---- Hero banner rotation ---- */
 const slides = [...document.querySelectorAll("#gpBanner .gp-slide")];
@@ -3272,10 +3276,30 @@ const progress = document.getElementById("gpProgress");
 function gpScroll(){
   const h = document.documentElement;
   const max = h.scrollHeight - h.clientHeight;
-  progress.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+  const p = max > 0 ? h.scrollTop / max : 0;
+  progress.style.transform = `scaleX(${p})`;
 }
 window.addEventListener("scroll", gpScroll, { passive: true });
 gpScroll();
+
+/* ---- Scroll-triggered 3D reveal ---- */
+(function gpReveal(){
+  const els = document.querySelectorAll(".gp-reveal");
+  if(!els.length) return;
+  if(!("IntersectionObserver" in window)){
+    els.forEach(el => el.classList.add("is-visible"));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if(en.isIntersecting){
+        en.target.classList.add("is-visible");
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+  els.forEach(el => io.observe(el));
+})();
 
 /* ---- Dialog ---- */
 const backdrop = document.getElementById("gpDialogBackdrop");
@@ -3299,13 +3323,26 @@ const TG_SUPPORT = "https://t.me/angsthtun";
 const TG_CHANNEL = "https://t.me/gamepaydyet";
 const linkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>';
 const payRows = `
-  <div class="gp-pay-methods">
-    <div class="gp-pay-row"><img src="assets/unnamed.png" alt="KBZPay" loading="lazy"><div><strong>KBZPay</strong><small>Local wallet</small></div></div>
-    <div class="gp-pay-row"><img src="assets/unnamed (1).png" alt="WavePay" loading="lazy"><div><strong>WavePay</strong><small>Local wallet</small></div></div>
-    <div class="gp-pay-row"><img src="assets/unnamed (2).png" alt="AYA Pay" loading="lazy"><div><strong>AYA Pay</strong><small>Local wallet</small></div></div>
-    <div class="gp-pay-row"><img src="assets/uabpay-black.png" alt="UABPay" loading="lazy"><div><strong>UABPay</strong><small>Local wallet</small></div></div>
-    <div class="gp-pay-row"><img src="assets/currency-usd.png" alt="USD" loading="lazy"><div><strong>USD / GBP / EUR</strong><small>Other currencies accepted</small></div></div>
-  </div>`;
+  <div class="gp-pay-head">
+    <span class="gp-pay-kicker-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
+    <span class="gp-pay-kicker">Payment, without the confusion</span>
+  </div>
+  <p class="gp-pay-desc">Follow the instructions for your selected plan. Your payment is reviewed before the order is confirmed.</p>
+  <p class="gp-pay-label">Payment options</p>
+  <div class="gp-pay-grid">
+    <div class="gp-pay-pill"><img src="assets/unnamed.png" alt="KBZPay" loading="lazy"><strong>KBZPay</strong></div>
+    <div class="gp-pay-pill"><img src="assets/unnamed (1).png" alt="WavePay" loading="lazy"><strong>WavePay</strong></div>
+    <div class="gp-pay-pill"><img src="assets/unnamed (2).png" alt="AYA Pay" loading="lazy"><strong>AYA Pay</strong></div>
+    <div class="gp-pay-pill"><img src="assets/uabpay-black.png" alt="UABPay" loading="lazy"><strong>UABPay</strong></div>
+    <div class="gp-pay-pill"><img src="assets/23.png" alt="Binance" loading="lazy"><strong>Binance</strong></div>
+  </div>
+  <p class="gp-pay-label">Other currencies</p>
+  <div class="gp-pay-grid">
+    <div class="gp-pay-pill"><span class="gp-cur-ico">$</span><strong>US Dollar</strong></div>
+    <div class="gp-pay-pill"><span class="gp-cur-ico">&pound;</span><strong>British Pound</strong></div>
+    <div class="gp-pay-pill"><span class="gp-cur-ico">&euro;</span><strong>Euro</strong></div>
+  </div>
+  <p class="gp-pay-note">Visa &amp; Mastercard products are sold separately. They are not listed here as checkout payment methods.</p>`;
 
 document.getElementById("gpHelpBtn")?.addEventListener("click", () => gpOpenDialog(
   "Help",
@@ -3342,7 +3379,7 @@ dlgBody.addEventListener("click", (e) => {
 
 /* ---- Hero buttons ---- */
 document.getElementById("gpProductsBtn")?.addEventListener("click", () => {
-  document.getElementById("gpProducts")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  if(typeof showProductsPage === "function") showProductsPage();
 });
 document.getElementById("gpNewsBtn")?.addEventListener("click", () => openNewsFeed());
 document.getElementById("gpSupportBtn")?.addEventListener("click", () => window.open(TG_SUPPORT, "_blank", "noopener"));
@@ -3364,18 +3401,36 @@ document.querySelectorAll("[data-gpnav]").forEach(el => {
   });
 });
 
+/* ---- FAQ accordion (smooth expand) ---- */
+document.getElementById("gpFaq")?.addEventListener("click", (e) => {
+  const head = e.target.closest(".gp-faq-head");
+  if(!head) return;
+  const item = head.closest(".gp-faq-item");
+  const willOpen = !item.classList.contains("open");
+  /* single-open accordion across the whole FAQ */
+  const scope = head.closest("#gpFaq") || item.parentElement;
+  scope.querySelectorAll(".gp-faq-item.open").forEach(o => {
+    o.classList.remove("open");
+    o.querySelector(".gp-faq-head")?.setAttribute("aria-expanded", "false");
+  });
+  if(willOpen){
+    item.classList.add("open");
+    head.setAttribute("aria-expanded", "true");
+  }
+});
+
 /* ---- FAQ: view more toggle ---- */
 const moreBtn = document.getElementById("gpMoreFaq");
 const moreWrap = document.getElementById("gpFaqMore");
 moreBtn?.addEventListener("click", () => {
   const hidden = moreWrap.hidden;
   moreWrap.hidden = !hidden;
-  moreBtn.textContent = hidden ? "Show fewer questions" : "View 4 more questions";
+  moreBtn.setAttribute("aria-expanded", hidden ? "true" : "false");
+  moreBtn.querySelector("span").textContent = hidden ? "Show fewer questions" : "View 4 more questions";
 });
 
 /* ---- Initial render ---- */
 renderGpCarousel();
-gpAutoplay();
 }
 
 // Tapping a card in the hero's Hot Products strip jumps straight into that
@@ -3748,6 +3803,9 @@ if(document.readyState === "loading"){
         if(currentProduct) renderOrder();
       }catch(err){
         console.error("Stock override fetch failed:", err);
+      }finally{
+        gpOverridesReady = true;
+        if(typeof gpRenderCarousel === "function") gpRenderCarousel();
       }
     }
 
