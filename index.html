@@ -68,7 +68,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=63">
+  <link rel="stylesheet" href="styles.css?v=64">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -145,20 +145,18 @@
 
   <div id="newsFeedView" class="news-feed-overlay hidden" role="dialog" aria-label="News">
     <div class="np-topbar">
-      <div class="np-utilbar"><span>GAMEPAY HUB NEWS</span><span id="npEditionDate">Reference edition</span></div>
       <div class="np-masthead">
-        <button id="newsFeedBackBtn" class="np-back" type="button" aria-label="Close News">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-        </button>
         <div class="np-brand">
-          <img id="newsFeedLogo" class="np-logo" alt="Gamepay Hub" />
+          <span class="np-wordmark">Gamepay Hub</span>
           <span class="np-news-badge">NEWS</span>
         </div>
         <div class="np-masthead-actions">
           <button id="npSearchBtn" class="np-icon-btn" type="button" aria-label="Search news">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
           </button>
-          <button id="npAccountBtn" class="np-account-btn" type="button">My account</button>
+          <button id="newsFeedBackBtn" class="np-icon-btn" type="button" aria-label="Close news">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+          </button>
         </div>
       </div>
       <div class="np-searchbar hidden" id="npSearchBar">
@@ -167,7 +165,7 @@
       </div>
       <nav class="np-tabs" aria-label="News sections">
         <button class="np-tab active" data-tab="latest" type="button">Latest</button>
-        <button class="np-tab" data-tab="saved" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Saved</button>
+        <button class="np-tab" data-tab="saved" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span id="npSavedTabLabel">Saved</span></button>
         <button class="np-tab" data-tab="offers" type="button">Offers &amp; Updates</button>
       </nav>
     </div>
@@ -5595,8 +5593,10 @@ function newsWhenText(post){
 function npDateText(post){
   const when = new Date(post.created_at);
   if(isNaN(when)) return "";
-  return when.toLocaleString(undefined, { day: "numeric", month: "short", year: "numeric" }) +
-    " · " + when.toLocaleString(undefined, { hour: "numeric", minute: "2-digit" });
+  // Fixed "12 Sep 2026" order in every locale (Figma format) -- not
+  // toLocaleString, whose day/month order follows the browser locale.
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return `${when.getDate()} ${months[when.getMonth()]} ${when.getFullYear()}`;
 }
 function npReadTime(post){
   const words = String(post.body || "").trim().split(/\s+/).filter(Boolean).length;
@@ -5649,7 +5649,7 @@ const NP_ICONS = {
   thumbDown: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/></svg>`
 };
 function npMetaHtml(post){
-  return `<div class="np-meta"><span>${escapePreviewText(npDateText(post))}</span><span class="np-meta-dot">·</span><span>Gamepay Hub</span><span class="np-meta-dot">·</span><span class="np-meta-read">${NP_ICONS.clock}${escapePreviewText(npReadTime(post))}</span></div>`;
+  return `<div class="np-meta"><span>${escapePreviewText(npDateText(post))}</span><span class="np-meta-sep">|</span><span>Gamepay Hub</span></div>`;
 }
 function npSaveBtnHtml(post, cls){
   const saved = npIsSaved(post.id);
@@ -5658,15 +5658,19 @@ function npSaveBtnHtml(post, cls){
 // ---- Latest tab ----
 function npHeroHtml(post){
   const images = npPostImages(post);
-  const imgHtml = images.length ? `<div class="np-hero-imgwrap"><img class="np-hero-img" src="${images[0]}" alt="" loading="lazy"></div>` : "";
+  const imgHtml = images.length ? `
+    <div class="np-hero-imgwrap">
+      <img class="np-hero-img" src="${images[0]}" alt="" loading="lazy">
+      <a class="np-hero-expand" href="${images[0]}" target="_blank" rel="noopener" aria-label="View image full size" data-expand-link>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+      </a>
+    </div>` : "";
   return `
     <article class="np-hero" data-post-id="${post.id}">
-      <div class="np-hero-text">
-        <h2 class="np-hero-title">${escapePreviewText(post.title)}</h2>
-        <p class="np-hero-excerpt">${escapePreviewText(npExcerpt(post, 160))}</p>
-        ${npMetaHtml(post)}
-        <span class="np-read-link">Read the story <span aria-hidden="true">→</span></span>
-      </div>
+      <h2 class="np-hero-title">${escapePreviewText(post.title)}</h2>
+      <p class="np-hero-excerpt">${escapePreviewText(npExcerpt(post, 160))}</p>
+      ${npMetaHtml(post)}
+      <span class="np-read-link">Read the story <span aria-hidden="true">→</span></span>
       ${imgHtml}
     </article>`;
 }
@@ -5732,26 +5736,29 @@ function renderNewsList(){
   const list = document.getElementById("newsFeedList");
   if(!list) return;
   const posts = npFilteredPosts();
+  const savedCount = npSavedIds().length;
+  const savedLabel = document.getElementById("npSavedTabLabel");
+  if(savedLabel) savedLabel.textContent = savedCount ? `Saved (${savedCount})` : "Saved";
   let html = "";
   if(npActiveTab === "latest"){
-    html += `<div class="np-section-head"><h1>Latest news</h1><span class="np-section-sub">All stories, in one place.</span></div>`;
+    html += `<div class="np-section-head"><h1>Latest news</h1></div>`;
     if(!posts.length){
       html += npEmptyHtml("No stories yet", "Check back soon for the latest from Gamepay Hub.", "", "");
     } else {
       const [featured, ...rest] = posts;
       html += `<div class="np-top"><div class="np-top-main">${npHeroHtml(featured)}</div>${npHeadlinesHtml(rest)}</div>`;
       if(rest.length){
-        html += `<div class="np-more-head"><h2>More stories</h2><span class="np-section-sub">Reference edition</span></div>
+        html += `<div class="np-more-head"><h2>More stories</h2><span class="np-more-rule" aria-hidden="true"></span><span class="np-section-sub">Reference edition</span></div>
                  <div class="np-grid">${rest.map(npCardHtml).join("")}</div>`;
       }
     }
   } else if(npActiveTab === "saved"){
-    html += `<div class="np-section-head"><h1>Saved stories</h1><span class="np-section-sub">${posts.length} ${posts.length === 1 ? "story" : "stories"}</span></div>`;
+    html += `<div class="np-section-head"><h1>Saved stories</h1></div>`;
     html += posts.length
       ? `<div class="np-grid">${posts.map(npCardHtml).join("")}</div>`
       : npEmptyHtml("Your reading list starts here.", "Save a story using its bookmark button to find it here.", "latest", "Explore the latest");
   } else {
-    html += `<div class="np-section-head"><h1>Offers &amp; Updates</h1><span class="np-section-sub">${posts.length} ${posts.length === 1 ? "story" : "stories"}</span></div>`;
+    html += `<div class="np-section-head"><h1>Offers &amp; Updates</h1></div>`;
     html += posts.length
       ? `<div class="np-grid">${posts.map(npCardHtml).join("")}</div>`
       : npEmptyHtml("No offers right now", "New offers and updates from Gamepay Hub will appear here.", "latest", "Explore the latest");
@@ -5763,7 +5770,7 @@ function renderNewsList(){
 function wireNewsList(container){
   container.querySelectorAll("[data-post-id]").forEach(el => {
     el.addEventListener("click", (e) => {
-      if(e.target.closest("[data-save-id]") || e.target.closest("[data-goto-tab]")) return;
+      if(e.target.closest("[data-save-id]") || e.target.closest("[data-goto-tab]") || e.target.closest("[data-expand-link]")) return;
       openNewsDetail(el.dataset.postId);
     });
   });
@@ -5927,10 +5934,6 @@ function openNewsFeed(){
   document.getElementById("npSearchBar")?.classList.add("hidden");
   document.querySelectorAll(".np-tab").forEach(t => t.classList.toggle("active", t.dataset.tab === "latest"));
   document.getElementById("newsFeedList")?.classList.remove("hidden");
-  const logo = document.getElementById("newsFeedLogo");
-  if(logo && !logo.src){ const src = document.querySelector(".compact-logo")?.src; if(src) logo.src = src; }
-  const ed = document.getElementById("npEditionDate");
-  if(ed) ed.textContent = "Reference edition · " + new Date().toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
   loadNewsFeed();
 }
 function closeNewsFeed(){
@@ -5939,10 +5942,6 @@ function closeNewsFeed(){
 }
 document.getElementById("newsFeedBtn")?.addEventListener("click", openNewsFeed);
 document.getElementById("newsFeedBackBtn")?.addEventListener("click", closeNewsFeed);
-document.getElementById("npAccountBtn")?.addEventListener("click", () => {
-  closeNewsFeed();
-  if(typeof openAccountView === "function") openAccountView();
-});
 document.getElementById("npSearchBtn")?.addEventListener("click", () => {
   document.getElementById("npSearchBar")?.classList.toggle("hidden");
   document.getElementById("npSearchInput")?.focus();
