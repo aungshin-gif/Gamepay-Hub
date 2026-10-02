@@ -6743,13 +6743,29 @@ body.news-feed-open{ overflow:hidden; }
 .np-tab{
   display:inline-flex; align-items:center; gap:7px; flex:0 0 auto;
   min-height:48px; padding:0 4px; background:none; border:none;
-  border-bottom:3px solid transparent; color:#d2d2d7;
+  border-bottom:3px solid transparent; color:#fff;
   font-size:16px; font-weight:700; cursor:pointer; white-space:nowrap;
   font-family:"Source Sans 3","Noto Sans Myanmar",sans-serif;
 }
 .np-tab svg{ width:16px; height:16px; }
 .np-tab:hover{ color:#fff; }
 .np-tab.active{ color:#fff; border-bottom-color:#ed3e4c; }
+/* The theme forces `body.light-mode button{color:#173d5b!important}` (dark
+   navy) on EVERY button -- that turns the tab labels, footer links and red
+   accents dark-on-black / wrong. Restore the newsroom colors explicitly. */
+body.light-mode .np-tab{ color:#fff !important; }
+body.light-mode .np-tab:hover{ color:#fff !important; }
+body.light-mode .np-icon-btn{ color:#202127 !important; }
+body.light-mode .np-searchbar button{ color:#202127 !important; }
+body.light-mode .np-footer-links button{ color:#e8e8ea !important; }
+body.light-mode .np-detail-back{ color:#b72131 !important; }
+body.light-mode .np-byline-actions button{ color:#b72131 !important; }
+body.light-mode .np-save-btn{ color:#59606d !important; }
+body.light-mode .np-save-btn.saved{ color:#b72131 !important; }
+body.light-mode .np-empty-cta{ color:#b72131 !important; }
+body.light-mode .np-headlines-more{ color:#b72131 !important; }
+body.light-mode .np-reaction-btn{ color:#353840 !important; }
+body.light-mode .np-reaction-btn.selected{ color:#b72131 !important; }
 /* Scrollable list area (keeps .news-feed-list flex/scroll behavior). */
 .np-list{ background:#fff; }
 .np-section-head{
