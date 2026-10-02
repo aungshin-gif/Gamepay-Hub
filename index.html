@@ -113,7 +113,7 @@
 
 
 </head>
-<body class="light-mode">
+<body class="light-mode lp-mode">
   <div class="neon-announcement" aria-label="Store announcement"><div class="neon-track"><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b><span>Premium digital products · Clear plans · Fast support</span><b>✦</b><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b></div></div>
   <div class="intro-splash" aria-hidden="true"><div class="intro-orb a"></div><div class="intro-orb b"></div><div class="intro-ring"><div class="intro-logo"><img class="intro-logo-img" alt=""></div></div><div class="intro-title">GAMEPAY <span>HUB</span></div><div class="intro-label">PREMIUM DIGITAL MARKETPLACE</div></div>
   <canvas id="particles"></canvas>
@@ -388,173 +388,322 @@
 
   <div class="page">
     <div id="landingShell" class="landing-shell">
-      <section class="lp-hero">
-        <div class="lp-scene" aria-hidden="true">
-          <svg class="lp-hills" viewBox="0 96 1200 364" preserveAspectRatio="xMidYMax slice" focusable="false">
-            <defs>
-              <linearGradient id="lpWash" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#F6F1FF"/>
-                <stop offset=".5" stop-color="#EFE8FD"/>
-                <stop offset="1" stop-color="#E6DBFA"/>
-              </linearGradient>
-              <radialGradient id="lpAuroraV" cx="50%" cy="18%" r="64%">
-                <stop offset="0" stop-color="#CBB8F6" stop-opacity=".9"/>
-                <stop offset="1" stop-color="#CBB8F6" stop-opacity="0"/>
-              </radialGradient>
-              <radialGradient id="lpAuroraTeal" cx="13%" cy="76%" r="60%">
-                <stop offset="0" stop-color="#93DAEC" stop-opacity=".55"/>
-                <stop offset="1" stop-color="#93DAEC" stop-opacity="0"/>
-              </radialGradient>
-              <radialGradient id="lpAuroraPink" cx="88%" cy="72%" r="56%">
-                <stop offset="0" stop-color="#F4B9E0" stop-opacity=".46"/>
-                <stop offset="1" stop-color="#F4B9E0" stop-opacity="0"/>
-              </radialGradient>
-              <radialGradient id="lpCore" cx="50%" cy="30%" r="42%">
-                <stop offset="0" stop-color="#FFFFFF" stop-opacity=".85"/>
-                <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
-              </radialGradient>
-              <linearGradient id="lpBaseFade" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#E6DBFA" stop-opacity="0"/>
-                <stop offset="1" stop-color="#F6F1FF" stop-opacity=".96"/>
-              </linearGradient>
-              <radialGradient id="lpVignette" cx="50%" cy="42%" r="62%">
-                <stop offset="0" stop-color="#000000" stop-opacity="0"/>
-                <stop offset=".66" stop-color="#000000" stop-opacity="0"/>
-                <stop offset="1" stop-color="#000000" stop-opacity="1"/>
-              </radialGradient>
-              <mask id="lpEdgeFade">
-                <rect x="0" y="96" width="1200" height="364" fill="#FFFFFF"/>
-                <rect x="0" y="96" width="1200" height="364" fill="url(#lpVignette)"/>
-              </mask>
-              <pattern id="lpDots" width="30" height="30" patternUnits="userSpaceOnUse">
-                <circle cx="2" cy="2" r="1.6" fill="#8A73C8"/>
-              </pattern>
-            </defs>
+      <div class="gp-progress" id="gpProgress" aria-hidden="true"></div>
 
-            <!-- soft lavender wash + aurora glows, tuned to the page palette -->
-            <rect x="0" y="96" width="1200" height="364" fill="url(#lpWash)"/>
-            <rect x="0" y="96" width="1200" height="364" fill="url(#lpAuroraV)"/>
-            <rect x="0" y="96" width="1200" height="364" fill="url(#lpAuroraTeal)"/>
-            <rect x="0" y="96" width="1200" height="364" fill="url(#lpAuroraPink)"/>
+      <header class="gp-header">
+        <button class="gp-brand" id="gpBrandHome" type="button" aria-label="Gamepay Hub home">
+          <img class="gp-logo" id="gpLogo" alt="Gamepay Hub logo" width="56" height="56">
+          <span class="gp-wordmark">Gamepay Hub</span>
+        </button>
+        <script>document.getElementById("gpLogo").src=document.querySelector(".compact-logo").src;</script>
+        <nav class="gp-nav" aria-label="Main navigation">
+          <button class="gp-nav-link is-active" type="button" data-gpnav="store">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Store</span>
+          </button>
+          <button class="gp-nav-link" type="button" data-gpnav="orders">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <span>My orders</span>
+          </button>
+          <button class="gp-nav-link" type="button" data-gpnav="news">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+            <span>News</span>
+          </button>
+        </nav>
+        <button class="gp-account" id="gpAccountBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>My account</span>
+        </button>
+      </header>
 
-            <!-- product-constellation dot grid, faded toward every edge -->
-            <g mask="url(#lpEdgeFade)" opacity=".5">
-              <rect x="0" y="96" width="1200" height="364" fill="url(#lpDots)"/>
-            </g>
+      <main class="gp-main">
+        <section class="gp-hero" aria-label="Store promotions">
+          <h1 class="gp-sr">Gamepay Hub digital premium store</h1>
+          <div class="gp-banner" id="gpBanner">
+            <img class="gp-slide is-active" src="assets/hero-digital-premium.jpg" alt="Gamepay Hub digital premium store" fetchpriority="high" decoding="async">
+            <img class="gp-slide" src="assets/hero-channel-join.jpg" alt="Join the Gamepay Hub Telegram channel" loading="lazy" decoding="async">
+            <img class="gp-slide" src="assets/hero-giftcard.jpg" alt="Gift card marketplace" loading="lazy" decoding="async">
+          </div>
+          <div class="gp-hero-actions">
+            <button class="gp-btn gp-btn-primary" id="gpProductsBtn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              <span>Products</span>
+              <svg class="gp-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+            <button class="gp-btn" id="gpNewsBtn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+              <span>News &amp; updates</span>
+            </button>
+            <button class="gp-btn" id="gpHelpBtn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+              <span>Help</span>
+            </button>
+          </div>
+        </section>
 
-            <!-- orbital rings the brand logos ride around -->
-            <g mask="url(#lpEdgeFade)" fill="none" stroke="#8E79CE" stroke-opacity=".38">
-              <ellipse cx="600" cy="252" rx="150" ry="96" stroke-width="1.4"/>
-              <ellipse cx="600" cy="252" rx="266" ry="168" stroke-width="1.3"/>
-              <ellipse cx="600" cy="252" rx="388" ry="244" stroke-width="1.2" stroke-dasharray="3 9"/>
-              <ellipse cx="600" cy="252" rx="516" ry="322" stroke-width="1.1" stroke-dasharray="3 9" stroke-opacity=".22"/>
-            </g>
+        <section class="gp-services" aria-label="Store services">
+          <button class="gp-service" id="gpFlexPay" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            <span>Flexible payments</span>
+          </button>
+          <button class="gp-service" id="gpOrderTrack" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            <span>Order tracking</span>
+          </button>
+          <button class="gp-service" id="gpCustSupport" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+            <span>Customer support</span>
+          </button>
+        </section>
 
-            <!-- soft light core so the featured photo + wordmark lift off the field -->
-            <ellipse cx="600" cy="212" rx="440" ry="220" fill="url(#lpCore)"/>
+        <section class="gp-discount" id="gpProducts" aria-label="Discount plans">
+          <div class="gp-discount-head">
+            <h2>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+              Discount plans
+              <span class="gp-count" id="gpCount">0</span>
+            </h2>
+            <div class="gp-controls">
+              <button id="gpPause" type="button" aria-label="Pause product motion" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="10" y1="5" x2="10" y2="19"/><line x1="14" y1="5" x2="14" y2="19"/></svg>
+              </button>
+              <button id="gpPrev" type="button" aria-label="Previous products">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              </button>
+              <button id="gpNext" type="button" aria-label="Next products">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="gp-tabs" id="gpTabs" role="tablist" aria-label="Product categories">
+            <button class="gp-tab is-active" data-cat="All" type="button" role="tab" aria-selected="true">All</button>
+            <button class="gp-tab" data-cat="AI tools" type="button" role="tab" aria-selected="false">AI tools</button>
+            <button class="gp-tab" data-cat="Entertainment" type="button" role="tab" aria-selected="false">Entertainment</button>
+            <button class="gp-tab" data-cat="Learning &amp; design" type="button" role="tab" aria-selected="false">Learning &amp; design</button>
+          </div>
+          <p class="gp-sr" id="gpFound" aria-live="polite"></p>
+          <div class="gp-carousel" id="gpCarousel" aria-label="Products"></div>
+        </section>
 
-            <!-- faint sparkles for depth -->
-            <g fill="#7C5FC0" opacity=".5">
-              <circle cx="196" cy="176" r="2.4"/>
-              <circle cx="1024" cy="164" r="2.2"/>
-              <circle cx="330" cy="392" r="2"/>
-              <circle cx="912" cy="404" r="2.4"/>
-              <circle cx="1066" cy="316" r="2"/>
-              <circle cx="150" cy="330" r="2.2"/>
-            </g>
+        <button class="gp-paystrip" id="gpPayStrip" type="button">
+          <span class="gp-pay-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </span>
+          <span class="gp-pay-text"><strong>Payment options</strong><small>Local wallets &amp; other currencies</small></span>
+          <span class="gp-pay-logos">
+            <img src="assets/unnamed.png" alt="KBZPay" loading="lazy" decoding="async">
+            <img src="assets/unnamed (1).png" alt="WavePay" loading="lazy" decoding="async">
+            <img src="assets/unnamed (2).png" alt="AYA Pay" loading="lazy" decoding="async">
+          </span>
+          <svg class="gp-pay-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
 
-            <!-- base fade so the field melts into the clouds and the page below -->
-            <rect x="0" y="300" width="1200" height="160" fill="url(#lpBaseFade)"/>
-          </svg>
-
-          <div class="lp-stage">
-            <div class="lp-hero-carousel" id="lpHeroCarousel">
-              <figure class="lp-hero-slide is-active" data-slide="0">
-                <img src="assets/hero-digital-premium.jpg" alt="Digital Premium Store" loading="eager" decoding="async" fetchpriority="high">
-              </figure>
-              <figure class="lp-hero-slide" data-slide="1" data-cta="Join" data-href="https://t.me/gamepaydyet">
-                <img src="assets/hero-channel-join.jpg" alt="Join the Gamepay Hub Telegram channel" loading="lazy" decoding="async">
-              </figure>
-              <figure class="lp-hero-slide" data-slide="2">
-                <img src="assets/hero-giftcard.jpg" alt="Gift Card Marketplace" loading="lazy" decoding="async">
-              </figure>
-              <div class="lp-hero-dots">
-                <span class="lp-hero-dot is-active" data-dot="0"></span>
-                <span class="lp-hero-dot" data-dot="1"></span>
-                <span class="lp-hero-dot" data-dot="2"></span>
+        <section class="gp-help" aria-label="Help">
+          <div class="gp-help-card">
+            <span class="gp-help-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+            </span>
+            <h2>Here to help</h2>
+            <p>Questions about a plan or order?</p>
+            <div class="gp-help-btns">
+              <button class="gp-btn gp-btn-primary" id="gpSupportBtn" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                <span>Support</span>
+                <svg class="gp-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </button>
+              <button class="gp-btn" id="gpOrdersBtn" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span>My orders</span>
+                <svg class="gp-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="gp-guide-card">
+            <span class="gp-guide-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>
+            </span>
+            <span class="gp-kicker">THE BUYING GUIDE</span>
+            <h3>Before you order</h3>
+            <p class="gp-guide-sub">Tap to unfold an answer.</p>
+            <div class="gp-faq" id="gpFaq">
+              <details class="gp-faq-item">
+                <summary>
+                  <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
+                  <span class="gp-faq-q">How do I place an order?</span>
+                  <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </summary>
+                <p>Choose a product, compare its plans, and check the account type and duration. Then follow the payment instructions and submit your payment details for manual confirmation.</p>
+              </details>
+              <details class="gp-faq-item">
+                <summary>
+                  <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></span>
+                  <span class="gp-faq-q">Can I renew my subscription?</span>
+                  <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </summary>
+                <p>Renewal depends on the individual plan. Check the plan note before ordering, or contact support to confirm.</p>
+              </details>
+              <details class="gp-faq-item">
+                <summary>
+                  <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
+                  <span class="gp-faq-q">How do student discounts work?</span>
+                  <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </summary>
+                <p>Student offers may apply to selected products and periods. Contact support with your request to check current availability.</p>
+              </details>
+              <details class="gp-faq-item">
+                <summary>
+                  <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg></span>
+                  <span class="gp-faq-q">Where can I see new stock and updates?</span>
+                  <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </summary>
+                <p>Join the official Telegram channel for new stock, offers, and service announcements.</p>
+              </details>
+              <details class="gp-faq-item">
+                <summary>
+                  <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                  <span class="gp-faq-q">My order was rejected. What should I do?</span>
+                  <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
+                </summary>
+                <p>Open the order in My orders and message support from there with your payment details so we can sort it out.</p>
+              </details>
+              <div id="gpFaqMore" hidden>
+                <details class="gp-faq-item">
+                  <summary>
+                    <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+                    <span class="gp-faq-q">How will I receive access, and how long does it take?</span>
+                    <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
+                  </summary>
+                  <p>Access details are delivered after manual payment confirmation, usually the same day. You will be notified when your order is ready.</p>
+                </details>
+                <details class="gp-faq-item">
+                  <summary>
+                    <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+                    <span class="gp-faq-q">Is this my own account or a shared account?</span>
+                    <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
+                  </summary>
+                  <p>It depends on the plan — each plan states whether it is Own Mail or a shared account. Check the plan's account type before ordering.</p>
+                </details>
+                <details class="gp-faq-item">
+                  <summary>
+                    <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
+                    <span class="gp-faq-q">Which payment methods can I use?</span>
+                    <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
+                  </summary>
+                  <p>KBZPay, WavePay, AYA Pay and other local wallets, plus USD, GBP and EUR options. See Payment options for the full list.</p>
+                </details>
+                <details class="gp-faq-item">
+                  <summary>
+                    <span class="gp-faq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                    <span class="gp-faq-q">What if I cannot sign in or my access stops working?</span>
+                    <span class="gp-faq-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span>
+                  </summary>
+                  <p>Message support right away with your order ID — the warranty terms are listed on each plan.</p>
+                </details>
               </div>
-              <button type="button" class="lp-hero-browse" id="lpHeroBrowseBtn">Browse <span>&rarr;</span></button>
             </div>
-          </div>
-
-        </div>
-
-        <div class="lp-headline">
-          <h1 class="lp-wordmark lp-wordmark-hidden">GAMEPAY&nbsp;HUB &mdash; The digital store of</h1>
-          <span class="lp-hot-label"><span class="lp-hot-flame"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2c1 3-3 4-3 8a3 3 0 0 0 6 0c1.5 1 2 3 2 4.5A5.5 5.5 0 0 1 6 14.5C6 9 12 7 12 2Z" fill="url(#flameGrad)"/><defs><linearGradient id="flameGrad" x1="6" y1="2" x2="17" y2="19" gradientUnits="userSpaceOnUse"><stop stop-color="#FFC93C"/><stop offset=".5" stop-color="#FF7A3C"/><stop offset="1" stop-color="#E8384F"/></linearGradient></defs></svg></span>Hot Products</span>
-          <div class="lp-hot" aria-label="Hot products">
-            <div class="lp-hot-track products" id="lpHotTrack"></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="lp-brandstrip" aria-label="How Gamepay Hub works">
-        <div class="lp-strip-brand">
-          <img class="lp-panel-logo" src="data:image/webp;base64,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" alt="Gamepay Hub logo" width="256" height="256">
-          <div><strong>Gamepay Hub</strong><span>Game &amp; Digital Premium Store</span></div>
-        </div>
-
-        <div class="lp-facts">
-          <div class="lp-fact"><b>41</b><span>Products live</span></div>
-          <div class="lp-fact"><b>180+</b><span>Games</span></div>
-          <div class="lp-fact"><b>Same day</b><span>Delivery</span></div>
-          <div class="lp-fact"><b>1,800 Ks</b><span>Plans from</span></div>
-        </div>
-
-        <div class="lp-paybar">
-          <span class="lp-paybar-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Verified &amp; secure payments</span>
-          <div class="lp-paygroup">
-            <span class="lp-brand-label">Pay with</span>
-            <div class="lp-pays">
-              <span class="pay-mark pay-compact kbz" title="KBZPay"><img src="assets/unnamed.png" alt="KBZPay" loading="lazy" decoding="async"></span>
-              <span class="pay-mark pay-compact wave" title="WavePay"><img src="assets/unnamed (1).png" alt="WavePay" loading="lazy" decoding="async"></span>
-              <span class="pay-mark" title="AYA Pay"><img src="assets/unnamed (2).png" alt="AYA Pay" loading="lazy" decoding="async"></span>
-              <span class="pay-mark uab" title="UABPay"><img src="assets/uabpay-black.png" alt="UABPay" loading="lazy" decoding="async"></span>
-              <span class="pay-mark" title="Binance"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjYuNjEgMTI2LjYxIj48cGF0aCBmaWxsPSIjRjNCQTJGIiBkPSJNMzguNzMgNTMuMiA2My4zIDI4LjYzbDI0LjU4IDI0LjU4IDE0LjMxLTE0LjNMNjMuMyAwIDI0LjQyIDM4Ljl6TTAgNjMuM2wxNC4zLTE0LjMxTDI4LjYzIDYzLjNsLTE0LjMxIDE0LjMxem0zOC43MyAxMC4xMUw2My4zIDk3Ljk4bDI0LjU4LTI0LjU4IDE0LjMyIDE0LjI5LS4wMS4wMkw2My4zIDEyNi42MSAyNC40MiA4Ny43MmwtLjAyLS4wMnpNOTguMzUgNjMuM2wxNC4zMS0xNC4zMSAxNC4zMSAxNC4zLTE0LjMxIDE0LjMyek03Ny44MyA2My4yOWguMDJMNjMuMyA0OC43NSA1Mi41NyA1OS40OGgtLjAwMWwtMS4yOSAxLjI4LTIuODcgMi44Ny0uMDEuMDIuMDEuMDJMNjMuMyA3Ny44NGwxNC41My0xNC41My4wMS0uMDF6Ii8+PC9zdmc+" alt="Binance" loading="lazy" decoding="async"></span>
-              <span class="currency-chip-group">
-                <span class="currency-chip" title="US Dollar accepted"><span class="currency-badge usd"><img src="assets/currency-usd.png" alt="US Dollar" loading="lazy" decoding="async"></span><span class="currency-chip-label">US Dollar</span></span>
-                <span class="currency-chip" title="British Pound accepted"><span class="currency-badge gbp"><img src="assets/currency-gbp.jpg" alt="British Pound" loading="lazy" decoding="async"></span><span class="currency-chip-label">British Pound</span></span>
-                <span class="currency-chip" title="Euro accepted"><span class="currency-badge eur"><img src="assets/currency-eur.png" alt="Euro" loading="lazy" decoding="async"></span><span class="currency-chip-label">Euro</span></span>
+            <button class="gp-more" id="gpMoreFaq" type="button">View 4 more questions</button>
+            <div class="gp-study">
+              <span class="gp-study-ico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
               </span>
+              <div><strong>Studying something new?</strong><p>Ask support about selected education offers.</p></div>
             </div>
           </div>
-          <div class="lp-paygroup lp-paygroup-sell">
-            <span class="lp-brand-label">Cards we sell</span>
-            <div class="lp-pays">
-              <span class="pay-mark pay-wide" title="Visa"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3ODAgMjUwIj48cGF0aCBmaWxsPSIjMTQzNENCIiBkPSJNMjkzIDEzIDE5NyAyNDRoLTYzTDg3IDYyYy0zLTExLTUtMTUtMTQtMjBDNTggMzQgMzQgMjcgMTMgMjJsMS05aDEwMWMxMyAwIDI1IDkgMjggMjRsMjUgMTMzTDIyOCAxM3pNNTQzIDE2OWMwLTYxLTg0LTY0LTgzLTkxIDAtOCA4LTE3IDI1LTE5IDgtMSAzMS0yIDU3IDEwbDExLTQ5Yy0xNC01LTMyLTEwLTU0LTEwLTU3IDAtOTcgMzAtOTcgNzQgMCAzMiAyOSA1MCA1MSA2MSAyMiAxMSAzMCAxOCAzMCAyNyAwIDE1LTE4IDIxLTM0IDIyLTI5IDAtNDYtOC01OS0xNGwtMTEgNTFjMTMgNiAzOCAxMSA2MyAxMSA2MSAwIDEwMS0zMCAxMDEtNzd6TTY5NiAyNDRoNTRMNzAzIDEzaC01MGMtMTEgMC0yMSA3LTI1IDE3bC04OCAyMTRoNjFsMTItMzRoNzV6bS02NS04MCAzMS04NSAxOCA4NXpNMzc3IDEzbC00OCAyMzFoLTU4bDQ4LTIzMXoiLz48L3N2Zz4=" alt="Visa" loading="lazy" decoding="async"></span>
-              <span class="pay-mark" title="Mastercard"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTIgMTA4Ij48cmVjdCB4PSI2MCIgeT0iMTIiIHdpZHRoPSIzMiIgaGVpZ2h0PSI4NCIgZmlsbD0iI0ZGNUYwMCIvPjxwYXRoIGQ9Ik02NCA1NGE1MyA1MyAwIDAgMSAyMC00MiA1MyA1MyAwIDEgMCAwIDg0IDUzIDUzIDAgMCAxLTIwLTQyeiIgZmlsbD0iI0VCMDAxQiIvPjxwYXRoIGQ9Ik0xNTIgNTRhNTMgNTMgMCAwIDEtODUgNDIgNTMgNTMgMCAwIDAgMC04NCA1MyA1MyAwIDAgMSA4NSA0MnoiIGZpbGw9IiNGNzlFMUIiLz48L3N2Zz4=" alt="Mastercard" loading="lazy" decoding="async"></span>
-            </div>
-          </div>
-        </div>
-        </div>
-      </section>
+        </section>
 
-      <section class="store-info-section" aria-label="Gamepay Hub information">
-        <div class="store-info-head"><span class="section-kicker">WHY GAMEPAY HUB</span><h2>Simple, trusted, ready when you are.</h2><p>Clear plans, manual payment confirmation, and direct support in one premium digital store.</p></div>
-        <div class="store-info-grid">
-          <article class="store-info-card"><span class="store-info-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12.5V17c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/><path d="M22 10v6"/></svg></span><div><h3>Education support</h3><p>Gamepay Hub supports education and offers selected discounts for students.</p></div></article>
-          <article class="store-info-card"><span class="store-info-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></span><div><h3>Flexible payment</h3><p>Pay with KBZPay, WavePay, AYA Pay, UABPay or Binance. International Visa and Mastercard are sold separately.</p></div></article>
-          <article class="store-info-card"><span class="store-info-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg></span><div><h3>Direct channel</h3><p>Get stock updates, offers, and announcements from our official Telegram channel.</p><a href="https://t.me/gamepaydyet" target="_blank" rel="noopener">Join Telegram channel ↗</a></div></article>
+        <section class="gp-community" aria-label="Community">
+          <span class="gp-tele-ico"><img src="assets/icon-telegram.jpg" alt="Telegram" loading="lazy" decoding="async"></span>
+          <span class="gp-kicker">THE GAMEPAY COMMUNITY</span>
+          <h2>New plans. Fresh updates.</h2>
+          <a class="gp-btn gp-btn-primary" href="https://t.me/gamepaydyet" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <span>Join channel</span>
+            <svg class="gp-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </a>
+        </section>
+      </main>
+
+      <footer class="gp-footer">
+        <div class="gp-foot-grid">
+          <div class="gp-foot-brand">
+            <span class="gp-foot-logo"><img id="gpFootLogo" alt="Gamepay Hub logo" width="56" height="56"></span>
+            <script>document.getElementById("gpFootLogo").src=document.querySelector(".compact-logo").src;</script>
+            <strong>Gamepay Hub</strong>
+            <p>Your game and digital premium store.<br>Clear choices. Direct support.</p>
+            <a class="gp-team" href="https://t.me/angsthtun" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+              <span>Talk to the team</span>
+              <svg class="gp-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </a>
+          </div>
+          <nav class="gp-foot-nav" aria-label="Explore">
+            <span class="gp-foot-head">EXPLORE</span>
+            <button type="button" data-gpnav="store">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <span>Store</span>
+            </button>
+            <button type="button" data-gpnav="orders">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              <span>My orders</span>
+            </button>
+            <button type="button" data-gpnav="news">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+              <span>News</span>
+            </button>
+            <button type="button" data-gpnav="account">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span>My account</span>
+            </button>
+          </nav>
+          <nav class="gp-foot-nav" aria-label="Good to know">
+            <span class="gp-foot-head">GOOD TO KNOW</span>
+            <a href="https://gamepayhub.shop/refund.html" target="_blank" rel="noopener">
+              <span>Refund policy</span>
+              <svg class="gp-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </a>
+            <a href="https://gamepayhub.shop/terms.html" target="_blank" rel="noopener">
+              <span>Terms of service</span>
+              <svg class="gp-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </a>
+            <a href="https://gamepayhub.shop/privacy.html" target="_blank" rel="noopener">
+              <span>Privacy policy</span>
+              <svg class="gp-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </a>
+          </nav>
         </div>
-        <div class="store-faq-wrap"><div class="store-info-head compact"><span class="section-kicker">HELP CENTER</span><h2>Frequently asked questions</h2></div>
-          <details class="store-faq-item"><summary>How do I place an order?</summary><p>Choose a product, select a plan, enter the required account details, choose a payment method, then review the order before sending it through Telegram.</p></details>
-          <details class="store-faq-item"><summary>Can I renew my subscription?</summary><p>Renewal depends on the individual plan. Check the plan note before ordering or contact support for confirmation.</p></details>
-          <details class="store-faq-item"><summary>How do student discounts work?</summary><p>Student offers may apply to selected products and periods. Contact support with your request to check current availability.</p></details>
-          <details class="store-faq-item"><summary>Where can I see new stock and updates?</summary><p>Join the official Telegram channel for new stock, offers, and service announcements.</p></details>
-          <details class="store-faq-item"><summary>My order was rejected — how do I get a refund?</summary><p>Go to Noti, open the order's message, and message our Admin directly from there. Attach a screenshot of the rejected order along with your payment slip, and include the payment method name and phone number you'd like the refund sent to.</p></details>
+        <p class="gp-legal">&copy; 2026 Gamepay Hub. Prices and availability may change &mdash; please confirm before purchase.</p>
+      </footer>
+
+      <nav class="gp-bottomnav" aria-label="Mobile navigation">
+        <button type="button" data-gpnav="store" class="is-active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Store</span>
+        </button>
+        <button type="button" data-gpnav="orders">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span>Orders</span>
+        </button>
+        <button type="button" data-gpnav="news">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+          <span>News</span>
+        </button>
+        <button type="button" data-gpnav="account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Account</span>
+        </button>
+      </nav>
+
+      <div class="gp-dialog-backdrop" id="gpDialogBackdrop" hidden>
+        <div class="gp-dialog" role="dialog" aria-modal="true" aria-labelledby="gpDialogTitle">
+          <button class="gp-dialog-close" id="gpDialogClose" type="button" aria-label="Close dialog">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <h3 id="gpDialogTitle"></h3>
+          <div class="gp-dialog-body" id="gpDialogBody"></div>
         </div>
-      </section>
+      </div>
     </div><!-- /landingShell -->
+
 
     <div id="catalogShell" class="catalog-shell hidden">
       <div class="catalog-discount-section hidden" id="catalogDiscountSection">
@@ -2905,6 +3054,7 @@ function showProductsPage(){
     landingShell.classList.add("hidden");
     catalogShell.classList.remove("hidden");
     document.body.classList.add("products-mode");
+    document.body.classList.remove("lp-mode");
     window.scrollTo(0, 0);
     hidePageLoader();
   }, 430);
@@ -2915,6 +3065,7 @@ function showLandingPage(){
   catalogShell.classList.add("hidden");
   landingShell.classList.remove("hidden");
   document.body.classList.remove("products-mode");
+  document.body.classList.add("lp-mode");
   window.scrollTo(0, 0);
 }
 // Tapping the header logo/wordmark should always land on the main page,
@@ -2972,6 +3123,260 @@ document.getElementById("lpHeroBrowseBtn")?.addEventListener("click", (e) => {
   showProductsPage();
 });
 document.getElementById("backToLandingBtn")?.addEventListener("click", showLandingPage);
+
+/* =====================================================================
+ Figma "User-greeting" main page -- landing logic.
+ Renders the REAL product catalog into the Figma card design; every
+ navigation reuses the existing views (products page, orders, news,
+ account) so those flows are untouched.
+ ===================================================================== */
+/* Figma landing guard -- the elements below only exist in the landing markup. */
+let gpRenderCarousel = null; // set when the landing markup exists
+if(document.getElementById("gpCarousel")){
+const carousel = document.getElementById("gpCarousel");
+
+/* ---- Category mapping: Figma tab labels -> real catalog categories ---- */
+const GP_CAT_GROUPS = {
+  "All": null,
+  "AI tools": ["AI"],
+  "Entertainment": ["Music", "Video", "Streaming", "Social"],
+  "Learning & design": ["Editing", "Services", "VPN", "Visacard"],
+};
+let gpActiveCat = "All";
+
+/* ---- Card band pastels, extending the Figma palette by category ---- */
+const GP_BAND = {
+  "AI":          ["#e6f5ee", "#c8e8db"],
+  "Streaming":   ["#ffedf0", "#ffd5df"],
+  "Music":       ["#ffedf0", "#ffd5df"],
+  "Video":       ["#ffedf0", "#ffd5df"],
+  "Social":      ["#ffedf0", "#ffd5df"],
+  "Editing":     ["#e2f7fd", "#bde8f4"],
+  "Services":    ["#eee7ff", "#d9caff"],
+  "VPN":         ["#e8eaf6", "#c5cae9"],
+  "Visacard":    ["#fff8e1", "#ffecb3"],
+};
+const GP_CAT_ICON = {
+  "AI tools": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>',
+  "Entertainment": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>',
+  "Learning & design": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+};
+function gpCatLabel(category){
+  if(category === "AI") return "AI tools";
+  if(["Music", "Video", "Streaming", "Social"].includes(category)) return "Entertainment";
+  return "Learning & design";
+}
+
+function gpFiltered(){
+  const group = GP_CAT_GROUPS[gpActiveCat];
+  return products.filter(p => !p.isGuide && (!group || group.includes(p.category)));
+}
+
+function gpCardHtml(product){
+  const cheapest = getCheapestPlan(product);
+  const price = cheapest ? Number(cheapest.price) : 0;
+  const discountPct = cheapest?.discountPercent || 0;
+  const original = cheapest?.originalPrice;
+  const band = GP_BAND[product.category] || ["#f2ebfc", "#d8c4f0"];
+  const catLabel = gpCatLabel(product.category);
+  const priceNum = price > 0 ? formatKs(price).replace(/\s*Ks$/, "") : "";
+  return `
+  <article class="gp-card" data-id="${product.id}">
+    <div class="gp-card-band" style="background:${band[0]};border-color:${band[1]}">
+      <span class="gp-card-logo">${renderIcon(product)}</span>
+      ${discountPct ? `<span class="gp-card-save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>Save ${discountPct}%</span>` : ""}
+    </div>
+    <div class="gp-card-body">
+      <span class="gp-card-cat">${GP_CAT_ICON[catLabel] || ""}${catLabel}</span>
+      <h3 class="gp-card-name">${product.name}</h3>
+      <span class="gp-card-from">From${discountPct && original ? `<s>${formatKs(original)}</s>` : ""}</span>
+      <span class="gp-card-price">${priceNum ? `${priceNum}<small>Ks</small>` : `<small>Ask us</small>`}</span>
+    </div>
+    <button class="gp-card-btn" type="button" data-gp-view-plans="${product.id}" aria-label="View ${product.name} plans">
+      <span>View plans</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+  </article>`;
+}
+
+function renderGpCarousel(){
+  const list = gpFiltered();
+  carousel.innerHTML = list.length
+    ? list.map(gpCardHtml).join("")
+    : `<div class="gp-empty">No products in this category yet.</div>`;
+  document.getElementById("gpCount").textContent = list.length;
+  document.getElementById("gpFound").textContent = `${list.length} products found`;
+  carousel.querySelectorAll("[data-gp-view-plans]").forEach(btn => {
+    btn.addEventListener("click", () => showProductsPage());
+  });
+}
+
+gpRenderCarousel = renderGpCarousel;
+
+/* ---- Tabs ---- */
+document.getElementById("gpTabs")?.addEventListener("click", (e) => {
+  const tab = e.target.closest(".gp-tab");
+  if(!tab) return;
+  gpActiveCat = tab.dataset.cat;
+  document.querySelectorAll("#gpTabs .gp-tab").forEach(t => {
+    const on = t === tab;
+    t.classList.toggle("is-active", on);
+    t.setAttribute("aria-selected", on ? "true" : "false");
+  });
+  renderGpCarousel();
+});
+
+/* ---- Carousel controls + autoplay ---- */
+const prevBtn = document.getElementById("gpPrev");
+const nextBtn = document.getElementById("gpNext");
+const pauseBtn = document.getElementById("gpPause");
+let gpPaused = false;
+let gpTimer = null;
+function gpStep(dir){
+  const card = carousel.querySelector(".gp-card");
+  const step = card ? card.offsetWidth + 12 : 200;
+  carousel.scrollBy({ left: dir * step * 2, behavior: "smooth" });
+}
+prevBtn?.addEventListener("click", () => gpStep(-1));
+nextBtn?.addEventListener("click", () => gpStep(1));
+function gpAutoplay(){
+  clearInterval(gpTimer);
+  if(gpPaused) return;
+  gpTimer = setInterval(() => {
+    if(carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 8){
+      carousel.scrollTo({ left: 0, behavior: "smooth" });
+    } else {
+      gpStep(1);
+    }
+  }, 4000);
+}
+pauseBtn?.addEventListener("click", () => {
+  gpPaused = !gpPaused;
+  pauseBtn.setAttribute("aria-pressed", gpPaused ? "true" : "false");
+  pauseBtn.setAttribute("aria-label", gpPaused ? "Resume product motion" : "Pause product motion");
+  gpAutoplay();
+});
+
+/* ---- Hero banner rotation ---- */
+const slides = [...document.querySelectorAll("#gpBanner .gp-slide")];
+if(slides.length > 1){
+  let bi = 0;
+  setInterval(() => {
+    bi = (bi + 1) % slides.length;
+    slides.forEach((s, n) => s.classList.toggle("is-active", n === bi));
+  }, 6000);
+}
+
+/* ---- Scroll progress ---- */
+const progress = document.getElementById("gpProgress");
+function gpScroll(){
+  const h = document.documentElement;
+  const max = h.scrollHeight - h.clientHeight;
+  progress.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+}
+window.addEventListener("scroll", gpScroll, { passive: true });
+gpScroll();
+
+/* ---- Dialog ---- */
+const backdrop = document.getElementById("gpDialogBackdrop");
+const dlgTitle = document.getElementById("gpDialogTitle");
+const dlgBody = document.getElementById("gpDialogBody");
+function gpOpenDialog(title, bodyHtml){
+  dlgTitle.textContent = title;
+  dlgBody.innerHTML = bodyHtml;
+  backdrop.hidden = false;
+  document.body.style.overflow = "hidden";
+}
+function gpCloseDialog(){
+  backdrop.hidden = true;
+  document.body.style.overflow = "";
+}
+document.getElementById("gpDialogClose")?.addEventListener("click", gpCloseDialog);
+backdrop?.addEventListener("click", (e) => { if(e.target === backdrop) gpCloseDialog(); });
+document.addEventListener("keydown", (e) => { if(e.key === "Escape" && !backdrop.hidden) gpCloseDialog(); });
+
+const TG_SUPPORT = "https://t.me/angsthtun";
+const TG_CHANNEL = "https://t.me/gamepaydyet";
+const linkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>';
+const payRows = `
+  <div class="gp-pay-methods">
+    <div class="gp-pay-row"><img src="assets/unnamed.png" alt="KBZPay" loading="lazy"><div><strong>KBZPay</strong><small>Local wallet</small></div></div>
+    <div class="gp-pay-row"><img src="assets/unnamed (1).png" alt="WavePay" loading="lazy"><div><strong>WavePay</strong><small>Local wallet</small></div></div>
+    <div class="gp-pay-row"><img src="assets/unnamed (2).png" alt="AYA Pay" loading="lazy"><div><strong>AYA Pay</strong><small>Local wallet</small></div></div>
+    <div class="gp-pay-row"><img src="assets/uabpay-black.png" alt="UABPay" loading="lazy"><div><strong>UABPay</strong><small>Local wallet</small></div></div>
+    <div class="gp-pay-row"><img src="assets/currency-usd.png" alt="USD" loading="lazy"><div><strong>USD / GBP / EUR</strong><small>Other currencies accepted</small></div></div>
+  </div>`;
+
+document.getElementById("gpHelpBtn")?.addEventListener("click", () => gpOpenDialog(
+  "Help",
+  `<p>Choose a shortcut. For plan advice or payment questions, contact our support team.</p>
+   <div class="gp-dialog-links">
+     <a href="${TG_SUPPORT}" target="_blank" rel="noopener">${linkIcon}<span>Telegram support</span></a>
+     <button type="button" data-gp-dialog-nav="orders">${linkIcon}<span>Check my orders</span></button>
+     <a href="${TG_CHANNEL}" target="_blank" rel="noopener">${linkIcon}<span>Join channel</span></a>
+   </div>`
+));
+document.getElementById("gpFlexPay")?.addEventListener("click", () => gpOpenDialog(
+  "Flexible payments",
+  `<p>Pay the way that suits you — local wallets and other currencies are all accepted. Your order is confirmed manually after you submit your payment details.</p>${payRows}`
+));
+document.getElementById("gpCustSupport")?.addEventListener("click", () => gpOpenDialog(
+  "Customer support",
+  `<p>Questions about a plan or an order? Message us any time — we usually reply the same day.</p>
+   <div class="gp-dialog-links">
+     <a href="${TG_SUPPORT}" target="_blank" rel="noopener">${linkIcon}<span>Telegram support</span></a>
+     <a href="${TG_CHANNEL}" target="_blank" rel="noopener">${linkIcon}<span>Join channel</span></a>
+   </div>`
+));
+document.getElementById("gpPayStrip")?.addEventListener("click", () => gpOpenDialog(
+  "Payment options",
+  `<p>Local wallets &amp; other currencies — pick what works for you at checkout.</p>${payRows}`
+));
+dlgBody.addEventListener("click", (e) => {
+  const nav = e.target.closest("[data-gp-dialog-nav]");
+  if(nav){
+    gpCloseDialog();
+    if(nav.dataset.gpDialogNav === "orders") openMyOrdersView();
+  }
+});
+
+/* ---- Hero buttons ---- */
+document.getElementById("gpProductsBtn")?.addEventListener("click", () => {
+  document.getElementById("gpProducts")?.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+document.getElementById("gpNewsBtn")?.addEventListener("click", () => openNewsFeed());
+document.getElementById("gpSupportBtn")?.addEventListener("click", () => window.open(TG_SUPPORT, "_blank", "noopener"));
+document.getElementById("gpOrdersBtn")?.addEventListener("click", () => openMyOrdersView());
+document.getElementById("gpOrderTrack")?.addEventListener("click", () => openMyOrdersView());
+document.getElementById("gpAccountBtn")?.addEventListener("click", () => openAccountView());
+document.getElementById("gpBrandHome")?.addEventListener("click", () => goToMainPage());
+
+/* ---- Shared nav (header, footer, mobile bottom nav) ---- */
+document.querySelectorAll("[data-gpnav]").forEach(el => {
+  el.addEventListener("click", () => {
+    const dest = el.dataset.gpnav;
+    document.querySelectorAll(".gp-nav-link.is-active, .gp-bottomnav button.is-active").forEach(b => b.classList.remove("is-active"));
+    document.querySelectorAll(`[data-gpnav="${dest}"]`).forEach(b => b.classList.add("is-active"));
+    if(dest === "store") goToMainPage();
+    else if(dest === "orders") openMyOrdersView();
+    else if(dest === "news") openNewsFeed();
+    else if(dest === "account") openAccountView();
+  });
+});
+
+/* ---- FAQ: view more toggle ---- */
+const moreBtn = document.getElementById("gpMoreFaq");
+const moreWrap = document.getElementById("gpFaqMore");
+moreBtn?.addEventListener("click", () => {
+  const hidden = moreWrap.hidden;
+  moreWrap.hidden = !hidden;
+  moreBtn.textContent = hidden ? "Show fewer questions" : "View 4 more questions";
+});
+
+/* ---- Initial render ---- */
+renderGpCarousel();
+gpAutoplay();
+}
 
 // Tapping a card in the hero's Hot Products strip jumps straight into that
 // product's plan screen, the same place "Buy now" on the catalog grid goes --
@@ -3338,6 +3743,7 @@ if(document.readyState === "loading"){
         applyStockOverrides(data);
         renderProducts();
         renderHotProducts();
+        if(typeof gpRenderCarousel === "function") gpRenderCarousel();
         renderCatalogDiscounts();
         if(currentProduct) renderOrder();
       }catch(err){
@@ -3367,6 +3773,7 @@ if(document.readyState === "loading"){
         applyProductOverrides(data);
         renderProducts();
         renderHotProducts();
+        if(typeof gpRenderCarousel === "function") gpRenderCarousel();
         renderCatalogDiscounts();
       }catch(err){
         console.error("Product override fetch failed:", err);
@@ -5386,6 +5793,7 @@ async function openMyOrdersView(){
   landingShell.classList.add("hidden");
   catalogShell.classList.remove("hidden");
   document.body.classList.add("products-mode");
+  document.body.classList.remove("lp-mode");
   document.body.classList.add("order-mode", "hub-page-mode");
   document.body.classList.remove("preview-mode", "dashboard-mode");
   document.documentElement.classList.remove("dashboard-mode");
@@ -5996,6 +6404,7 @@ async function openNoticeView(){
   landingShell.classList.add("hidden");
   catalogShell.classList.remove("hidden");
   document.body.classList.add("products-mode");
+  document.body.classList.remove("lp-mode");
   document.body.classList.add("order-mode", "hub-page-mode");
   document.body.classList.remove("preview-mode", "dashboard-mode");
   document.documentElement.classList.remove("dashboard-mode");
@@ -6138,6 +6547,7 @@ function openAccountView(){
   landingShell.classList.add("hidden");
   catalogShell.classList.remove("hidden");
   document.body.classList.add("products-mode", "order-mode", "hub-page-mode", "account-mode");
+  document.body.classList.remove("lp-mode");
   document.body.classList.remove("preview-mode", "dashboard-mode");
   document.documentElement.classList.remove("dashboard-mode");
   hideAllOrderSubviews();
@@ -6661,6 +7071,7 @@ orderBtn.addEventListener("click", submitOrder);
 renderCategories();
 renderProducts();
 renderHotProducts();
+if(typeof gpRenderCarousel === "function") gpRenderCarousel();
 renderCatalogDiscounts();
 renderPayments();
 loadStockOverrides();
