@@ -3764,16 +3764,34 @@ if(document.readyState === "loading"){
         .trim()
         .toLowerCase();
     }
+    // Strips trailing price suffix ("– 27000 Ks", "– 400") and dangling
+    // separators ("–") so admin rows saved without (or with a different)
+    // price still match the catalog. Also normalizes common abbreviations.
+    function stripPriceSuffix(s){
+      return String(s || "")
+        .replace(/[–—-]\s*\d[\d,]*\s*(ks)?\s*$/i, "")
+        .replace(/\s*[–—-]\s*$/, "")
+        .replace(/\b1\s*m\b/i, "1 month")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
     // Product id and plan name are normalized separately, then joined --
     // stripping an emoji prefix ("CGPT GO...") leaves a leading space
     // that trim() must eat per-part, not just at the whole string's ends.
     function normPlanKey(productId, planName){
       return normKeyStr(productId) + "::" + normKeyStr(planName);
     }
+    function normPlanKeyNoPrice(productId, planName){
+      return normKeyStr(productId) + "::" + normKeyStr(stripPriceSuffix(planName));
+    }
     function applyStockOverrides(rows){
       if(!rows || !rows.length) return;
       const byKey = new Map();
-      rows.forEach(r => byKey.set(normPlanKey(r.product_id, r.plan_name), r));
+      const byKeyNoPrice = new Map();
+      rows.forEach(r => {
+        byKey.set(normPlanKey(r.product_id, r.plan_name), r);
+        byKeyNoPrice.set(normPlanKeyNoPrice(r.product_id, r.plan_name), r);
+      });
       products.forEach(product => {
         product.plans.forEach(plan => {
           // Same idea as _catalogPrice below -- the lookup key must stay
@@ -3781,7 +3799,8 @@ if(document.readyState === "loading"){
           // plan.name to embed the new price, or a second apply (a
           // realtime refresh, say) would silently miss this plan's row.
           if(plan._catalogName == null) plan._catalogName = plan.name;
-          const row = byKey.get(normPlanKey(product.id, plan._catalogName));
+          const row = byKey.get(normPlanKey(product.id, plan._catalogName))
+            || byKeyNoPrice.get(normPlanKeyNoPrice(product.id, plan._catalogName));
           if(!row) return;
           // Captured once, before any override/discount math touches
           // plan.price -- re-applying overrides (e.g. a second data load)
