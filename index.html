@@ -921,7 +921,7 @@
       <div class="acct-screen">
         <div class="acct-col">
           <header class="acct-appbar">
-            <div class="acct-appbar-brand"><span class="acct-appbar-plus">+</span><span class="acct-appbar-word">gamepay.</span></div>
+            <div class="acct-appbar-brand"><img class="acct-brand-logo" id="acctBrandLogo" alt="Gamepay Hub"><span class="acct-appbar-word">gamepay.</span></div>
             <div class="acct-appbar-actions">
               <button type="button" class="acct-icon-btn" id="acctBellBtn" aria-label="Notifications">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
@@ -1025,35 +1025,69 @@
     </div>
 
 
-    <div id="securityView" class="hidden order-status-view">
-      <div class="preview-shell">
-        <div class="dashboard-head"><button id="securityBackBtn" class="dashboard-back-btn" type="button">← Back to Account</button><span class="dashboard-chip">SECURITY</span></div>
-        <div class="acct-list" style="margin-top:12px;">
-          <div class="acct-row acct-row-btn" id="securityUsernameRow">
-            <span class="acct-row-icon acct-row-icon-text">@</span>
-            <div class="acct-row-body"><div class="acct-row-label">USERNAME</div><div class="acct-row-value" id="securityUsernameValue">—</div></div>
-            <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
-          </div>
-          <div class="acct-row acct-row-btn" id="securityEmailRow">
-            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span>
-            <div class="acct-row-body"><div class="acct-row-label">EMAIL</div><div class="acct-row-value" id="securityEmailValue">—</div></div>
-            <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
-          </div>
-          <div class="acct-row acct-row-btn" id="securityTelegramRow">
-            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></span>
-            <div class="acct-row-body"><div class="acct-row-label">TELEGRAM ACCOUNT</div><div class="acct-row-value" id="securityTelegramValue">Not linked</div></div>
-            <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
-          </div>
-          <div class="acct-row acct-row-btn" id="securityPasswordRow">
-            <span class="acct-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span>
-            <div class="acct-row-body"><div class="acct-row-value">Change password</div></div>
-            <span class="acct-row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
-          </div>
+        <div id="securityView" class="hidden order-status-view">
+      <div class="acct-screen">
+        <div class="acct-col">
+          <header class="acct-appbar sec-appbar">
+            <div class="acct-appbar-brand"><img class="acct-brand-logo" id="secBrandLogo" alt="Gamepay Hub"><span class="acct-appbar-word">gamepay.</span></div>
+            <div class="acct-appbar-actions">
+              <button type="button" class="acct-icon-btn" id="secBellBtn" aria-label="Notifications">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+              </button>
+              <button type="button" class="acct-appbar-avatar" id="secHeaderAvatar" aria-label="My account">M</button>
+            </div>
+          </header>
+
+          <div><button type="button" class="sec-back-pill" id="securityBackBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>Back to account</button></div>
+
+          <section class="sec-card">
+            <div class="sec-card-head"><span class="sec-head-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span>Account security</div>
+            <button type="button" class="sec-row" id="securityUsernameRow">
+              <span class="sec-row-icon tint-purple">@</span>
+              <span class="sec-row-body"><span class="sec-row-label">Username</span><span class="sec-row-value" id="securityUsernameValue">—</span></span>
+              <span class="sec-row-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+            </button>
+            <button type="button" class="sec-row" id="securityEmailRow">
+              <span class="sec-row-icon tint-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 7L22 7"/></svg></span>
+              <span class="sec-row-body"><span class="sec-row-label">Email address</span><span class="sec-row-value" id="securityEmailValue">—</span></span>
+              <span class="sec-row-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+            </button>
+            <button type="button" class="sec-row" id="securityTelegramRow">
+              <span class="sec-row-icon tint-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></span>
+              <span class="sec-row-body"><span class="sec-row-label">Telegram account</span><span class="sec-row-value dim" id="securityTelegramValue">Not linked</span></span>
+              <span class="sec-row-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+            </button>
+            <button type="button" class="sec-row" id="securityPasswordRow">
+              <span class="sec-row-icon tint-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></span>
+              <span class="sec-row-body"><span class="sec-row-value">Change password</span></span>
+              <span class="sec-row-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+            </button>
+          </section>
+
+          <section class="sec-card">
+            <div class="sec-support-head"><span class="sec-row-icon tint-grey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2" y="14" width="5" height="7" rx="2"/><rect x="17" y="14" width="5" height="7" rx="2"/></svg></span>Contact support</div>
+            <div class="sec-support-btns">
+              <a class="sec-support-btn wa" href="https://wa.me/qr/PMHPHBAS33UHB1" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>WhatsApp</a>
+              <a class="sec-support-btn tg" href="https://t.me/angsthtun" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>Telegram</a>
+            </div>
+          </section>
+
+          <div class="sec-notice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Never share your password or verification codes, even with support.</span></div>
+
+          <p class="sec-foot">Security preview · Username edits stay in this browser<br>Email, Telegram, and password changes require a live account connection.</p>
+
+          <nav class="acct-tabbar" aria-label="Primary">
+            <div class="acct-tabbar-inner">
+              <button type="button" class="acct-tab" id="secTabStore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/></svg>Store</button>
+              <button type="button" class="acct-tab" id="secTabOrders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>Orders</button>
+              <button type="button" class="acct-tab active" id="secTabAccount" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account</button>
+            </div>
+          </nav>
         </div>
       </div>
     </div>
 
-    <div id="inviteFriendsView" class="hidden order-status-view">
+<div id="inviteFriendsView" class="hidden order-status-view">
       <div class="preview-shell">
         <div class="dashboard-head"><button id="inviteFriendsBackBtn" class="dashboard-back-btn" type="button">← Back to Account</button><span class="dashboard-chip">INVITE FRIENDS</span></div>
         <div class="invite-hero">
@@ -6109,6 +6143,9 @@ function openAccountView(){
   document.documentElement.classList.remove("dashboard-mode");
   hideAllOrderSubviews();
   document.getElementById("accountView").classList.remove("hidden");
+  // Appbar brand shows the real Gamepay Hub logo (replaces the "+" placeholder).
+  const acctLogo = document.getElementById("acctBrandLogo");
+  if(acctLogo){ const src = (typeof siteLogoSrc === "function") ? siteLogoSrc() : ""; if(src) acctLogo.src = src; }
   skeletonTransition(catalogView, orderView, () => {
     refreshAccountFields();
     loadAccountStats();
@@ -6266,6 +6303,11 @@ function openSecurityView(){
   document.getElementById("securityUsernameValue").textContent = "@" + getUsername();
   document.getElementById("securityEmailValue").textContent = maskEmail(currentUser.email);
   refreshSecurityTelegramRow();
+  // Figma security header: real logo + user initial in the avatar.
+  const secLogo = document.getElementById("secBrandLogo");
+  if(secLogo){ const src = (typeof siteLogoSrc === "function") ? siteLogoSrc() : ""; if(src) secLogo.src = src; }
+  const secAv = document.getElementById("secHeaderAvatar");
+  if(secAv) secAv.textContent = getDisplayName()[0]?.toUpperCase() || "?";
   skeletonTransition(document.getElementById("accountView"), document.getElementById("securityView"));
 }
 document.getElementById("openSecurityMenuBtn")?.addEventListener("click", openSecurityView);
@@ -6273,6 +6315,25 @@ document.getElementById("securityBackBtn")?.addEventListener("click", () => {
   document.getElementById("securityView").classList.add("hidden");
   document.getElementById("accountView").classList.remove("hidden");
   window.scrollTo(0, 0);
+});
+/* Figma security page header + tab bar (mirrors the account page behavior). */
+document.getElementById("secBellBtn")?.addEventListener("click", () => {
+  document.getElementById("notiBtn")?.click();
+});
+document.getElementById("secHeaderAvatar")?.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+document.getElementById("secTabStore")?.addEventListener("click", () => {
+  document.getElementById("securityView").classList.add("hidden");
+  exitAccountView();
+});
+document.getElementById("secTabOrders")?.addEventListener("click", () => {
+  document.getElementById("securityView").classList.add("hidden");
+  document.body.classList.remove("account-mode");
+  openMyOrdersView();
+});
+document.getElementById("secTabAccount")?.addEventListener("click", () => {
+  document.getElementById("securityBackBtn")?.click();
 });
 document.getElementById("securityUsernameRow")?.addEventListener("click", () => openEditNameModal("username"));
 document.getElementById("securityPasswordRow")?.addEventListener("click", openPwModal);
@@ -6293,6 +6354,7 @@ async function refreshSecurityTelegramRow(){
   if(!valueEl) return;
   const link = await getMyTelegramLink();
   valueEl.textContent = !link ? "Not linked" : (link.status === "pending" ? "Pending verification" : "@" + link.telegram_username);
+  valueEl.classList.toggle("dim", !link || link.status === "pending");
 }
 
 function renderTelegramLinkBody(link){
