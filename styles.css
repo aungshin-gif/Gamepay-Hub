@@ -8479,10 +8479,12 @@ body.light-mode .gp-bottomnav button.is-active{
   transform-origin:center top;
   transition:opacity .7s ease-out, transform .7s cubic-bezier(.16,.8,.24,1);
   will-change:opacity, transform;
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
 }
 .gp-reveal.is-visible{
   opacity:1;
   transform:translateY(0) perspective(1000px) rotateX(0deg) scale(1);
+  will-change:auto;
 }
 /* stagger siblings */
 .gp-reveal[data-gp-delay="1"]{ transition-delay:.1s; }
@@ -8619,9 +8621,14 @@ body.light-mode .gp-bottomnav button.is-active{
 }
 .gp-slide.is-active{ opacity:1; }
 .gp-hero-actions{
-  display:flex; justify-content:center; flex-wrap:wrap; gap:8px;
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;
   padding:14px 16px;
   border-top:1px solid #eee8f6; background:#faf7ff;
+}
+.gp-hero-actions .gp-btn{ justify-content:center; padding:11px 8px; font-size:11.5px; white-space:nowrap; }
+@media (min-width:560px){
+  .gp-hero-actions{ display:flex; justify-content:center; flex-wrap:wrap; }
+  .gp-hero-actions .gp-btn{ padding:11px 18px; font-size:12px; }
 }
 .gp-btn{
   display:inline-flex; align-items:center; gap:8px;
@@ -8737,8 +8744,8 @@ body.light-mode .gp-bottomnav button.is-active{
   animation-play-state:paused;
 }
 @keyframes gp-marquee{
-  from{ transform:translateX(0); }
-  to{ transform:translateX(-50%); }
+  from{ transform:translate3d(0,0,0); }
+  to{ transform:translate3d(-50%,0,0); }
 }
 @media (prefers-reduced-motion:reduce){
   .gp-marquee-track{ animation:none; }
@@ -9026,7 +9033,7 @@ body.light-mode .gp-bottomnav button.is-active{
 /* hidden questions pop in with a bouncy stagger */
 #gpFaqMore .gp-faq-item{ opacity:0; }
 #gpFaqMore.show .gp-faq-item{
-  animation:gp-faq-pop .55s cubic-bezier(.34,1.56,.64,1) backwards;
+  animation:gp-faq-pop .55s cubic-bezier(.34,1.56,.64,1) both;
 }
 #gpFaqMore.show .gp-faq-item:nth-child(2){ animation-delay:.09s; }
 #gpFaqMore.show .gp-faq-item:nth-child(3){ animation-delay:.18s; }
@@ -9056,17 +9063,26 @@ body.light-mode .gp-bottomnav button.is-active{
 /* Community */
 .gp-community{
   background:#f2ebfc; border:1px solid #d8c4f0; border-radius:16px;
-  padding:28px 24px; text-align:center;
-  display:flex; flex-direction:column; align-items:center; gap:8px;
+  padding:18px 20px;
+  display:flex; align-items:center; gap:14px; text-align:left;
 }
-.gp-tele-ico{
-  width:52px; height:52px; border-radius:16px; overflow:hidden;
+.gp-comm-logo{
+  width:48px; height:48px; border-radius:14px; overflow:hidden; flex:none;
   background:#fff; box-shadow:0 4px 12px #6231c822;
 }
-.gp-tele-ico img{ width:100%; height:100%; object-fit:cover; }
-.gp-community .gp-kicker{ font-size:11px; }
-.gp-community h2{ margin:0; font-size:18px; font-weight:700; color:#342044; }
-.gp-community .gp-btn{ margin-top:8px; font-size:13px; padding:13px 22px; }
+.gp-comm-logo img{ width:100%; height:100%; object-fit:cover; }
+.gp-comm-copy{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.gp-community .gp-kicker{ font-size:10px; }
+.gp-community h2{ margin:0; font-size:16px; font-weight:700; color:#342044; }
+.gp-comm-copy p{ margin:0; font-size:12px; color:#6b5a80; }
+.gp-comm-btn{ flex:none; font-size:13px; padding:11px 18px; }
+@media (max-width:420px){
+  .gp-community{ gap:10px; padding:14px 14px; }
+  .gp-comm-logo{ width:40px; height:40px; border-radius:12px; }
+  .gp-community h2{ font-size:14px; }
+  .gp-comm-copy p{ font-size:11px; }
+  .gp-comm-btn{ padding:10px 14px; font-size:12px; }
+}
 
 /* Footer */
 .gp-footer{
