@@ -9501,6 +9501,52 @@ body.light-mode .gp-bottomnav button.is-active{
   .plan-discount-sticker{ font-size:9px !important; padding:3px 8px !important; top:-9px !important; left:7px !important; }
 }
 
+/* ===== Figma plans header: product box above categories ===== */
+.plans-header{ margin:6px 0 12px; }
+.plans-eyebrow{
+  font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+  color:#8b6fb0; margin-bottom:4px;
+}
+.plans-title{
+  font-family:'Sora','Noto Sans Myanmar',sans-serif;
+  font-size:24px; font-weight:700; color:#2d1b42; margin:0 0 4px 0; line-height:1.2;
+}
+.plans-sub{ font-size:13px; color:#8a7a99; margin:0; }
+.plans-product-box{
+  display:flex; align-items:center; gap:12px;
+  background:#ffffff; border:1px solid #e8e2f2; border-radius:14px;
+  padding:12px 14px; margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(80,50,120,0.05);
+}
+.ppb-logo{
+  width:44px; height:44px; border-radius:12px; flex-shrink:0;
+  border:1px solid #e7dfee; background:#faf8ff;
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+  font-size:22px;
+}
+.ppb-logo img{ width:34px; height:34px; object-fit:contain; }
+.ppb-info{ flex:1; min-width:0; }
+.ppb-name{
+  font-family:'Sora','Noto Sans Myanmar',sans-serif;
+  font-size:16px; font-weight:700; color:#2d1b42; line-height:1.3;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.ppb-meta{ font-size:12px; color:#8a7a99; margin-top:2px; }
+.ppb-close{
+  width:32px; height:32px; border-radius:50%; flex-shrink:0;
+  border:1px solid #e8e2f2; background:#faf8ff; color:#8a7a99;
+  font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:background .15s ease;
+}
+.ppb-close:hover{ background:#f0e8f8; color:#5b426c; }
+@media (max-width:640px){
+  .plans-title{ font-size:20px !important; }
+  .plans-product-box{ padding:10px 12px !important; gap:10px !important; }
+  .ppb-logo{ width:38px !important; height:38px !important; }
+  .ppb-logo img{ width:28px !important; height:28px !important; }
+  .ppb-name{ font-size:14px !important; }
+}
+
 /* ===== Figma filter tabs: segmented control with sliding indicator ===== */
 .plan-filters.figma-tabs{
   position:relative;
