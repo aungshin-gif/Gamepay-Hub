@@ -9428,6 +9428,27 @@ body.light-mode .gp-bottomnav button.is-active{
 }
 .plan-option.figma-card.out-stock .plan-card-price{ color:#9a8ba5; }
 
+/* Compact rectangle card: meta row (account • duration) + inline prices */
+.plan-card-meta{
+  display:flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:600; line-height:18px; color:#6b5a7d;
+  margin:6px 0; white-space:nowrap; overflow:hidden;
+}
+.plan-card-meta .plan-icon-chip{ width:18px; height:18px; border-radius:5px; flex-shrink:0; }
+.plan-card-meta .plan-icon-chip svg{ width:10px; height:10px; }
+.plan-meta-sep{ color:#c9b8d9; font-size:10px; flex-shrink:0; }
+.plan-card-prices{
+  display:flex; align-items:baseline; gap:6px; flex-wrap:wrap;
+  border-top:1px solid #eee6f4; padding-top:6px; margin-top:6px;
+}
+.plan-card-prices .plan-card-price-original{ font-size:10px; line-height:14px; }
+.plan-card-prices .plan-card-price{ font-size:19px; line-height:24px; }
+@media (max-width:640px){
+  .plan-card-meta{ font-size:10px !important; line-height:16px !important; margin:5px 0 !important; gap:4px !important; }
+  .plan-card-prices{ padding-top:5px !important; margin-top:5px !important; gap:5px !important; }
+  .plan-card-prices .plan-card-price{ font-size:17px !important; line-height:22px !important; }
+}
+
 /* Figma cards inside #orderView: restore Figma tokens over legacy
    #orderView .plan-option rules (higher specificity). Without this the
    cards render with mixed old/new styles (wrong font, padding, radius,
