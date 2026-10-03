@@ -9285,6 +9285,12 @@ body.light-mode .gp-bottomnav button.is-active{
 .plan-tier-badge[data-tier="plus"]{ border-color:#bcd6f7; background:#e0efff; color:#2a64a8; }
 .plan-tier-badge[data-tier="pro"],
 .plan-tier-badge[data-tier="proplus"]{ border-color:#d3bcf3; background:#ece0ff; color:#7146a8; }
+/* Figma: PRO 5X = lavender, PRO 20X = pink */
+.plan-tier-badge[data-tier="pro5x"]{ border-color:#d3bcf3; background:#ece0ff; color:#7146a8; }
+.plan-tier-badge[data-tier="pro20x"]{ border-color:#f2bcd8; background:#ffe0ef; color:#a13c78; }
+/* Fallbacks: every data tier must have a color -- never render a white badge */
+.plan-tier-badge[data-tier="gptpro"]{ border-color:#d3bcf3; background:#ece0ff; color:#7146a8; }
+.plan-tier-badge[data-tier="4k"]{ border-color:#bcd6f7; background:#e0efff; color:#2a64a8; }
 .plan-tier-badge[data-tier="team"]{ border-color:#a9dcea; background:#d2f0f8; color:#2a6d80; }
 .plan-tier-badge[data-tier="individual"]{ border-color:#a9ddc0; background:#d8f3e3; color:#35785a; }
 .plan-tier-badge[data-tier="family"]{ border-color:#a9dcea; background:#d2f0f8; color:#2a6d80; }
@@ -9316,14 +9322,24 @@ body.light-mode .gp-bottomnav button.is-active{
 
 /* Figma plan card */
 .plan-option.figma-card{
-  position:relative; display:flex; flex-direction:column;
-  min-height:0; padding:10px;
-  border-radius:12px; border:1px solid #e8e2f2; background:#ffffff;
-  font-family:'Manrope','Noto Sans Myanmar',sans-serif;
+  /* Figma card frame — !important on layout props to beat legacy
+     .plan-option rules (which use !important) wherever the card renders. */
+  position:relative !important; overflow:visible !important;
+  display:flex !important; flex-direction:column !important;
+  align-items:stretch !important; justify-content:flex-start !important;
+  gap:0 !important;
+  width:100% !important; height:auto !important; min-height:0 !important;
+  box-sizing:border-box !important;
+  padding:12px !important;
+  border-radius:12px !important; border:1px solid #e8e2f2 !important; background:#ffffff !important;
+  box-shadow:0 2px 8px rgba(80,50,120,0.06) !important;
+  font-family:'Manrope','Noto Sans Myanmar',sans-serif !important;
+  font-size:13px !important; font-weight:400 !important; line-height:1.4 !important;
   cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
-  text-align:left; color:#2d223c;
+  text-align:left !important; color:#2d223c !important;
 }
-.plan-option.figma-card:hover{ border-color:#c9b8e0; }
+.plan-option.figma-card:before{ content:none !important; display:none !important; }
+.plan-option.figma-card:hover{ border-color:#c9b8e0 !important; transform:none !important; box-shadow:0 2px 8px rgba(80,50,120,0.06) !important; }
 .plan-option.figma-card.active{
   border-color:#8b5cf6; background:#fbf9ff;
   box-shadow:0 0 0 1px #8b5cf6, 0 5px 16px rgba(139,92,246,0.08);
@@ -9334,23 +9350,23 @@ body.light-mode .gp-bottomnav button.is-active{
 }
 .plan-card-top{
   display:flex; align-items:center; justify-content:space-between;
-  min-height:24px; margin-bottom:6px;
+  min-height:28px; margin-bottom:8px;
 }
 .plan-card-radio{
-  width:14px; height:14px; accent-color:#6231c8; cursor:pointer; flex-shrink:0;
+  width:16px; height:16px; accent-color:#6231c8; cursor:pointer; flex-shrink:0;
 }
 .plan-card-name{
   font-family:'Sora','Noto Sans Myanmar',sans-serif;
-  font-size:14px; font-weight:600; line-height:18px; color:#31213f;
-  margin:0 0 6px 0;
+  font-size:15px; font-weight:600; line-height:20px; color:#31213f;
+  margin:0 0 8px 0;
 }
 .plan-card-row{
   display:flex; align-items:center; gap:6px;
-  font-size:11px; font-weight:600; line-height:18px; color:#4d365e;
-  margin:6px 0;
+  font-size:12px; font-weight:600; line-height:20px; color:#4d365e;
+  margin:8px 0;
 }
 .plan-card-offer{
-  min-height:20px; margin-bottom:6px;
+  margin-bottom:8px;
   display:flex; align-items:center;
 }
 .plan-card-offer .special-offer{
@@ -9365,6 +9381,21 @@ body.light-mode .gp-bottomnav button.is-active{
   white-space:nowrap;
 }
 .plan-discount-badge svg{ width:11px; height:11px; flex-shrink:0; }
+/* Realistic sale sticker: overlaps the card's top-left corner like a
+   physical sticker slapped on. Replaces the inline badge. */
+.plan-option.figma-card.has-discount{ padding-top:20px !important; }
+.plan-discount-sticker{
+  position:absolute; top:-12px; left:10px; z-index:5;
+  display:inline-flex; align-items:center; gap:4px;
+  background:linear-gradient(135deg,#ff8a5c 0%,#f43f5e 100%);
+  border:1px solid rgba(255,255,255,.55);
+  color:#ffffff; font-size:11px; font-weight:800; letter-spacing:.3px;
+  padding:5px 12px; border-radius:999px; white-space:nowrap;
+  transform:rotate(-6deg);
+  box-shadow:0 3px 10px rgba(244,63,94,.35), inset 0 1px 0 rgba(255,255,255,.4);
+  font-family:'Manrope','Noto Sans Myanmar',sans-serif;
+}
+.plan-discount-sticker svg{ width:11px; height:11px; flex-shrink:0; }
 .plan-card-offer .unavailable-pill{
   display:inline-flex; align-items:center; gap:4px;
   border:1px solid #f0c3cc; background:#ffe7ed; color:#a72948;
@@ -9373,47 +9404,92 @@ body.light-mode .gp-bottomnav button.is-active{
 }
 .plan-card-offer .unavailable-pill svg{ width:11px; height:11px; }
 .plan-card-footer{
-  margin-top:auto; border-top:1px solid #eee6f4; padding-top:6px;
+  /* Figma: content flows naturally from the top — no bottom-pinning.
+     margin-top:auto pushed the price to the card bottom, opening a gap
+     in the middle on mixed-height rows. Fixed spacing like Figma. */
+  margin-top:0; border-top:1px solid #eee6f4; padding-top:8px;
 }
 .plan-card-duration{
   display:flex; align-items:center; gap:6px;
-  font-size:11px; font-weight:700; line-height:18px; color:#4d365e;
-  margin-bottom:2px;
+  font-size:12px; font-weight:700; line-height:20px; color:#4d365e;
+  margin-bottom:4px;
 }
 .plan-card-price-original{
-  display:block; min-height:14px;
-  font-size:10px; line-height:14px; color:#a08bac;
+  display:block;
+  font-size:11px; line-height:16px; color:#a08bac;
 }
 .plan-card-price-original s{ text-decoration:line-through; }
 .plan-card-price{
-  font-size:20px; font-weight:800; line-height:26px; color:#542697;
+  font-size:24px; font-weight:800; line-height:32px; color:#542697;
   font-variant-numeric:tabular-nums;
 }
 .plan-card-price .ks{
-  font-size:10px; font-weight:500; margin-left:4px;
+  font-size:11px; font-weight:500; margin-left:4px;
 }
 .plan-option.figma-card.out-stock .plan-card-price{ color:#9a8ba5; }
 
-/* Mobile: extra compact */
+/* Figma cards inside #orderView: restore Figma tokens over legacy
+   #orderView .plan-option rules (higher specificity). Without this the
+   cards render with mixed old/new styles (wrong font, padding, radius,
+   and indigo active state). */
+#orderView .plan-option.figma-card{
+  min-height:0 !important;
+  padding:12px !important;
+  border-radius:12px !important;
+  background:#ffffff !important;
+  border:1px solid #e8e2f2 !important;
+  box-shadow:none !important;
+  font-family:'Manrope','Noto Sans Myanmar',sans-serif !important;
+  text-align:left !important;
+  color:#2d223c !important;
+  overflow:visible !important;
+}
+#orderView .plan-option.figma-card:hover{
+  border-color:#c9b8e0 !important;
+  box-shadow:none !important;
+  transform:none !important;
+}
+#orderView .plan-option.figma-card.active{
+  border-color:#8b5cf6 !important;
+  background:#faf7ff !important;
+  box-shadow:0 0 0 1px #8b5cf6, 0 5px 16px rgba(139,92,246,0.08) !important;
+}
+#orderView .plan-option.figma-card.out-stock{
+  border:1px dashed #dfaab4 !important;
+  background:#fff8fa !important;
+  color:#68505b !important;
+}
+/* Mobile: Figma 2-col frame */
 @media (max-width:640px){
-  .plan-option.figma-card{ padding:8px; border-radius:10px; }
-  .plan-card-name{ font-size:13px; line-height:16px; margin-bottom:4px; }
-  .plan-card-row{ font-size:10px; line-height:16px; margin:4px 0; }
-  .plan-card-offer{ min-height:18px; margin-bottom:4px; }
-  .plan-card-duration{ font-size:10px; line-height:16px; }
-  .plan-card-price{ font-size:18px; line-height:24px; }
-  .plan-tier-badge{ min-height:24px; font-size:9px; padding:0 8px; }
-  .plan-icon-chip{ width:20px; height:20px; }
-  .plan-icon-chip svg{ width:12px; height:12px; }
+  #orderView .plan-option.figma-card{ min-height:0 !important; padding:12px 10px !important; }
+}
+/* Phone: smaller, tighter cards — easier to scan */
+@media (max-width:640px){
+  .plan-option.figma-card{ padding:10px 8px !important; border-radius:10px !important; }
+  .plan-option.figma-card.has-discount{ padding-top:16px !important; }
+  .plan-card-top{ min-height:24px !important; margin-bottom:6px !important; }
+  .plan-tier-badge{ min-height:24px !important; padding:0 8px !important; font-size:10px !important; }
+  .plan-tier-badge .tier-dot{ width:7px !important; height:7px !important; }
+  .plan-card-radio{ width:16px !important; height:16px !important; }
+  .plan-card-name{ font-size:13px !important; line-height:18px !important; margin:0 0 6px 0 !important; }
+  .plan-card-row{ font-size:11px !important; line-height:18px !important; margin:6px 0 !important; }
+  .plan-icon-chip{ width:20px !important; height:20px !important; border-radius:5px !important; }
+  .plan-icon-chip svg{ width:11px !important; height:11px !important; }
+  .plan-card-offer{ margin-bottom:6px !important; }
+  .plan-card-footer{ padding-top:6px !important; }
+  .plan-card-duration{ font-size:11px !important; line-height:18px !important; margin-bottom:3px !important; }
+  .plan-card-price-original{ font-size:10px !important; line-height:14px !important; }
+  .plan-card-price{ font-size:20px !important; line-height:26px !important; }
+  .plan-discount-sticker{ font-size:10px !important; padding:4px 9px !important; top:-10px !important; left:8px !important; }
 }
 
 /* ===== Figma filter tabs: segmented control with sliding indicator ===== */
 .plan-filters.figma-tabs{
   position:relative;
-  display:flex; gap:4px;
+  display:flex; gap:4px; flex-wrap:nowrap;
   background:#f4f0f9; border-radius:12px; padding:4px;
   overflow-x:auto; scrollbar-width:none;
-  margin-bottom:12px;
+  margin:10px 0 12px;
 }
 .plan-filters.figma-tabs::-webkit-scrollbar{ display:none; }
 .plan-filter-tab{
@@ -9432,12 +9508,12 @@ body.light-mode .gp-bottomnav button.is-active{
 }
 .plan-filter-tab.active{ color:#6231c8; }
 .plan-filter-tab:hover:not(.active){ color:#4d365e; }
-/* Sliding indicator */
+/* Sliding indicator — glides smoothly between tabs */
 .plan-tab-indicator{
   position:absolute; top:4px; bottom:4px; left:0;
   background:#ffffff; border-radius:8px;
   box-shadow:0 2px 6px rgba(67,33,120,0.06);
-  transition:left .25s cubic-bezier(0.4, 0, 0.2, 1), width .25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:left .38s cubic-bezier(0.22, 0.8, 0.24, 1), width .38s cubic-bezier(0.22, 0.8, 0.24, 1);
   z-index:0; pointer-events:none;
 }
 
