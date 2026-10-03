@@ -9323,7 +9323,7 @@ body.light-mode .gp-bottomnav button.is-active{
 /* Figma plan card */
 .plan-option.figma-card{
   position:relative; display:flex; flex-direction:column;
-  min-height:190px; padding:12px;
+  padding:12px;
   border-radius:12px; border:1px solid #e2d8eb; background:#ffffff;
   font-family:'Manrope','Noto Sans Myanmar',sans-serif;
   cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
@@ -9356,7 +9356,7 @@ body.light-mode .gp-bottomnav button.is-active{
   margin:8px 0;
 }
 .plan-card-offer{
-  min-height:24px; margin-bottom:8px;
+  margin-bottom:8px;
   display:flex; align-items:center;
 }
 .plan-card-offer .special-offer{
@@ -9387,7 +9387,7 @@ body.light-mode .gp-bottomnav button.is-active{
   margin-bottom:4px;
 }
 .plan-card-price-original{
-  display:block; min-height:16px;
+  display:block;
   font-size:11px; line-height:16px; color:#a08bac;
 }
 .plan-card-price-original s{ text-decoration:line-through; }
@@ -9405,7 +9405,7 @@ body.light-mode .gp-bottomnav button.is-active{
    cards render with mixed old/new styles (wrong font, padding, radius,
    and indigo active state). */
 #orderView .plan-option.figma-card{
-  min-height:190px !important;
+  min-height:0 !important;
   padding:12px !important;
   border-radius:12px !important;
   background:#ffffff !important;
@@ -9433,7 +9433,7 @@ body.light-mode .gp-bottomnav button.is-active{
 }
 /* Mobile: Figma 2-col frame */
 @media (max-width:640px){
-  #orderView .plan-option.figma-card{ min-height:196px !important; padding:12px 10px !important; }
+  #orderView .plan-option.figma-card{ min-height:0 !important; padding:12px 10px !important; }
 }
 
 /* ===== Figma filter tabs: segmented control with sliding indicator ===== */
