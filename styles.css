@@ -9393,3 +9393,147 @@ body.light-mode .gp-bottomnav button.is-active{
   font-size:11px; font-weight:500; margin-left:4px;
 }
 .plan-option.figma-card.out-stock .plan-card-price{ color:#9a8ba5; }
+
+/* ===== Figma filter tabs: segmented control with sliding indicator ===== */
+.plan-filters.figma-tabs{
+  position:relative;
+  display:flex; gap:4px;
+  background:#f4f0f9; border-radius:12px; padding:4px;
+  overflow-x:auto; scrollbar-width:none;
+  margin-bottom:12px;
+}
+.plan-filters.figma-tabs::-webkit-scrollbar{ display:none; }
+.plan-filter-tab{
+  position:relative; z-index:1;
+  display:inline-flex; align-items:center; gap:6px;
+  min-height:44px; padding:0 14px;
+  border:none; background:transparent; border-radius:8px;
+  font-family:'Manrope','Noto Sans Myanmar',sans-serif;
+  font-size:12px; font-weight:600; color:#7b698a;
+  cursor:pointer; white-space:nowrap;
+  transition:color .2s ease;
+}
+.plan-filter-tab svg{ width:14px; height:14px; flex-shrink:0; }
+.plan-filter-tab .tab-count{
+  font-size:10px; font-weight:600; opacity:0.6;
+}
+.plan-filter-tab.active{ color:#6231c8; }
+.plan-filter-tab:hover:not(.active){ color:#4d365e; }
+/* Sliding indicator */
+.plan-tab-indicator{
+  position:absolute; top:4px; bottom:4px; left:0;
+  background:#ffffff; border-radius:8px;
+  box-shadow:0 2px 6px rgba(67,33,120,0.06);
+  transition:left .25s cubic-bezier(0.4, 0, 0.2, 1), width .25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index:0; pointer-events:none;
+}
+
+/* ===== Figma "Your selection" receipt panel ===== */
+.your-selection-panel{
+  border-radius:18px; border:1px solid #ded0eb; background:#ffffff;
+  box-shadow:0 4px 0 #e8ddf1, 0 12px 30px rgba(67,33,120,0.04);
+  overflow:hidden; position:relative;
+  font-family:'Manrope','Noto Sans Myanmar',sans-serif;
+}
+.your-selection-panel::before{
+  content:""; display:block; height:4px;
+  background:linear-gradient(90deg,#b398d5 0%,#7751b0 50%,#d5bde9 100%);
+}
+.ys-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px 10px;
+}
+.ys-title{
+  font-family:'Sora','Noto Sans Myanmar',sans-serif;
+  font-size:14px; font-weight:600; color:#39224f; margin:0;
+}
+.ys-count{
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:10px; font-weight:600; color:#957eaa;
+}
+.ys-count svg{ width:13px; height:13px; }
+.ys-item{
+  margin:0 12px; padding:12px;
+  border-radius:12px; border:1px solid #eee4f6; background:#faf7ff;
+}
+.ys-product-row{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.ys-logo{
+  width:40px; height:40px; border-radius:10px; flex-shrink:0;
+  border:1px solid #e7dfee; background:#faf8ff;
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+}
+.ys-logo img{ width:32px; height:32px; object-fit:contain; }
+.ys-product-name{
+  font-family:'Sora','Noto Sans Myanmar',sans-serif;
+  font-size:15px; font-weight:600; color:#342044; margin:0;
+}
+.ys-tier{ font-size:12px; font-weight:600; color:#805b9d; }
+.ys-details{
+  display:grid; grid-template-columns:1fr 1fr; gap:8px;
+  border-top:1px solid #e6d9f0; padding-top:10px;
+}
+.ys-detail dt{
+  display:flex; align-items:center; gap:4px;
+  font-size:10px; font-weight:600; color:#88699e; margin:0 0 2px 0;
+}
+.ys-detail dt svg{ width:14px; height:14px; }
+.ys-detail dd{
+  font-size:13px; font-weight:700; color:#503064; margin:0;
+}
+.ys-qty-row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px;
+}
+.ys-qty-label{ font-size:10px; color:#947ca5; }
+.ys-qty-price{ font-size:13px; font-weight:700; color:#5b426c; font-variant-numeric:tabular-nums; }
+.ys-stepper{
+  display:inline-flex; align-items:center; gap:2px;
+  border-radius:8px; border:1px solid #e1d3ec; background:#faf7ff; padding:2px;
+}
+.ys-stepper button{
+  width:44px; height:36px; border:none; background:transparent;
+  color:#7543a4; font-size:18px; font-weight:700; cursor:pointer;
+  border-radius:6px; display:flex; align-items:center; justify-content:center;
+}
+.ys-stepper button:hover{ background:#f0e8f8; }
+.ys-stepper .ys-qty{
+  font-size:14px; font-weight:800; color:#43245b;
+  font-variant-numeric:tabular-nums; min-width:32px; text-align:center;
+}
+.ys-total{
+  position:relative;
+  border-top:1px dashed #ddcce9;
+  background:linear-gradient(180deg,#faf5ff 0%,#ffffff 100%);
+  padding:16px 16px 20px; margin-top:4px;
+}
+.ys-total::before, .ys-total::after{
+  content:""; position:absolute; top:-9px;
+  width:16px; height:16px; border-radius:50%;
+  background:#f8f7fc; border:1px solid #ded0eb;
+}
+.ys-total::before{ left:-9px; }
+.ys-total::after{ right:-9px; }
+.ys-total-label{ font-size:12px; font-weight:700; color:#6b487f; }
+.ys-total-sub{ font-size:10px; color:#a087b1; margin-top:2px; }
+.ys-total-amount{
+  font-size:26px; font-weight:800; color:#60368c;
+  font-variant-numeric:tabular-nums; margin-top:6px;
+}
+.ys-total-amount .ks{ font-size:11px; font-weight:600; margin-left:4px; }
+.ys-continue{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  width:calc(100% - 32px); margin:0 16px 12px;
+  min-height:48px; border-radius:12px; border:none;
+  background:#6231c8; color:#ffffff;
+  font-size:13px; font-weight:700; cursor:pointer;
+  box-shadow:0 4px 12px rgba(98,49,200,0.13);
+  transition:background .18s ease;
+}
+.ys-continue:hover{ background:#5123b1; }
+.ys-continue svg{ width:16px; height:16px; }
+.ys-help{
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  padding:12px; border-top:1px solid #eee6f4; background:#fcfaff;
+  font-size:11px; font-weight:600; color:#836497; text-decoration:none;
+}
+.ys-help svg{ width:14px; height:14px; }

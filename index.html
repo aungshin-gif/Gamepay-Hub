@@ -4386,10 +4386,62 @@ customHint.textContent = isInvalid
 
       togglePlansBtn.textContent = plansOpen ? "Hide Plan Selection" : "Choose Plan";
       planList.innerHTML = "";
-      const filterDefs = [{key:"all",label:"All Plans"},{key:"ownmail",label:"Own Mail"},{key:"private",label:"Private"},{key:"share",label:"Share"},{key:"credits",label:"Credits"}];
-      planFilters.innerHTML = filterDefs.map(f=>`<button type="button" class="plan-filter ${planFilterMode===f.key?"active":""}" data-filter="${f.key}">${f.label}</button>`).join("");
+      // Figma segmented filter tabs with icons, counts, and sliding indicator
+      const _tabSvg = (inner) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+      const TAB_ICONS = {
+        all: _tabSvg('<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>'),
+        ownmail: _tabSvg('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>'),
+        private: _tabSvg('<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'),
+        share: _tabSvg('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
+        credits: _tabSvg('<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>'),
+        individual: _tabSvg('<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>')
+      };
+      // Count plans per filter
+      const _countFor = (key) => {
+        if(key === "all") return currentProduct.plans.length;
+        return currentProduct.plans.filter(plan => {
+          const txt = String(plan.name || "").toLowerCase();
+          if(key === "ownmail") return Boolean(plan.ownMail) || /own[- ]?mail|invite/i.test(txt);
+          if(key === "private") return /private/i.test(txt);
+          if(key === "share") return /share/i.test(txt);
+          if(key === "credits") return /credit/i.test(txt);
+          if(key === "individual") return /individual/i.test(txt);
+          return false;
+        }).length;
+      };
+      // Build dynamic filter list: All + only filters that have plans
+      const _baseFilters = [
+        {key:"all", label:"All plans"},
+        {key:"ownmail", label:"Own mail"},
+        {key:"private", label:"Private"},
+        {key:"share", label:"Shared"},
+        {key:"individual", label:"Individual"},
+        {key:"credits", label:"Credits"}
+      ];
+      const filterDefs = _baseFilters
+        .map(f => ({...f, count: _countFor(f.key)}))
+        .filter(f => f.key === "all" || f.count > 0);
+      planFilters.className = "plan-filters figma-tabs";
+      planFilters.innerHTML = `<span class="plan-tab-indicator"></span>` + filterDefs.map(f=>`<button type="button" class="plan-filter-tab ${planFilterMode===f.key?"active":""}" data-filter="${f.key}">${TAB_ICONS[f.key]||""}<span>${f.label}</span><span class="tab-count">${f.count}</span></button>`).join("");
       planFilters.style.display = plansOpen ? "flex" : "none";
-      planFilters.querySelectorAll(".plan-filter").forEach(btn=>btn.addEventListener("click",()=>{planFilterMode=btn.dataset.filter;renderOrder();}));
+      // Position the sliding indicator
+      const _positionIndicator = () => {
+        const activeBtn = planFilters.querySelector(".plan-filter-tab.active");
+        const indicator = planFilters.querySelector(".plan-tab-indicator");
+        if(activeBtn && indicator){
+          indicator.style.left = activeBtn.offsetLeft + "px";
+          indicator.style.width = activeBtn.offsetWidth + "px";
+        }
+      };
+      requestAnimationFrame(_positionIndicator);
+      planFilters.querySelectorAll(".plan-filter-tab").forEach(btn=>btn.addEventListener("click",()=>{
+        planFilterMode=btn.dataset.filter;
+        // Animate indicator immediately for smooth UX
+        planFilters.querySelectorAll(".plan-filter-tab").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        _positionIndicator();
+        renderOrder();
+      }));
 planList.style.display = plansOpen ? "grid" : "none";
       if(plansOpen){
   currentProduct.plans.map((plan,index)=>({plan,index})).filter(({plan})=>{
