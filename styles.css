@@ -9288,6 +9288,9 @@ body.light-mode .gp-bottomnav button.is-active{
 /* Figma: PRO 5X = lavender, PRO 20X = pink */
 .plan-tier-badge[data-tier="pro5x"]{ border-color:#c7acf1; background:#e4d5ff; color:#693a9d; }
 .plan-tier-badge[data-tier="pro20x"]{ border-color:#efaacf; background:#ffd6ea; color:#96326d; }
+/* Fallbacks: every data tier must have a color -- never render a white badge */
+.plan-tier-badge[data-tier="gptpro"]{ border-color:#c7acf1; background:#e4d5ff; color:#693a9d; }
+.plan-tier-badge[data-tier="4k"]{ border-color:#a8c9f5; background:#d4e7ff; color:#255b9e; }
 .plan-tier-badge[data-tier="team"]{ border-color:#98d5e4; background:#c6edf5; color:#246376; }
 .plan-tier-badge[data-tier="individual"]{ border-color:#98d4b5; background:#c9efdb; color:#2e694b; }
 .plan-tier-badge[data-tier="family"]{ border-color:#98d5e4; background:#c6edf5; color:#246376; }
