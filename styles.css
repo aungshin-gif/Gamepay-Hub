@@ -9379,7 +9379,10 @@ body.light-mode .gp-bottomnav button.is-active{
 }
 .plan-card-offer .unavailable-pill svg{ width:11px; height:11px; }
 .plan-card-footer{
-  margin-top:auto; border-top:1px solid #eee6f4; padding-top:8px;
+  /* Figma: content flows naturally from the top — no bottom-pinning.
+     margin-top:auto pushed the price to the card bottom, opening a gap
+     in the middle on mixed-height rows. Fixed spacing like Figma. */
+  margin-top:0; border-top:1px solid #eee6f4; padding-top:8px;
 }
 .plan-card-duration{
   display:flex; align-items:center; gap:6px;
