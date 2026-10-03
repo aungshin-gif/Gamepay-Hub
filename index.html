@@ -68,7 +68,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=64">
+  <link rel="stylesheet" href="styles.css?v=65">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -4350,6 +4350,238 @@ customHint.textContent = isInvalid
       restart();
     }
 
+    // Figma segmented filter tabs with icons, counts, and a sliding indicator.
+    // Tabs rebuild ONLY when the product/filter set changes (signature cache),
+    // so tab switches just glide the indicator via CSS transition instead of jumping.
+    const _tabSvg = (inner) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+    const TAB_ICONS = {
+      all: _tabSvg('<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>'),
+      ownmail: _tabSvg('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>'),
+      private: _tabSvg('<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'),
+      share: _tabSvg('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
+      credits: _tabSvg('<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>'),
+      individual: _tabSvg('<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>')
+    };
+    const _BASE_FILTERS = [
+      {key:"all", label:"All plans"},
+      {key:"ownmail", label:"Own mail"},
+      {key:"private", label:"Private"},
+      {key:"share", label:"Shared"},
+      {key:"individual", label:"Individual"},
+      {key:"credits", label:"Credits"}
+    ];
+    function _positionTabIndicator(){
+      const activeBtn = planFilters.querySelector(".plan-filter-tab.active");
+      const indicator = planFilters.querySelector(".plan-tab-indicator");
+      if(activeBtn && indicator){
+        indicator.style.left = activeBtn.offsetLeft + "px";
+        indicator.style.width = activeBtn.offsetWidth + "px";
+      }
+    }
+    function renderPlanTabs(){
+      if(!currentProduct || !planFilters) return;
+      const _countFor = (key) => {
+        if(key === "all") return currentProduct.plans.length;
+        return currentProduct.plans.filter(plan => {
+          const txt = String(plan.name || "").toLowerCase();
+          if(key === "ownmail") return Boolean(plan.ownMail) || /own[- ]?mail|invite/i.test(txt);
+          if(key === "private") return /private/i.test(txt);
+          if(key === "share") return /share/i.test(txt);
+          if(key === "credits") return /credit/i.test(txt);
+          if(key === "individual") return /individual/i.test(txt);
+          return false;
+        }).length;
+      };
+      const filterDefs = _BASE_FILTERS
+        .map(f => ({...f, count: _countFor(f.key)}))
+        .filter(f => f.key === "all" || f.count > 0);
+      planFilters.className = "plan-filters figma-tabs";
+      planFilters.style.display = plansOpen ? "flex" : "none";
+      const sig = currentProduct.id + "|" + filterDefs.map(f=>f.key+":"+f.count).join(",");
+      if(planFilters.dataset.tabSig === sig){
+        planFilters.querySelectorAll(".plan-filter-tab").forEach(b=>b.classList.toggle("active", b.dataset.filter===planFilterMode));
+        requestAnimationFrame(_positionTabIndicator);
+        return;
+      }
+      planFilters.dataset.tabSig = sig;
+      planFilters.innerHTML = `<span class="plan-tab-indicator"></span>` + filterDefs.map(f=>`<button type="button" class="plan-filter-tab ${planFilterMode===f.key?"active":""}" data-filter="${f.key}">${TAB_ICONS[f.key]||""}<span>${f.label}</span><span class="tab-count">${f.count}</span></button>`).join("");
+      // Initial position: no transition (fresh element), so it doesn't glide in from the left
+      const _freshIndicator = planFilters.querySelector(".plan-tab-indicator");
+      if(_freshIndicator) _freshIndicator.style.transition = "none";
+      requestAnimationFrame(()=>{
+        _positionTabIndicator();
+        requestAnimationFrame(()=>{ if(_freshIndicator) _freshIndicator.style.transition = ""; });
+      });
+      planFilters.querySelectorAll(".plan-filter-tab").forEach(btn=>btn.addEventListener("click",()=>{
+        if(planFilterMode===btn.dataset.filter) return;
+        planFilterMode=btn.dataset.filter;
+        planFilters.querySelectorAll(".plan-filter-tab").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        _positionTabIndicator();
+        btn.scrollIntoView({block:"nearest", inline:"nearest", behavior:"smooth"});
+        renderPlanCards();
+      }));
+    }
+
+    // Figma plan cards. Re-renders on product change AND on tab switch
+    // (tab switches no longer rebuild the whole order view).
+    function renderPlanCards(){
+      if(!currentProduct || !planList) return;
+      planList.innerHTML = "";
+  planList.style.display = plansOpen ? "grid" : "none";
+        if(plansOpen){
+    currentProduct.plans.map((plan,index)=>({plan,index})).filter(({plan})=>{
+      if(planFilterMode==="all") return true;
+      const txt=String(plan.name||"").toLowerCase();
+      if(planFilterMode==="ownmail") return Boolean(plan.ownMail)||/own[- ]?mail|invite/i.test(txt);
+      if(planFilterMode==="private") return /private/i.test(txt);
+      if(planFilterMode==="share") return /share/i.test(txt);
+      if(planFilterMode==="credits") return /credit/i.test(txt);
+      if(planFilterMode==="individual") return /individual/i.test(txt);
+      return true;
+    }).forEach(({plan,index}) => {
+      const el = document.createElement("div");
+    el.className =
+    "plan-option figma-card" +
+    (index === currentPlanIndex ? " active" : "") +
+    (plan.bestSeller ? " best-seller" : "") +
+    (plan.discount || plan.discountPercent ? " discount" : "") +
+    (plan.outOfStock ? " out-stock" : "") +
+    (!plan.outOfStock && plan.lowStock ? " low-stock" : "");
+
+     // plan.name ထဲက (Stable|Unstable|⚡Instant|🕰️Waiting Time) ကိုခွဲထုတ်
+  // 🔹 လျှော့ပြီး Stable/Unstable/Instant/Waiting Time အရသာ extract
+     // Render every plan as three aligned lines: name, duration/access, price.
+  const rawPlan = String(plan.name || "").replace(/\\n/g, "\n");
+  const priceMatch = rawPlan.match(/([0-9][0-9,]*)\s*(?:ks|ကျပ်)/i);
+  const priceText = priceMatch ? `${priceMatch[1]} Ks` : (plan.custom ? "Custom price" : (plan.price ? formatKs(plan.price) : "DM"));
+  const withoutPrice = rawPlan.replace(/\s*[–—-]?\s*[0-9][0-9,]*\s*(?:ks|ကျပ်).*$/i, "").trim();
+  const durationMatch = withoutPrice.match(/(\d+\s*(?:minute|minutes|min|mins|hour|hours|hr|hrs|day|days|month|months|year|years|week|weeks)|coming\s+soon|preorder|dm)$/i);
+  const durationText = plan.duration || (durationMatch ? durationMatch[1].replace(/\b\w/g, c => c.toUpperCase()) : (plan.outOfStock ? "Preorder" : "Standard"));
+  let planName = plan.label ? plan.label : withoutPrice.replace(/\s*[–—-]?\s*(?:\d+\s*(?:minute|minutes|min|mins|hour|hours|hr|hrs|day|days|month|months|year|years|week|weeks)|coming\s+soon|preorder|dm)$/i, "").trim();
+  planName = plan.label ? plan.label : planName.replace(/\b(private|share|own[- ]?mail|invite)\b/ig, "").replace(/[()]/g, "").replace(/\s*[·–—-]\s*/g, " ").replace(/\s{2,}/g, " ").replace(/^\W+|\W+$/g, "").trim() || "Digital plan";
+  const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
+  const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
+    team:"Team", education:"Education", individual:"Individual", family:"Family",
+    pro:"Pro", pro5x:"Pro 5X", pro20x:"Pro 20X", proplus:"Pro Plus", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
+    "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra", hobby:"Hobby"};
+  const tierChipFor = t => t ? `<span class="plan-tier-chip">${TIER_LABEL[t] || t}</span>` : "";
+  // How the account is delivered. Explicit plan.type wins; otherwise infer.
+  const typeOf = p => p.type || (p.ownMail ? "Own Mail"
+    : /private/i.test(`${p.access||""} ${p.name||""}`) ? "Private Acc"
+    : /share/i.test(`${p.access||""} ${p.name||""}`)   ? "Share Acc"
+    : /key|redeem|code/i.test(String(p.name||""))      ? "Code Redeem" : "");
+  const accessValue = [plan.access, plan.accessType, plan.type, plan.name, rawPlan].filter(Boolean).join(" ").toLowerCase();
+  const accessClass = /share/i.test(accessValue) ? " share-plan" : (/private/i.test(accessValue) ? " private-plan" : "");
+  const watermark = accessClass === " share-plan" ? '<span class="plan-watermark-wrap css-watermark share-watermark-css" aria-hidden="true"><span class="plan-watermark-symbol share-symbol"></span><span class="plan-watermark-word">SHARE</span></span>' : (accessClass === " private-plan" ? '<span class="plan-watermark-wrap css-watermark private-watermark-css" aria-hidden="true"><span class="plan-watermark-symbol private-symbol"></span><span class="plan-watermark-word">PRIVATE</span></span>' : '');
+  el.className += accessClass;
+    el.dataset.planIndex = String(index);
+    // A plan may name its own tier; otherwise read it off the plan name.
+    // GO is its own tier -- it is a plan name, not a synonym for Basic.
+    const tierSource = `${rawPlan} ${planName}`.toLowerCase();
+    const tier = plan.tier || (
+      /\bsvip\b|\bvip\b/.test(tierSource)                     ? "vip" :
+      /\bmax\b|\bultimate\b/.test(tierSource)                ? "max" :
+      /\bultra\b/.test(tierSource)                             ? "ultra" :
+      /\bpremium\b/.test(tierSource)                           ? "premium" :
+      /\bbusiness\b|\benterprise\b/.test(tierSource)          ? "business" :
+      /\bteam\b/.test(tierSource)                              ? "team" :
+      /\beducation\b|\bstudent\b|\bedu\b/.test(tierSource)   ? "education" :
+      /\bindividual\b/.test(tierSource)                        ? "individual" :
+      /\bfamily\b/.test(tierSource)                            ? "family" :
+      /\bpro\s*20\s*x\b/.test(tierSource)                       ? "pro20x" :
+      /\bpro\s*5\s*x\b/.test(tierSource)                        ? "pro5x" :
+      /\bpro\b/.test(tierSource)                               ? "pro" :
+      /\bcore\b/.test(tierSource)                              ? "core" :
+      /\bstandard\b/.test(tierSource)                          ? "standard" :
+      /\bplus\b/.test(tierSource)                              ? "plus" :
+      /\bgo\b/.test(tierSource)                                ? "go" :
+      /\blink\b/.test(tierSource)                              ? "link" :
+      /\bbasic\b|\blite\b|\bmini\b/.test(tierSource)         ? "basic" :
+      /\bhobby\b/.test(tierSource)                            ? "hobby" : "");
+    if(tier){
+      el.dataset.tier = tier;
+      el.classList.add("has-tier");
+    }
+  // Figma "User greeting" plan card icons (Lucide)
+  const _svgWrap = (inner, vb) => `<svg viewBox="${vb||"0 0 24 24"}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+  const ICON_MAIL = _svgWrap('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>');
+  const ICON_LOCK = _svgWrap('<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>');
+  const ICON_USERS = _svgWrap('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>');
+  const ICON_USER = _svgWrap('<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>');
+  const ICON_KEY = _svgWrap('<path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/>');
+  const ICON_CLOCK = _svgWrap('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>');
+  const ICON_X = _svgWrap('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>', "0 0 24 24");
+  // Choose account-type icon
+  const _accLower = String(typeOf(plan) || "").toLowerCase();
+  const accIcon = /share/.test(_accLower) ? ICON_USERS : /private/.test(_accLower) ? ICON_LOCK : /code|redeem|key/.test(_accLower) ? ICON_KEY : /individual|head/.test(_accLower) ? ICON_USER : ICON_MAIL;
+  const accLabel = typeOf(plan) || (plan.ownMail ? "Own Mail" : "Standard");
+  // Tier badge (Figma pastel + diamond dot via CSS)
+  const tierBadgeLabel = TIER_LABEL[tier] || tier || "";
+  const tierBadgeHtml = tier ? `<span class="plan-tier-badge" data-tier="${tier}" aria-label="${tierBadgeLabel}">${tierBadgeLabel}</span>` : `<span></span>`;
+  // Discount: Figma shows "Special offer" text + strikethrough, no -X% badge
+  const hasDiscount = Boolean(plan.discount || plan.discountPercent);
+  const origPriceHtml = hasDiscount && plan.originalPrice ? `<s>${formatKs(plan.originalPrice)}</s>` : "";
+  // Price number split
+  const _priceNum = priceText.replace(/\s*Ks\s*$/i, "");
+  const _isCustom = /custom|contact|dm/i.test(priceText);
+  el.innerHTML = `
+    <div class="plan-card-top">
+      ${tierBadgeHtml}
+      <input type="radio" class="plan-card-radio" name="plan-radio-${currentProduct.id}" ${index === currentPlanIndex ? "checked" : ""} ${plan.outOfStock ? "disabled" : ""} tabindex="-1" aria-hidden="true">
+    </div>
+    <h3 class="plan-card-name font-plan-heading">${planName}</h3>
+    <div class="plan-card-row">
+      <span class="plan-icon-chip">${accIcon}</span>
+      <span>${accLabel}</span>
+    </div>
+    <div class="plan-card-offer">
+      ${plan.outOfStock
+        ? `<span class="unavailable-pill">${ICON_X} Unavailable</span>`
+        : (hasDiscount ? `<span class="plan-discount-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>-${plan.discountPercent || ""}%</span>` : ``)}
+    </div>
+    <div class="plan-card-footer">
+      ${plan.noDuration ? `` : `<div class="plan-card-duration"><span class="plan-icon-chip clock">${ICON_CLOCK}</span><span>${durationText}</span></div>`}
+      <span class="plan-card-price-original">${origPriceHtml}</span>
+      <div class="plan-card-price">${_isCustom ? `<span style="font-size:14px;font-weight:700;">${priceText}</span>` : `${_priceNum}<span class="ks">Ks</span>`}</div>
+    </div>
+  `;
+  if(plan.outOfStock){
+    el.onclick = null;
+  } else {
+
+      el.onclick = () => {
+        if(currentPlanIndex === index) return;
+        currentPlanIndex = index;
+        selectedPlanByProduct.set(currentProduct.id, index);
+        planList.querySelectorAll(".plan-option").forEach(card => {
+          card.classList.toggle("active", card.dataset.planIndex === String(index));
+        });
+        const selected = currentProduct.plans[index];
+        cartPlanCurrent.textContent = selected.name;
+        qtyNum.textContent = currentQty;
+        const customAmount = Number(customAmountInput.value || 0);
+        let amount = Number(selected.price || 0) * currentQty;
+        if(selected.custom && customAmount > 0){
+          amount = Math.ceil((customAmount / Number(selected.baseAmount || 1)) * Number(selected.price || 0));
+        }
+        itemAmount.textContent = formatKs(amount);
+        if(selected.custom){
+          customBox.classList.add("show");
+          customAmountInput.placeholder = `Enter ${selected.unit || "amount"}...`;
+        } else {
+          customBox.classList.remove("show");
+          customAmountInput.value = "";
+          customHint.textContent = "";
+        }
+        updatePreview();
+      };
+  }
+      planList.appendChild(el);
+    });
+        }
+    }
+
     function renderOrder(){
       if(!currentProduct){
         cartItem.classList.add("hidden");
@@ -4385,212 +4617,8 @@ customHint.textContent = isInvalid
       }
 
       togglePlansBtn.textContent = plansOpen ? "Hide Plan Selection" : "Choose Plan";
-      planList.innerHTML = "";
-      // Figma segmented filter tabs with icons, counts, and sliding indicator
-      const _tabSvg = (inner) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
-      const TAB_ICONS = {
-        all: _tabSvg('<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>'),
-        ownmail: _tabSvg('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>'),
-        private: _tabSvg('<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'),
-        share: _tabSvg('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
-        credits: _tabSvg('<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>'),
-        individual: _tabSvg('<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>')
-      };
-      // Count plans per filter
-      const _countFor = (key) => {
-        if(key === "all") return currentProduct.plans.length;
-        return currentProduct.plans.filter(plan => {
-          const txt = String(plan.name || "").toLowerCase();
-          if(key === "ownmail") return Boolean(plan.ownMail) || /own[- ]?mail|invite/i.test(txt);
-          if(key === "private") return /private/i.test(txt);
-          if(key === "share") return /share/i.test(txt);
-          if(key === "credits") return /credit/i.test(txt);
-          if(key === "individual") return /individual/i.test(txt);
-          return false;
-        }).length;
-      };
-      // Build dynamic filter list: All + only filters that have plans
-      const _baseFilters = [
-        {key:"all", label:"All plans"},
-        {key:"ownmail", label:"Own mail"},
-        {key:"private", label:"Private"},
-        {key:"share", label:"Shared"},
-        {key:"individual", label:"Individual"},
-        {key:"credits", label:"Credits"}
-      ];
-      const filterDefs = _baseFilters
-        .map(f => ({...f, count: _countFor(f.key)}))
-        .filter(f => f.key === "all" || f.count > 0);
-      planFilters.className = "plan-filters figma-tabs";
-      planFilters.innerHTML = `<span class="plan-tab-indicator"></span>` + filterDefs.map(f=>`<button type="button" class="plan-filter-tab ${planFilterMode===f.key?"active":""}" data-filter="${f.key}">${TAB_ICONS[f.key]||""}<span>${f.label}</span><span class="tab-count">${f.count}</span></button>`).join("");
-      planFilters.style.display = plansOpen ? "flex" : "none";
-      // Position the sliding indicator
-      const _positionIndicator = () => {
-        const activeBtn = planFilters.querySelector(".plan-filter-tab.active");
-        const indicator = planFilters.querySelector(".plan-tab-indicator");
-        if(activeBtn && indicator){
-          indicator.style.left = activeBtn.offsetLeft + "px";
-          indicator.style.width = activeBtn.offsetWidth + "px";
-        }
-      };
-      requestAnimationFrame(_positionIndicator);
-      planFilters.querySelectorAll(".plan-filter-tab").forEach(btn=>btn.addEventListener("click",()=>{
-        planFilterMode=btn.dataset.filter;
-        // Animate indicator immediately for smooth UX
-        planFilters.querySelectorAll(".plan-filter-tab").forEach(b=>b.classList.remove("active"));
-        btn.classList.add("active");
-        _positionIndicator();
-        renderOrder();
-      }));
-planList.style.display = plansOpen ? "grid" : "none";
-      if(plansOpen){
-  currentProduct.plans.map((plan,index)=>({plan,index})).filter(({plan})=>{
-    if(planFilterMode==="all") return true;
-    const txt=String(plan.name||"").toLowerCase();
-    if(planFilterMode==="ownmail") return Boolean(plan.ownMail)||/own[- ]?mail|invite/i.test(txt);
-    if(planFilterMode==="private") return /private/i.test(txt);
-    if(planFilterMode==="share") return /share/i.test(txt);
-    if(planFilterMode==="credits") return /credit/i.test(txt);
-    return true;
-  }).forEach(({plan,index}) => {
-    const el = document.createElement("div");
-  el.className =
-  "plan-option figma-card" +
-  (index === currentPlanIndex ? " active" : "") +
-  (plan.bestSeller ? " best-seller" : "") +
-  (plan.discount || plan.discountPercent ? " discount" : "") +
-  (plan.outOfStock ? " out-stock" : "") +
-  (!plan.outOfStock && plan.lowStock ? " low-stock" : "");
-
-   // plan.name ထဲက (Stable|Unstable|⚡Instant|🕰️Waiting Time) ကိုခွဲထုတ်
-// 🔹 လျှော့ပြီး Stable/Unstable/Instant/Waiting Time အရသာ extract
-   // Render every plan as three aligned lines: name, duration/access, price.
-const rawPlan = String(plan.name || "").replace(/\\n/g, "\n");
-const priceMatch = rawPlan.match(/([0-9][0-9,]*)\s*(?:ks|ကျပ်)/i);
-const priceText = priceMatch ? `${priceMatch[1]} Ks` : (plan.custom ? "Custom price" : (plan.price ? formatKs(plan.price) : "DM"));
-const withoutPrice = rawPlan.replace(/\s*[–—-]?\s*[0-9][0-9,]*\s*(?:ks|ကျပ်).*$/i, "").trim();
-const durationMatch = withoutPrice.match(/(\d+\s*(?:minute|minutes|min|mins|hour|hours|hr|hrs|day|days|month|months|year|years|week|weeks)|coming\s+soon|preorder|dm)$/i);
-const durationText = plan.duration || (durationMatch ? durationMatch[1].replace(/\b\w/g, c => c.toUpperCase()) : (plan.outOfStock ? "Preorder" : "Standard"));
-let planName = plan.label ? plan.label : withoutPrice.replace(/\s*[–—-]?\s*(?:\d+\s*(?:minute|minutes|min|mins|hour|hours|hr|hrs|day|days|month|months|year|years|week|weeks)|coming\s+soon|preorder|dm)$/i, "").trim();
-planName = plan.label ? plan.label : planName.replace(/\b(private|share|own[- ]?mail|invite)\b/ig, "").replace(/[()]/g, "").replace(/\s*[·–—-]\s*/g, " ").replace(/\s{2,}/g, " ").replace(/^\W+|\W+$/g, "").trim() || "Digital plan";
-const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
-const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
-  team:"Team", education:"Education", individual:"Individual", family:"Family",
-  pro:"Pro", proplus:"Pro Plus", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
-  "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra", hobby:"Hobby"};
-const tierChipFor = t => t ? `<span class="plan-tier-chip">${TIER_LABEL[t] || t}</span>` : "";
-// How the account is delivered. Explicit plan.type wins; otherwise infer.
-const typeOf = p => p.type || (p.ownMail ? "Own Mail"
-  : /private/i.test(`${p.access||""} ${p.name||""}`) ? "Private Acc"
-  : /share/i.test(`${p.access||""} ${p.name||""}`)   ? "Share Acc"
-  : /key|redeem|code/i.test(String(p.name||""))      ? "Code Redeem" : "");
-const accessValue = [plan.access, plan.accessType, plan.type, plan.name, rawPlan].filter(Boolean).join(" ").toLowerCase();
-const accessClass = /share/i.test(accessValue) ? " share-plan" : (/private/i.test(accessValue) ? " private-plan" : "");
-const watermark = accessClass === " share-plan" ? '<span class="plan-watermark-wrap css-watermark share-watermark-css" aria-hidden="true"><span class="plan-watermark-symbol share-symbol"></span><span class="plan-watermark-word">SHARE</span></span>' : (accessClass === " private-plan" ? '<span class="plan-watermark-wrap css-watermark private-watermark-css" aria-hidden="true"><span class="plan-watermark-symbol private-symbol"></span><span class="plan-watermark-word">PRIVATE</span></span>' : '');
-el.className += accessClass;
-  el.dataset.planIndex = String(index);
-  // A plan may name its own tier; otherwise read it off the plan name.
-  // GO is its own tier -- it is a plan name, not a synonym for Basic.
-  const tierSource = `${rawPlan} ${planName}`.toLowerCase();
-  const tier = plan.tier || (
-    /\bsvip\b|\bvip\b/.test(tierSource)                     ? "vip" :
-    /\bmax\b|\bultimate\b/.test(tierSource)                ? "max" :
-    /\bultra\b/.test(tierSource)                             ? "ultra" :
-    /\bpremium\b/.test(tierSource)                           ? "premium" :
-    /\bbusiness\b|\benterprise\b/.test(tierSource)          ? "business" :
-    /\bteam\b/.test(tierSource)                              ? "team" :
-    /\beducation\b|\bstudent\b|\bedu\b/.test(tierSource)   ? "education" :
-    /\bindividual\b/.test(tierSource)                        ? "individual" :
-    /\bfamily\b/.test(tierSource)                            ? "family" :
-    /\bpro\b/.test(tierSource)                               ? "pro" :
-    /\bcore\b/.test(tierSource)                              ? "core" :
-    /\bstandard\b/.test(tierSource)                          ? "standard" :
-    /\bplus\b/.test(tierSource)                              ? "plus" :
-    /\bgo\b/.test(tierSource)                                ? "go" :
-    /\blink\b/.test(tierSource)                              ? "link" :
-    /\bbasic\b|\blite\b|\bmini\b/.test(tierSource)         ? "basic" :
-    /\bhobby\b/.test(tierSource)                            ? "hobby" : "");
-  if(tier){
-    el.dataset.tier = tier;
-    el.classList.add("has-tier");
-  }
-// Figma "User greeting" plan card icons (Lucide)
-const _svgWrap = (inner, vb) => `<svg viewBox="${vb||"0 0 24 24"}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
-const ICON_MAIL = _svgWrap('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>');
-const ICON_LOCK = _svgWrap('<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>');
-const ICON_USERS = _svgWrap('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>');
-const ICON_USER = _svgWrap('<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>');
-const ICON_KEY = _svgWrap('<path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/>');
-const ICON_CLOCK = _svgWrap('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>');
-const ICON_X = _svgWrap('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>', "0 0 24 24");
-// Choose account-type icon
-const _accLower = String(typeOf(plan) || "").toLowerCase();
-const accIcon = /share/.test(_accLower) ? ICON_USERS : /private/.test(_accLower) ? ICON_LOCK : /code|redeem|key/.test(_accLower) ? ICON_KEY : /individual|head/.test(_accLower) ? ICON_USER : ICON_MAIL;
-const accLabel = typeOf(plan) || (plan.ownMail ? "Own Mail" : "Standard");
-// Tier badge (Figma pastel + diamond dot via CSS)
-const tierBadgeLabel = TIER_LABEL[tier] || tier || "";
-const tierBadgeHtml = tier ? `<span class="plan-tier-badge" data-tier="${tier}" aria-label="${tierBadgeLabel}">${tierBadgeLabel}</span>` : `<span></span>`;
-// Discount: Figma shows "Special offer" text + strikethrough, no -X% badge
-const hasDiscount = Boolean(plan.discount || plan.discountPercent);
-const origPriceHtml = hasDiscount && plan.originalPrice ? `<s>${formatKs(plan.originalPrice)}</s>` : "";
-// Price number split
-const _priceNum = priceText.replace(/\s*Ks\s*$/i, "");
-const _isCustom = /custom|contact|dm/i.test(priceText);
-el.innerHTML = `
-  <div class="plan-card-top">
-    ${tierBadgeHtml}
-    <input type="radio" class="plan-card-radio" name="plan-radio-${currentProduct.id}" ${index === currentPlanIndex ? "checked" : ""} ${plan.outOfStock ? "disabled" : ""} tabindex="-1" aria-hidden="true">
-  </div>
-  <h3 class="plan-card-name font-plan-heading">${planName}</h3>
-  <div class="plan-card-row">
-    <span class="plan-icon-chip">${accIcon}</span>
-    <span>${accLabel}</span>
-  </div>
-  <div class="plan-card-offer">
-    ${plan.outOfStock
-      ? `<span class="unavailable-pill">${ICON_X} Unavailable</span>`
-      : (hasDiscount ? `<span class="plan-discount-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>-${plan.discountPercent || ""}%</span>` : ``)}
-  </div>
-  <div class="plan-card-footer">
-    ${plan.noDuration ? `` : `<div class="plan-card-duration"><span class="plan-icon-chip clock">${ICON_CLOCK}</span><span>${durationText}</span></div>`}
-    <span class="plan-card-price-original">${origPriceHtml}</span>
-    <div class="plan-card-price">${_isCustom ? `<span style="font-size:14px;font-weight:700;">${priceText}</span>` : `${_priceNum}<span class="ks">Ks</span>`}</div>
-  </div>
-`;
-if(plan.outOfStock){
-  el.onclick = null;
-} else {
-
-    el.onclick = () => {
-      if(currentPlanIndex === index) return;
-      currentPlanIndex = index;
-      selectedPlanByProduct.set(currentProduct.id, index);
-      planList.querySelectorAll(".plan-option").forEach(card => {
-        card.classList.toggle("active", card.dataset.planIndex === String(index));
-      });
-      const selected = currentProduct.plans[index];
-      cartPlanCurrent.textContent = selected.name;
-      qtyNum.textContent = currentQty;
-      const customAmount = Number(customAmountInput.value || 0);
-      let amount = Number(selected.price || 0) * currentQty;
-      if(selected.custom && customAmount > 0){
-        amount = Math.ceil((customAmount / Number(selected.baseAmount || 1)) * Number(selected.price || 0));
-      }
-      itemAmount.textContent = formatKs(amount);
-      if(selected.custom){
-        customBox.classList.add("show");
-        customAmountInput.placeholder = `Enter ${selected.unit || "amount"}...`;
-      } else {
-        customBox.classList.remove("show");
-        customAmountInput.value = "";
-        customHint.textContent = "";
-      }
-      updatePreview();
-    };
-}
-    planList.appendChild(el);
-  });
-      }
+      renderPlanTabs();
+      renderPlanCards();
 
       sumItems.textContent = "1";
       sumQty.textContent = currentQty;
