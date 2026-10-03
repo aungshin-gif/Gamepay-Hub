@@ -68,7 +68,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=72">
+  <link rel="stylesheet" href="styles.css?v=73">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -4542,9 +4542,12 @@ customHint.textContent = isInvalid
       <input type="radio" class="plan-card-radio" name="plan-radio-${currentProduct.id}" ${index === currentPlanIndex ? "checked" : ""} ${plan.outOfStock ? "disabled" : ""} tabindex="-1" aria-hidden="true">
     </div>
     <h3 class="plan-card-name font-plan-heading">${planName}</h3>
-    <div class="plan-card-meta">
-      <span class="plan-icon-chip">${accIcon}</span><span>${accLabel}</span>${plan.noDuration ? `` : `<span class="plan-meta-sep">•</span><span class="plan-icon-chip clock">${ICON_CLOCK}</span><span>${durationText}</span>`}
+    <div class="plan-card-row">
+      <span class="plan-icon-chip">${accIcon}</span><span>${accLabel}</span>
     </div>
+    ${plan.noDuration ? `` : `<div class="plan-card-row">
+      <span class="plan-icon-chip clock">${ICON_CLOCK}</span><span>${durationText}</span>
+    </div>`}
     ${_offerInner ? `<div class="plan-card-offer">${_offerInner}</div>` : ``}
     <div class="plan-card-prices">
       ${origPriceHtml ? `<span class="plan-card-price-original">${origPriceHtml}</span>` : ``}

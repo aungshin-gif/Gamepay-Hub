@@ -9360,11 +9360,6 @@ body.light-mode .gp-bottomnav button.is-active{
   font-size:15px; font-weight:600; line-height:20px; color:#31213f;
   margin:0 0 8px 0;
 }
-.plan-card-row{
-  display:flex; align-items:center; gap:6px;
-  font-size:12px; font-weight:600; line-height:20px; color:#4d365e;
-  margin:8px 0;
-}
 .plan-card-offer{
   margin-bottom:8px;
   display:flex; align-items:center;
@@ -9428,24 +9423,24 @@ body.light-mode .gp-bottomnav button.is-active{
 }
 .plan-option.figma-card.out-stock .plan-card-price{ color:#9a8ba5; }
 
-/* Compact rectangle card: meta row (account • duration) + inline prices */
-.plan-card-meta{
-  display:flex; align-items:center; gap:5px;
+/* Vertical stack card: badge, name, account, duration, then price pinned to bottom */
+.plan-card-row{
+  display:flex; align-items:center; gap:6px;
   font-size:11px; font-weight:600; line-height:18px; color:#6b5a7d;
-  margin:6px 0; white-space:nowrap; overflow:hidden;
+  margin:5px 0;
 }
-.plan-card-meta .plan-icon-chip{ width:18px; height:18px; border-radius:5px; flex-shrink:0; }
-.plan-card-meta .plan-icon-chip svg{ width:10px; height:10px; }
-.plan-meta-sep{ color:#c9b8d9; font-size:10px; flex-shrink:0; }
+.plan-card-row .plan-icon-chip{ width:18px; height:18px; border-radius:5px; flex-shrink:0; }
+.plan-card-row .plan-icon-chip svg{ width:10px; height:10px; }
 .plan-card-prices{
+  margin-top:auto; /* pin price to card bottom */
   display:flex; align-items:baseline; gap:6px; flex-wrap:wrap;
-  border-top:1px solid #eee6f4; padding-top:6px; margin-top:6px;
+  border-top:1px solid #eee6f4; padding-top:6px;
 }
 .plan-card-prices .plan-card-price-original{ font-size:10px; line-height:14px; }
 .plan-card-prices .plan-card-price{ font-size:19px; line-height:24px; }
 @media (max-width:640px){
-  .plan-card-meta{ font-size:10px !important; line-height:16px !important; margin:5px 0 !important; gap:4px !important; }
-  .plan-card-prices{ padding-top:5px !important; margin-top:5px !important; gap:5px !important; }
+  .plan-card-row{ font-size:10px !important; line-height:16px !important; margin:4px 0 !important; gap:5px !important; }
+  .plan-card-prices{ padding-top:5px !important; gap:5px !important; }
   .plan-card-prices .plan-card-price{ font-size:17px !important; line-height:22px !important; }
 }
 
@@ -9494,7 +9489,7 @@ body.light-mode .gp-bottomnav button.is-active{
   .plan-tier-badge .tier-dot{ width:6px !important; height:6px !important; }
   .plan-card-radio{ width:15px !important; height:15px !important; }
   .plan-card-name{ font-size:12px !important; line-height:16px !important; margin:0 0 5px 0 !important; }
-  .plan-card-row{ font-size:10px !important; line-height:16px !important; margin:5px 0 !important; gap:5px !important; }
+  .plan-card-row{ font-size:10px !important; line-height:16px !important; margin:4px 0 !important; gap:5px !important; }
   .plan-icon-chip{ width:18px !important; height:18px !important; border-radius:5px !important; }
   .plan-icon-chip svg{ width:10px !important; height:10px !important; }
   .plan-card-offer{ margin-bottom:5px !important; }
