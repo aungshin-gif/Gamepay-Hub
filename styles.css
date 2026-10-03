@@ -9381,6 +9381,21 @@ body.light-mode .gp-bottomnav button.is-active{
   white-space:nowrap;
 }
 .plan-discount-badge svg{ width:11px; height:11px; flex-shrink:0; }
+/* Realistic sale sticker: overlaps the card's top-left corner like a
+   physical sticker slapped on. Replaces the inline badge. */
+.plan-option.figma-card.has-discount{ padding-top:20px !important; }
+.plan-discount-sticker{
+  position:absolute; top:-12px; left:10px; z-index:5;
+  display:inline-flex; align-items:center; gap:4px;
+  background:linear-gradient(135deg,#ff8a5c 0%,#f43f5e 100%);
+  border:1px solid rgba(255,255,255,.55);
+  color:#ffffff; font-size:11px; font-weight:800; letter-spacing:.3px;
+  padding:5px 12px; border-radius:999px; white-space:nowrap;
+  transform:rotate(-6deg);
+  box-shadow:0 3px 10px rgba(244,63,94,.35), inset 0 1px 0 rgba(255,255,255,.4);
+  font-family:'Manrope','Noto Sans Myanmar',sans-serif;
+}
+.plan-discount-sticker svg{ width:11px; height:11px; flex-shrink:0; }
 .plan-card-offer .unavailable-pill{
   display:inline-flex; align-items:center; gap:4px;
   border:1px solid #f0c3cc; background:#ffe7ed; color:#a72948;
@@ -9447,6 +9462,25 @@ body.light-mode .gp-bottomnav button.is-active{
 /* Mobile: Figma 2-col frame */
 @media (max-width:640px){
   #orderView .plan-option.figma-card{ min-height:0 !important; padding:12px 10px !important; }
+}
+/* Phone: smaller, tighter cards — easier to scan */
+@media (max-width:640px){
+  .plan-option.figma-card{ padding:10px 8px !important; border-radius:10px !important; }
+  .plan-option.figma-card.has-discount{ padding-top:16px !important; }
+  .plan-card-top{ min-height:24px !important; margin-bottom:6px !important; }
+  .plan-tier-badge{ min-height:24px !important; padding:0 8px !important; font-size:10px !important; }
+  .plan-tier-badge .tier-dot{ width:7px !important; height:7px !important; }
+  .plan-card-radio{ width:16px !important; height:16px !important; }
+  .plan-card-name{ font-size:13px !important; line-height:18px !important; margin:0 0 6px 0 !important; }
+  .plan-card-row{ font-size:11px !important; line-height:18px !important; margin:6px 0 !important; }
+  .plan-icon-chip{ width:20px !important; height:20px !important; border-radius:5px !important; }
+  .plan-icon-chip svg{ width:11px !important; height:11px !important; }
+  .plan-card-offer{ margin-bottom:6px !important; }
+  .plan-card-footer{ padding-top:6px !important; }
+  .plan-card-duration{ font-size:11px !important; line-height:18px !important; margin-bottom:3px !important; }
+  .plan-card-price-original{ font-size:10px !important; line-height:14px !important; }
+  .plan-card-price{ font-size:20px !important; line-height:26px !important; }
+  .plan-discount-sticker{ font-size:10px !important; padding:4px 9px !important; top:-10px !important; left:8px !important; }
 }
 
 /* ===== Figma filter tabs: segmented control with sliding indicator ===== */
