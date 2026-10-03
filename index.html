@@ -68,7 +68,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=74">
+  <link rel="stylesheet" href="styles.css?v=75">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -743,7 +743,6 @@
               <div class="ppb-name" id="ppbName">-</div>
               <div class="ppb-meta" id="ppbMeta">-</div>
             </div>
-            <button class="ppb-close" id="ppbClose" type="button" aria-label="Back to products">✕</button>
           </div>
           <div id="planFilters" class="plan-filters" aria-label="Plan filters"></div>
           <div id="planList" class="plan-list"></div>
@@ -4622,15 +4621,6 @@ customHint.textContent = isInvalid
         const planCount = (currentProduct.plans || []).length;
         ppbMeta.textContent = `${planCount} plan${planCount===1?"":"s"} · Choose an account type`;
       }
-      const ppbClose = document.getElementById("ppbClose");
-      if(ppbClose && !ppbClose.dataset.wired){
-        ppbClose.dataset.wired = "1";
-        ppbClose.addEventListener("click", () => {
-          const backBtn = document.getElementById("backBtn");
-          if(backBtn) backBtn.click();
-        });
-      }
-
       const amount = refreshCartSummary();
 
       const galleryEl = document.getElementById("orderGallery");
