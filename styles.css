@@ -9322,14 +9322,24 @@ body.light-mode .gp-bottomnav button.is-active{
 
 /* Figma plan card */
 .plan-option.figma-card{
-  position:relative; display:flex; flex-direction:column;
-  padding:12px;
-  border-radius:12px; border:1px solid #e2d8eb; background:#ffffff;
-  font-family:'Manrope','Noto Sans Myanmar',sans-serif;
+  /* Figma card frame — !important on layout props to beat legacy
+     .plan-option rules (which use !important) wherever the card renders. */
+  position:relative !important; overflow:visible !important;
+  display:flex !important; flex-direction:column !important;
+  align-items:stretch !important; justify-content:flex-start !important;
+  gap:0 !important;
+  width:100% !important; height:auto !important; min-height:0 !important;
+  box-sizing:border-box !important;
+  padding:12px !important;
+  border-radius:12px !important; border:1px solid #e2d8eb !important; background:#ffffff !important;
+  box-shadow:0 2px 8px rgba(80,50,120,0.06) !important;
+  font-family:'Manrope','Noto Sans Myanmar',sans-serif !important;
+  font-size:13px !important; font-weight:400 !important; line-height:1.4 !important;
   cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
-  text-align:left; color:#2d223c;
+  text-align:left !important; color:#2d223c !important;
 }
-.plan-option.figma-card:hover{ border-color:#bb9bdb; }
+.plan-option.figma-card:before{ content:none !important; display:none !important; }
+.plan-option.figma-card:hover{ border-color:#bb9bdb !important; transform:none !important; box-shadow:0 2px 8px rgba(80,50,120,0.06) !important; }
 .plan-option.figma-card.active{
   border-color:#8351ce; background:#faf7ff;
   box-shadow:0 0 0 1px #8351ce, 0 5px 16px rgba(98,49,200,0.06);
@@ -9379,7 +9389,10 @@ body.light-mode .gp-bottomnav button.is-active{
 }
 .plan-card-offer .unavailable-pill svg{ width:11px; height:11px; }
 .plan-card-footer{
-  margin-top:auto; border-top:1px solid #eee6f4; padding-top:8px;
+  /* Figma: content flows naturally from the top — no bottom-pinning.
+     margin-top:auto pushed the price to the card bottom, opening a gap
+     in the middle on mixed-height rows. Fixed spacing like Figma. */
+  margin-top:0; border-top:1px solid #eee6f4; padding-top:8px;
 }
 .plan-card-duration{
   display:flex; align-items:center; gap:6px;
