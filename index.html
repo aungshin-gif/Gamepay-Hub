@@ -68,7 +68,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=69">
+  <link rel="stylesheet" href="styles.css?v=70">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -4446,6 +4446,7 @@ customHint.textContent = isInvalid
     (index === currentPlanIndex ? " active" : "") +
     (plan.bestSeller ? " best-seller" : "") +
     (plan.discount || plan.discountPercent ? " discount" : "") +
+    (!plan.outOfStock && (plan.discount || plan.discountPercent) ? " has-discount" : "") +
     (plan.outOfStock ? " out-stock" : "") +
     (!plan.outOfStock && plan.lowStock ? " low-stock" : "");
 
@@ -4528,10 +4529,14 @@ customHint.textContent = isInvalid
   // Price number split
   const _priceNum = priceText.replace(/\s*Ks\s*$/i, "");
   const _isCustom = /custom|contact|dm/i.test(priceText);
+  const _stickerHtml = (!plan.outOfStock && hasDiscount)
+    ? `<span class="plan-discount-sticker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>-${plan.discountPercent || ""}%</span>`
+    : ``;
   const _offerInner = plan.outOfStock
     ? `<span class="unavailable-pill">${ICON_X} Unavailable</span>`
-    : (hasDiscount ? `<span class="plan-discount-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>-${plan.discountPercent || ""}%</span>` : ``);
+    : ``;
   el.innerHTML = `
+    ${_stickerHtml}
     <div class="plan-card-top">
       ${tierBadgeHtml}
       <input type="radio" class="plan-card-radio" name="plan-radio-${currentProduct.id}" ${index === currentPlanIndex ? "checked" : ""} ${plan.outOfStock ? "disabled" : ""} tabindex="-1" aria-hidden="true">
