@@ -68,7 +68,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=65">
+  <link rel="stylesheet" href="styles.css?v=66">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -4478,8 +4478,11 @@ customHint.textContent = isInvalid
     el.dataset.planIndex = String(index);
     // A plan may name its own tier; otherwise read it off the plan name.
     // GO is its own tier -- it is a plan name, not a synonym for Basic.
+    // "gptpro" is a generic data tag -- let the plan name decide the exact
+    // variant so "Pro 5X" -> lavender and "Pro 20X" -> pink (Figma).
     const tierSource = `${rawPlan} ${planName}`.toLowerCase();
-    const tier = plan.tier || (
+    const _explicitTier = (plan.tier && plan.tier !== "gptpro") ? plan.tier : "";
+    const tier = _explicitTier || (
       /\bsvip\b|\bvip\b/.test(tierSource)                     ? "vip" :
       /\bmax\b|\bultimate\b/.test(tierSource)                ? "max" :
       /\bultra\b/.test(tierSource)                             ? "ultra" :
