@@ -68,7 +68,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=73">
+  <link rel="stylesheet" href="styles.css?v=74">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -731,6 +731,20 @@
 
           <div id="orderGallery" class="order-gallery hidden"></div>
           <button id="togglePlansBtn" class="plan-toggle">Hide Plan Selection</button>
+          <!-- Figma: product header above categories -->
+          <div class="plans-header">
+            <div class="plans-eyebrow">Your next upgrade</div>
+            <h2 class="plans-title">Choose your plan.</h2>
+            <p class="plans-sub">Compare options. Pick what works for you.</p>
+          </div>
+          <div class="plans-product-box" id="plansProductBox">
+            <span class="ppb-logo" id="ppbLogo"></span>
+            <div class="ppb-info">
+              <div class="ppb-name" id="ppbName">-</div>
+              <div class="ppb-meta" id="ppbMeta">-</div>
+            </div>
+            <button class="ppb-close" id="ppbClose" type="button" aria-label="Back to products">✕</button>
+          </div>
           <div id="planFilters" class="plan-filters" aria-label="Plan filters"></div>
           <div id="planList" class="plan-list"></div>
           
@@ -4594,6 +4608,27 @@ customHint.textContent = isInvalid
       if(!currentProduct){
         cartItem.classList.add("hidden");
         return;
+      }
+
+      // Figma product header box above categories
+      const ppbLogo = document.getElementById("ppbLogo");
+      const ppbName = document.getElementById("ppbName");
+      const ppbMeta = document.getElementById("ppbMeta");
+      if(ppbLogo && ppbName && ppbMeta){
+        ppbLogo.innerHTML = currentProduct.iconType === "emoji"
+          ? currentProduct.icon
+          : `<img src="${currentProduct.icon}" alt="${currentProduct.name}" loading="lazy" decoding="async">`;
+        ppbName.textContent = currentProduct.name;
+        const planCount = (currentProduct.plans || []).length;
+        ppbMeta.textContent = `${planCount} plan${planCount===1?"":"s"} · Choose an account type`;
+      }
+      const ppbClose = document.getElementById("ppbClose");
+      if(ppbClose && !ppbClose.dataset.wired){
+        ppbClose.dataset.wired = "1";
+        ppbClose.addEventListener("click", () => {
+          const backBtn = document.getElementById("backBtn");
+          if(backBtn) backBtn.click();
+        });
       }
 
       const amount = refreshCartSummary();
