@@ -4497,7 +4497,7 @@ el.innerHTML = `
   <div class="plan-card-offer">
     ${plan.outOfStock
       ? `<span class="unavailable-pill">${ICON_X} Unavailable</span>`
-      : (hasDiscount ? `<span class="special-offer">Special offer</span>` : ``)}
+      : (hasDiscount ? `<span class="plan-discount-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>-${plan.discountPercent || ""}%</span>` : ``)}
   </div>
   <div class="plan-card-footer">
     ${plan.noDuration ? `` : `<div class="plan-card-duration"><span class="plan-icon-chip clock">${ICON_CLOCK}</span><span>${durationText}</span></div>`}

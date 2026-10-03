@@ -9317,7 +9317,7 @@ body.light-mode .gp-bottomnav button.is-active{
 /* Figma plan card */
 .plan-option.figma-card{
   position:relative; display:flex; flex-direction:column;
-  min-height:220px; padding:12px;
+  min-height:190px; padding:10px;
   border-radius:12px; border:1px solid #e2d8eb; background:#ffffff;
   font-family:'Manrope','Noto Sans Myanmar',sans-serif;
   cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
@@ -9356,6 +9356,15 @@ body.light-mode .gp-bottomnav button.is-active{
 .plan-card-offer .special-offer{
   font-size:10px; font-weight:600; color:#537969;
 }
+/* Figma discount badge: light mint green pill with percent icon */
+.plan-discount-badge{
+  display:inline-flex; align-items:center; gap:4px;
+  background:#d4f0e2; border:1px solid #b8e0c8; color:#2e7d4f;
+  border-radius:6px; padding:3px 8px;
+  font-size:10px; font-weight:700; line-height:14px;
+  white-space:nowrap;
+}
+.plan-discount-badge svg{ width:11px; height:11px; flex-shrink:0; }
 .plan-card-offer .unavailable-pill{
   display:inline-flex; align-items:center; gap:4px;
   border:1px solid #f0c3cc; background:#ffe7ed; color:#a72948;
