@@ -9281,25 +9281,25 @@ body.light-mode .gp-bottomnav button.is-active{
   background:currentColor; opacity:0.75; flex-shrink:0;
 }
 /* Badge color tokens — same plan name = same color */
-.plan-tier-badge[data-tier="go"]{ border-color:#e9c16f; background:#ffe391; color:#75510e; }
-.plan-tier-badge[data-tier="plus"]{ border-color:#a8c9f5; background:#d4e7ff; color:#255b9e; }
+.plan-tier-badge[data-tier="go"]{ border-color:#f0d48a; background:#ffedb5; color:#7a5a12; }
+.plan-tier-badge[data-tier="plus"]{ border-color:#bcd6f7; background:#e0efff; color:#2a64a8; }
 .plan-tier-badge[data-tier="pro"],
-.plan-tier-badge[data-tier="proplus"]{ border-color:#c7acf1; background:#e4d5ff; color:#693a9d; }
+.plan-tier-badge[data-tier="proplus"]{ border-color:#d3bcf3; background:#ece0ff; color:#7146a8; }
 /* Figma: PRO 5X = lavender, PRO 20X = pink */
-.plan-tier-badge[data-tier="pro5x"]{ border-color:#c7acf1; background:#e4d5ff; color:#693a9d; }
-.plan-tier-badge[data-tier="pro20x"]{ border-color:#efaacf; background:#ffd6ea; color:#96326d; }
+.plan-tier-badge[data-tier="pro5x"]{ border-color:#d3bcf3; background:#ece0ff; color:#7146a8; }
+.plan-tier-badge[data-tier="pro20x"]{ border-color:#f2bcd8; background:#ffe0ef; color:#a13c78; }
 /* Fallbacks: every data tier must have a color -- never render a white badge */
-.plan-tier-badge[data-tier="gptpro"]{ border-color:#c7acf1; background:#e4d5ff; color:#693a9d; }
-.plan-tier-badge[data-tier="4k"]{ border-color:#a8c9f5; background:#d4e7ff; color:#255b9e; }
-.plan-tier-badge[data-tier="team"]{ border-color:#98d5e4; background:#c6edf5; color:#246376; }
-.plan-tier-badge[data-tier="individual"]{ border-color:#98d4b5; background:#c9efdb; color:#2e694b; }
-.plan-tier-badge[data-tier="family"]{ border-color:#98d5e4; background:#c6edf5; color:#246376; }
-.plan-tier-badge[data-tier="education"]{ border-color:#a8c9f5; background:#d4e7ff; color:#255b9e; }
-.plan-tier-badge[data-tier="business"]{ border-color:#edb791; background:#ffdcc2; color:#914b25; }
-.plan-tier-badge[data-tier="premium"]{ border-color:#efaacf; background:#ffd6ea; color:#96326d; }
-.plan-tier-badge[data-tier="vip"]{ border-color:#e9c16f; background:#ffe391; color:#75510e; }
-.plan-tier-badge[data-tier="max"]{ border-color:#c7acf1; background:#e4d5ff; color:#693a9d; }
-.plan-tier-badge[data-tier="ultra"]{ border-color:#efaacf; background:#ffd6ea; color:#96326d; }
+.plan-tier-badge[data-tier="gptpro"]{ border-color:#d3bcf3; background:#ece0ff; color:#7146a8; }
+.plan-tier-badge[data-tier="4k"]{ border-color:#bcd6f7; background:#e0efff; color:#2a64a8; }
+.plan-tier-badge[data-tier="team"]{ border-color:#a9dcea; background:#d2f0f8; color:#2a6d80; }
+.plan-tier-badge[data-tier="individual"]{ border-color:#a9ddc0; background:#d8f3e3; color:#35785a; }
+.plan-tier-badge[data-tier="family"]{ border-color:#a9dcea; background:#d2f0f8; color:#2a6d80; }
+.plan-tier-badge[data-tier="education"]{ border-color:#bcd6f7; background:#e0efff; color:#2a64a8; }
+.plan-tier-badge[data-tier="business"]{ border-color:#f0c6a3; background:#ffe4cb; color:#9a5730; }
+.plan-tier-badge[data-tier="premium"]{ border-color:#f2bcd8; background:#ffe0ef; color:#a13c78; }
+.plan-tier-badge[data-tier="vip"]{ border-color:#f0d48a; background:#ffedb5; color:#7a5a12; }
+.plan-tier-badge[data-tier="max"]{ border-color:#d3bcf3; background:#ece0ff; color:#7146a8; }
+.plan-tier-badge[data-tier="ultra"]{ border-color:#f2bcd8; background:#ffe0ef; color:#a13c78; }
 .plan-tier-badge[data-tier="basic"],
 .plan-tier-badge[data-tier="core"],
 .plan-tier-badge[data-tier="standard"],
@@ -9331,7 +9331,7 @@ body.light-mode .gp-bottomnav button.is-active{
   width:100% !important; height:auto !important; min-height:0 !important;
   box-sizing:border-box !important;
   padding:12px !important;
-  border-radius:12px !important; border:1px solid #e2d8eb !important; background:#ffffff !important;
+  border-radius:12px !important; border:1px solid #e8e2f2 !important; background:#ffffff !important;
   box-shadow:0 2px 8px rgba(80,50,120,0.06) !important;
   font-family:'Manrope','Noto Sans Myanmar',sans-serif !important;
   font-size:13px !important; font-weight:400 !important; line-height:1.4 !important;
@@ -9339,10 +9339,10 @@ body.light-mode .gp-bottomnav button.is-active{
   text-align:left !important; color:#2d223c !important;
 }
 .plan-option.figma-card:before{ content:none !important; display:none !important; }
-.plan-option.figma-card:hover{ border-color:#bb9bdb !important; transform:none !important; box-shadow:0 2px 8px rgba(80,50,120,0.06) !important; }
+.plan-option.figma-card:hover{ border-color:#c9b8e0 !important; transform:none !important; box-shadow:0 2px 8px rgba(80,50,120,0.06) !important; }
 .plan-option.figma-card.active{
-  border-color:#8351ce; background:#faf7ff;
-  box-shadow:0 0 0 1px #8351ce, 0 5px 16px rgba(98,49,200,0.06);
+  border-color:#8b5cf6; background:#fbf9ff;
+  box-shadow:0 0 0 1px #8b5cf6, 0 5px 16px rgba(139,92,246,0.08);
 }
 .plan-option.figma-card.out-stock{
   border:1px dashed #dfaab4; background:#fff8fa; color:#68505b;
@@ -9375,7 +9375,7 @@ body.light-mode .gp-bottomnav button.is-active{
 /* Figma discount badge: light mint green pill with percent icon */
 .plan-discount-badge{
   display:inline-flex; align-items:center; gap:4px;
-  background:#d4f0e2; border:1px solid #b8e0c8; color:#2e7d4f;
+  background:#dcf5e5; border:1px solid #c2e8d1; color:#35805c;
   border-radius:6px; padding:3px 8px;
   font-size:10px; font-weight:700; line-height:14px;
   white-space:nowrap;
@@ -9437,7 +9437,7 @@ body.light-mode .gp-bottomnav button.is-active{
   padding:12px !important;
   border-radius:12px !important;
   background:#ffffff !important;
-  border:1px solid #e2d8eb !important;
+  border:1px solid #e8e2f2 !important;
   box-shadow:none !important;
   font-family:'Manrope','Noto Sans Myanmar',sans-serif !important;
   text-align:left !important;
@@ -9445,14 +9445,14 @@ body.light-mode .gp-bottomnav button.is-active{
   overflow:visible !important;
 }
 #orderView .plan-option.figma-card:hover{
-  border-color:#bb9bdb !important;
+  border-color:#c9b8e0 !important;
   box-shadow:none !important;
   transform:none !important;
 }
 #orderView .plan-option.figma-card.active{
-  border-color:#8351ce !important;
+  border-color:#8b5cf6 !important;
   background:#faf7ff !important;
-  box-shadow:0 0 0 1px #8351ce, 0 5px 16px rgba(98,49,200,0.06) !important;
+  box-shadow:0 0 0 1px #8b5cf6, 0 5px 16px rgba(139,92,246,0.08) !important;
 }
 #orderView .plan-option.figma-card.out-stock{
   border:1px dashed #dfaab4 !important;
