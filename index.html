@@ -68,7 +68,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=66">
+  <link rel="stylesheet" href="styles.css?v=67">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -4528,6 +4528,9 @@ customHint.textContent = isInvalid
   // Price number split
   const _priceNum = priceText.replace(/\s*Ks\s*$/i, "");
   const _isCustom = /custom|contact|dm/i.test(priceText);
+  const _offerInner = plan.outOfStock
+    ? `<span class="unavailable-pill">${ICON_X} Unavailable</span>`
+    : (hasDiscount ? `<span class="plan-discount-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>-${plan.discountPercent || ""}%</span>` : ``);
   el.innerHTML = `
     <div class="plan-card-top">
       ${tierBadgeHtml}
@@ -4538,14 +4541,10 @@ customHint.textContent = isInvalid
       <span class="plan-icon-chip">${accIcon}</span>
       <span>${accLabel}</span>
     </div>
-    <div class="plan-card-offer">
-      ${plan.outOfStock
-        ? `<span class="unavailable-pill">${ICON_X} Unavailable</span>`
-        : (hasDiscount ? `<span class="plan-discount-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>-${plan.discountPercent || ""}%</span>` : ``)}
-    </div>
+    ${_offerInner ? `<div class="plan-card-offer">${_offerInner}</div>` : ``}
     <div class="plan-card-footer">
       ${plan.noDuration ? `` : `<div class="plan-card-duration"><span class="plan-icon-chip clock">${ICON_CLOCK}</span><span>${durationText}</span></div>`}
-      <span class="plan-card-price-original">${origPriceHtml}</span>
+      ${origPriceHtml ? `<span class="plan-card-price-original">${origPriceHtml}</span>` : ``}
       <div class="plan-card-price">${_isCustom ? `<span style="font-size:14px;font-weight:700;">${priceText}</span>` : `${_priceNum}<span class="ks">Ks</span>`}</div>
     </div>
   `;
