@@ -9532,13 +9532,6 @@ body.light-mode .gp-bottomnav button.is-active{
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .ppb-meta{ font-size:12px; color:#8a7a99; margin-top:2px; }
-.ppb-close{
-  width:32px; height:32px; border-radius:50%; flex-shrink:0;
-  border:1px solid #e8e2f2; background:#faf8ff; color:#8a7a99;
-  font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center;
-  transition:background .15s ease;
-}
-.ppb-close:hover{ background:#f0e8f8; color:#5b426c; }
 @media (max-width:640px){
   .plans-title{ font-size:20px !important; }
   .plans-product-box{ padding:10px 12px !important; gap:10px !important; }
@@ -9546,6 +9539,23 @@ body.light-mode .gp-bottomnav button.is-active{
   .ppb-logo img{ width:28px !important; height:28px !important; }
   .ppb-name{ font-size:14px !important; }
 }
+
+/* ===== Clean plans header: hide redundant order-cart chrome ===== */
+#orderView .panel-title,
+#orderView .panel-sub{ display:none !important; }
+#cartItem .section-title,
+#cartItem .cart-head{ display:none !important; }
+/* Subtle plan toggle instead of huge gradient button */
+#togglePlansBtn.plan-toggle{
+  display:inline-flex !important; align-items:center; gap:6px;
+  width:auto !important; min-height:0 !important;
+  margin:0 0 10px auto !important; padding:6px 12px !important;
+  background:#f4efff !important; border:1px solid #e2d8f0 !important;
+  border-radius:999px !important; color:#6b4d8f !important;
+  font-size:11px !important; font-weight:600 !important;
+  box-shadow:none !important; cursor:pointer;
+}
+#togglePlansBtn.plan-toggle:hover{ background:#ece2fa !important; }
 
 /* ===== Figma filter tabs: segmented control with sliding indicator ===== */
 .plan-filters.figma-tabs{
