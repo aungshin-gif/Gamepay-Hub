@@ -6,6 +6,10 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
+<!-- Not meant to be found via search or crawling -- the real gate is
+     is_admin()/RLS server-side, but there's no reason to make this page
+     any easier to stumble onto than it has to be. -->
+<meta name="robots" content="noindex, nofollow, noarchive" />
 <title>Gamepay Hub — Admin</title>
 <link rel="icon" href="assets/favicon.webp" type="image/webp" />
   <!-- The ?v= query string busts the browser's cache for this file --
@@ -914,7 +918,9 @@ let currentChatCustomerInitial = "?";
 
 function renderChatCustomerHeader(label){
   const el = document.getElementById("chatCustomerHeader");
-  if(el) el.innerHTML = `<div class="chat-customer-header">${ICON_USER}Chatting with <b>${label}</b></div>`;
+  // label can come straight from a customer-controlled field (account_info),
+  // so it's never safe to drop into innerHTML unescaped.
+  if(el) el.innerHTML = `<div class="chat-customer-header">${ICON_USER}Chatting with <b>${escapeHtml(label)}</b></div>`;
   const clean = String(label).replace("@", "").replace("Loading…", "").trim();
   currentChatCustomerInitial = (clean[0] || "?").toUpperCase();
 }
@@ -1093,8 +1099,8 @@ function renderOrderRow(o){
   return `
     <div class="order-row" data-id="${o.id}">
       <div class="or-main">
-        <div class="or-code">${o.order_code} ${o.archived ? statusBadge("archived") : statusBadge(o.status)}${unread}</div>
-        <div class="or-sub">${o.product_name} · ${o.plan_name}</div>
+        <div class="or-code">${escapeHtml(o.order_code)} ${o.archived ? statusBadge("archived") : statusBadge(o.status)}${unread}</div>
+        <div class="or-sub">${escapeHtml(o.product_name)} · ${escapeHtml(o.plan_name)}</div>
       </div>
       <div class="or-amount">${Number(o.amount).toLocaleString()} Ks</div>
       <div class="or-meta">${o.payment_method || "-"}</div>
@@ -1180,6 +1186,34 @@ const userDetailContent = document.getElementById("userDetailContent");
 document.getElementById("userDetailCloseBtn")?.addEventListener("click", () => userDetailModal.classList.add("hidden"));
 userDetailModal?.addEventListener("click", (e) => { if(e.target === userDetailModal) userDetailModal.classList.add("hidden"); });
 
+// A customer's submitted Telegram username + its verification state, for
+// the Users-tab detail card. Separate from telegram_links' own table so
+// showUserDetail() just has one HTML-building call per section -- matches
+// the pattern userAvatarHtml()/userDisplayHandle() already use elsewhere
+// on this page. Was being called below without ever being defined, which
+// threw and left the whole "Chat with this customer" modal stuck on
+// "Loading…" forever.
+function telegramLinkCardHtml(link){
+  if(!link){
+    return `<div class="empty-note">No Telegram account submitted yet.</div>
+      <div id="tgLinkMsg" style="font-size:12.5px;color:var(--muted);margin-top:4px;"></div>`;
+  }
+  const username = escapeHtml(link.telegram_username);
+  const isPending = link.status === "pending";
+  const badge = isPending
+    ? `<span class="badge pending">PENDING</span>`
+    : `<span class="badge approved">LINKED</span>`;
+  const actions = isPending
+    ? `<button id="tgConfirmBtn" type="button">Confirm</button>
+       <button id="tgUnlinkBtn" type="button" class="ghost">Reject</button>`
+    : `<button id="tgUnlinkBtn" type="button" class="ghost">Unlink</button>`;
+  return `
+    <div class="or-sub" style="white-space:normal;margin-bottom:6px;">@${username} ${badge}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;">${actions}</div>
+    <div id="tgLinkMsg" style="font-size:12.5px;color:var(--muted);"></div>
+  `;
+}
+
 async function showUserDetail(user){
   userDetailModal.classList.remove("hidden");
   userDetailContent.innerHTML = "<div class='empty-note'>Loading…</div>";
@@ -1195,8 +1229,8 @@ async function showUserDetail(user){
   const rows = list.length
     ? list.map(o => `
         <div style="padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:#fbfbfe;margin-bottom:8px;">
-          <div class="or-code" style="white-space:normal;">${o.order_code} ${statusBadge(o.status)}</div>
-          <div class="or-sub" style="white-space:normal;">${o.product_name} · ${o.plan_name}</div>
+          <div class="or-code" style="white-space:normal;">${escapeHtml(o.order_code)} ${statusBadge(o.status)}</div>
+          <div class="or-sub" style="white-space:normal;">${escapeHtml(o.product_name)} · ${escapeHtml(o.plan_name)}</div>
           <div class="or-sub" style="white-space:normal;">${Number(o.amount).toLocaleString()} Ks · ${new Date(o.created_at).toLocaleDateString()}</div>
         </div>
       `).join("")
@@ -1288,6 +1322,8 @@ async function showUserDetail(user){
 // Users-tab card, and the Messages inbox thread) -- one staged File per
 // file-input id, uploaded to the public "chat-images" bucket on send.
 const adminChatFiles = {};
+// Matches the "chat-images" bucket's own file_size_limit in schema.sql.
+const MAX_CHAT_IMAGE_BYTES = 8 * 1024 * 1024;
 
 function wireChatAttach(attachBtnId, fileInputId, previewId){
   const btn = document.getElementById(attachBtnId);
@@ -1297,6 +1333,11 @@ function wireChatAttach(attachBtnId, fileInputId, previewId){
   input.addEventListener("change", () => {
     const file = input.files && input.files[0];
     if(!file) return;
+    if(file.size > MAX_CHAT_IMAGE_BYTES){
+      showAdminToast("That image is too large (max 8MB).", true);
+      input.value = "";
+      return;
+    }
     adminChatFiles[fileInputId] = file;
     renderChatAttachPreview(fileInputId, previewId);
   });
@@ -1308,7 +1349,7 @@ function renderChatAttachPreview(fileInputId, previewId){
   if(!file){ preview.classList.add("hidden"); preview.innerHTML = ""; return; }
   const url = URL.createObjectURL(file);
   preview.classList.remove("hidden");
-  preview.innerHTML = `<img src="${url}" alt=""><span>${file.name}</span><span class="chat-image-remove">Remove</span>`;
+  preview.innerHTML = `<img src="${url}" alt=""><span>${escapeHtml(file.name)}</span><span class="chat-image-remove">Remove</span>`;
   preview.querySelector(".chat-image-remove")?.addEventListener("click", () => clearChatAttach(fileInputId, previewId));
 }
 function clearChatAttach(fileInputId, previewId){
@@ -1877,22 +1918,22 @@ async function selectOrder(id){
   showOrderDetailView();
   orderDetail.innerHTML = `
     <table class="order-detail-table">
-      <tr><th>Product</th><td>${order.product_name}</td></tr>
-      <tr><th>Plan</th><td>${order.plan_name}</td></tr>
+      <tr><th>Product</th><td>${escapeHtml(order.product_name)}</td></tr>
+      <tr><th>Plan</th><td>${escapeHtml(order.plan_name)}</td></tr>
       <tr><th>Amount</th><td><b>${Number(order.amount).toLocaleString()} Ks</b></td></tr>
-      <tr><th>Payment</th><td>${order.payment_method || "-"}</td></tr>
-      <tr><th>Account/Email</th><td>${order.account_info || "-"}</td></tr>
-      <tr><th>Customer Note</th><td>${order.note || "-"}</td></tr>
-      <tr><th>Plan Warranty</th><td>${order.plan_warranty || "-"}</td></tr>
-      <tr><th>Plan Format</th><td>${order.plan_format || "-"}</td></tr>
-      <tr><th>Plan Note</th><td style="white-space:pre-line;">${order.plan_note || "-"}</td></tr>
+      <tr><th>Payment</th><td>${escapeHtml(order.payment_method) || "-"}</td></tr>
+      <tr><th>Account/Email</th><td>${escapeHtml(order.account_info) || "-"}</td></tr>
+      <tr><th>Customer Note</th><td>${escapeHtml(order.note) || "-"}</td></tr>
+      <tr><th>Plan Warranty</th><td>${escapeHtml(order.plan_warranty) || "-"}</td></tr>
+      <tr><th>Plan Format</th><td>${escapeHtml(order.plan_format) || "-"}</td></tr>
+      <tr><th>Plan Note</th><td style="white-space:pre-line;">${escapeHtml(order.plan_note) || "-"}</td></tr>
       <tr><th>Placed</th><td>${new Date(order.created_at).toLocaleString()}</td></tr>
       <tr><th>Payment Slip</th><td id="slipStatus">${order.payment_slip_path ? "Loading…" : "None attached"}</td></tr>
       ${order.status === "rejected" && order.reject_reason ? `<tr><th>Reject Reason</th><td>${escapeHtml(order.reject_reason)}</td></tr>` : ""}
     </table>
   `;
   document.getElementById("chatOrderStrip").innerHTML =
-    `<span>${order.order_code}</span><b>${Number(order.amount).toLocaleString()} Ks</b>${statusBadge(order.archived ? "archived" : order.status)}`;
+    `<span>${escapeHtml(order.order_code)}</span><b>${Number(order.amount).toLocaleString()} Ks</b>${statusBadge(order.archived ? "archived" : order.status)}`;
   updateChatEndedUI(order);
   renderChatCustomerHeader(order.user_id ? "Loading…" : (order.account_info || "this customer (guest)"));
   if(order.user_id){

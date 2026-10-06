@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /shinpayhubcld.html
 
 Sitemap: https://gamepayhub.shop/sitemap.xml

@@ -214,9 +214,15 @@ grant execute on function public.get_messages to anon, authenticated;
 grant execute on function public.send_customer_message to anon, authenticated;
 
 -- 5. Payment-slip screenshots (private storage bucket) -------------
-insert into storage.buckets (id, name, public)
-values ('payment-slips', 'payment-slips', false)
-on conflict (id) do nothing;
+-- file_size_limit/allowed_mime_types are enforced by Storage itself on
+-- every upload (anon includes an un-authenticated guest, so without
+-- these a guest could upload arbitrarily large or arbitrary-type files
+-- here all day for free). 8MB covers a phone screenshot comfortably.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('payment-slips', 'payment-slips', false, 8388608, array['image/jpeg','image/png','image/webp','image/heic','image/heif'])
+on conflict (id) do update set
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
 
 drop policy if exists "anyone can upload a payment slip" on storage.objects;
 create policy "anyone can upload a payment slip" on storage.objects
@@ -327,9 +333,13 @@ drop policy if exists "customer read own notifications" on public.notifications;
 create policy "customer read own notifications" on public.notifications
   for select using (auth.uid() = user_id);
 
+-- Deliberately no customer UPDATE policy on this table: a row-level
+-- policy here can't restrict which COLUMNS a customer touches, so one
+-- that let them flip their own read_at would also let them rewrite their
+-- own title/body (e.g. forging a fake "GamePay gave you 50,000 Ks"
+-- notice for a screenshot). mark_notifications_read() below is the only
+-- door in -- it's security definer and only ever sets read_at = now().
 drop policy if exists "customer mark own notifications read" on public.notifications;
-create policy "customer mark own notifications read" on public.notifications
-  for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 drop policy if exists "admin manage notifications" on public.notifications;
 create policy "admin manage notifications" on public.notifications
@@ -549,19 +559,37 @@ create policy "admin manage support messages" on public.support_messages
 -- for an image-only message) so existing rows/constraints don't change.
 alter table public.support_messages add column if not exists image_url text;
 
-insert into storage.buckets (id, name, public)
-values ('chat-images', 'chat-images', true)
-on conflict (id) do nothing;
+-- file_size_limit/allowed_mime_types: the bucket is public (chat
+-- attachments need to load for both sides without a signed URL), so
+-- without a size cap anyone with an account could use it as free,
+-- unlimited public file hosting under our own domain.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('chat-images', 'chat-images', true, 8388608, array['image/jpeg','image/png','image/webp','image/gif'])
+on conflict (id) do update set
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
 
 drop policy if exists "anyone can view chat images" on storage.objects;
 create policy "anyone can view chat images" on storage.objects
   for select to anon, authenticated
   using (bucket_id = 'chat-images');
 
+-- Both uploaders (index.html's customer chat, shinpayhubcld.html's admin
+-- reply box) already upload under a fixed folder -- "<user_id>/..." for a
+-- customer, "admin/..." for the admin -- so this just makes that the
+-- enforced rule instead of trusting the client to keep doing it: a
+-- customer can only write into their own folder, never pose as another
+-- customer or as "admin/..." in the same shared public bucket.
 drop policy if exists "authenticated can upload chat images" on storage.objects;
 create policy "authenticated can upload chat images" on storage.objects
   for insert to authenticated
-  with check (bucket_id = 'chat-images');
+  with check (
+    bucket_id = 'chat-images'
+    and (
+      (storage.foldername(name))[1] = auth.uid()::text
+      or ((storage.foldername(name))[1] = 'admin' and public.is_admin())
+    )
+  );
 
 -- support_messages has no natural "one row per conversation" to hang an
 -- admin_last_read_at on the way orders does -- this table gives it one,
@@ -649,19 +677,59 @@ create table if not exists public.admin_gate (
   updated_at timestamptz not null default now()
 );
 alter table public.admin_gate enable row level security;
+-- Was storing the gate code as plain text -- anyone who ever saw the
+-- table (a dashboard screen-share, a future reader of this file's own
+-- data) would see the real code. Hash it with pgcrypto's bcrypt (already
+-- enabled at the top of this file) instead; check_admin_gate_code below
+-- transparently upgrades an old plaintext row to a hash the first time
+-- it's matched, so re-running this file on an existing project doesn't
+-- require resetting the code by hand.
+alter table public.admin_gate add column if not exists failed_attempts int not null default 0;
+alter table public.admin_gate add column if not exists locked_until timestamptz;
 
 create or replace function public.check_admin_gate_code(p_code text)
 returns boolean
 language plpgsql security definer set search_path = public as $$
-declare v_code text;
+declare v_code text; v_locked_until timestamptz; v_failed int; v_match boolean;
 begin
-  select code into v_code from public.admin_gate where id = true;
+  select code, locked_until, failed_attempts into v_code, v_locked_until, v_failed
+  from public.admin_gate where id = true;
+
   -- No code configured yet -- stay reachable so first-time setup (logging
   -- in once with just email/password to set the code from Settings) works.
   if v_code is null then
     return true;
   end if;
-  return v_code = p_code;
+
+  -- Locked out from too many recent wrong guesses -- refuse without even
+  -- looking at p_code, so a script retrying as fast as it can still only
+  -- gets a few guesses every 15 minutes.
+  if v_locked_until is not null and v_locked_until > now() then
+    return false;
+  end if;
+
+  -- bcrypt hashes always start with "$2"; anything else is a leftover
+  -- plaintext code from before this column was hashed.
+  if v_code like '$2%' then
+    v_match := (crypt(p_code, v_code) = v_code);
+  else
+    v_match := (v_code = p_code);
+    if v_match then
+      -- Right code, old plaintext row -- upgrade it to a hash now.
+      update public.admin_gate set code = crypt(p_code, gen_salt('bf')) where id = true;
+    end if;
+  end if;
+
+  if v_match then
+    update public.admin_gate set failed_attempts = 0, locked_until = null where id = true;
+  else
+    v_failed := v_failed + 1;
+    update public.admin_gate set
+      failed_attempts = v_failed,
+      locked_until = case when v_failed >= 8 then now() + interval '15 minutes' else locked_until end
+    where id = true;
+  end if;
+  return v_match;
 end;
 $$;
 grant execute on function public.check_admin_gate_code to anon, authenticated;
@@ -669,17 +737,22 @@ grant execute on function public.check_admin_gate_code to anon, authenticated;
 create or replace function public.set_admin_gate_code(p_current text, p_new text)
 returns boolean
 language plpgsql security definer set search_path = public as $$
-declare v_code text;
+declare v_code text; v_match boolean;
 begin
   if not public.is_admin() then
     raise exception 'not authorized';
   end if;
   select code into v_code from public.admin_gate where id = true;
-  if v_code is not null and v_code is distinct from p_current then
-    raise exception 'current code is incorrect';
+  if v_code is not null then
+    v_match := case when v_code like '$2%' then crypt(p_current, v_code) = v_code else v_code = p_current end;
+    if not v_match then
+      raise exception 'current code is incorrect';
+    end if;
   end if;
-  insert into public.admin_gate (id, code, updated_at) values (true, p_new, now())
-    on conflict (id) do update set code = excluded.code, updated_at = excluded.updated_at;
+  insert into public.admin_gate (id, code, updated_at, failed_attempts, locked_until)
+    values (true, crypt(p_new, gen_salt('bf')), now(), 0, null)
+    on conflict (id) do update set code = excluded.code, updated_at = excluded.updated_at,
+      failed_attempts = 0, locked_until = null;
   return true;
 end;
 $$;
@@ -956,10 +1029,14 @@ drop policy if exists "admin manage app settings" on public.app_settings;
 create policy "admin manage app settings" on public.app_settings
   for all using (public.is_admin()) with check (public.is_admin());
 
+-- Every other admin_* function in this file gates on is_admin() -- this
+-- one didn't, so any logged-in customer could read it directly. The
+-- value itself is low-stakes (just the welcome-coupon amount), but the
+-- gap was inconsistent with the rest of the file and worth closing.
 create or replace function public.admin_get_welcome_coupon_amount()
 returns numeric
 language sql security definer set search_path = public as $$
-  select value from public.app_settings where key = 'welcome_coupon_amount';
+  select value from public.app_settings where key = 'welcome_coupon_amount' and public.is_admin();
 $$;
 grant execute on function public.admin_get_welcome_coupon_amount to authenticated;
 
