@@ -2825,14 +2825,24 @@ function hideAllOrderSubviews(){
   orderView.classList.add("hide-cart-header");
 }
 
+// Matches the "payment-slips" bucket's own file_size_limit in schema.sql --
+// Storage would reject an oversized file too, but catching it here means
+// an instant message instead of a 15-second upload that fails at the end.
+const MAX_SLIP_BYTES = 8 * 1024 * 1024;
+
 slipUploadLabel?.addEventListener("click", (e) => { e.preventDefault(); slipInput.click(); });
 slipInput?.addEventListener("change", () => {
   const file = slipInput.files && slipInput.files[0];
   if(!file) return;
+  if(file.size > MAX_SLIP_BYTES){
+    showToast("That screenshot is too large (max 8MB). Try a smaller image.");
+    slipInput.value = "";
+    return;
+  }
   selectedSlipFile = file;
   const url = URL.createObjectURL(file);
   slipPreview.classList.remove("hidden");
-  slipPreview.innerHTML = `<img src="${url}" alt="Payment slip preview"><span>${file.name}</span><span class="slip-remove" id="slipRemoveBtn">Remove</span>`;
+  slipPreview.innerHTML = `<img src="${url}" alt="Payment slip preview"><span>${escapePreviewText(file.name)}</span><span class="slip-remove" id="slipRemoveBtn">Remove</span>`;
   // attach animation: pop the preview in + flash the box
   slipPreview.classList.remove("slip-pop"); void slipPreview.offsetWidth; slipPreview.classList.add("slip-pop");
   const slipBox = slipPreview.closest(".slip-upload-box");
@@ -5636,11 +5646,16 @@ document.getElementById("chatImageInput")?.addEventListener("change", () => {
   const input = document.getElementById("chatImageInput");
   const file = input.files && input.files[0];
   if(!file) return;
+  if(file.size > MAX_SLIP_BYTES){
+    showToast("That image is too large (max 8MB). Try a smaller image.");
+    input.value = "";
+    return;
+  }
   selectedChatImageFile = file;
   const url = URL.createObjectURL(file);
   const preview = document.getElementById("chatImagePreview");
   preview.classList.remove("hidden");
-  preview.innerHTML = `<img src="${url}" alt="Selected image"><span>${file.name}</span><span class="slip-remove" id="chatImageRemoveBtn">Remove</span>`;
+  preview.innerHTML = `<img src="${url}" alt="Selected image"><span>${escapePreviewText(file.name)}</span><span class="slip-remove" id="chatImageRemoveBtn">Remove</span>`;
   document.getElementById("chatImageRemoveBtn")?.addEventListener("click", clearChatImageSelection);
 });
 
