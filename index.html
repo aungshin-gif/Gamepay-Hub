@@ -2762,6 +2762,7 @@ plans: [
     wirePasswordToggle("newPasswordInput", "newPasswordToggle");
     let authMode = "login"; // "login" | "signup" | "forgot-email" | "forgot-otp"
     let resetEmail = ""; // remembered between the forgot-password steps
+    let signupEmail = ""; // remembered on the "check your email" screen (code entry + resend)
 
     let activeCategory = "All";
     let activePayment = "";
@@ -5958,12 +5959,16 @@ function openAuthModal(mode, pendingEmail){
     authConfirmPasswordField.classList.add("hidden");
     authReferralField.classList.add("hidden");
     authForgotRow.classList.add("hidden");
-    authOtpField.classList.add("hidden");
+    signupEmail = pendingEmail || signupEmail;
+    // The confirmation email carries a link and (once the template includes
+    // it) a code. Both work: tap the link, or type the code here.
+    authOtpField.classList.remove("hidden");
     authNewPasswordField.classList.add("hidden");
     document.getElementById("authModalTitle").textContent = "Check your email!";
-    document.getElementById("authModalSub").textContent = `We sent a confirmation link to ${pendingEmail || "your email"}. Open it, then come back and log in.`;
-    document.getElementById("authSubmitBtn").textContent = "Got it";
-    document.getElementById("authSwitchText").innerHTML = `<a id="authSwitchLink">Back to Login</a>`;
+    document.getElementById("authModalSub").textContent = `We sent a confirmation email to ${signupEmail || "your email"}. Tap the button in it, or enter the code from it below. Check your Spam folder too.`;
+    document.getElementById("authSubmitBtn").textContent = "Verify code";
+    document.getElementById("authSwitchText").innerHTML = `Didn't get it? <a id="authResendLink">Resend email</a> · <a id="authSwitchLink">Back to Login</a>`;
+    document.getElementById("authResendLink")?.addEventListener("click", () => resendSignupEmail(signupEmail));
     document.getElementById("authModalIcon")?.classList.remove("hidden");
     document.querySelector(".auth-modal")?.classList.add("celebrate");
     switchLink();
@@ -6023,10 +6028,65 @@ function openAuthModal(mode, pendingEmail){
 document.getElementById("authCloseBtn")?.addEventListener("click", () => authModalBackdrop.classList.add("hidden"));
 authModalBackdrop?.addEventListener("click", (e) => { if(e.target === authModalBackdrop) authModalBackdrop.classList.add("hidden"); });
 
+// Raw GoTrue messages ("Email not confirmed", "Invalid login credentials",
+// rate limits) mean nothing to a shopper -- say what to do instead.
+function friendlyAuthError(error){
+  const code = String(error?.code || "");
+  const msg = String(error?.message || "");
+  if(code === "email_not_confirmed" || /email not confirmed/i.test(msg))
+    return "Please confirm your email first. Open the email we sent (check Spam too), tap Confirm, then log in.";
+  if(code === "invalid_credentials" || /invalid login credentials/i.test(msg))
+    return "Wrong email or password. New here? Tap Get Started to create an account.";
+  if(code === "over_email_send_rate_limit" || code === "over_request_rate_limit" || /rate limit/i.test(msg))
+    return "Too many attempts. Please wait a few minutes and try again.";
+  if(code === "otp_expired" || /expired|invalid.*(token|otp)|token.*invalid/i.test(msg))
+    return "That code is wrong or has expired. Tap Resend email to get a new one.";
+  if(code === "user_already_exists" || /already (registered|been registered)/i.test(msg))
+    return "This email already has an account. Please log in, or use Forgot password.";
+  if(code === "weak_password" || /password should be/i.test(msg))
+    return "Password is too weak. Use at least 6 characters.";
+  return msg || "Something went wrong. Please try again.";
+}
+
+let signupResendTimer = 0;
+async function resendSignupEmail(email){
+  if(!supabaseClient || !email) return;
+  const link = document.getElementById("authResendLink");
+  if(signupResendTimer > Date.now()){
+    authError.textContent = `Please wait ${Math.ceil((signupResendTimer - Date.now()) / 1000)}s before resending.`;
+    return;
+  }
+  authError.textContent = "";
+  if(link) link.textContent = "Sending…";
+  const { error } = await supabaseClient.auth.resend({ type: "signup", email });
+  if(error){
+    authError.textContent = friendlyAuthError(error);
+    if(link) link.textContent = "Resend email";
+    return;
+  }
+  signupResendTimer = Date.now() + 60000;
+  showToast("Email sent again — check your inbox and Spam");
+  if(link) link.textContent = "Resend email";
+}
+
 document.getElementById("authSubmitBtn")?.addEventListener("click", async () => {
-  if(authMode === "signup-sent"){ authModalBackdrop.classList.add("hidden"); return; }
   if(!supabaseClient){ authError.textContent = "Backend not configured yet."; return; }
   authError.textContent = "";
+  if(authMode === "signup-sent"){
+    const code = authOtp.value.trim();
+    if(!code){ authError.textContent = "Enter the code from the email, or tap the confirm button in the email and then log in."; return; }
+    const btn = document.getElementById("authSubmitBtn");
+    const prevLabel = btn.textContent; btn.disabled = true; btn.textContent = "Verifying…";
+    const { data, error } = await supabaseClient.auth.verifyOtp({ email: signupEmail, token: code, type: "signup" });
+    btn.disabled = false; btn.textContent = prevLabel;
+    if(error){ authError.textContent = friendlyAuthError(error); return; }
+    currentUser = data.user;
+    renderAuthUI();
+    authModalBackdrop.classList.add("hidden");
+    showToast("Email confirmed — welcome!");
+    flushPendingReferral();
+    return;
+  }
 
   if(authMode === "forgot-email"){
     const email = authEmail.value.trim();
@@ -6072,7 +6132,22 @@ document.getElementById("authSubmitBtn")?.addEventListener("click", async () => 
     ? supabaseClient.auth.signInWithPassword({ email, password })
     : supabaseClient.auth.signUp({ email, password, options: { data: { username } } });
   const { data, error } = await action;
-  if(error){ authError.textContent = error.message; return; }
+  if(error){
+    authError.textContent = friendlyAuthError(error);
+    // Logged in before confirming the email: jump straight to the screen
+    // where the confirmation can be finished or re-sent.
+    if(authMode === "login" && (error.code === "email_not_confirmed" || /email not confirmed/i.test(error.message || ""))){
+      openAuthModal("signup-sent", email);
+    }
+    return;
+  }
+  // An already-registered email comes back as a "successful" signup with no
+  // identities and NO email sent (anti-enumeration) -- the shopper then waits
+  // forever for a code that never arrives. Tell them instead.
+  if(authMode === "signup" && data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0){
+    authError.textContent = "This email already has an account. Please log in, or use Forgot password.";
+    return;
+  }
   if(authMode === "signup" && !data.session){
     openAuthModal("signup-sent", email);
     return;
@@ -7494,6 +7569,22 @@ document.getElementById("pwResetSubmitBtn")?.addEventListener("click", async () 
   if(session) currentUser = session.user;
   renderAuthUI();
   flushPendingReferral();
+  // Back from the confirmation link in the signup email: either it worked
+  // (session in the URL hash) or the link was expired / already used.
+  try{
+    const hp = new URLSearchParams(location.hash.replace(/^#/, ""));
+    if(hp.get("error_code") || hp.get("error")){
+      const expired = /otp_expired|expired|invalid/i.test(`${hp.get("error_code")} ${hp.get("error_description")}`);
+      history.replaceState(null, "", location.pathname + location.search);
+      openAuthModal("login");
+      authError.textContent = expired
+        ? "That confirmation link has expired or was already used. Log in — if it says email not confirmed, we'll let you resend it."
+        : "We couldn't confirm that link. Please log in, or sign up again.";
+    }else if(session && hp.get("type") === "signup"){
+      history.replaceState(null, "", location.pathname + location.search);
+      showToast("Email confirmed — welcome!");
+    }
+  }catch(e){}
 })();
 
     searchInput.addEventListener("input", renderProducts);
