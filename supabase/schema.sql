@@ -431,11 +431,44 @@ grant execute on function public.admin_list_users to authenticated;
 
 -- Customer (or guest, for a public code): check a coupon at checkout
 -- without consuming it -- create_order is what actually redeems it.
+-- Global rate limit for check_coupon -- it's callable by anon (a guest
+-- checking a coupon at checkout never has to log in first), so there's
+-- no stable per-caller identity to throttle by the way admin_gate's
+-- per-account lockout does. One shared sliding window across every
+-- caller is the tradeoff: a script guessing codes (36^6 ≈ 2.1 billion
+-- combinations for the "GPH......" codes randomCouponCode() generates)
+-- is slowed to uselessness at any sane cap, while real traffic -- one
+-- or two checks per customer, at checkout -- never gets close to it.
+create table if not exists public.coupon_check_rate_limit (
+  id boolean primary key default true check (id),
+  window_start timestamptz not null default now(),
+  count int not null default 0
+);
+insert into public.coupon_check_rate_limit (id) values (true) on conflict (id) do nothing;
+alter table public.coupon_check_rate_limit enable row level security;
+-- No policies at all, same reasoning as admin_gate -- nothing outside
+-- check_coupon itself (security definer, bypasses RLS) ever needs to
+-- touch this row.
+
 create or replace function public.check_coupon(p_code text)
 returns table(amount numeric, valid boolean)
 language plpgsql security definer set search_path = public as $$
-declare v_row public.coupons%rowtype;
+declare
+  v_row public.coupons%rowtype;
+  v_window_start timestamptz;
+  v_count int;
 begin
+  select window_start, count into v_window_start, v_count
+    from public.coupon_check_rate_limit where id = true for update;
+  if now() - v_window_start > interval '1 minute' then
+    update public.coupon_check_rate_limit set window_start = now(), count = 1 where id = true;
+  else
+    if v_count >= 20 then
+      raise exception 'Too many coupon checks right now -- please try again in a minute.';
+    end if;
+    update public.coupon_check_rate_limit set count = v_count + 1 where id = true;
+  end if;
+
   select * into v_row from public.coupons where code = p_code;
   if v_row.id is null or v_row.used_at is not null then
     return query select 0::numeric, false;
