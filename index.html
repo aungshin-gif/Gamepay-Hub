@@ -903,15 +903,6 @@
 
         <div id="orderStatusView" class="hidden order-status-view">
             <div class="preview-shell fig-os-shell">
-        <header class="acct-appbar fig-os-appbar">
-          <div class="acct-appbar-brand"><img class="acct-brand-logo" id="osBrandLogo" alt="Gamepay Hub"><span class="acct-appbar-word">gamepay.</span></div>
-          <div class="acct-appbar-actions">
-            <button type="button" class="acct-icon-btn" id="osSupportBtn" aria-label="Contact support">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
-            </button>
-            <button type="button" class="acct-appbar-avatar" id="osAvatar" aria-label="My account">M</button>
-          </div>
-        </header>
         <nav class="fig-os-crumb fig-anim" style="--d:.02s" aria-label="Breadcrumb">
           <button type="button" class="fig-os-crumb-link" id="crumbMyOrders">My orders</button>
           <span class="fig-os-crumb-sep">›</span>
@@ -919,10 +910,7 @@
         </nav>
 
         <div class="fig-os-head fig-anim" style="--d:.06s">
-          <span class="fig-os-kicker fig-os-eyebrow">Clarity at every step</span>
           <h2 class="fig-os-title">Your order, step by step.</h2>
-          <p class="fig-os-sub">From the first click to the final confirmation. All in one place.</p>
-          <span class="fig-os-secure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Secure order tracking</span>
         </div>
 
         <div class="fig-os-ref fig-anim" style="--d:.10s">
@@ -930,7 +918,7 @@
             <span class="fig-os-kicker">Order reference</span>
             <span class="fig-os-code"><b id="statusOrderCode">—</b><button id="copyOrderCodeBtn" class="fig-os-copy" type="button" aria-label="Copy order code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></span>
           </div>
-          <button id="refreshStatusBtn" class="fig-os-refresh" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Refresh status</button>
+          <button id="refreshStatusBtn" class="fig-os-refresh" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Refresh<span class="fig-os-refresh-more"> status</span></button>
         </div>
 
         <div class="fig-os-card fig-anim" style="--d:.14s">
@@ -942,6 +930,7 @@
           </div>
         </div>
 
+        <section class="fig-os-journey">
         <div class="fig-os-rowhead fig-anim" style="--d:.20s"><span class="fig-os-section">Order journey</span><span class="fig-os-count" id="journeyCount">1 OF 3 COMPLETE</span></div>
         <div id="statusStepper" class="status-stepper fig-os-stepper fig-anim" style="--d:.24s">
           <div class="status-step done" data-step="placed"><span class="status-step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span><span class="status-step-text"><span class="status-step-label">Order placed</span><span class="status-step-sub" id="placedDateLabel">—</span></span></div>
@@ -950,6 +939,7 @@
           <div class="status-step-line" data-line="2"></div>
           <div class="status-step" data-step="approved"><span class="status-step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="status-step-text"><span class="status-step-label" id="journeyTitle3">Completed</span><span class="status-step-sub" id="journeySub3">Confirmation pending</span></span></div>
         </div>
+        </section>
 
         <div class="fig-os-notice fig-anim" style="--d:.30s">
           <span class="fig-os-notice-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
@@ -5442,14 +5432,6 @@ function showOrderStatusView(){
   orderView.classList.remove("hidden");
   document.getElementById("orderStatusView").classList.remove("hidden");
   document.getElementById("statusOrderCode").textContent = currentOrder ? currentOrder.order_code : "—";
-  const osLogo = document.getElementById("osBrandLogo");
-  if(osLogo){ const src = (typeof siteLogoSrc === "function") ? siteLogoSrc() : ""; if(src) osLogo.src = src; }
-  const osAv = document.getElementById("osAvatar");
-  if(osAv){
-    const photo = currentUser?.user_metadata?.avatar_url || null;
-    if(photo) osAv.innerHTML = `<img src="${photo}" alt="">`;
-    else osAv.textContent = currentUser ? (getDisplayName()[0]?.toUpperCase() || "?") : "?";
-  }
   renderStatusDetails(currentOrder);
   setStatusPlacedLabels(currentOrder);
   wireStatusButtons();
@@ -5566,16 +5548,6 @@ function wireStatusButtons(){
   if(supportBtn && !supportBtn.dataset.wired){
     supportBtn.dataset.wired = "1";
     supportBtn.addEventListener("click", openChatView);
-  }
-  const osSupport = document.getElementById("osSupportBtn");
-  if(osSupport && !osSupport.dataset.wired){
-    osSupport.dataset.wired = "1";
-    osSupport.addEventListener("click", openChatView);
-  }
-  const osAvatar = document.getElementById("osAvatar");
-  if(osAvatar && !osAvatar.dataset.wired){
-    osAvatar.dataset.wired = "1";
-    osAvatar.addEventListener("click", () => { if(currentUser) openAccountView(); });
   }
 }
 
