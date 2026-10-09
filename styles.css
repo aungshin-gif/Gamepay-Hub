@@ -10069,3 +10069,42 @@ body.light-mode .gp-bottomnav button.is-active{
   #orderStatusView .fig-os-stepper .status-step-line.done::after{ transform:scaleX(1); }
   #orderStatusView .fig-os-collapse-body > *{ opacity:1; transform:none; }
 }
+
+/* ===== Order tracking (mobile): less clutter, journey visible without scrolling ===== */
+@media(max-width:767px){
+  /* the global store header / ticker sit above the page and only add noise here */
+  body:has(#orderStatusView:not(.hidden)) .compact-header,
+  body:has(#orderStatusView:not(.hidden)) .neon-announcement{ display:none !important; }
+
+  #orderStatusView{ padding:8px 12px 16px; margin-top:4px; }
+  #orderStatusView .fig-os-crumb{ margin:2px 2px 0; }
+  #orderStatusView .fig-os-head{ margin:6px 2px 10px; }
+  #orderStatusView .fig-os-title{ font-size:22px; margin:0; }
+
+  /* reference + refresh on one row */
+  #orderStatusView .fig-os-ref{ flex-direction:row; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; }
+  #orderStatusView .fig-os-ref-meta{ width:auto; flex:1 1 auto; min-width:0; gap:3px; }
+  #orderStatusView .fig-os-code b{ font-size:14px; }
+  #orderStatusView .fig-os-refresh{ flex:0 0 auto; padding:8px 11px; font-size:12px; }
+
+  /* tighter status card */
+  #orderStatusView .fig-os-card{ padding:11px 12px; gap:10px; margin-top:8px; }
+  #orderStatusView .fig-os-status-icon{ width:40px; height:40px; border-radius:12px; }
+  #orderStatusView .fig-os-status-icon svg{ width:21px; height:21px; }
+  #orderStatusView .fig-os-status-title{ font-size:15px; }
+  #orderStatusView .fig-os-status-desc{ font-size:12px; margin-top:2px; line-height:1.45; }
+  #orderStatusView .fig-os-pill{ margin-top:7px; padding:3px 10px; font-size:10.5px; }
+
+  /* Order journey: its own bordered card */
+  #orderStatusView .fig-os-journey{
+    margin-top:8px; padding:10px 8px 8px;
+    background:linear-gradient(#fff,#fff) padding-box, linear-gradient(135deg,#cdb6f7 0%,#efe7ff 55%,#d9c8fb 100%) border-box;
+    border:1.5px solid transparent; border-radius:18px;
+    box-shadow:0 8px 22px rgba(98,49,200,.10);
+  }
+  #orderStatusView .fig-os-journey .fig-os-rowhead{ margin:0 6px 8px; align-items:center; }
+  #orderStatusView .fig-os-journey .fig-os-stepper{ padding:0 0 2px; }
+  #orderStatusView .fig-os-journey .status-step-dot{ width:42px; height:42px; }
+  #orderStatusView .fig-os-journey .status-step-line{ margin-top:20px; }
+}
+@media(max-width:767px){ #orderStatusView .fig-os-refresh-more{ display:none; } }
