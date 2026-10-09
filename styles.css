@@ -9700,3 +9700,94 @@ body.light-mode .gp-bottomnav button.is-active{
   font-size:11px; font-weight:600; color:#836497; text-decoration:none;
 }
 .ys-help svg{ width:14px; height:14px; }
+
+/* ===== Mobile navigation (Figma): bottom tab bar, no top tabs/account ===== */
+@media(max-width:767px){
+  /* top Store / My orders / News pills and account icon move to the bottom bar */
+  .gp-header .gp-nav,
+  .gp-header .gp-account{ display:none; }
+  .gp-header{ flex-wrap:nowrap; height:72px; padding:0 12px; row-gap:0; }
+  /* bar is now a sibling of the page shells so it persists on catalog pages */
+  body.order-mode .gp-bottomnav{ display:none; }
+  body.products-mode .catalog-shell{ padding-bottom:96px; }
+  /* light-mode rule above forces active tab white -> make it purple */
+  body.light-mode .gp-bottomnav button.is-active{ color:#6231c8 !important; }
+  .gp-bottomnav button{ border-radius:12px; }
+  .gp-bottomnav button.is-active{ background:#f4f0fa; }
+}
+/* Products / News / Help: one row, identical width and height */
+@media(max-width:559px){
+  .gp-hero-actions{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    align-items:stretch; gap:8px;
+  }
+  .gp-hero-actions .gp-btn{
+    min-width:0; min-height:48px; justify-content:center;
+    gap:6px; padding:10px 6px; font-size:12px; text-align:center;
+  }
+  .gp-hero-actions .gp-btn .gp-arrow,
+  .gp-hero-actions .gp-news-more{ display:none; }
+}
+
+/* ===== "Your selection" box (Figma): summary above the checkout button ===== */
+#cartItem .sel-box{
+  margin-top:16px; padding:16px;
+  background:#fff; border:1px solid #eae5f1; border-radius:20px;
+  box-shadow:0 6px 20px rgba(98,49,200,.07);
+  font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color:#242330; text-align:left;
+}
+#cartItem .sel-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+#cartItem .sel-title{ font-size:15px; font-weight:800; color:#242330; }
+#cartItem .sel-chip{
+  font-size:11px; font-weight:700; color:#6231c8;
+  background:#f4f0fa; border-radius:999px; padding:4px 10px;
+}
+#cartItem .sel-plan{ margin-top:12px; }
+#cartItem .sel-plan-name{ font-size:16px; font-weight:800; line-height:1.3; color:#242330; overflow-wrap:anywhere; }
+#cartItem .sel-meta{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+#cartItem .sel-meta span{
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:12px; font-weight:600; color:#51475f;
+  background:#fcfbfe; border:1px solid #eae5f1; border-radius:999px; padding:4px 10px;
+}
+#cartItem .sel-meta svg{ width:13px; height:13px; color:#6231c8; }
+#cartItem .sel-box .sel-line{ margin-top:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:nowrap; }
+#cartItem .sel-unit small{ display:block; font-size:11px; font-weight:600; color:#7d7390; }
+#cartItem .sel-unit b{ font-size:15px; font-weight:800; color:#242330; }
+#cartItem .sel-box .qty-box{ gap:10px; }
+#cartItem .sel-box .qty-btn{
+  width:34px; height:34px; border-radius:50%; font-size:18px; line-height:1;
+  color:#6231c8 !important; background:#f4f0fa !important; border:1px solid #dfd2f3 !important;
+}
+#cartItem .sel-box .qty-num{ min-width:28px; font-size:16px; font-weight:800; color:#242330 !important; }
+#cartItem .sel-divider{ margin:14px 0; border-top:1px dashed #d9cdee; }
+#cartItem .sel-total{ display:flex; align-items:flex-end; justify-content:space-between; gap:10px; }
+#cartItem .sel-total-label span{ display:block; font-size:12px; font-weight:700; color:#51475f; }
+#cartItem .sel-total-label small{ display:block; margin-top:2px; font-size:11px; font-weight:600; color:#7d7390; }
+#cartItem .sel-total .amount{ font-size:22px; font-weight:900; color:#6231c8 !important; }
+#cartItem .sel-box #continueBtn.telegram-btn{
+  width:100% !important; margin:14px 0 0 !important;
+  padding:14px 20px; font-size:14.5px; border-radius:14px;
+}
+#cartItem .sel-help{
+  display:block; width:100%; margin-top:10px; padding:6px;
+  background:none !important; border:none !important; box-shadow:none !important;
+  font-family:inherit; font-size:12.5px; font-weight:700;
+  color:#6231c8 !important; cursor:pointer; text-decoration:underline; text-underline-offset:3px;
+}
+
+/* ===== Facebook Service plan cards (Figma): category badge + emoji sub-row ===== */
+.plan-tier-badge.fb-cat{ text-transform:uppercase; letter-spacing:.06em; }
+.plan-tier-badge.fb-cat::before{ display:none; }
+.plan-tier-badge.fb-cat[data-fb="norefill"],
+.plan-tier-badge.fb-cat[data-fb="refill"]{ border-color:#a8c9f5; background:#d4e7ff; color:#255b9e; }
+.plan-tier-badge.fb-cat[data-fb="reactions"]{ border-color:#f3b6c8; background:#ffdce7; color:#a3214f; }
+.plan-tier-badge.fb-cat[data-fb="views"]{ border-color:#b9e0c6; background:#dcf5e4; color:#1f7a45; }
+.plan-tier-badge.fb-cat[data-fb="ads"]{ border-color:#e9c16f; background:#ffe391; color:#75510e; }
+.plan-card-row .plan-icon-chip.fb-emoji{
+  width:auto !important; height:auto !important; min-width:18px;
+  background:none !important; border:none !important; box-shadow:none !important;
+  font-size:14px; line-height:1;
+}
+.fb-emoji-row{ margin:-2px 0 4px; font-size:13px; line-height:1.2; letter-spacing:1px; white-space:nowrap; }
