@@ -433,7 +433,7 @@
             </button>
             <button class="gp-btn" id="gpNewsBtn" type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
-              <span>News &amp; updates</span>
+              <span>News<span class="gp-news-more"> &amp; updates</span></span>
             </button>
             <button class="gp-btn" id="gpHelpBtn" type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
@@ -645,27 +645,28 @@
         <p class="gp-legal">&copy; 2026 Gamepay Hub. Prices and availability may change &mdash; please confirm before purchase.</p>
       </footer>
 
-      <nav class="gp-bottomnav" aria-label="Mobile navigation">
-        <button type="button" data-gpnav="store" class="is-active">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          <span>Store</span>
-        </button>
-        <button type="button" data-gpnav="orders">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <span>Orders</span>
-        </button>
-        <button type="button" data-gpnav="news">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
-          <span>News</span>
-        </button>
-        <button type="button" data-gpnav="account">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span>Account</span>
-        </button>
-      </nav>
 
       
     </div><!-- /landingShell -->
+
+    <nav class="gp-bottomnav" aria-label="Mobile navigation">
+      <button type="button" data-gpnav="store" class="is-active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Store</span>
+      </button>
+      <button type="button" data-gpnav="orders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span>Orders</span>
+      </button>
+      <button type="button" data-gpnav="news">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+        <span>News</span>
+      </button>
+      <button type="button" data-gpnav="account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Account</span>
+      </button>
+    </nav>
 
 
     <div id="catalogShell" class="catalog-shell hidden">
@@ -753,18 +754,34 @@
   <div id="customHint" class="custom-hint"></div>
           </div>
 
-          <div class="qty-row">
-            <div class="qty-box">
-              <button id="minusBtn" class="qty-btn">−</button>
-              <div id="qtyNum" class="qty-num">1</div>
-              <button id="plusBtn" class="qty-btn">+</button>
+          <!-- Figma: "Your selection" summary box (ids below are unchanged, JS still drives them) -->
+          <div class="sel-box" id="selBox">
+            <div class="sel-head">
+              <span class="sel-title">Your selection</span>
+              <span class="sel-chip" id="selChip">1 item</span>
             </div>
-            <div id="itemAmount" class="amount">0 Ks</div>
-</div>
-
-<button id="continueBtn" class="telegram-btn">
-  Continue to Checkout
-</button>
+            <div class="sel-plan">
+              <div class="sel-plan-name" id="selPlanName">-</div>
+              <div class="sel-meta" id="selMeta"></div>
+            </div>
+            <div class="qty-row sel-line">
+              <div class="sel-unit"><small>Price</small><b id="selUnit">0 Ks</b></div>
+              <div class="qty-box">
+                <button id="minusBtn" class="qty-btn">−</button>
+                <div id="qtyNum" class="qty-num">1</div>
+                <button id="plusBtn" class="qty-btn">+</button>
+              </div>
+            </div>
+            <div class="sel-divider"></div>
+            <div class="sel-total">
+              <div class="sel-total-label"><span>Total amount</span><small id="selCalc"></small></div>
+              <div id="itemAmount" class="amount">0 Ks</div>
+            </div>
+            <button id="continueBtn" class="telegram-btn">
+              Continue to Checkout
+            </button>
+            <button id="selHelpBtn" class="sel-help" type="button">Need help choosing?</button>
+          </div>
 
 </div>
 
@@ -2772,6 +2789,11 @@ plans: [
     const plusBtn = document.getElementById("plusBtn");
     const qtyNum = document.getElementById("qtyNum");
     const itemAmount = document.getElementById("itemAmount");
+    const selPlanName = document.getElementById("selPlanName");
+    const selMeta = document.getElementById("selMeta");
+    const selUnit = document.getElementById("selUnit");
+    const selCalc = document.getElementById("selCalc");
+    const selChip = document.getElementById("selChip");
 
     const accountInput = document.getElementById("accountInput");
     const couponInput = document.getElementById("couponInput");
@@ -4307,6 +4329,52 @@ function closeOrder(){
 }
 
 
+    // "Your selection" box (Figma): mirrors the active plan card + qty/total.
+    // Read-only -- it only copies what the plan card and cart already show,
+    // so no price or plan-name logic lives here.
+    function renderSelectionBox(){
+      if(!currentProduct) return;
+      const plan = currentProduct.plans[currentPlanIndex];
+      if(!plan) return;
+      const card = planList.querySelector(".plan-option.active");
+      const planTitle = card?.querySelector(".plan-card-name")?.textContent?.trim() || plan.name;
+      selPlanName.textContent = planTitle;
+      selMeta.innerHTML = "";
+      card?.querySelectorAll(".plan-card-row").forEach(row => {
+        const chip = document.createElement("span");
+        const ic = row.querySelector("svg");
+        if(ic) chip.appendChild(ic.cloneNode(true));
+        chip.appendChild(document.createTextNode(
+          [...row.querySelectorAll(":scope > span")].map(x => x.textContent.trim()).filter(Boolean).join(" ")
+        ));
+        selMeta.appendChild(chip);
+      });
+      const custom = Number(customAmountInput.value || 0);
+      selUnit.textContent = plan.custom
+        ? `${formatKs(plan.price)} / ${plan.baseAmount} ${plan.unit || ""}`.trim()
+        : formatKs(plan.price);
+      selCalc.textContent = plan.custom
+        ? (custom > 0 ? `${custom} ${plan.unit || ""}`.trim() : "")
+        : `${currentQty} × ${formatKs(plan.price)}`;
+      // Facebook: "Number of followers" input (label only; value/limits unchanged)
+      if(currentProduct.id === "facebook_service" && plan.custom){
+        const unit = String(plan.unit || "amount").toLowerCase();
+        const lbl = customBox.querySelector(".field-title");
+        if(lbl) lbl.textContent = /ads/.test(unit) ? "Ad budget (USD)" : `Number of ${unit}`;
+        customAmountInput.placeholder = /ads/.test(unit) ? "e.g. 5" : `e.g. ${Math.max(plan.baseAmount||1000, plan.minAmount||0)}`;
+      } else {
+        const lbl = customBox.querySelector(".field-title");
+        if(lbl && lbl.textContent !== "Custom Amount") lbl.textContent = "Custom Amount";
+      }
+      selChip.textContent = plan.custom ? "Custom" : `${currentQty} ${currentQty === 1 ? "item" : "items"}`;
+    }
+    // Plan cards, qty, custom amount and total are all updated in several
+    // places; watching the three text nodes keeps the box in sync without
+    // touching any of them.
+    new MutationObserver(renderSelectionBox).observe(itemAmount, {childList:true, characterData:true, subtree:true});
+    new MutationObserver(renderSelectionBox).observe(cartPlanCurrent, {childList:true, characterData:true, subtree:true});
+    document.getElementById("selHelpBtn")?.addEventListener("click", () => window.open(TG_SUPPORT, "_blank", "noopener"));
+
     // Qty/custom-amount are just numbers next to the plan grid -- they never
     // change which plans exist. Recomputing only this summary (instead of
     // the full renderOrder(), which wipes and rebuilds every plan card) is
@@ -4385,6 +4453,52 @@ customHint.textContent = isInvalid
       credits: _tabSvg('<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>'),
       individual: _tabSvg('<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>')
     };
+    // Facebook Service: Figma-style category/sub-label/emoji per plan.
+    // RENDER-ONLY -- plan.name stays untouched because it is the key the
+    // server uses to look up the price (catalog_plans / stock_overrides).
+    const FB_REACTION_EMOJI = {like:"👍", love:"❤️", haha:"😂", wow:"😮", sad:"😢", angry:"😡"};
+    const FB_FILTERS = [
+      {key:"all", label:"All plans"},
+      {key:"norefill", label:"No refill"},
+      {key:"refill", label:"Refill / High quality"},
+      {key:"reactions", label:"Reactions"},
+      {key:"views", label:"Story views"},
+      {key:"ads", label:"Ads"}
+    ];
+    function fbPlanMeta(plan){
+      if(!currentProduct || currentProduct.id !== "facebook_service") return null;
+      const n = String(plan.name || "");
+      const low = n.toLowerCase();
+      if(/followers/.test(low)){
+        const refill = /\brefill\b/.test(low.replace(/norefill|no refill/g, ""));
+        return {filter: refill ? "refill" : "norefill", cat:"Followers", title:"Followers",
+                sub: refill ? "Refill / High quality" : "No refill", emoji:"👥", duration:"Standard"};
+      }
+      if(/mixed/.test(low)){
+        const row = (n.match(/[\u{1F300}-\u{1FAFF}\u2764]\uFE0F?/gu) || []).filter(e => e !== "💥").join("");
+        return {filter:"reactions", cat:"Reactions", title:"Mixed Reactions", sub:"Reactions", emoji:"👍", emojiRow:row, duration: plan.duration || "30 Days"};
+      }
+      const react = Object.keys(FB_REACTION_EMOJI).find(k => new RegExp("\\b" + k + "\\b").test(low));
+      if(react){
+        return {filter:"reactions", cat:"Reactions", title: react[0].toUpperCase() + react.slice(1),
+                sub:"Reactions", emoji: FB_REACTION_EMOJI[react], duration: plan.duration || "30 Days"};
+      }
+      if(/story views/.test(low)){
+        return {filter:"views", cat:"Views", title:"Story Views", sub:"Views", emoji:"👁️", duration:"Standard"};
+      }
+      if(/ads/.test(low)){
+        return {filter:"ads", cat:"Ads", title:"Facebook Ads 1", sub:"Ads", emoji:"📢", duration:"Standard"};
+      }
+      return null;
+    }
+    const _fbIcon = (inner) => _tabSvg(inner);
+    Object.assign(TAB_ICONS, {
+      norefill: _fbIcon('<circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/>'),
+      refill: _fbIcon('<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>'),
+      reactions: _fbIcon('<path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/>'),
+      views: _fbIcon('<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>'),
+      ads: _fbIcon('<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>')
+    });
     const _BASE_FILTERS = [
       {key:"all", label:"All plans"},
       {key:"ownmail", label:"Own mail"},
@@ -4403,8 +4517,10 @@ customHint.textContent = isInvalid
     }
     function renderPlanTabs(){
       if(!currentProduct || !planFilters) return;
+      const _isFb = currentProduct.id === "facebook_service";
       const _countFor = (key) => {
         if(key === "all") return currentProduct.plans.length;
+        if(_isFb) return currentProduct.plans.filter(plan => fbPlanMeta(plan)?.filter === key).length;
         return currentProduct.plans.filter(plan => {
           const txt = String(plan.name || "").toLowerCase();
           if(key === "ownmail") return Boolean(plan.ownMail) || /own[- ]?mail|invite/i.test(txt);
@@ -4415,7 +4531,7 @@ customHint.textContent = isInvalid
           return false;
         }).length;
       };
-      const filterDefs = _BASE_FILTERS
+      const filterDefs = (_isFb ? FB_FILTERS : _BASE_FILTERS)
         .map(f => ({...f, count: _countFor(f.key)}))
         .filter(f => f.key === "all" || f.count > 0);
       planFilters.className = "plan-filters figma-tabs";
@@ -4455,6 +4571,7 @@ customHint.textContent = isInvalid
         if(plansOpen){
     currentProduct.plans.map((plan,index)=>({plan,index})).filter(({plan})=>{
       if(planFilterMode==="all") return true;
+      if(currentProduct.id==="facebook_service") return fbPlanMeta(plan)?.filter === planFilterMode;
       const txt=String(plan.name||"").toLowerCase();
       if(planFilterMode==="ownmail") return Boolean(plan.ownMail)||/own[- ]?mail|invite/i.test(txt);
       if(planFilterMode==="private") return /private/i.test(txt);
@@ -4550,7 +4667,8 @@ customHint.textContent = isInvalid
   const hasDiscount = Boolean(plan.discount || plan.discountPercent);
   const origPriceHtml = hasDiscount && plan.originalPrice ? `<s>${formatKs(plan.originalPrice)}</s>` : "";
   // Price number split
-  const _priceNum = priceText.replace(/\s*Ks\s*$/i, "");
+  const fb = fbPlanMeta(plan);
+  const _priceNum = priceText.replace(/\s*Ks\s*$/i, "").replace(fb ? /\B(?=(\d{3})+(?!\d))/g : /$^/, ",");
   const _isCustom = /custom|contact|dm/i.test(priceText);
   const _stickerHtml = (!plan.outOfStock && hasDiscount)
     ? `<span class="plan-discount-sticker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>-${plan.discountPercent || ""}%</span>`
@@ -4561,15 +4679,16 @@ customHint.textContent = isInvalid
   el.innerHTML = `
     ${_stickerHtml}
     <div class="plan-card-top">
-      ${tierBadgeHtml}
+      ${fb ? `<span class="plan-tier-badge fb-cat" data-fb="${fb.filter}">${fb.cat}</span>` : tierBadgeHtml}
       <input type="radio" class="plan-card-radio" name="plan-radio-${currentProduct.id}" ${index === currentPlanIndex ? "checked" : ""} ${plan.outOfStock ? "disabled" : ""} tabindex="-1" aria-hidden="true">
     </div>
-    <h3 class="plan-card-name font-plan-heading">${planName}</h3>
+    <h3 class="plan-card-name font-plan-heading">${fb ? fb.title : planName}</h3>
     <div class="plan-card-row">
-      <span class="plan-icon-chip">${accIcon}</span><span>${accLabel}</span>
+      <span class="plan-icon-chip${fb ? " fb-emoji" : ""}">${fb ? (fb.emoji || "💬") : accIcon}</span><span>${fb ? fb.sub : accLabel}</span>
     </div>
+    ${fb && fb.emojiRow ? `<div class="fb-emoji-row" aria-hidden="true">${fb.emojiRow}</div>` : ``}
     ${plan.noDuration ? `` : `<div class="plan-card-row">
-      <span class="plan-icon-chip clock">${ICON_CLOCK}</span><span>${durationText}</span>
+      <span class="plan-icon-chip clock">${ICON_CLOCK}</span><span>${fb ? fb.duration : durationText}</span>
     </div>`}
     ${_offerInner ? `<div class="plan-card-offer">${_offerInner}</div>` : ``}
     <div class="plan-card-prices">
