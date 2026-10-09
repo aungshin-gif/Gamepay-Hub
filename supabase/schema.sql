@@ -431,11 +431,44 @@ grant execute on function public.admin_list_users to authenticated;
 
 -- Customer (or guest, for a public code): check a coupon at checkout
 -- without consuming it -- create_order is what actually redeems it.
+-- Global rate limit for check_coupon -- it's callable by anon (a guest
+-- checking a coupon at checkout never has to log in first), so there's
+-- no stable per-caller identity to throttle by the way admin_gate's
+-- per-account lockout does. One shared sliding window across every
+-- caller is the tradeoff: a script guessing codes (36^6 ≈ 2.1 billion
+-- combinations for the "GPH......" codes randomCouponCode() generates)
+-- is slowed to uselessness at any sane cap, while real traffic -- one
+-- or two checks per customer, at checkout -- never gets close to it.
+create table if not exists public.coupon_check_rate_limit (
+  id boolean primary key default true check (id),
+  window_start timestamptz not null default now(),
+  count int not null default 0
+);
+insert into public.coupon_check_rate_limit (id) values (true) on conflict (id) do nothing;
+alter table public.coupon_check_rate_limit enable row level security;
+-- No policies at all, same reasoning as admin_gate -- nothing outside
+-- check_coupon itself (security definer, bypasses RLS) ever needs to
+-- touch this row.
+
 create or replace function public.check_coupon(p_code text)
 returns table(amount numeric, valid boolean)
 language plpgsql security definer set search_path = public as $$
-declare v_row public.coupons%rowtype;
+declare
+  v_row public.coupons%rowtype;
+  v_window_start timestamptz;
+  v_count int;
 begin
+  select window_start, count into v_window_start, v_count
+    from public.coupon_check_rate_limit where id = true for update;
+  if now() - v_window_start > interval '1 minute' then
+    update public.coupon_check_rate_limit set window_start = now(), count = 1 where id = true;
+  else
+    if v_count >= 20 then
+      raise exception 'Too many coupon checks right now -- please try again in a minute.';
+    end if;
+    update public.coupon_check_rate_limit set count = v_count + 1 where id = true;
+  end if;
+
   select * into v_row from public.coupons where code = p_code;
   if v_row.id is null or v_row.used_at is not null then
     return query select 0::numeric, false;
@@ -464,69 +497,6 @@ language sql security definer set search_path = public as $$
   update public.notifications set read_at = now() where user_id = auth.uid() and read_at is null;
 $$;
 grant execute on function public.mark_notifications_read to authenticated;
-
--- create_order now accepts an optional coupon code. The discount is
--- computed and the coupon marked used here -- never trust a client-sent
--- discount, always re-derive it from the coupon row server-side.
--- Drop every existing overload again (see the dynamic drop above) --
--- the 7-argument version created earlier in this same file run would
--- otherwise stick around as a second overload alongside the one below,
--- and the unqualified "grant" further down fails with "function name is
--- not unique".
-do $$
-declare r record;
-begin
-  for r in
-    select p.oid::regprocedure::text as sig
-    from pg_proc p join pg_namespace n on n.oid = p.pronamespace
-    where n.nspname = 'public' and p.proname = 'create_order'
-  loop
-    execute format('drop function if exists %s', r.sig);
-  end loop;
-end $$;
-
--- Also snapshots the plan's Warranty/Format/Note (as resolved on the
--- customer's screen at checkout, after any Stock-list overrides) onto the
--- order row itself, so the order's own chat/detail view can show exactly
--- what the customer was promised even if the plan's info changes later.
-create or replace function public.create_order(
-  p_product_name text, p_plan_name text, p_amount numeric,
-  p_payment_method text, p_account_info text, p_note text,
-  p_payment_slip_path text default null,
-  p_coupon_code text default null,
-  p_plan_warranty text default null,
-  p_plan_format text default null,
-  p_plan_note text default null
-) returns table (id uuid, access_token uuid, order_code text)
-language plpgsql security definer set search_path = public as $$
-declare
-  v_code text := 'GPH-' || to_char(now(),'YYYYMMDD') || '-' || substr(replace(gen_random_uuid()::text,'-',''),1,5);
-  v_coupon public.coupons%rowtype;
-  v_discount numeric := 0;
-  v_order_id uuid;
-  v_access_token uuid;
-begin
-  if p_coupon_code is not null then
-    select * into v_coupon from public.coupons where code = p_coupon_code for update;
-    if v_coupon.id is not null and v_coupon.used_at is null
-       and (v_coupon.assigned_user_id is null or v_coupon.assigned_user_id = auth.uid()) then
-      v_discount := least(v_coupon.amount, p_amount);
-    end if;
-  end if;
-
-  insert into public.orders(product_name, plan_name, amount, payment_method, account_info, note, order_code, payment_slip_path, user_id, coupon_code, discount_amount, plan_warranty, plan_format, plan_note)
-  values (p_product_name, p_plan_name, p_amount - v_discount, p_payment_method, p_account_info, p_note, v_code, p_payment_slip_path, auth.uid(),
-          case when v_discount > 0 then p_coupon_code else null end, v_discount, p_plan_warranty, p_plan_format, p_plan_note)
-  returning orders.id, orders.access_token into v_order_id, v_access_token;
-
-  if v_discount > 0 then
-    update public.coupons set used_at = now(), used_by_user_id = auth.uid(), used_by_order_id = v_order_id where id = v_coupon.id;
-  end if;
-
-  return query select v_order_id, v_access_token, v_code;
-end;
-$$;
-grant execute on function public.create_order to anon, authenticated;
 
 -- 10. Support messages ----------------------------------------------
 -- A general chat thread between a logged-in customer and GamePay support,
@@ -663,6 +633,370 @@ create policy "anyone reads product overrides" on public.product_overrides
 drop policy if exists "admin manage product overrides" on public.product_overrides;
 create policy "admin manage product overrides" on public.product_overrides
   for all using (public.is_admin()) with check (public.is_admin());
+
+-- 10c. Catalog plans (server-side source of truth for pricing) -------
+-- index.html's own "products" JS array stays the source of truth for
+-- everything DISPLAY-related (descriptions, icons, benefit tables) --
+-- this table exists purely so create_order can look up what a plan
+-- should actually cost without trusting whatever amount the browser
+-- sends. Regenerate by re-running the same extraction the Stock list's
+-- CATALOG_MANIFEST uses, any time products/plans change in index.html.
+create table if not exists public.catalog_plans (
+  product_id text not null,
+  plan_name text not null,  -- the plan's canonical name, exactly as index.html's
+                             -- products[].plans[].name reads before any discount
+                             -- rewrites it for display (plan._catalogName client-side)
+  price numeric not null,
+  custom boolean not null default false,  -- true = variable-amount plan (top-ups,
+                                           -- followers, etc.) priced per base_amount
+  base_amount numeric,       -- for custom plans: price is "per this many units"
+  min_amount numeric,        -- for custom plans: smallest amount a customer may enter
+  out_of_stock boolean not null default false,
+  updated_at timestamptz not null default now(),
+  primary key (product_id, plan_name)
+);
+alter table public.catalog_plans enable row level security;
+
+-- Anyone needs to read this for checkout to work at all -- it's catalog
+-- data, same as the plan names/prices already visible on the storefront,
+-- not anything sensitive.
+drop policy if exists "anyone reads catalog plans" on public.catalog_plans;
+create policy "anyone reads catalog plans" on public.catalog_plans
+  for select using (true);
+
+-- Deliberately no insert/update/delete policy for anyone, admin included:
+-- this table is only ever written by re-running this file's seed block
+-- (service_role bypasses RLS), never through the app or an RPC. Keeping
+-- it out of reach of create_order's own callers is the whole point --
+-- see the note on create_order above.
+insert into public.catalog_plans (product_id, plan_name, price, custom, base_amount, min_amount, out_of_stock) values
+('chatgpt', 'CGPT GO Official – 8$ Plan – 1 Month – 27000 Ks', 27000, false, null, null, false),
+('chatgpt', 'CHATGPT PLUS Official – 80$ Plan – 1 Month – 90000 Ks', 90000, false, null, null, false),
+('chatgpt', 'CHATGPT PLUS – Private – 1 Month – 30000 Ks', 30000, false, null, null, false),
+('chatgpt', 'CGPT GO – 3 Months – Preorder', 27000, false, null, null, true),
+('chatgpt', 'ChatGPT Pro 5X – Own Mail – 1 Month – 450000 Ks', 450000, false, null, null, false),
+('chatgpt', 'ChatGPT Pro 20X – Own Mail – 1 Month – 885000 Ks', 885000, false, null, null, false),
+('canva', 'Canva Education – Own Mail – 1.5 Year – 5000 Ks', 5000, false, null, null, false),
+('canva', 'Canva Education – Code Redeem – 1.5 Years – 5000 Ks', 5000, false, null, null, false),
+('canva', 'Canva Business – Own Mail – 1 Month – 6000 Ks', 6000, false, null, null, false),
+('canva', 'Canva Pro Individual – Private Acc – 1 Month – 7000 Ks', 7000, false, null, null, false),
+('capcut', 'CapCut Team – Private Acc – 7 Days – 2000 Ks', 2000, false, null, null, false),
+('capcut', 'CapCut Team – Private Acc – 1 Month – 8000 Ks', 8000, false, null, null, false),
+('capcut', 'CapCut Pro Individual (crd 1200) – Private Acc – 34 Days – 12000 Ks', 12000, false, null, null, false),
+('capcut', 'CapCut Individual – Private Acc – 6 Months – 50000 Ks', 50000, false, null, null, false),
+('capcut', 'CapCut Team Head – Own Mail – 1 Month – Contact me', 0, true, null, null, false),
+('gemini', 'Gemini AI Pro – Own Mail – 1 Month – 4000 Ks', 4000, false, null, null, false),
+('gemini', 'Gemini AI Pro – Own Mail – 2 Months – 7000 Ks', 7000, false, null, null, false),
+('gemini', 'Gemini AI Pro – Own Mail – 3 Months – 10000 Ks', 10000, false, null, null, false),
+('gemini', 'Gemini AI Pro – Own Mail – 4 Months – 12000 Ks', 12000, false, null, null, false),
+('gemini', 'Family Manager – Own Mail – 3 Months – 10000 Ks', 10000, false, null, null, false),
+('gemini', 'Family Manager – Own Mail – 12 Months – 15000 Ks', 15000, false, null, null, false),
+('gemini', 'Gemini Link – Own Mail – 1.5 Years – 8000 Ks', 8000, false, null, null, false),
+('zoom', '🔐 Private – 14 Days – 5000 Ks', 5000, false, null, null, false),
+('zoom', '🔐 Private – 1 Month – 8000 Ks', 8000, false, null, null, false),
+('zoom', '🔐 Private – 2 Months – 15000 Ks', 15000, false, null, null, false),
+('hbomax', '👤1 Profile - 8500 Ks
+1 Month', 8500, false, null, null, false),
+('hbomax', '👥2 Profiles - 13000 Ks
+1 Month', 13000, false, null, null, false),
+('hbomax', 'Each Profile - 6000 Ks
+Above 3 Pf', 6000, false, null, null, false),
+('hbomax', '🔥HBO Head - 25000 Ks
+1 Month', 25000, false, null, null, false),
+('picsart', '1 Month (👥Share) – 4000 Ks', 4000, false, null, null, false),
+('picsart', '1 Month (🔐Private) – 5700 Ks', 5700, false, null, null, false),
+('picsart', '3 Months – 14000 Ks', 14000, false, null, null, true),
+('picsart', '1 Year – 50000 Ks', 50000, false, null, null, false),
+('picsart', 'Own Mail - 1 Month – 24000 Ks', 24000, false, null, null, true),
+('hma_vpn', '👥 1 Month – Share – 1400 Ks', 1400, false, null, null, false),
+('hma_vpn', '🔐 1 Month – Private – 5000 Ks', 5000, false, null, null, false),
+('hma_vpn', '✉️ 1 Month – Own Mail – 6000 Ks', 6000, false, null, null, false),
+('vpn', '🔐 2 Months – 1 Device – 5000 Ks', 5000, false, null, null, false),
+('vpn', '🔐 3 Months – 2 Devices – 7000 Ks', 7000, false, null, null, false),
+('vpn', '🔐 6 Months – 4 Devices – 11000 Ks', 11000, false, null, null, false),
+('vpn', '🔐 12 Months – 6 Devices – 15000 Ks', 15000, false, null, null, false),
+('telegram', 'Login Method – 1 Month – 20500 Ks', 20500, false, null, null, false),
+('telegram', 'Gift Plan – 3 Months – 50000 Ks', 50000, false, null, null, false),
+('telegram', 'Gift Plan – 6 Months – 67000 Ks', 67000, false, null, null, false),
+('telegram', 'Gift Plan – 9 Months – 118000 Ks', 118000, false, null, null, false),
+('telegram', 'Link Plan – 3 Months – 44000 Ks', 44000, false, null, null, false),
+('telegram', 'Link Plan – 6 Months – 65000 Ks', 65000, false, null, null, false),
+('telegram', 'Link Plan – 12 Months – 118000 Ks', 118000, false, null, null, false),
+('adobe_cc', '1 Month - 15000 Ks', 15000, false, null, null, false),
+('adobe_cc', '2 Months - 25000 Ks', 25000, false, null, null, false),
+('adobe_cc', '3 Months - 39000 Ks', 39000, false, null, null, false),
+('adobe_cc', '6 Months - 35000 Ks', 35000, false, null, null, false),
+('adobe_cc', '1 Year - 100000 Ks (Stock rare)', 100000, false, null, null, false),
+('claude_ai', 'Claude PRO – 1 Month – 93000 Ks', 93000, false, null, null, false),
+('claude_ai', 'Claude MAX – 1 Month – 500000 Ks', 500000, false, null, null, false),
+('cursor', 'Cursor Pro – 1 Month – 92000 Ks', 92000, false, null, null, false),
+('cursor', 'Cursor Pro+ – 1 Month – 285000 Ks', 285000, false, null, null, false),
+('cursor', 'Cursor Ultra – 1 Month – 920000 Ks', 920000, false, null, null, false),
+('cursor', 'Cursor Ultra – 1 Month – 255000 Ks', 255000, false, null, null, false),
+('grok', 'Super Grok – 1 Month – 58000 Ks', 58000, false, null, null, false),
+('grok', 'Super Grok – 3 Months – 190000 Ks', 190000, false, null, null, false),
+('grok', 'SuperGrok Plus – 1 Month – 480000 Ks', 480000, false, null, null, false),
+('grok', 'SuperGrok Heavy – 1 Month – DM', 0, false, null, null, false),
+('perplexity', 'Perplexity AI Pro – 1 Month – 43000 Ks', 43000, false, null, null, false),
+('kling_ai', 'Standard Plan – 1 Month – 40000 Ks', 40000, false, null, null, false),
+('kling_ai', 'Pro Plan – 1 Month – 130000 Ks', 130000, false, null, null, false),
+('kling_ai', 'Premier Plan – 1 Month – 320000 Ks', 320000, false, null, null, false),
+('kling_ai', 'Ultra Plan – 1 Month – 590000 Ks', 590000, false, null, null, false),
+('kling_ai', '330 Credits – 26500 Ks', 26500, false, null, null, false),
+('kling_ai', '660 Credits – 45500 Ks', 45500, false, null, null, false),
+('kling_ai', '1320 Credits – 92500 Ks', 92500, false, null, null, false),
+('kling_ai', '3500 Credits – 230000 Ks', 230000, false, null, null, false),
+('suno_ai', 'Pro Plan – 1 Month – 50000 Ks', 50000, false, null, null, false),
+('suno_ai', 'Premier Plan – 1 Month – 140000 Ks', 140000, false, null, null, false),
+('gitHub copilot', 'GitHub Copilot Pro – 1 Month – 48000 Ks', 48000, false, null, null, false),
+('gitHub copilot', 'GitHub Copilot Pro+ – 1 Month – 178000 Ks', 178000, false, null, null, false),
+('gitHub copilot', 'GitHub Copilot Max – 1 Month – 480000 Ks', 480000, false, null, null, false),
+('replit', 'Replit Core – 1 Month – 90000 Ks', 90000, false, null, null, false),
+('replit', 'Replit Pro – 1 Month – 455000 Ks', 455000, false, null, null, false),
+('railway', 'Railway Hobby – 1 Month – 26000 Ks', 26000, false, null, null, false),
+('railway', 'Railway Pro – 1 Month – 48000 Ks', 48000, false, null, null, false),
+('quillbot', 'Quillbot Premium – 1 Month – 8000 Ks', 8000, false, null, null, false),
+('scribd', 'Scribd Premium – Private Acc – 1 Month – 7000 Ks', 7000, false, null, null, false),
+('scribd', 'Scribd Premium – Own Mail – 1 Month – Contact me', 0, true, null, null, false),
+('manus_ai', 'Standard – 1 Month – 90000 Ks', 90000, false, null, null, false),
+('manus_ai', 'Customizable Plan – 1 Month – 183000 Ks', 183000, false, null, null, false),
+('x_premium', 'X Premium – 1 Month – 30000 Ks', 30000, false, null, null, false),
+('x_premium', 'X Premium Plus – 1 Month – 135000 Ks', 135000, false, null, null, false),
+('whatsapp_plus', 'WhatsApp Plus – 1 Month – 22000 Ks', 22000, false, null, null, false),
+('whatsapp_accounts', 'USA Number – 20000 Ks', 20000, false, null, null, false),
+('whatsapp_accounts', 'Canada Number – 21000 Ks', 21000, false, null, null, false),
+('whatsapp_accounts', 'France Number – 25000 Ks', 25000, false, null, null, false),
+('netflix', '🌈(1 Profile) -8000 Ks
+1 Month', 8000, false, null, null, false),
+('netflix', '🌈(3 Profiles) - 19000 Ks
+1 Month', 19000, false, null, null, false),
+('netflix', '🌈(4 Profiles) - 25000 Ks
+1 Month', 25000, false, null, null, false),
+('netflix', '🌈(Head) - 25000 Ks
+1 Month', 25000, false, null, null, false),
+('spotify', '🔥 Individual Plan — 1 Month — 8000 Ks', 8000, false, null, null, false),
+('spotify', '🔥 Individual Plan — 2 Months — 14000 Ks', 14000, false, null, null, false),
+('spotify', '✨ Family Plan — 3 Months — 17000 Ks', 17000, false, null, null, false),
+('tidal_music', '💥 Individual Plan — 1 Month — 8000 Ks', 8000, false, null, null, false),
+('tidal_music', '💥 Family Plan — 1 Month — 8000 Ks', 8000, false, null, null, false),
+('tidal_music', '💥 Family Plan — 2 Months — 10000 Ks', 10000, false, null, null, false),
+('youtube_music', 'YouTube Music – Your Mail – 1 Month – 7000 Ks', 7000, false, null, null, false),
+('soundcloud_go', 'SoundCloud Go — 1 Month — 8000 Ks', 8000, false, null, null, false),
+('qobuz_music', 'Qobuz Music — 1 Month — 8000 Ks', 8000, false, null, null, false),
+('apple_music', '💥 Individual Plan — 1 Month — 6000 Ks', 6000, false, null, null, false),
+('apple_music', '💥 Family Plan — 1 Month — 6000 Ks', 6000, false, null, null, false),
+('apple_music', '💥 Family Plan — 2 Months — 9000 Ks', 9000, false, null, null, false),
+('apple_music', '💥 Family Plan — 3 Months — 11000 Ks', 11000, false, null, null, false),
+('youtube', '🌐 Individual – Private Account – 1 Month – 6500 Ks', 6500, false, null, null, false),
+('youtube', '🌐 Individual – 3 Months – 20000 Ks', 20000, false, null, null, false),
+('youtube', '✉️ Individual – Invite Your Mail – 1 Month – 7000 Ks', 7000, false, null, null, false),
+('youtube', '👑 Family Head Account – 1 Month – 30000 Ks', 30000, false, null, null, false),
+('disney', 'Disney+ Premium - 1 Month - 7000 Ks', 7000, false, null, null, false),
+('disney', 'Disney+ Duo - 1 Month - 8000 Ks', 8000, false, null, null, false),
+('disney', 'Disney+ Trio - 1 Month - 10000 Ks', 10000, false, null, null, false),
+('disney', 'Disney+ Premium - 3 Months - 8500 Ks', 8500, false, null, null, false),
+('disney', 'Disney+ Duo - 3 Months - 12000 Ks', 12000, false, null, null, false),
+('disney', 'Disney+ Trio - 3 Months - 15000 Ks', 15000, false, null, null, false),
+('disney', 'Disney+ Premium - 12 Months - 20000 Ks', 20000, false, null, null, false),
+('disney', 'Disney+ Duo - 12 Months - 22000 Ks', 22000, false, null, null, false),
+('disney', 'Disney+ Trio - 12 Months - 30000 Ks', 30000, false, null, null, false),
+('prime', 'Premium – 1 Month – 8000 Ks', 8000, false, null, null, false),
+('prime', 'Premium – 6 Months – 20000 Ks', 20000, false, null, null, false),
+('bigo', '50 Diamonds 💎 - 4200 Ks', 4200, false, null, null, false),
+('bigo', '100 Diamonds 💎 - 8500 Ks', 8500, false, null, null, false),
+('bigo', '150 Diamonds 💎 - 12980 Ks', 12980, false, null, null, false),
+('bigo', '200 Diamonds 💎 - 16950 Ks', 16950, false, null, null, false),
+('bigo', '250 Diamonds 💎 - 21200 Ks', 21200, false, null, null, false),
+('bigo', '300 Diamonds 💎 - 25300 Ks', 25300, false, null, null, false),
+('bigo', '400 Diamonds 💎 - 34200 Ks', 34200, false, null, null, false),
+('bigo', '500 Diamonds 💎 - 42300 Ks', 42300, false, null, null, false),
+('bigo', '750 Diamonds 💎 - 63200 Ks', 63200, false, null, null, false),
+('bigo', '1000 Diamonds 💎 - 84580 Ks', 84580, false, null, null, false),
+('bigo', '2000 Diamonds 💎 - 168700 Ks', 168700, false, null, null, false),
+('bigo', '3000 Diamonds 💎 - 265060 Ks', 265060, false, null, null, false),
+('facebook_service', '👥Followers(NoRefill)⚡', 5000, true, 1000, 500, false),
+('facebook_service', '👥Followers (Refill / High Quality)🔥', 7000, true, 1000, 500, false),
+('facebook_service', '👍Like 💥', 5000, true, 1000, 500, false),
+('facebook_service', '❤️Love 💥', 5000, true, 1000, 500, false),
+('facebook_service', '😂Haha 💥', 5000, true, 1000, 500, false),
+('facebook_service', '😮Wow 💥', 5000, true, 1000, 500, false),
+('facebook_service', '😢Sad 💥', 5000, true, 1000, 500, false),
+('facebook_service', '😡Angry 💥', 5000, true, 1000, 500, false),
+('facebook_service', '👍❤️🤣🥲😯 Mixed Reactions 💥', 6500, true, 1000, 500, false),
+('facebook_service', '👥👁️Story Views 💯', 6500, true, 1000, 500, false),
+('facebook_service', '📢 Facebook Ads 1️⃣💲 ⏩ 5600 Ks', 5600, true, 1, 5, false),
+('🪙tiktok_coins_promote', '🪙Titok Coins 🪙', 5200, true, 100, 100, false),
+('🪙tiktok_coins_promote', '🔥📈 TikTok Promote 💲💲', 6000, true, 1, 1, false),
+('wink', 'China Region – 1 Month – 4500 Ks', 4500, false, null, null, true),
+('wink', '👥Global Region – 1 Month – 7000 Ks (Share) – 1 Device', 8000, false, null, null, false),
+('wink', '🔐Global Region – 1 Month – 18000 Ks (Private) – 3 Devices', 18000, false, null, null, false),
+('wink', '🔐Global Region – 1 Year – 160000 Ks (Private) – 3 Devices', 160000, false, null, null, false),
+('meitu', '👥VIP Plan (Share account) - 1 Month - 8000 Ks', 8000, false, null, null, false),
+('meitu', '🔐VIP Plan (Private account) - 1 Month - 12000 Ks', 12000, false, null, null, false),
+('meitu', '🔐VIP Plan (Private account) - 1 Year - 98000 Ks', 98000, false, null, null, false),
+('meitu', '👥SVIP Plan (Share account) - 1 Month - 15000 Ks', 15000, false, null, null, false),
+('meitu', '🔐SVIP Plan (Private account) - 1 Month - 22000 Ks', 22000, false, null, null, false),
+('meitu', '🔐SVIP Plan (Private account) - 3 Months - 53000 Ks', 53000, false, null, null, false),
+('meitu', '🔐SVIP Plan (Private account) - 1 Year - 160000 Ks', 160000, false, null, null, false),
+('meitu', '✉️Own Mail VIP Plan - 1 Month - 12500 Ks', 12500, false, null, null, false),
+('meitu', '✉️Own Mail SVIP Plan - 1 Month - 21000 Ks', 21000, false, null, null, false),
+('meitu', '✉️Own Mail SVIP Plan - 3 Months - 54000 Ks', 54000, false, null, null, false),
+('meitu', '✉️Own Mail SVIP Plan - 1 Year - 165000 Ks', 165000, false, null, null, false),
+('steam', '5 USD - 23200 Ks', 23200, false, null, null, false),
+('steam', '10 USD - 45000 Ks', 45000, false, null, null, false),
+('steam', '20 USD - 90000 Ks', 90000, false, null, null, false),
+('steam', '25 USD - 113000 Ks', 113000, false, null, null, false),
+('steam', '30 USD - 137000 Ks', 137000, false, null, null, false),
+('steam', '35 USD - 157000 Ks', 157000, false, null, null, false),
+('steam', '50 USD - 228000 Ks', 228000, false, null, null, false),
+('steam', '100 USD - 460000 Ks', 460000, false, null, null, false),
+('duolingo', 'Individual Plan – 1 Month – 5000 Ks', 5000, false, null, null, false),
+('duolingo', 'Family Plan – Coming Soon', 0, false, null, null, true),
+('nordvpn', '👥 2 Months – Share – 8000 Ks', 8000, false, null, null, false),
+('nordvpn', '🔐 2 Months – Private – 15000 Ks', 15000, false, null, null, false),
+('nordvpn', '👥 3 Months – Share – 12000 Ks', 12000, false, null, null, false),
+('nordvpn', '🔐 3 Months – Private – 22000 Ks', 22000, false, null, null, false),
+('onevpn', '👥 1 Month – Share – 1600 Ks', 1600, false, null, null, false),
+('onevpn', '🔐 1 Month – Private – 6000 Ks', 6000, false, null, null, false),
+('surfshark', '👥 2 Months – Share – 6000 Ks', 6000, false, null, null, false),
+('surfshark', '🔐 2 Months – Private – 28000 Ks', 28000, false, null, null, false),
+('ypt_wallet', 'YPT Wallet – Wallet+One Visa or Master card – 180000 Ks', 180000, false, null, null, false),
+('tevau_wallet', 'Tevau Wallet – Wallet+One Visacard – 160000 Ks', 160000, false, null, null, false)
+on conflict (product_id, plan_name) do update set
+  price = excluded.price, custom = excluded.custom, base_amount = excluded.base_amount,
+  min_amount = excluded.min_amount, out_of_stock = excluded.out_of_stock, updated_at = now();
+
+-- create_order no longer takes an amount from the client at all. It used
+-- to (p_amount numeric, trusted as-is), which meant anyone with their
+-- browser's devtools open could call create_order({ p_amount: 1, ... })
+-- and buy anything for 1 Ks -- there was nothing server-side checking it
+-- against a real price. Now it looks up what (p_product_id, p_plan_name)
+-- should actually cost from catalog_plans + stock_overrides (section 10c,
+-- above -- this function is defined after both on purpose, since its
+-- %rowtype declarations below need them to already exist) and computes
+-- the charge itself, mirroring the exact same math index.html's
+-- own order-preview already shows (round() for a discount %, ceil() for
+-- a custom per-unit amount), so what the customer previewed and what
+-- they're charged always agree.
+-- Drop every existing overload again (see the dynamic drop above) -- an
+-- older argument list would otherwise stick around as a second overload,
+-- and the unqualified "grant" further down fails with "function name is
+-- not unique".
+do $$
+declare r record;
+begin
+  for r in
+    select p.oid::regprocedure::text as sig
+    from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.proname = 'create_order'
+  loop
+    execute format('drop function if exists %s', r.sig);
+  end loop;
+end $$;
+
+-- Still snapshots the plan's Warranty/Format/Note (as resolved on the
+-- customer's screen at checkout, after any Stock-list overrides) onto the
+-- order row itself, so the order's own chat/detail view can show exactly
+-- what the customer was promised even if the plan's info changes later --
+-- those three fields aren't money, so there's no reason not to keep
+-- trusting the client's snapshot of them the way the rest of this
+-- function trusts nothing about the price.
+create or replace function public.create_order(
+  p_product_id text,
+  p_product_name text,
+  p_plan_name text,
+  p_payment_method text,
+  p_account_info text,
+  p_note text,
+  p_payment_slip_path text default null,
+  p_coupon_code text default null,
+  p_plan_warranty text default null,
+  p_plan_format text default null,
+  p_plan_note text default null,
+  p_qty numeric default 1,
+  p_custom_amount numeric default null
+) returns table (id uuid, access_token uuid, order_code text, amount numeric)
+language plpgsql security definer set search_path = public as $$
+declare
+  v_code text := 'GPH-' || to_char(now(),'YYYYMMDD') || '-' || substr(replace(gen_random_uuid()::text,'-',''),1,5);
+  v_catalog public.catalog_plans%rowtype;
+  v_override public.stock_overrides%rowtype;
+  v_base_price numeric;
+  v_discount_pct numeric;
+  v_unit_price numeric;
+  v_amount numeric;
+  v_coupon public.coupons%rowtype;
+  v_coupon_discount numeric := 0;
+  v_order_id uuid;
+  v_access_token uuid;
+begin
+  select * into v_catalog from public.catalog_plans
+    where product_id = p_product_id and plan_name = p_plan_name;
+  if v_catalog.product_id is null then
+    raise exception 'Unknown product or plan -- please refresh and try again.';
+  end if;
+
+  select * into v_override from public.stock_overrides
+    where product_id = p_product_id and plan_name = p_plan_name;
+
+  if coalesce(v_override.out_of_stock, v_catalog.out_of_stock) then
+    raise exception 'This plan is currently out of stock.';
+  end if;
+
+  -- Admin's Stock-list price override wins when set (price > 0 means
+  -- "set", matching how the storefront's own applyStockOverrides() treats
+  -- a 0/blank override price as "no override"); otherwise the catalog's
+  -- own price. discount_percent then applies on top, same as the
+  -- storefront already shows it.
+  v_base_price := v_catalog.price;
+  if v_override.price is not null and v_override.price > 0 then
+    v_base_price := v_override.price;
+  end if;
+
+  v_discount_pct := least(95, greatest(0, coalesce(v_override.discount_percent, 0)));
+  v_unit_price := case when v_discount_pct > 0
+    then round(v_base_price * (1 - v_discount_pct / 100))
+    else v_base_price end;
+
+  if v_catalog.custom then
+    if v_catalog.base_amount is null or v_catalog.base_amount <= 0 then
+      raise exception 'This plan can''t be ordered online -- please message us directly.';
+    end if;
+    if p_custom_amount is null or p_custom_amount < coalesce(v_catalog.min_amount, 1) then
+      raise exception 'Please enter a valid amount for this plan.';
+    end if;
+    v_amount := ceil((p_custom_amount / v_catalog.base_amount) * v_unit_price);
+  else
+    v_amount := v_unit_price * greatest(1, coalesce(p_qty, 1));
+  end if;
+
+  if p_coupon_code is not null then
+    select * into v_coupon from public.coupons where code = p_coupon_code for update;
+    if v_coupon.id is not null and v_coupon.used_at is null
+       and (v_coupon.assigned_user_id is null or v_coupon.assigned_user_id = auth.uid()) then
+      v_coupon_discount := least(v_coupon.amount, v_amount);
+    end if;
+  end if;
+
+  insert into public.orders(product_name, plan_name, amount, payment_method, account_info, note, order_code, payment_slip_path, user_id, coupon_code, discount_amount, plan_warranty, plan_format, plan_note)
+  values (p_product_name, p_plan_name, v_amount - v_coupon_discount, p_payment_method, p_account_info, p_note, v_code, p_payment_slip_path, auth.uid(),
+          case when v_coupon_discount > 0 then p_coupon_code else null end, v_coupon_discount, p_plan_warranty, p_plan_format, p_plan_note)
+  returning orders.id, orders.access_token into v_order_id, v_access_token;
+
+  if v_coupon_discount > 0 then
+    -- "id" alone here is ambiguous: this function's own RETURNS TABLE
+    -- declares an out parameter named "id" too, which PL/pgSQL also sees
+    -- in scope here -- found by writing a real coupon-redemption test
+    -- for this change and watching it fail with exactly that error, on
+    -- a line that already shipped unchanged in the previous version of
+    -- this function. Qualifying it is the fix in both places.
+    update public.coupons set used_at = now(), used_by_user_id = auth.uid(), used_by_order_id = v_order_id where coupons.id = v_coupon.id;
+  end if;
+
+  return query select v_order_id, v_access_token, v_code, v_amount - v_coupon_discount;
+end;
+$$;
+grant execute on function public.create_order to anon, authenticated;
 
 -- 11. Dashboard access code -----------------------------------------
 -- A second lock in front of shinpayhubcld.html's login, entirely separate
