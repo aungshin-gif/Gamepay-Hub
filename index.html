@@ -4949,11 +4949,7 @@ async function uploadPaymentSlip(){
 async function submitOrderToBackend(){
   if(!supabaseClient || !currentProduct) return { order: null, error: "Backend not configured." };
   const selectedPlan = currentProduct.plans[currentPlanIndex];
-  let customAmount = Number(customAmountInput.value || 0);
-  let amount = Number(selectedPlan.price) * currentQty;
-  if(selectedPlan.custom && customAmount > 0){
-    amount = Math.ceil((customAmount / Number(selectedPlan.baseAmount)) * Number(selectedPlan.price));
-  }
+  const customAmount = Number(customAmountInput.value || 0);
   const slip = await uploadPaymentSlip();
   if(slip.failed){
     showToast("Payment slip upload failed — continuing without it.");
@@ -4962,9 +4958,14 @@ async function submitOrderToBackend(){
   try{
     ({ data, error } = await withTimeout(
       supabaseClient.rpc("create_order", {
+        p_product_id: currentProduct.id,
         p_product_name: currentProduct.name,
-        p_plan_name: selectedPlan.name,
-        p_amount: amount,
+        // _catalogName is the plan's name as it reads in the untouched
+        // catalog -- plan.name itself gets rewritten to embed a new price
+        // once a Stock-list discount is active (see applyStockOverrides),
+        // so sending that instead would stop matching catalog_plans'
+        // server-side lookup key the moment a discount turns on.
+        p_plan_name: selectedPlan._catalogName || selectedPlan.name,
         p_payment_method: activePayment || "Not selected",
         p_account_info: accountInput.value.trim(),
         p_note: noteInput.value.trim(),
@@ -4975,7 +4976,12 @@ async function submitOrderToBackend(){
         // to the plan's own info can never rewrite what was promised here.
         p_plan_warranty: selectedPlan.warranty || null,
         p_plan_format: selectedPlan.format || null,
-        p_plan_note: selectedPlan.note || null
+        p_plan_note: selectedPlan.note || null,
+        // The price itself is never sent -- create_order looks it up
+        // server-side from catalog_plans/stock_overrides using the ids
+        // above, so a tampered amount here couldn't do anything anyway.
+        p_qty: currentQty,
+        p_custom_amount: (selectedPlan.custom && customAmount > 0) ? customAmount : null
       }),
       15000, "Saving the order timed out."
     ));
@@ -4988,11 +4994,12 @@ async function submitOrderToBackend(){
     return { order: null, error: error?.message || "Unknown error while saving the order." };
   }
   const row = data[0];
-  const discount = appliedCoupon ? Math.min(appliedCoupon.amount, amount) : 0;
   currentOrder = {
     id: row.id, access_token: row.access_token, order_code: row.order_code,
     product_name: currentProduct.name, plan_name: selectedPlan.name,
-    amount: amount - discount, created_at: new Date().toISOString(),
+    // row.amount is what the server actually charged -- the real source
+    // of truth now, not a number this page computed itself.
+    amount: Number(row.amount), created_at: new Date().toISOString(),
     status: "pending", chat_closed: false,
     plan_warranty: selectedPlan.warranty || null,
     plan_format: selectedPlan.format || null,
