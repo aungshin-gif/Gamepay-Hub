@@ -9851,7 +9851,7 @@ body.light-mode .gp-bottomnav button.is-active{
 @keyframes osSweep{ from{ transform:translateX(-120%) skewX(-18deg); } to{ transform:translateX(320%) skewX(-18deg); } }
 @keyframes osRise{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
 
-@media(max-width:767px){
+@media all{
   #orderStatusView{
     background:#f6f3fd; color:#242330; border-radius:20px;
     padding:10px 12px 22px; margin-top:6px;
@@ -10064,14 +10064,14 @@ body.light-mode .gp-bottomnav button.is-active{
     animation:osSweep 1.1s ease .5s 1 both; pointer-events:none;
   }
 }
-@media(max-width:767px) and (prefers-reduced-motion:reduce){
+@media (prefers-reduced-motion:reduce){
   #orderStatusView *, #orderStatusView *::after{ animation:none !important; transition:none !important; }
   #orderStatusView .fig-os-stepper .status-step-line.done::after{ transform:scaleX(1); }
   #orderStatusView .fig-os-collapse-body > *{ opacity:1; transform:none; }
 }
 
 /* ===== Order tracking (mobile): less clutter, journey visible without scrolling ===== */
-@media(max-width:767px){
+@media all{
   /* the global store header / ticker sit above the page and only add noise here */
   body:has(#orderStatusView:not(.hidden)) .compact-header,
   body:has(#orderStatusView:not(.hidden)) .neon-announcement{ display:none !important; }
@@ -10107,4 +10107,7 @@ body.light-mode .gp-bottomnav button.is-active{
   #orderStatusView .fig-os-journey .status-step-dot{ width:42px; height:42px; }
   #orderStatusView .fig-os-journey .status-step-line{ margin-top:20px; }
 }
-@media(max-width:767px){ #orderStatusView .fig-os-refresh-more{ display:none; } }
+@media all{ #orderStatusView .fig-os-refresh-more{ display:none; } }
+
+/* Order tracking keeps the same compact card column on tablets / desktop */
+#orderStatusView{ max-width:560px; margin-left:auto; margin-right:auto; }

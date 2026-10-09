@@ -1,0 +1,58 @@
+<!--
+  Supabase -> Authentication -> Emails -> Templates -> "Confirm sign up"
+  Subject:  Confirm your email address
+  Paste everything below the comment into the template body and Save.
+
+  Contains BOTH the confirm button ({{ .ConfirmationURL }}) and the code
+  ({{ .Token }}), so new customers can either tap the button or type the code
+  into the "Check your email!" screen on the site. Same look as the existing
+  "Reset your password" email.
+-->
+<div style="background:#efe9f7;padding:36px 14px;font-family:Arial,Helvetica,sans-serif;">
+  <table role="presentation" width="100%" style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #e5e0f5;box-shadow:0 18px 40px rgba(58,17,99,.14);">
+    <tr>
+      <td style="background:linear-gradient(135deg,#170023,#4c1480 55%,#8c4fe0 100%);padding:34px 24px 26px;text-align:center;">
+        <table role="presentation" align="center" style="margin:0 auto 14px;">
+          <tr><td style="width:56px;height:56px;border-radius:16px;background:#ffffff;text-align:center;vertical-align:middle;font:900 26px Arial,Helvetica,sans-serif;color:#4c1480;">G</td></tr>
+        </table>
+        <div style="color:#ffffff;font-weight:900;font-size:19px;letter-spacing:1.5px;">GAMEPAY HUB</div>
+        <div style="color:rgba(255,255,255,.72);font-size:10.5px;letter-spacing:3px;margin-top:3px;">DIGITAL STORE</div>
+      </td>
+    </tr>
+    <tr><td style="height:4px;background:linear-gradient(90deg,#e9c46a,#8c4fe0,#e9c46a);font-size:0;line-height:0;">&nbsp;</td></tr>
+    <tr>
+      <td style="padding:34px 30px 30px;">
+        <h1 style="margin:0 0 12px;font-size:21px;font-weight:800;color:#1f2333;">Confirm your email</h1>
+        <p style="margin:0 0 22px;font-size:14px;line-height:1.7;color:#5b5468;">
+          Thanks for creating a GamePay Hub account. Enter this code on the
+          "Check your email!" screen, or tap the button below.
+        </p>
+        <table role="presentation" align="center" style="margin:0 auto 22px;">
+          <tr><td style="background:#f7f4fc;border:1.5px dashed #7c3aed;border-radius:14px;padding:16px 32px;">
+            <span style="font-size:32px;font-weight:900;letter-spacing:9px;color:#5a1a86;font-family:'Courier New',monospace;">{{ .Token }}</span>
+          </td></tr>
+        </table>
+        <table role="presentation" align="center" style="margin:0 auto 24px;">
+          <tr><td style="border-radius:999px;background:#7c3aed;">
+            <a href="{{ .ConfirmationURL }}" style="display:inline-block;color:#ffffff;text-decoration:none;font-weight:700;font-size:14.5px;padding:14px 34px;border-radius:999px;">Confirm my email →</a>
+          </td></tr>
+        </table>
+        <table role="presentation" width="100%" style="background:#fff7e6;border-radius:12px;">
+          <tr><td style="padding:13px 16px;">
+            <p style="margin:0;font-size:12px;line-height:1.6;color:#8a6d1f;">
+              ⏱ The code expires shortly for your security. Didn't create this account?
+              You can safely ignore this email.
+            </p>
+          </td></tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:20px 30px;border-top:1px solid #eee;text-align:center;">
+        <p style="margin:0;font-size:11px;color:#b7b0c4;">
+          GamePay Hub · gamepayhub.shop · Support: Telegram <a href="https://t.me/angsthtun" style="color:#9099ad;">@angsthtun</a>
+        </p>
+      </td>
+    </tr>
+  </table>
+</div>
