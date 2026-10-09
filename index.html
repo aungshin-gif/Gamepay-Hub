@@ -3508,8 +3508,22 @@ moreBtn?.addEventListener("click", () => {
     void moreWrap.offsetWidth; /* reflow so the pop animation restarts */
     moreWrap.classList.add("show");
   }else{
-    moreWrap.classList.remove("show");
-    moreWrap.hidden = true;
+    /* collapse with the same stagger, played in reverse, then fold the height away */
+    if(moreWrap.classList.contains("closing")) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const finish = () => {
+      moreWrap.classList.remove("show", "closing");
+      moreWrap.style.height = "";
+      moreWrap.hidden = true;
+    };
+    if(reduce){ finish(); }
+    else{
+      moreWrap.style.height = moreWrap.offsetHeight + "px";
+      void moreWrap.offsetWidth;
+      moreWrap.classList.add("closing");
+      moreWrap.style.height = "0px";
+      setTimeout(finish, 520);
+    }
   }
   moreBtn.setAttribute("aria-expanded", hidden ? "true" : "false");
   moreBtn.querySelector("span").textContent = hidden ? "Show fewer questions" : "View 4 more questions";

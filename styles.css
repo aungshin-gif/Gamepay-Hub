@@ -9044,6 +9044,19 @@ body.light-mode .gp-bottomnav button.is-active{
   60%{ opacity:1; transform:translateY(-4px) scale(1.01); }
   to{ opacity:1; transform:translateY(0) scale(1); }
 }
+/* ...and fold away in reverse when "Show fewer questions" is tapped */
+
+#gpFaqMore.closing{ overflow:hidden; transition:height .4s cubic-bezier(.4,0,.2,1) .15s; }
+#gpFaqMore.closing .gp-faq-item{
+  animation:gp-faq-out .3s cubic-bezier(.4,0,1,1) both;
+}
+#gpFaqMore.closing .gp-faq-item:nth-child(3){ animation-delay:.07s; }
+#gpFaqMore.closing .gp-faq-item:nth-child(2){ animation-delay:.14s; }
+#gpFaqMore.closing .gp-faq-item:nth-child(1){ animation-delay:.21s; }
+@keyframes gp-faq-out{
+  from{ opacity:1; transform:translateY(0) scale(1); }
+  to{ opacity:0; transform:translateY(14px) scale(.95); }
+}
 @media (prefers-reduced-motion:reduce){
   #gpFaqMore .gp-faq-item{ opacity:1; }
   #gpFaqMore.show .gp-faq-item{ animation:none; }
