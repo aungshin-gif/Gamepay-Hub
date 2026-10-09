@@ -9044,6 +9044,19 @@ body.light-mode .gp-bottomnav button.is-active{
   60%{ opacity:1; transform:translateY(-4px) scale(1.01); }
   to{ opacity:1; transform:translateY(0) scale(1); }
 }
+/* ...and fold away in reverse when "Show fewer questions" is tapped */
+
+#gpFaqMore.closing{ overflow:hidden; transition:height .4s cubic-bezier(.4,0,.2,1) .15s; }
+#gpFaqMore.closing .gp-faq-item{
+  animation:gp-faq-out .3s cubic-bezier(.4,0,1,1) both;
+}
+#gpFaqMore.closing .gp-faq-item:nth-child(3){ animation-delay:.07s; }
+#gpFaqMore.closing .gp-faq-item:nth-child(2){ animation-delay:.14s; }
+#gpFaqMore.closing .gp-faq-item:nth-child(1){ animation-delay:.21s; }
+@keyframes gp-faq-out{
+  from{ opacity:1; transform:translateY(0) scale(1); }
+  to{ opacity:0; transform:translateY(14px) scale(.95); }
+}
 @media (prefers-reduced-motion:reduce){
   #gpFaqMore .gp-faq-item{ opacity:1; }
   #gpFaqMore.show .gp-faq-item{ animation:none; }
@@ -9791,3 +9804,268 @@ body.light-mode .gp-bottomnav button.is-active{
   font-size:14px; line-height:1;
 }
 .fb-emoji-row{ margin:-2px 0 4px; font-size:13px; line-height:1.2; letter-spacing:1px; white-space:nowrap; }
+
+/* ---- "Your selection": product logo beside the plan name ---- */
+#cartItem .sel-plan{ display:flex; align-items:flex-start; gap:12px; }
+#cartItem .sel-plan-text{ flex:1; min-width:0; }
+#cartItem .sel-logo{
+  width:44px; height:44px; border-radius:12px; flex-shrink:0;
+  border:1px solid #e7dfee; background:#faf8ff;
+  display:flex; align-items:center; justify-content:center; overflow:hidden; font-size:22px;
+}
+#cartItem .sel-logo img{ width:34px; height:34px; object-fit:contain; }
+
+/* ---- Account / My orders: drop the empty cart panel that sat above them ---- */
+#orderView.hide-cart-header:has(> #accountView:not(.hidden)) > .panel,
+#orderView.hide-cart-header:has(> #myOrdersView:not(.hidden)) > .panel{ display:none; }
+
+/* A finished `both` fill leaves an identity transform on these views, which
+   makes them the containing block of their position:fixed bottom tab bar --
+   so the bar sat at the end of the page instead of the screen bottom. */
+#myOrdersView:not(.hidden),
+#noticeView:not(.hidden),
+#accountView:not(.hidden),
+#securityView:not(.hidden),
+#inviteFriendsView:not(.hidden){
+  animation-fill-mode:backwards;
+}
+
+/* ===== Order tracking (Figma Make, light-purple compact mobile) ===== */
+/* the empty cart panel above any order status page is just a blank pill */
+#orderView:has(> #orderStatusView:not(.hidden)) > .panel{ display:none; }
+#orderStatusView .fig-os-appbar,
+#orderStatusView .fig-os-eyebrow,
+#orderStatusView .fig-os-secure,
+#orderStatusView .fig-os-collapse-more{ display:none; }
+#orderStatusView .fig-os-support-text small{ display:none; }
+#orderStatusView .fig-os-support-text b{ font-weight:inherit; }
+
+@keyframes osPop{ 0%{ transform:scale(.55); opacity:0; } 60%{ transform:scale(1.12); opacity:1; } 100%{ transform:scale(1); opacity:1; } }
+@keyframes osFill{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
+@keyframes osDraw{ to{ stroke-dashoffset:0; } }
+@keyframes osRingLoop{ 0%{ box-shadow:0 0 0 0 rgba(98,49,200,.30); } 100%{ box-shadow:0 0 0 14px rgba(98,49,200,0); } }
+@keyframes osRingOnce{ 0%{ box-shadow:0 0 0 0 rgba(98,49,200,.38); } 100%{ box-shadow:0 0 0 22px rgba(98,49,200,0); } }
+@keyframes osFlow{ to{ background-position:14px 0; } }
+@keyframes osBlink{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.35; transform:scale(.65); } }
+@keyframes osStepPulse{ 0%,100%{ box-shadow:0 0 0 4px rgba(98,49,200,.10); } 50%{ box-shadow:0 0 0 10px rgba(98,49,200,.04); } }
+@keyframes osSweep{ from{ transform:translateX(-120%) skewX(-18deg); } to{ transform:translateX(320%) skewX(-18deg); } }
+@keyframes osRise{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+
+@media(max-width:767px){
+  #orderStatusView{
+    background:#f6f3fd; color:#242330; border-radius:20px;
+    padding:10px 12px 22px; margin-top:6px;
+  }
+  #orderStatusView .fig-os-shell{ max-width:none; }
+
+  /* app bar (same pattern as Account / My orders) */
+  #orderStatusView .fig-os-appbar{ display:flex; margin:0 0 8px; }
+
+  /* breadcrumb + heading, compact */
+  #orderStatusView .fig-os-crumb{ margin:4px 2px 0; font-size:12px; }
+  #orderStatusView .fig-os-crumb-link{ color:#7d7390; }
+  #orderStatusView .fig-os-crumb-here{ color:#242330; }
+  #orderStatusView .fig-os-head{ margin:10px 2px 12px; display:flex; flex-direction:column; align-items:flex-start; gap:0; }
+  #orderStatusView .fig-os-eyebrow{ display:block; color:#7d5bd0; font-size:10px; letter-spacing:.2em; margin-bottom:6px; }
+  #orderStatusView .fig-os-title{ font-size:25px; line-height:1.12; color:#2a1a55; margin:0 0 6px; }
+  #orderStatusView .fig-os-sub{ font-size:12.5px; color:#7d7390; line-height:1.5; }
+  #orderStatusView .fig-os-secure{
+    display:inline-flex; align-items:center; gap:6px; margin-top:10px;
+    font-size:11.5px; font-weight:600; color:#7d7390;
+  }
+  #orderStatusView .fig-os-secure svg{ width:13px; height:13px; }
+
+  /* order reference card */
+  #orderStatusView .fig-os-ref{
+    flex-direction:column; align-items:flex-start; gap:10px; padding:14px;
+    background:linear-gradient(135deg,#efe8fc 0%,#f8f5ff 100%);
+    border:1px solid #e3d9f6; border-radius:16px; box-shadow:none;
+  }
+  #orderStatusView .fig-os-ref-meta{ width:100%; gap:5px; }
+  #orderStatusView .fig-os-kicker{ color:#8c7cb0; font-size:10px; }
+  #orderStatusView .fig-os-code b{ font-size:15px; color:#2a1a55; letter-spacing:.02em; }
+  #orderStatusView .fig-os-copy{ background:#fff; border-color:#e3d9f6; color:#6231c8 !important; }
+  #orderStatusView .fig-os-refresh{
+    background:#6231c8; box-shadow:0 6px 14px rgba(98,49,200,.28);
+    padding:9px 14px; border-radius:10px; font-size:12.5px;
+  }
+
+  /* status card */
+  #orderStatusView .fig-os-card{
+    position:relative; padding:14px; gap:12px; margin-top:10px;
+    background:#fff; border:1px solid #eae5f1; border-radius:16px; box-shadow:0 4px 14px rgba(98,49,200,.06);
+  }
+  #orderStatusView .fig-os-status-icon{
+    width:46px; height:46px; border-radius:14px;
+    background:#f4f0fa; border:1px solid #e3d9f6; color:#6231c8;
+  }
+  #orderStatusView .fig-os-status-icon svg{ width:24px; height:24px; }
+  #orderStatusView .fig-os-status-title{ font-size:17px; color:#2a1a55; }
+  #orderStatusView .fig-os-status-desc{ font-size:12.5px; color:#7d7390; margin-top:4px; }
+  #orderStatusView .fig-os-pill{
+    margin-top:10px; padding:5px 11px; font-size:11px;
+    background:#f4f0fa; color:#6231c8; border:1px solid #e3d9f6;
+  }
+  #orderStatusView .fig-os-pill.done{ background:#efe7ff; color:#5524b8; border-color:#d6c4f7; }
+  #orderStatusView .fig-os-pill.bad{ background:#fdeaea; color:#b3261e; border-color:#f3c4c4; }
+
+  /* journey */
+  #orderStatusView .fig-os-rowhead{ margin:16px 2px 8px; }
+  #orderStatusView .fig-os-section{ font-size:14px; color:#2a1a55; }
+  #orderStatusView .fig-os-count{ color:#8c7cb0; font-size:10px; }
+  #orderStatusView .fig-os-stepper{ margin:0 auto; padding:2px 0 4px; }
+  #orderStatusView .fig-os-stepper .status-step{ gap:7px; }
+  #orderStatusView .fig-os-stepper .status-step-dot{
+    width:46px; height:46px; background:#faf8ff; border:1.5px solid #e5def2; color:#b6a8d0;
+  }
+  #orderStatusView .fig-os-stepper .status-step-dot svg{ width:20px; height:20px; }
+  #orderStatusView .fig-os-stepper .status-step.done .status-step-dot{
+    background:#efe7ff; border-color:#6231c8; color:#6231c8; box-shadow:none;
+  }
+  #orderStatusView .fig-os-stepper .status-step.current .status-step-dot{
+    background:#fff; border-color:#6231c8; color:#6231c8; box-shadow:0 0 0 5px rgba(98,49,200,.08);
+    animation:osStepPulse 2s ease-in-out infinite;
+  }
+  #orderStatusView .fig-os-stepper .status-step.current .status-step-dot::after{
+    background:#6231c8; border-color:#fff; animation:osBlink 1.2s ease-in-out infinite;
+  }
+  #orderStatusView .fig-os-stepper .status-step.rejected .status-step-dot{ background:#b3261e; border-color:#b3261e; color:#fff; }
+  #orderStatusView .fig-os-stepper .status-step-label{ font-size:11.5px; color:#b6a8d0; }
+  #orderStatusView .fig-os-stepper .status-step.done .status-step-label,
+  #orderStatusView .fig-os-stepper .status-step.current .status-step-label{ color:#2a1a55; }
+  #orderStatusView .fig-os-stepper .status-step-sub{ font-size:10px; color:#9a8fb4; }
+  #orderStatusView .fig-os-stepper .status-step.current .status-step-sub{ color:#7d7390; }
+  #orderStatusView .fig-os-stepper .status-step-line{
+    position:relative; overflow:hidden; background:#e5def2; margin-top:22px; flex:0 1 34px; min-width:10px;
+  }
+  #orderStatusView .fig-os-stepper .status-step-line.done{ background:#e5def2; }
+  #orderStatusView .fig-os-stepper .status-step-line::after{
+    content:""; position:absolute; inset:0; background:#6231c8;
+    transform:scaleX(0); transform-origin:left center;
+  }
+  #orderStatusView .fig-os-stepper .status-step-line.done::after{ transform:scaleX(1); }
+  /* tracking: the line leaving the current step flows forward */
+  #orderStatusView .fig-os-stepper .status-step.current + .status-step-line{
+    background:repeating-linear-gradient(90deg,#b99cf0 0 7px,transparent 7px 14px);
+    background-size:14px 100%; animation:osFlow .9s linear infinite;
+  }
+
+  /* notice */
+  #orderStatusView .fig-os-notice{
+    background:#fff; border:1px solid #eae5f1; border-radius:14px; padding:11px 13px;
+    margin-top:12px; font-size:12.5px; color:#51475f;
+  }
+  #orderStatusView .fig-os-notice-icon{ color:#6231c8; }
+
+  /* Order details / Order activity cards */
+  #orderStatusView .fig-os-cols{ grid-template-columns:1fr; gap:10px; margin-top:12px; }
+  #orderStatusView .fig-os-collapse{
+    background:#fff; border:1px solid #eae5f1; border-radius:16px; box-shadow:0 4px 14px rgba(98,49,200,.05);
+  }
+  #orderStatusView .fig-os-collapse-head{ padding:12px 14px; gap:10px; background:none; color:#2a1a55; }
+  #orderStatusView .fig-os-collapse-ico{
+    width:36px; height:36px; border-radius:11px; background:#f4f0fa; color:#6231c8;
+    align-items:center; justify-content:center;
+  }
+  #orderStatusView .fig-os-collapse-ico svg{ width:18px; height:18px; }
+  #orderStatusView .fig-os-collapse-title{ display:flex; flex-direction:column; white-space:normal; gap:1px; }
+  #orderStatusView .fig-os-collapse-title b{ font-size:14.5px; color:#2a1a55; }
+  #orderStatusView .fig-os-collapse-title span{ margin:0; font-size:12px; color:#7d7390; font-weight:600; }
+  #orderStatusView #activityCollapse .fig-os-collapse-title span{ display:none; }
+  #orderStatusView .fig-os-collapse-more{ display:inline; font-size:12.5px; font-weight:700; color:#6231c8; white-space:nowrap; }
+  #orderStatusView .fig-os-collapse-chev{ color:#6231c8; transition:transform .35s cubic-bezier(.4,0,.2,1); }
+  #orderStatusView #detailsCollapse .fig-os-collapse-chev{ transform:rotate(-90deg); }
+  #orderStatusView #detailsCollapse.open .fig-os-collapse-chev{ transform:rotate(0); }
+  #orderStatusView #activityCollapse .fig-os-collapse-chev{ display:none; }
+
+  /* smooth height (0fr -> 1fr) + content fade/slide instead of a max-height guess */
+  #orderStatusView .fig-os-collapse-body{
+    display:grid; grid-template-rows:0fr; max-height:none; overflow:visible;
+    transition:grid-template-rows .4s cubic-bezier(.4,0,.2,1);
+  }
+  #orderStatusView .fig-os-collapse.open .fig-os-collapse-body{ grid-template-rows:1fr; max-height:none; }
+  #orderStatusView .fig-os-collapse-body > *{
+    min-height:0; overflow:hidden; opacity:0; transform:translateY(-8px);
+    transition:opacity .3s ease, transform .4s cubic-bezier(.4,0,.2,1);
+  }
+  #orderStatusView .fig-os-collapse.open .fig-os-collapse-body > *{ opacity:1; transform:none; transition-delay:.08s; }
+  #orderStatusView .fig-os-collapse.open .order-status-details .order-preview-table tr{ animation:osRise .4s both; }
+  #orderStatusView .fig-os-collapse.open .order-status-details .order-preview-table tr:nth-child(2){ animation-delay:.06s; }
+  #orderStatusView .fig-os-collapse.open .order-status-details .order-preview-table tr:nth-child(3){ animation-delay:.12s; }
+  #orderStatusView .fig-os-collapse.open .order-status-details .order-preview-table tr:nth-child(4){ animation-delay:.18s; }
+  #orderStatusView .fig-os-collapse.open .order-status-details .order-preview-table tr:nth-child(5){ animation-delay:.24s; }
+  #orderStatusView .status-details-caption{ display:none; }
+  #orderStatusView .order-status-details{ background:none; border:0; border-top:1px solid #f0ebf8; border-radius:0; box-shadow:none; }
+  #orderStatusView .order-status-details .order-preview-table th{ color:#7d7390 !important; font-size:12px; text-align:left; padding:10px 14px; }
+  #orderStatusView .order-status-details .order-preview-table td{ color:#2a1a55 !important; font-size:12.5px; font-weight:700; text-align:right; padding:10px 14px; }
+  #orderStatusView .order-status-details .order-preview-table th,
+  #orderStatusView .order-status-details .order-preview-table td{ border-bottom:1px solid #f4f0fa !important; }
+
+  /* activity timeline */
+  #orderStatusView .fig-os-collapse-body .fig-os-timeline{ padding:2px 14px 8px; border-top:1px solid #f0ebf8; }
+  #orderStatusView .fig-os-tl-item{ padding:10px 0; gap:11px; border-bottom:1px dashed #ece6f7; }
+  #orderStatusView .fig-os-tl-dot{ width:32px; height:32px; background:#f4f0fa; border-color:#e3d9f6; color:#9a8fb4; }
+  #orderStatusView .fig-os-tl-item.done .fig-os-tl-dot{ background:#efe7ff; border-color:#d6c4f7; color:#6231c8; }
+  #orderStatusView .fig-os-tl-item.current .fig-os-tl-dot{
+    background:#fff; border-color:#6231c8; color:#6231c8; animation:osRingLoop 1.8s ease-out infinite;
+  }
+  #orderStatusView .fig-os-tl-body b{ font-size:13px; color:#2a1a55; }
+  #orderStatusView .fig-os-tl-body span{ font-size:11.5px; color:#7d7390; }
+  #orderStatusView .fig-os-tl-time{ font-size:10.5px; padding-top:8px; color:#9a8fb4; }
+  #orderStatusView .fig-os-tl-now{ color:#6231c8; border-color:#e3d9f6; background:#f4f0fa; }
+
+  /* support */
+  #orderStatusView .fig-os-support{
+    flex-direction:row; align-items:center; justify-content:space-between; gap:10px;
+    margin:14px 0 0; padding:12px 4px 0; border-top:1px solid #eae5f1;
+  }
+  #orderStatusView .fig-os-support-label{ align-items:center; gap:10px; color:#2a1a55; min-width:0; }
+  #orderStatusView .fig-os-support-label svg{ color:#6231c8; flex:0 0 auto; }
+  #orderStatusView .fig-os-support-text{ display:flex; flex-direction:column; gap:1px; min-width:0; }
+  #orderStatusView .fig-os-support-label{ flex:1 1 auto; }
+  #orderStatusView .fig-os-support-text b{ font-size:12.5px; font-weight:700; }
+  #orderStatusView .fig-os-support-text small{ display:block; font-size:11px; font-weight:500; color:#7d7390; }
+  #orderStatusView .fig-os-support-link{ color:#6231c8; font-size:12px; white-space:nowrap; flex:0 0 auto; }
+  #orderStatusView .fig-os-support-link .fig-os-support-arrow{ margin-left:2px; }
+  #orderStatusView .fig-os-foot{ margin:16px 0 0; font-size:11px; color:#9a8fb4; }
+
+  /* ---- status animations (replayed by playOrderStatusAnimation) ---- */
+  /* tracking: dots pop in order, the journey line fills left to right */
+  #orderStatusView.os-play .fig-os-stepper .status-step.done .status-step-dot{
+    animation:osPop .5s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  #orderStatusView.os-play .fig-os-stepper .status-step:nth-of-type(1) .status-step-dot{ animation-delay:.10s; }
+  #orderStatusView.os-play .fig-os-stepper .status-step:nth-of-type(2).done .status-step-dot{ animation-delay:.70s; }
+  #orderStatusView.os-play .fig-os-stepper .status-step:nth-of-type(3).done .status-step-dot{ animation-delay:1.30s; }
+  #orderStatusView.os-play .fig-os-stepper .status-step-line.done::after{ animation:osFill .55s cubic-bezier(.4,0,.2,1) both; }
+  #orderStatusView.os-play .fig-os-stepper .status-step-line[data-line="1"].done::after{ animation-delay:.30s; }
+  #orderStatusView.os-play .fig-os-stepper .status-step-line[data-line="2"].done::after{ animation-delay:.95s; }
+  #orderStatusView.os-play .fig-os-tl-item{ animation:osRise .45s both; }
+  #orderStatusView.os-play .fig-os-tl-item:nth-child(2){ animation-delay:.15s; }
+
+  /* waiting: breathing ring + blinking dot while the review is in progress */
+  #orderStatusView[data-state="wait"] .fig-os-status-icon{ animation:osRingLoop 1.9s ease-out infinite; }
+  #orderStatusView[data-state="wait"] .fig-os-pill-dot{ animation:osBlink 1.1s ease-in-out infinite; }
+
+  /* completed: icon pops, check draws itself, ring bursts once, card shines */
+  #orderStatusView[data-state="done"].os-play .fig-os-status-icon{
+    animation:osPop .6s cubic-bezier(.34,1.56,.64,1) both, osRingOnce 1.1s ease-out .35s 1 both;
+  }
+  #orderStatusView[data-state="done"].os-play .fig-os-status-icon svg path{
+    stroke-dasharray:64; stroke-dashoffset:64; animation:osDraw .8s ease .25s forwards;
+  }
+  #orderStatusView[data-state="done"].os-play .fig-os-status-icon svg polyline{
+    stroke-dasharray:24; stroke-dashoffset:24; animation:osDraw .5s ease .85s forwards;
+  }
+  #orderStatusView[data-state="done"].os-play .fig-os-pill{ animation:osPop .5s cubic-bezier(.34,1.56,.64,1) .5s both; }
+  #orderStatusView[data-state="done"].os-play .fig-os-card::after{
+    content:""; position:absolute; top:0; bottom:0; left:0; width:30%;
+    background:linear-gradient(105deg,transparent,rgba(98,49,200,.12),transparent);
+    animation:osSweep 1.1s ease .5s 1 both; pointer-events:none;
+  }
+}
+@media(max-width:767px) and (prefers-reduced-motion:reduce){
+  #orderStatusView *, #orderStatusView *::after{ animation:none !important; transition:none !important; }
+  #orderStatusView .fig-os-stepper .status-step-line.done::after{ transform:scaleX(1); }
+  #orderStatusView .fig-os-collapse-body > *{ opacity:1; transform:none; }
+}
