@@ -761,8 +761,11 @@
               <span class="sel-chip" id="selChip">1 item</span>
             </div>
             <div class="sel-plan">
-              <div class="sel-plan-name" id="selPlanName">-</div>
-              <div class="sel-meta" id="selMeta"></div>
+              <span class="sel-logo" id="selLogo"></span>
+              <div class="sel-plan-text">
+                <div class="sel-plan-name" id="selPlanName">-</div>
+                <div class="sel-meta" id="selMeta"></div>
+              </div>
             </div>
             <div class="qty-row sel-line">
               <div class="sel-unit"><small>Price</small><b id="selUnit">0 Ks</b></div>
@@ -1069,6 +1072,10 @@
               <button type="button" class="acct-appbar-avatar" id="acctHeaderAvatar" aria-label="My account">M</button>
             </div>
           </header>
+          <div class="mo-headrow">
+            <button id="accountBackBtn" class="mo-back-btn" type="button">← Back to store</button>
+            <h1 class="mo-page-title">My account</h1>
+          </div>
 
           <section class="acct-profile-card">
             <div class="acct-profile-top">
@@ -2791,6 +2798,7 @@ plans: [
     const itemAmount = document.getElementById("itemAmount");
     const selPlanName = document.getElementById("selPlanName");
     const selMeta = document.getElementById("selMeta");
+    const selLogo = document.getElementById("selLogo");
     const selUnit = document.getElementById("selUnit");
     const selCalc = document.getElementById("selCalc");
     const selChip = document.getElementById("selChip");
@@ -4339,6 +4347,9 @@ function closeOrder(){
       const card = planList.querySelector(".plan-option.active");
       const planTitle = card?.querySelector(".plan-card-name")?.textContent?.trim() || plan.name;
       selPlanName.textContent = planTitle;
+      selLogo.innerHTML = currentProduct.iconType === "emoji"
+        ? currentProduct.icon
+        : `<img src="${currentProduct.icon}" alt="${currentProduct.name}" decoding="async">`;
       selMeta.innerHTML = "";
       card?.querySelectorAll(".plan-card-row").forEach(row => {
         const chip = document.createElement("span");
@@ -7006,6 +7017,7 @@ function exitAccountView(){
   returnToStoreHome();
 }
 document.getElementById("acctTabStore")?.addEventListener("click", exitAccountView);
+document.getElementById("accountBackBtn")?.addEventListener("click", exitAccountView);
 document.getElementById("acctTabOrders")?.addEventListener("click", () => {
   document.body.classList.remove("account-mode");
   openMyOrdersView();

@@ -9791,3 +9791,28 @@ body.light-mode .gp-bottomnav button.is-active{
   font-size:14px; line-height:1;
 }
 .fb-emoji-row{ margin:-2px 0 4px; font-size:13px; line-height:1.2; letter-spacing:1px; white-space:nowrap; }
+
+/* ---- "Your selection": product logo beside the plan name ---- */
+#cartItem .sel-plan{ display:flex; align-items:flex-start; gap:12px; }
+#cartItem .sel-plan-text{ flex:1; min-width:0; }
+#cartItem .sel-logo{
+  width:44px; height:44px; border-radius:12px; flex-shrink:0;
+  border:1px solid #e7dfee; background:#faf8ff;
+  display:flex; align-items:center; justify-content:center; overflow:hidden; font-size:22px;
+}
+#cartItem .sel-logo img{ width:34px; height:34px; object-fit:contain; }
+
+/* ---- Account / My orders: drop the empty cart panel that sat above them ---- */
+#orderView.hide-cart-header:has(> #accountView:not(.hidden)) > .panel,
+#orderView.hide-cart-header:has(> #myOrdersView:not(.hidden)) > .panel{ display:none; }
+
+/* A finished `both` fill leaves an identity transform on these views, which
+   makes them the containing block of their position:fixed bottom tab bar --
+   so the bar sat at the end of the page instead of the screen bottom. */
+#myOrdersView:not(.hidden),
+#noticeView:not(.hidden),
+#accountView:not(.hidden),
+#securityView:not(.hidden),
+#inviteFriendsView:not(.hidden){
+  animation-fill-mode:backwards;
+}
