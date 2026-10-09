@@ -903,6 +903,15 @@
 
         <div id="orderStatusView" class="hidden order-status-view">
             <div class="preview-shell fig-os-shell">
+        <header class="acct-appbar fig-os-appbar">
+          <div class="acct-appbar-brand"><img class="acct-brand-logo" id="osBrandLogo" alt="Gamepay Hub"><span class="acct-appbar-word">gamepay.</span></div>
+          <div class="acct-appbar-actions">
+            <button type="button" class="acct-icon-btn" id="osSupportBtn" aria-label="Contact support">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+            </button>
+            <button type="button" class="acct-appbar-avatar" id="osAvatar" aria-label="My account">M</button>
+          </div>
+        </header>
         <nav class="fig-os-crumb fig-anim" style="--d:.02s" aria-label="Breadcrumb">
           <button type="button" class="fig-os-crumb-link" id="crumbMyOrders">My orders</button>
           <span class="fig-os-crumb-sep">›</span>
@@ -910,8 +919,10 @@
         </nav>
 
         <div class="fig-os-head fig-anim" style="--d:.06s">
-          <h2 class="fig-os-title">Order tracking</h2>
-          <p class="fig-os-sub">Every step, all in one place.</p>
+          <span class="fig-os-kicker fig-os-eyebrow">Clarity at every step</span>
+          <h2 class="fig-os-title">Your order, step by step.</h2>
+          <p class="fig-os-sub">From the first click to the final confirmation. All in one place.</p>
+          <span class="fig-os-secure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Secure order tracking</span>
         </div>
 
         <div class="fig-os-ref fig-anim" style="--d:.10s">
@@ -919,7 +930,7 @@
             <span class="fig-os-kicker">Order reference</span>
             <span class="fig-os-code"><b id="statusOrderCode">—</b><button id="copyOrderCodeBtn" class="fig-os-copy" type="button" aria-label="Copy order code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></span>
           </div>
-          <button id="refreshStatusBtn" class="fig-os-refresh" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Refresh</button>
+          <button id="refreshStatusBtn" class="fig-os-refresh" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Refresh status</button>
         </div>
 
         <div class="fig-os-card fig-anim" style="--d:.14s">
@@ -949,15 +960,16 @@
           <div class="fig-os-collapse" id="detailsCollapse">
             <button type="button" class="fig-os-collapse-head" id="detailsToggle" aria-expanded="false" aria-controls="detailsBody">
               <span class="fig-os-collapse-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
-              <span class="fig-os-collapse-title"><b id="detailsProductName">Order</b><span>Details</span></span>
+              <span class="fig-os-collapse-title"><b>Order details</b><span id="detailsProductName">Order</span></span>
+              <span class="fig-os-collapse-more" id="detailsMoreLabel">View more</span>
               <span class="fig-os-collapse-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
             </button>
             <div class="fig-os-collapse-body" id="detailsBody">
               <div id="statusDetails" class="order-status-details"></div>
             </div>
           </div>
-          <div class="fig-os-collapse" id="activityCollapse">
-            <button type="button" class="fig-os-collapse-head" id="activityToggle" aria-expanded="false" aria-controls="activityBody">
+          <div class="fig-os-collapse open" id="activityCollapse">
+            <button type="button" class="fig-os-collapse-head" id="activityToggle" aria-expanded="true" aria-controls="activityBody">
               <span class="fig-os-collapse-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
               <span class="fig-os-collapse-title"><b>Order activity</b></span>
               <span class="fig-os-collapse-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
@@ -982,7 +994,7 @@
         <div id="statusReasonBox" class="status-reason-box hidden"><span class="status-reason-icon" id="statusReasonIcon"></span><span class="status-reason-text" id="statusReasonText"></span></div>
 
         <div class="fig-os-support fig-anim" style="--d:.40s">
-          <span class="fig-os-support-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>Need a hand?</span>
+          <span class="fig-os-support-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg><span class="fig-os-support-text"><b>Questions about your order?</b><small>Our support team is here to help.</small></span></span>
           <button type="button" class="fig-os-support-link" id="contactSupportBtn">Contact support <span class="fig-os-support-arrow">→</span></button>
         </div>
 
@@ -5248,8 +5260,8 @@ function setOrderStatusUI(status, reason){
   icon.classList.remove("flip");
   if(status === "approved" || status === "completed"){
     icon.innerHTML = FIG_OS_SVG.approved;
-    title.textContent = "Order completed";
-    desc.textContent = "Your payment is confirmed. Open the chat to share your account details with our team.";
+    title.textContent = "Confirmed. You're all set.";
+    desc.textContent = "Your payment has been verified and your order is approved. Open the chat to share your account details with our team.";
     pillText.textContent = "Completed";
     pill.classList.add("done");
     noticeText.textContent = "Your order is complete. Keep your order reference for your records.";
@@ -5280,8 +5292,8 @@ function setOrderStatusUI(status, reason){
   } else {
     icon.innerHTML = FIG_OS_SVG.pending;
     icon.classList.add("flip");
-    title.textContent = "Reviewing your order";
-    desc.textContent = "We're verifying your payment. Confirmation will follow.";
+    title.textContent = "We're reviewing your order.";
+    desc.textContent = "We're checking your payment details. Your order will be confirmed once the review is complete.";
     pillText.textContent = "In progress";
     noticeText.textContent = "No action needed. Please don't send a second payment.";
     journeyCount.textContent = "1 OF 3 COMPLETE";
@@ -5291,6 +5303,9 @@ function setOrderStatusUI(status, reason){
     tlReviewTime.textContent = "Current";
     tlReviewTime.classList.add("fig-os-tl-now");
   }
+  const osView = document.getElementById("orderStatusView");
+  if(osView){ osView.dataset.state = (status === "approved" || status === "completed") ? "done" : (status === "rejected" ? "bad" : "wait"); }
+  playOrderStatusAnimation();
 }
 
 
@@ -5427,6 +5442,14 @@ function showOrderStatusView(){
   orderView.classList.remove("hidden");
   document.getElementById("orderStatusView").classList.remove("hidden");
   document.getElementById("statusOrderCode").textContent = currentOrder ? currentOrder.order_code : "—";
+  const osLogo = document.getElementById("osBrandLogo");
+  if(osLogo){ const src = (typeof siteLogoSrc === "function") ? siteLogoSrc() : ""; if(src) osLogo.src = src; }
+  const osAv = document.getElementById("osAvatar");
+  if(osAv){
+    const photo = currentUser?.user_metadata?.avatar_url || null;
+    if(photo) osAv.innerHTML = `<img src="${photo}" alt="">`;
+    else osAv.textContent = currentUser ? (getDisplayName()[0]?.toUpperCase() || "?") : "?";
+  }
   renderStatusDetails(currentOrder);
   setStatusPlacedLabels(currentOrder);
   wireStatusButtons();
@@ -5458,12 +5481,20 @@ function toggleFigCollapse(collapseId, btn){
   if(!el) return;
   const open = el.classList.toggle("open");
   if(btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+  // "View more" <-> "View less" label on the Order details card
+  const more = el.querySelector(".fig-os-collapse-more");
+  if(more) more.textContent = open ? "View less" : "View more";
 }
-function toggleFigCollapse(collapseId, btn){
-  const el = document.getElementById(collapseId);
-  if(!el) return;
-  const open = el.classList.toggle("open");
-  if(btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+
+// Replays the status animations (journey line fill, step pop, check draw).
+// Called whenever the page opens or the status changes; CSS keyframes only
+// restart when the class is removed and re-added after a reflow.
+function playOrderStatusAnimation(){
+  const v = document.getElementById("orderStatusView");
+  if(!v) return;
+  v.classList.remove("os-play");
+  void v.offsetWidth;
+  v.classList.add("os-play");
 }
 function wireStatusButtons(){
   const copyBtn = document.getElementById("copyOrderCodeBtn");
@@ -5535,6 +5566,16 @@ function wireStatusButtons(){
   if(supportBtn && !supportBtn.dataset.wired){
     supportBtn.dataset.wired = "1";
     supportBtn.addEventListener("click", openChatView);
+  }
+  const osSupport = document.getElementById("osSupportBtn");
+  if(osSupport && !osSupport.dataset.wired){
+    osSupport.dataset.wired = "1";
+    osSupport.addEventListener("click", openChatView);
+  }
+  const osAvatar = document.getElementById("osAvatar");
+  if(osAvatar && !osAvatar.dataset.wired){
+    osAvatar.dataset.wired = "1";
+    osAvatar.addEventListener("click", () => { if(currentUser) openAccountView(); });
   }
 }
 
