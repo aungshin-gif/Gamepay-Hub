@@ -6079,7 +6079,7 @@ const authPassword = document.getElementById("authPassword");
 
 function renderAuthUI(){
   if(currentUser){
-    clearPendingSignup();
+    clearPendingAuth();
     // Logout used to have its own header button; it now lives as a "Log
     // out" row inside My Account (see #accountLogoutBtn) so the header
     // stays down to My Account + Noti instead of four separate buttons.
@@ -6145,8 +6145,8 @@ document.addEventListener("keydown", (e) => {
   if(e.key === "Escape" && !loginGateBackdrop.classList.contains("hidden")) closeLoginGate(true);
 });
 
-function openAuthModal(mode, pendingEmail){
-  if(mode !== "signup-sent") clearPendingSignup();
+function openAuthModal(mode, pendingEmail, restored){
+  if(mode !== "signup-sent" && mode !== "forgot-otp") clearPendingAuth();
   authMode = mode;
   authError.textContent = "";
   authUsername.value = "";
@@ -6172,13 +6172,13 @@ function openAuthModal(mode, pendingEmail){
     authReferralField.classList.add("hidden");
     authForgotRow.classList.add("hidden");
     signupEmail = pendingEmail || signupEmail;
-    savePendingSignup(signupEmail);
+    if(!restored) savePendingAuth("signup", signupEmail);
     // The confirmation email carries a link and (once the template includes
     // it) a code. Both work: tap the link, or type the code here.
     authOtpField.classList.remove("hidden");
     authNewPasswordField.classList.add("hidden");
     document.getElementById("authModalTitle").textContent = "Check your email!";
-    document.getElementById("authModalSub").textContent = `We sent a verification code to ${signupEmail || "your email"}. Enter it below, or tap the link in the email. Check your Spam folder too.`;
+    document.getElementById("authModalSub").textContent = `We sent a verification code to ${signupEmail || "your email"}. Enter it below, or tap the link in the email. Check your Spam folder too. You can leave to read the email — this window waits for you for 8 minutes.`;
     document.getElementById("authSubmitBtn").textContent = "Verify code";
     document.getElementById("authSwitchText").innerHTML = `Didn't get it? <a id="authResendLink">Resend email</a> · <a id="authSwitchLink">Back to Login</a>`;
     document.getElementById("authResendLink")?.addEventListener("click", () => resendSignupEmail(signupEmail));
@@ -6213,7 +6213,8 @@ function openAuthModal(mode, pendingEmail){
     authOtpField.classList.remove("hidden");
     authNewPasswordField.classList.remove("hidden");
     document.getElementById("authModalTitle").textContent = "Enter code";
-    document.getElementById("authModalSub").textContent = `We sent a code to ${resetEmail}.`;
+    if(!restored) savePendingAuth("reset", resetEmail);
+    document.getElementById("authModalSub").textContent = `We sent a code to ${resetEmail}. You can leave to read the email — this window waits for you for 8 minutes.`;
     document.getElementById("authSubmitBtn").textContent = "Reset password";
     document.getElementById("authSwitchText").innerHTML = `<a id="authSwitchLink">Back to Login</a>`;
   } else {
@@ -6238,26 +6239,30 @@ function openAuthModal(mode, pendingEmail){
   document.getElementById("authForgotLink")?.addEventListener("click", () => openAuthModal("forgot-email"));
   authModalBackdrop.classList.remove("hidden");
 }
-document.getElementById("authCloseBtn")?.addEventListener("click", () => { afterAuthAction = null; if(authMode === "signup-sent") clearPendingSignup(); authModalBackdrop.classList.add("hidden"); });
-authModalBackdrop?.addEventListener("click", (e) => { if(e.target === authModalBackdrop){ afterAuthAction = null; if(authMode === "signup-sent") clearPendingSignup(); authModalBackdrop.classList.add("hidden"); } });
+document.getElementById("authCloseBtn")?.addEventListener("click", () => { afterAuthAction = null; clearPendingAuth(); authModalBackdrop.classList.add("hidden"); });
+authModalBackdrop?.addEventListener("click", (e) => { if(e.target === authModalBackdrop){ afterAuthAction = null; clearPendingAuth(); authModalBackdrop.classList.add("hidden"); } });
 
 // Raw GoTrue messages ("Email not confirmed", "Invalid login credentials",
 // rate limits) mean nothing to a shopper -- say what to do instead.
-// The "Check your email!" popup used to vanish if the shopper left the site
-// to read the email and the page reloaded when they came back. Remember the
-// pending signup for 30 minutes so it reopens, like an app would.
-const PENDING_SIGNUP_KEY = "gph_pending_signup";
-function savePendingSignup(email){
-  try{ localStorage.setItem(PENDING_SIGNUP_KEY, JSON.stringify({ email, ts: Date.now() })); }catch(e){}
+// The "Check your email!" / "Enter code" popups used to vanish if the shopper
+// left the site to read the email and the page reloaded when they came back
+// (phone browsers drop background tabs). Like an app would, remember which
+// code step they were on for 8 minutes and reopen it. Closing the popup with
+// X clears it on purpose.
+const PENDING_AUTH_KEY = "gph_pending_auth";
+const PENDING_AUTH_TTL = 8 * 60 * 1000;
+function savePendingAuth(kind, email){
+  try{ localStorage.setItem(PENDING_AUTH_KEY, JSON.stringify({ kind, email, ts: Date.now() })); }catch(e){}
 }
-function clearPendingSignup(){
-  try{ localStorage.removeItem(PENDING_SIGNUP_KEY); }catch(e){}
+function clearPendingAuth(){
+  try{ localStorage.removeItem(PENDING_AUTH_KEY); }catch(e){}
 }
-function readPendingSignup(){
+function readPendingAuth(){
   try{
-    const o = JSON.parse(localStorage.getItem(PENDING_SIGNUP_KEY) || "null");
-    if(o && o.email && Date.now() - o.ts < 30 * 60 * 1000) return o;
+    const o = JSON.parse(localStorage.getItem(PENDING_AUTH_KEY) || "null");
+    if(o && o.email && (o.kind === "signup" || o.kind === "reset") && Date.now() - o.ts < PENDING_AUTH_TTL) return o;
   }catch(e){}
+  clearPendingAuth();
   return null;
 }
 
@@ -7854,8 +7859,9 @@ document.getElementById("pwResetSubmitBtn")?.addEventListener("click", async () 
       history.replaceState(null, "", location.pathname + location.search);
       showToast("Email confirmed — welcome!");
     }else if(!session){
-      const pending = readPendingSignup();
-      if(pending) openAuthModal("signup-sent", pending.email);
+      const pending = readPendingAuth();
+      if(pending && pending.kind === "signup") openAuthModal("signup-sent", pending.email, true);
+      else if(pending && pending.kind === "reset"){ resetEmail = pending.email; openAuthModal("forgot-otp", null, true); }
     }
   }catch(e){}
 })();
