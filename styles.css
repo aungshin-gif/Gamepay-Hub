@@ -10283,3 +10283,18 @@ body.light-mode .gp-bottomnav button.is-active{
 /* ===== Supabase / Notion catalog card colours ===== */
 .products .card[data-cat="Developer"]   { --pc:#16875A; --pc-2:#34C58A; }
 .products .card[data-cat="Productivity"]{ --pc:#2F2F36; --pc-2:#5E5E6B; }
+
+/* Sign up / log in button while the request is running */
+#authSubmitBtn.is-busy{ position:relative; opacity:.92; cursor:progress; }
+#authSubmitBtn.is-busy::before{
+  content:""; display:inline-block; width:15px; height:15px; margin-right:9px; vertical-align:-2px;
+  border:2.2px solid rgba(255,255,255,.55); border-top-color:#fff; border-radius:50%;
+  animation:authSpin .7s linear infinite;
+}
+@keyframes authSpin{ to{ transform:rotate(360deg); } }
+@media (prefers-reduced-motion:reduce){ #authSubmitBtn.is-busy::before{ animation-duration:2s; } }
+#authSubmitBtn.is-busy:disabled{
+  opacity:1 !important; color:#fff !important;
+  background:linear-gradient(135deg,#6a7cf7,#8a5cf2) !important;
+  box-shadow:0 10px 22px rgba(106,92,240,.32) !important;
+}
