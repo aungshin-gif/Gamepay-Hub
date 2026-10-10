@@ -1774,8 +1774,8 @@ plans: [
       duration: "1 Month", price: 120000, ownMail: true,
       warranty: "Full Warranty", format: "Own Mail",
       note: "100 credits\nOn your own mail\nFull Warranty" },
-    { name: "Lovable Credits – 1 Month – 98000 Ks",
-      label: "Lovable Credits", type: "Own Mail",
+    { name: "Lovable 300 Credits – 1 Month – 98000 Ks",
+      label: "Lovable 300 Credits", type: "Own Mail", tier: "credit",
       duration: "1 Month", price: 98000, ownMail: true,
       warranty: "Full Warranty", format: "Own Mail",
       note: "300 credits\nOn your own mail\nFull Warranty" },
@@ -4172,7 +4172,7 @@ if(document.readyState === "loading"){
     // a plan may name its own tier; otherwise it's read off the plan's name.
     const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
       team:"Team", education:"Education", individual:"Individual", family:"Family",
-      pro:"Pro", proplus:"Pro Plus", plus:"Plus", go:"GO", lite:"Lite", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
+      pro:"Pro", proplus:"Pro Plus", plus:"Plus", go:"GO", lite:"Lite", credit:"Credit", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
       "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra", hobby:"Hobby"};
     function planTier(plan){
       if(plan.tier) return plan.tier;
@@ -4700,7 +4700,7 @@ customHint.textContent = isInvalid
   const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
   const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
     team:"Team", education:"Education", individual:"Individual", family:"Family",
-    pro:"Pro", pro5x:"Pro 5X", pro20x:"Pro 20X", proplus:"Pro Plus", plus:"Plus", go:"GO", lite:"Lite", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
+    pro:"Pro", pro5x:"Pro 5X", pro20x:"Pro 20X", proplus:"Pro Plus", plus:"Plus", go:"GO", lite:"Lite", credit:"Credit", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
     "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra", hobby:"Hobby"};
   const tierChipFor = t => t ? `<span class="plan-tier-chip">${TIER_LABEL[t] || t}</span>` : "";
   // How the account is delivered. Explicit plan.type wins; otherwise infer.
