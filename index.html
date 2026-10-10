@@ -1548,9 +1548,9 @@
     ]
   },
   plans: [
-      { name: "🔐 Private – 14 Days – 5000 Ks", label: "Pro Plan", tier: "pro", noTierBadge: true, type: "Private Acc", price: 5000 },
-      { name: "🔐 Private – 1 Month – 8000 Ks", label: "Pro Plan", tier: "pro", noTierBadge: true, type: "Private Acc", price: 8000, bestSeller: true },
-      { name: "🔐 Private – 2 Months – 15000 Ks", label: "Pro Plan", tier: "pro", noTierBadge: true, type: "Private Acc", price: 15000 },
+      { name: "🔐 Private – 14 Days – 5000 Ks", label: "Pro Plan", tier: "pro", type: "Private Acc", price: 5000 },
+      { name: "🔐 Private – 1 Month – 8000 Ks", label: "Pro Plan", tier: "pro", type: "Private Acc", price: 8000, bestSeller: true },
+      { name: "🔐 Private – 2 Months – 15000 Ks", label: "Pro Plan", tier: "pro", type: "Private Acc", price: 15000 },
   ]
 },
       {
@@ -4715,7 +4715,7 @@ customHint.textContent = isInvalid
   const accLabel = typeOf(plan) || (plan.ownMail ? "Own Mail" : "Standard");
   // Tier badge (Figma pastel + diamond dot via CSS)
   const tierBadgeLabel = TIER_LABEL[tier] || tier || "";
-  const tierBadgeHtml = (tier && !plan.noTierBadge) ? `<span class="plan-tier-badge" data-tier="${tier}" aria-label="${tierBadgeLabel}">${tierBadgeLabel}</span>` : `<span></span>`;
+  const tierBadgeHtml = tier ? `<span class="plan-tier-badge" data-tier="${tier}" aria-label="${tierBadgeLabel}">${tierBadgeLabel}</span>` : `<span></span>`;
   // Discount: Figma shows "Special offer" text + strikethrough, no -X% badge
   const hasDiscount = Boolean(plan.discount || plan.discountPercent);
   const origPriceHtml = hasDiscount && plan.originalPrice ? `<s>${formatKs(plan.originalPrice)}</s>` : "";
