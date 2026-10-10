@@ -211,6 +211,23 @@
     </div>
   </div>
 
+  <div id="loginGateBackdrop" class="login-gate-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="loginGateTitle">
+    <div class="login-gate">
+      <button type="button" class="login-gate-close" id="loginGateClose" aria-label="Close">&times;</button>
+      <div class="login-gate-art" aria-hidden="true">
+        <span class="login-gate-spark s1"></span><span class="login-gate-spark s2"></span><span class="login-gate-spark s3"></span>
+        <div class="login-gate-bubble">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+        </div>
+      </div>
+      <h3 id="loginGateTitle">Create an account first</h3>
+      <p class="login-gate-sub">အော်ဒါမတင်ခင် Account အရင်ဖွင့်ပေးပါနော် 💜</p>
+      <p class="login-gate-note">It takes a minute — then you can track every order, get delivery updates and chat with support.</p>
+      <button type="button" class="login-gate-primary" id="loginGateSignup">Create account</button>
+      <button type="button" class="login-gate-secondary" id="loginGateLogin">I already have an account — Log in</button>
+    </div>
+  </div>
+
   <div id="authModalBackdrop" class="auth-modal-backdrop hidden">
     <div class="auth-modal">
       <span class="auth-close" id="authCloseBtn">&times;</span>
@@ -1511,7 +1528,6 @@
       {
   id: "zoom",
   name: "Zoom Pro",
-  pro: true,
   subtitle: "Tap to see prices",
   badge: "available",
   category: "Services",
@@ -2890,6 +2906,7 @@ slipInput?.addEventListener("change", () => {
 
 continueBtn.onclick = () => {
   if(!currentProduct) return;
+  if(!requireLoginFor(() => openProductPage())) return;
   openProductPage();
 };
 
@@ -3474,6 +3491,7 @@ document.getElementById("gpBrandHome")?.addEventListener("click", () => goToMain
 document.querySelectorAll("[data-gpnav]").forEach(el => {
   el.addEventListener("click", () => {
     const dest = el.dataset.gpnav;
+    if(dest === "account" && !currentUser){ openAuthModal("login"); return; }
     document.querySelectorAll(".gp-nav-link.is-active, .gp-bottomnav button.is-active").forEach(b => b.classList.remove("is-active"));
     document.querySelectorAll(`[data-gpnav="${dest}"]`).forEach(b => b.classList.add("is-active"));
     if(dest === "store") goToMainPage();
@@ -3783,6 +3801,7 @@ function initProductPage(){
   document.getElementById("productChangePlanBtn")?.addEventListener("click", closeProductPage);
   document.getElementById("productContinueBtn")?.addEventListener("click", () => {
     if(!currentProduct) return;
+    if(!requireLoginFor(() => { dismissProductPage(); openCheckoutBox(); })) return;
     dismissProductPage();
     openCheckoutBox();
   });
@@ -4683,10 +4702,15 @@ customHint.textContent = isInvalid
   const ICON_USER = _svgWrap('<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>');
   const ICON_KEY = _svgWrap('<path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/>');
   const ICON_CLOCK = _svgWrap('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>');
+  const ICON_LINK = _svgWrap('<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>');
+  const ICON_GIFT = _svgWrap('<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>');
   const ICON_X = _svgWrap('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>', "0 0 24 24");
   // Choose account-type icon
   const _accLower = String(typeOf(plan) || "").toLowerCase();
-  const accIcon = /share/.test(_accLower) ? ICON_USERS : /private/.test(_accLower) ? ICON_LOCK : /code|redeem|key/.test(_accLower) ? ICON_KEY : /individual|head/.test(_accLower) ? ICON_USER : ICON_MAIL;
+  // Telegram Premium: Link plans get a chain-link icon, Gift plans a gift box
+  // (instead of the generic mail icon every other product uses).
+  const _tgIcon = currentProduct.id !== "telegram" ? "" : /\blink\b/i.test(planName) ? ICON_LINK : /\bgift\b/i.test(planName) ? ICON_GIFT : "";
+  const accIcon = _tgIcon ? _tgIcon : /share/.test(_accLower) ? ICON_USERS : /private/.test(_accLower) ? ICON_LOCK : /code|redeem|key/.test(_accLower) ? ICON_KEY : /individual|head/.test(_accLower) ? ICON_USER : ICON_MAIL;
   const accLabel = typeOf(plan) || (plan.ownMail ? "Own Mail" : "Standard");
   // Tier badge (Figma pastel + diamond dot via CSS)
   const tierBadgeLabel = TIER_LABEL[tier] || tier || "";
@@ -5858,6 +5882,7 @@ function setOrderButtonsBusy(busy, label){
 
 async function submitOrder(){
   if(!currentProduct || !activePayment) return;
+  if(supabaseClient && !requireLoginFor(() => submitOrder())) return;
 
   // Backend configured: save the order and jump straight to the live
   // status screen. No Telegram popup -- admin sees it in shinpayhubcld.html instantly.
@@ -5933,6 +5958,40 @@ const authNewPassword = document.getElementById("authNewPassword");
 const authConfirmPassword = document.getElementById("authConfirmPassword");
 const authReferralField = document.getElementById("authReferralField");
 const authReferralCode = document.getElementById("authReferralCode");
+
+// Orders need an account. Returns true when the shopper is logged in;
+// otherwise shows the "create an account" popup, remembers what they were
+// about to do, and returns false. The remembered step runs once they have
+// logged in or signed up (see runAfterAuth).
+let afterAuthAction = null;
+function requireLoginFor(action){
+  if(currentUser) return true;
+  afterAuthAction = action || null;
+  openLoginGate();
+  return false;
+}
+function runAfterAuth(){
+  const fn = afterAuthAction;
+  afterAuthAction = null;
+  if(typeof fn === "function") setTimeout(fn, 350);
+}
+const loginGateBackdrop = document.getElementById("loginGateBackdrop");
+function openLoginGate(){
+  loginGateBackdrop.classList.remove("hidden");
+  requestAnimationFrame(() => loginGateBackdrop.classList.add("show"));
+}
+function closeLoginGate(clearAction){
+  loginGateBackdrop.classList.remove("show");
+  if(clearAction) afterAuthAction = null;
+  setTimeout(() => loginGateBackdrop.classList.add("hidden"), 220);
+}
+document.getElementById("loginGateClose")?.addEventListener("click", () => closeLoginGate(true));
+loginGateBackdrop?.addEventListener("click", (e) => { if(e.target === loginGateBackdrop) closeLoginGate(true); });
+document.getElementById("loginGateSignup")?.addEventListener("click", () => { closeLoginGate(false); openAuthModal("signup"); });
+document.getElementById("loginGateLogin")?.addEventListener("click", () => { closeLoginGate(false); openAuthModal("login"); });
+document.addEventListener("keydown", (e) => {
+  if(e.key === "Escape" && !loginGateBackdrop.classList.contains("hidden")) closeLoginGate(true);
+});
 
 function openAuthModal(mode, pendingEmail){
   authMode = mode;
@@ -6025,8 +6084,8 @@ function openAuthModal(mode, pendingEmail){
   document.getElementById("authForgotLink")?.addEventListener("click", () => openAuthModal("forgot-email"));
   authModalBackdrop.classList.remove("hidden");
 }
-document.getElementById("authCloseBtn")?.addEventListener("click", () => authModalBackdrop.classList.add("hidden"));
-authModalBackdrop?.addEventListener("click", (e) => { if(e.target === authModalBackdrop) authModalBackdrop.classList.add("hidden"); });
+document.getElementById("authCloseBtn")?.addEventListener("click", () => { afterAuthAction = null; authModalBackdrop.classList.add("hidden"); });
+authModalBackdrop?.addEventListener("click", (e) => { if(e.target === authModalBackdrop){ afterAuthAction = null; authModalBackdrop.classList.add("hidden"); } });
 
 // Raw GoTrue messages ("Email not confirmed", "Invalid login credentials",
 // rate limits) mean nothing to a shopper -- say what to do instead.
@@ -6085,6 +6144,7 @@ document.getElementById("authSubmitBtn")?.addEventListener("click", async () => 
     authModalBackdrop.classList.add("hidden");
     showToast("Email confirmed — welcome!");
     flushPendingReferral();
+    runAfterAuth();
     return;
   }
 
@@ -6157,6 +6217,7 @@ document.getElementById("authSubmitBtn")?.addEventListener("click", async () => 
   authModalBackdrop.classList.add("hidden");
   showToast(authMode === "login" ? "Welcome back!" : "Account created!");
   flushPendingReferral();
+  runAfterAuth();
 });
 
 /* ================= My Orders (order history) ================= */
@@ -7093,7 +7154,7 @@ async function loadAccountStats(){
 // Plans (and Security/Invite Friends within the account hub) so it doesn't
 // read as an abrupt cut.
 function openAccountView(){
-  if(!currentUser) return;
+  if(!currentUser){ openAuthModal("login"); return; }
   cameFromLanding = !landingShell.classList.contains("hidden");
   landingShell.classList.add("hidden");
   catalogShell.classList.remove("hidden");
