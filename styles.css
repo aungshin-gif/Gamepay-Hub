@@ -10248,7 +10248,7 @@ body.light-mode .gp-bottomnav button.is-active{
 /* ===== Mobile store: one nav row (glass bottom bar), no duplicate top row ===== */
 @media(max-width:767px){
   /* Login / Get Started / News / bell at the top duplicate the bottom bar */
-  body:not(.order-mode) .compact-header{ display:none !important; }
+  .compact-header{ display:none !important; }
 
   .gp-bottomnav{
     left:12px; right:12px; bottom:calc(10px + env(safe-area-inset-bottom));
@@ -10297,4 +10297,23 @@ body.light-mode .gp-bottomnav button.is-active{
   opacity:1 !important; color:#fff !important;
   background:linear-gradient(135deg,#6a7cf7,#8a5cf2) !important;
   box-shadow:0 10px 22px rgba(106,92,240,.32) !important;
+}
+
+
+/* ===== Mobile plan page: no top bar, plans start higher ===== */
+@media(max-width:767px){
+  /* the top bar (logo / account / News / bell) is gone on mobile everywhere --
+     Back buttons and the bottom tab bar cover navigation */
+  body.products-mode .catalog-shell{ padding-top:10px; }
+  #orderView .panel{ padding-top:12px; }
+  #orderView .top-actions{ margin-bottom:8px; }
+  #orderView .top-actions .back-btn{ padding:9px 15px; font-size:13px; }
+  /* "Hide Plan Selection" and the intro lines only push the plans down */
+  #orderView #togglePlansBtn{ display:none !important; }
+  #orderView .plans-eyebrow,
+  #orderView .plans-sub{ display:none !important; }
+  #orderView .plans-header{ margin:2px 0 8px; }
+  #orderView .plans-title{ font-size:22px; margin:0; }
+  #orderView .plans-product-box{ margin-bottom:10px; }
+  #orderView .plan-filters{ margin-bottom:10px; }
 }
