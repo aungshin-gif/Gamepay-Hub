@@ -212,18 +212,33 @@
   </div>
 
   <div id="loginGateBackdrop" class="login-gate-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="loginGateTitle">
+    <span class="lg-blob lg-blob-a" aria-hidden="true"></span>
+    <span class="lg-blob lg-blob-b" aria-hidden="true"></span>
+    <span class="lg-blob lg-blob-c" aria-hidden="true"></span>
     <div class="login-gate">
       <button type="button" class="login-gate-close" id="loginGateClose" aria-label="Close">&times;</button>
       <div class="login-gate-art" aria-hidden="true">
-        <span class="login-gate-spark s1"></span><span class="login-gate-spark s2"></span><span class="login-gate-spark s3"></span>
+        <svg class="lg-sparkle s1" viewBox="0 0 24 24"><path pathLength="1" d="M12 2.5l2.1 6.6 6.9 2.4-6.9 2.4L12 20.5l-2.1-6.6L3 11.5l6.9-2.4z"/></svg>
+        <svg class="lg-sparkle s2" viewBox="0 0 24 24"><path pathLength="1" d="M12 2.5l2.1 6.6 6.9 2.4-6.9 2.4L12 20.5l-2.1-6.6L3 11.5l6.9-2.4z"/></svg>
+        <svg class="lg-sparkle s3" viewBox="0 0 24 24"><path pathLength="1" d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg>
+        <span class="lg-ring"></span>
         <div class="login-gate-bubble">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+          <svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle class="lg-face-ring" pathLength="1" cx="32" cy="32" r="22" stroke="#fff" stroke-width="2.4"/>
+            <circle cx="24.5" cy="29" r="2.7" fill="#fff"/>
+            <circle cx="39.5" cy="29" r="2.7" fill="#fff"/>
+            <path class="lg-smile" pathLength="1" d="M25.5 37c3.2 4.2 10.8 4.2 14 0" stroke="#fff" stroke-width="2.6"/>
+            <ellipse cx="19.5" cy="36" rx="3.6" ry="2.3" fill="#ff9fcf" opacity=".75"/>
+            <ellipse cx="44.5" cy="36" rx="3.6" ry="2.3" fill="#ff9fcf" opacity=".75"/>
+          </svg>
+          <span class="login-gate-plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
         </div>
       </div>
       <h3 id="loginGateTitle">Create an account first</h3>
+      <svg class="login-gate-squiggle" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 5.5Q11 .5 20 5.5T38 5.5T56 5.5T74 5.5T92 5.5T118 5.5"/></svg>
       <p class="login-gate-sub">အော်ဒါမတင်ခင် Account အရင်ဖွင့်ပေးပါနော် 💜</p>
       <p class="login-gate-note">It takes a minute — then you can track every order, get delivery updates and chat with support.</p>
-      <button type="button" class="login-gate-primary" id="loginGateSignup">Create account</button>
+      <button type="button" class="login-gate-primary" id="loginGateSignup"><span>Create account</span></button>
       <button type="button" class="login-gate-secondary" id="loginGateLogin">I already have an account — Log in</button>
     </div>
   </div>
@@ -1592,7 +1607,6 @@ plans: [
       {
   id: "hma_vpn",
   name: "HMA VPN",
-  pro: true,
   subtitle: "Tap to see prices",
   badge: "available",
   category: "VPN",
@@ -1740,6 +1754,41 @@ plans: [
   plans: [
     { name: "Claude PRO – 1 Month – 93000 Ks", price: 93000, ownMail: true, bestSeller: true },
     { name: "Claude MAX – 1 Month – 500000 Ks", price: 500000, ownMail: true }
+  ]
+},
+      {
+  id: "lovable",
+  name: "Lovable",
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "AI",
+  iconType: "image",
+  icon: "assets/lovable-logo.png",
+  search: "lovable ai app builder website vibe coding credits pro lite own mail",
+  warranty: "Full Warranty",
+  format: "On your own mail",
+  description: "💜 Lovable plans activated on your own mail.\n✔️ Check the credits and warranty of each plan before you order.\n❗️Availability may change based on stock.",
+  plans: [
+    { name: "Lovable Pro Official – Own Mail – 1 Month – 120000 Ks",
+      label: "Lovable Pro Official", type: "Own Mail", tier: "pro",
+      duration: "1 Month", price: 120000, ownMail: true,
+      warranty: "Full Warranty", format: "Own Mail",
+      note: "100 credits\nOn your own mail\nFull Warranty" },
+    { name: "Lovable Credits – 1 Month – 98000 Ks",
+      label: "Lovable Credits", type: "Own Mail",
+      duration: "1 Month", price: 98000, ownMail: true,
+      warranty: "Full Warranty", format: "Own Mail",
+      note: "300 credits\nOn your own mail\nFull Warranty" },
+    { name: "Lovable Lite – 12 Months – 55000 Ks",
+      label: "Lovable Lite", type: "Own Mail", tier: "lite",
+      duration: "12 Months", price: 55000, ownMail: true,
+      warranty: "Full Warranty", format: "Own Mail",
+      note: "300 credits, one time\nOn your own mail\nFull Warranty" },
+    { name: "Lovable Pro – 1 Month – 18000 Ks",
+      label: "Lovable Pro", type: "Own Mail", tier: "pro",
+      duration: "1 Month", price: 18000, ownMail: true,
+      warranty: "20 Days Warranty", format: "Own Mail",
+      note: "100 credits\nOn your own mail\n20 days warranty" }
   ]
 },
       {
@@ -4123,7 +4172,7 @@ if(document.readyState === "loading"){
     // a plan may name its own tier; otherwise it's read off the plan's name.
     const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
       team:"Team", education:"Education", individual:"Individual", family:"Family",
-      pro:"Pro", proplus:"Pro Plus", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
+      pro:"Pro", proplus:"Pro Plus", plus:"Plus", go:"GO", lite:"Lite", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
       "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra", hobby:"Hobby"};
     function planTier(plan){
       if(plan.tier) return plan.tier;
@@ -4651,7 +4700,7 @@ customHint.textContent = isInvalid
   const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
   const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
     team:"Team", education:"Education", individual:"Individual", family:"Family",
-    pro:"Pro", pro5x:"Pro 5X", pro20x:"Pro 20X", proplus:"Pro Plus", plus:"Plus", go:"GO", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
+    pro:"Pro", pro5x:"Pro 5X", pro20x:"Pro 20X", proplus:"Pro Plus", plus:"Plus", go:"GO", lite:"Lite", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
     "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra", hobby:"Hobby"};
   const tierChipFor = t => t ? `<span class="plan-tier-chip">${TIER_LABEL[t] || t}</span>` : "";
   // How the account is delivered. Explicit plan.type wins; otherwise infer.
