@@ -1792,6 +1792,80 @@ plans: [
   ]
 },
       {
+  id: "supabase",
+  name: "Supabase Pro",
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "Developer",
+  iconType: "image",
+  icon: "assets/supabase-logo.png",
+  search: "supabase pro database backend postgres auth storage developer own mail",
+  warranty: "Full Warranty",
+  format: "Own Mail",
+  description: "💚 Supabase Pro on your own account.\n✔️ Full Warranty\n❗️Availability may change based on stock.",
+  benefits: {
+    subtitle: "Everything in the Free plan, plus:",
+    rows: [
+      { icon: "users", label: "100,000 monthly active users", values: "Then $0.00325 per MAU." },
+      { icon: "database", label: "8 GB disk size per project", values: "Then $0.125 per GB." },
+      { icon: "cloud", label: "250 GB egress", values: "Then $0.09 per GB." },
+      { icon: "layers", label: "250 GB cached egress", values: "Then $0.03 per GB." },
+      { icon: "folder", label: "100 GB file storage", values: "Then $0.0213 per GB." },
+      { icon: "mail", label: "Email support", values: "Reach the Supabase team by email." },
+      { icon: "archive", label: "Daily backups", values: "Backups are stored for 7 days." },
+      { icon: "fileText", label: "7-day log retention", values: "Keep a week of project logs." },
+      { icon: "send", label: "Add Log Drains", values: "Additional $60 per drain, per project." },
+    ]
+  },
+  plans: [
+    { name: "Supabase Pro – Own Mail – 1 Month – 120000 Ks",
+      label: "Supabase Pro", type: "Own Mail", tier: "pro",
+      duration: "1 Month", price: 120000, ownMail: true,
+      warranty: "Full Warranty", format: "Own Mail",
+      note: "On your account\nFull Warranty" }
+  ]
+},
+      {
+  id: "notion",
+  name: "Notion Business",
+  subtitle: "Tap to see prices",
+  badge: "available",
+  category: "Productivity",
+  iconType: "image",
+  icon: "assets/notion-logo.png",
+  search: "notion business workspace notes docs wiki ai productivity own mail",
+  warranty: "Full Warranty",
+  format: "Own Mail",
+  description: "🖤 Notion Business on your own Notion account.\n✔️ Full Warranty\n❗️Availability may change based on stock.",
+  benefits: {
+    subtitle: "Everything in Plus, and:",
+    rows: [
+      { icon: "bot", label: "Notion Agent", values: "An AI agent that works across your workspace." },
+      { icon: "mic", label: "AI Meeting Notes", values: "Automatic notes and summaries from your meetings." },
+      { icon: "search", label: "Enterprise Search", values: "Search across Slack, GitHub, Gmail, Google Drive, Linear and PDF files.<br><b>Beta:</b> Jira, Microsoft Teams, SharePoint, OneDrive and Asana." },
+      { icon: "shield", label: "SAML SSO", values: "Single sign-on for your workspace." },
+      { icon: "key", label: "Granular database permissions", values: "Control exactly who can see and edit each database." },
+      { icon: "badgeCheck", label: "Verify any page", values: "Mark pages as verified so everyone knows they are up to date." },
+      { icon: "lock", label: "Private teamspaces", values: "Teamspaces that only invited members can open." },
+      { icon: "globe", label: "Domain verification", values: "Verify and manage your company domain." },
+      { icon: "plug", label: "Premium connections", values: "Asana, GitHub, Jira, Zendesk and GitLab." },
+      { icon: "sparkles", label: "Everything in Plus", values: "Trial of Notion AI, custom forms, custom sites, unlimited charts, unlimited collaborative blocks, unlimited file uploads and basic connections (Slack, Gmail, Google Drive)." },
+    ]
+  },
+  plans: [
+    { name: "Notion Business – Own Mail – 3 Months – 31500 Ks",
+      label: "Notion Business", type: "Own Mail", tier: "business",
+      duration: "3 Months", price: 31500, ownMail: true,
+      warranty: "Full Warranty", format: "Own Mail",
+      note: "On your Notion account\nFull Warranty" },
+    { name: "Notion Business – Own Mail – 12 Months – 75000 Ks",
+      label: "Notion Business", type: "Own Mail", tier: "business",
+      duration: "12 Months", price: 75000, ownMail: true,
+      warranty: "4 Months Warranty", format: "Own Mail",
+      note: "On your Notion account\n4 Months Warranty" }
+  ]
+},
+      {
   id: "cursor",
   name: "Cursor AI Plans",
   top: true,
@@ -2470,9 +2544,18 @@ category:"Editing",
 iconType: "image",
 icon: "assets/41054661-1713936918042-110deb4aa0105.jpg",
 search: "wink video editor vip",
-description:"have only 1 stock for china region",
+description:"China Region VIP / SVIP are private ready-made accounts -- sign in with Google.",
 plans: [
-{ name:"China Region – 1 Month – 4500 Ks", price:4500,outOfStock:true },
+{ name:"Wink VIP – China Region – 7 Days – 2000 Ks",
+  label:"Wink VIP", type:"Private Acc", tier:"vip",
+  duration:"7 Days", price:2000,
+  warranty:"Full Warranty", format:"Private account",
+  note:"Sign with Google\nPrivate ready made account" },
+{ name:"Wink SVIP – China Region – 7 Days – 3000 Ks",
+  label:"Wink SVIP", type:"Private Acc", tier:"svip",
+  duration:"7 Days", price:3000,
+  warranty:"Full Warranty", format:"Private account",
+  note:"Sign with Google\nPrivate ready made account" },
 { name:"👥Global Region – 1 Month – 7000 Ks (Share) – 1 Device", price:8000 },
 { name:"🔐Global Region – 1 Month – 18000 Ks (Private) – 3 Devices", price:18000 },
 { name:"🔐Global Region – 1 Year – 160000 Ks (Private) – 3 Devices", price:160000 }
@@ -2806,7 +2889,26 @@ plans: [
       chat: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.4 8.4 0 0 1-8.9 8.4 8.6 8.6 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1 9.6-11.9 8.5 8.5 0 0 1 6.5 6.6z"/></svg>`,
       upload: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.44 11.05l-9.19 9.19a5.5 5.5 0 0 1-7.78-7.78l9.2-9.19a3.67 3.67 0 0 1 5.18 5.19l-9.2 9.19a1.83 1.83 0 0 1-2.59-2.59l8.49-8.48"/></svg>`,
       image: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>`,
-      brain: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9.5 2a6.5 6.5 0 0 0-4.7 11 3.5 3.5 0 0 0 1.2 6.5h9a3.5 3.5 0 0 0 1.2-6.5A6.5 6.5 0 0 0 9.5 2Z"/><path d="M9.5 22v-3"/></svg>`
+      brain: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9.5 2a6.5 6.5 0 0 0-4.7 11 3.5 3.5 0 0 0 1.2 6.5h9a3.5 3.5 0 0 0 1.2-6.5A6.5 6.5 0 0 0 9.5 2Z"/><path d="M9.5 22v-3"/></svg>`,
+      users: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+      database: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>`,
+      cloud: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>`,
+      layers: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>`,
+      folder: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>`,
+      mail: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>`,
+      archive: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>`,
+      fileText: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>`,
+      send: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>`,
+      bot: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>`,
+      mic: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>`,
+      search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`,
+      shield: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>`,
+      key: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>`,
+      badgeCheck: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg>`,
+      lock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
+      globe: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>`,
+      plug: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg>`,
+      sparkles: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>`
     };
     // Wires a show/hide eye button next to a password field. Shared by
     // login/signup, the forgot-password reset step, and account settings.
@@ -4084,7 +4186,7 @@ if(document.readyState === "loading"){
     function getFilteredProducts(){
       const q = (searchInput.value || "").trim().toLowerCase();
       return products.filter(product => {
-        const groupedCategories = {"AI & Productivity":["AI"],"Entertainment":["Music","Video","Streaming"],"VPN & Security":["VPN"],"Creative Tools":["Editing"],"Social & Services":["Social","Services"],"More":["Gift"]};
+        const groupedCategories = {"AI & Productivity":["AI","Productivity","Developer"],"Entertainment":["Music","Video","Streaming"],"VPN & Security":["VPN"],"Creative Tools":["Editing"],"Social & Services":["Social","Services"],"More":["Gift"]};
         const byCategory = activeCategory === "All" || (groupedCategories[activeCategory] || [activeCategory]).includes(product.category);
         const bySearch = !q || `${product.name} ${product.search} ${product.category}`.toLowerCase().includes(q);
         return byCategory && bySearch;
@@ -4170,7 +4272,7 @@ if(document.readyState === "loading"){
 
     // Shared with the plan-option selector's own tier chip (renderOrder) --
     // a plan may name its own tier; otherwise it's read off the plan's name.
-    const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
+    const TIER_LABEL = {vip:"VIP", svip:"SVIP", max:"Max", premium:"Premium", business:"Business",
       team:"Team", education:"Education", individual:"Individual", family:"Family",
       pro:"Pro", proplus:"Pro Plus", plus:"Plus", go:"GO", lite:"Lite", credit:"Credit", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
       "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra", hobby:"Hobby"};
@@ -4698,7 +4800,7 @@ customHint.textContent = isInvalid
   let planName = plan.label ? plan.label : withoutPrice.replace(/\s*[–—-]?\s*(?:\d+\s*(?:minute|minutes|min|mins|hour|hours|hr|hrs|day|days|month|months|year|years|week|weeks)|coming\s+soon|preorder|dm)$/i, "").trim();
   planName = plan.label ? plan.label : planName.replace(/\b(private|share|own[- ]?mail|invite)\b/ig, "").replace(/[()]/g, "").replace(/\s*[·–—-]\s*/g, " ").replace(/\s{2,}/g, " ").replace(/^\W+|\W+$/g, "").trim() || "Digital plan";
   const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
-  const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
+  const TIER_LABEL = {vip:"VIP", svip:"SVIP", max:"Max", premium:"Premium", business:"Business",
     team:"Team", education:"Education", individual:"Individual", family:"Family",
     pro:"Pro", pro5x:"Pro 5X", pro20x:"Pro 20X", proplus:"Pro Plus", plus:"Plus", go:"GO", lite:"Lite", credit:"Credit", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
     "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra", hobby:"Hobby"};
