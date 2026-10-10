@@ -10279,3 +10279,7 @@ body.light-mode .gp-bottomnav button.is-active{
   .compact-header #loginBtn,
   .compact-header #getStartedBtn{ display:none !important; }
 }
+
+/* ===== Supabase / Notion catalog card colours ===== */
+.products .card[data-cat="Developer"]   { --pc:#16875A; --pc-2:#34C58A; }
+.products .card[data-cat="Productivity"]{ --pc:#2F2F36; --pc-2:#5E5E6B; }
