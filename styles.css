@@ -10231,3 +10231,34 @@ body.light-mode .gp-bottomnav button.is-active{
 .login-gate .login-gate-primary span{ color:#fff !important; }
 .login-gate .login-gate-primary span{ position:relative; z-index:1; }
 .login-gate .login-gate-secondary{ color:#6c3fd0 !important; }
+
+
+/* ===== Credit / Lite plan badges ===== */
+.plan-tier-badge[data-tier="credit"]{ border-color:#f4b896; background:#ffe0cf; color:#98441c; }
+.plan-tier-badge[data-tier="lite"]{ border-color:#c9bdea; background:#ece5fb; color:#5d4a96; }
+#orderView .plan-option[data-tier="credit"]{ --tier:#B4521F; --tier-2:#F08A4B; --tier-ink:#FFF1E8; }
+#orderView .plan-option[data-tier="lite"]{ --tier:#5D4A96; --tier-2:#8A76C8; --tier-ink:#F3EFFD; }
+#previewSection .order-preview-table td .preview-tier[data-tier="credit"]{--tier:#B4521F;--tier-2:#F08A4B;--tier-ink:#FFF1E8}
+#previewSection .order-preview-table td .preview-tier[data-tier="lite"]{--tier:#5D4A96;--tier-2:#8A76C8;--tier-ink:#F3EFFD}
+
+/* ===== Mobile store: one nav row (glass bottom bar), no duplicate top row ===== */
+@media(max-width:767px){
+  /* Login / Get Started / News / bell at the top duplicate the bottom bar */
+  body:not(.order-mode) .compact-header{ display:none !important; }
+
+  .gp-bottomnav{
+    left:12px; right:12px; bottom:calc(10px + env(safe-area-inset-bottom));
+    padding:6px; gap:2px; border-radius:28px;
+    background:linear-gradient(180deg,rgba(255,255,255,.58),rgba(243,235,255,.42));
+    border:1px solid rgba(255,255,255,.78);
+    -webkit-backdrop-filter:blur(22px) saturate(1.9); backdrop-filter:blur(22px) saturate(1.9);
+    box-shadow:0 16px 38px rgba(98,49,200,.22), 0 2px 8px rgba(120,80,210,.10), inset 0 1.5px rgba(255,255,255,.95), inset 0 -8px 18px rgba(190,165,255,.12);
+  }
+  .gp-bottomnav button{ min-height:56px; border-radius:22px; transition:background .25s ease, transform .2s ease, color .2s ease; }
+  .gp-bottomnav button:active{ transform:scale(.94); }
+  .gp-bottomnav button.is-active,
+  body.light-mode .gp-bottomnav button.is-active{
+    background:linear-gradient(160deg,rgba(255,255,255,.88),rgba(236,226,255,.7));
+    box-shadow:0 6px 14px rgba(98,49,200,.16), inset 0 1px #fff;
+  }
+}
