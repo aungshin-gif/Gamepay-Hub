@@ -5456,6 +5456,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="business"] .plan-tier-chip::after,
 #orderView .plan-option[data-tier="premium"]  .plan-tier-chip::after,
 #orderView .plan-option[data-tier="vip"]      .plan-tier-chip::after,
+#orderView .plan-option[data-tier="svip"]      .plan-tier-chip::after,
 #orderView .plan-option[data-tier="go"]       .plan-tier-chip::after,
 #orderView .plan-option[data-tier="4k"]       .plan-tier-chip::after,
 #orderView .plan-option[data-tier="gptpro"]   .plan-tier-chip::after,
@@ -5501,6 +5502,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="business"],
 #orderView .plan-option[data-tier="premium"],
 #orderView .plan-option[data-tier="vip"],
+#orderView .plan-option[data-tier="svip"],
 #orderView .plan-option[data-tier="go"],
 #orderView .plan-option[data-tier="4k"],
 #orderView .plan-option[data-tier="gptpro"],
@@ -5516,6 +5518,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="business"].active,
 #orderView .plan-option[data-tier="premium"].active,
 #orderView .plan-option[data-tier="vip"].active,
+#orderView .plan-option[data-tier="svip"].active,
 #orderView .plan-option[data-tier="go"].active,
 #orderView .plan-option[data-tier="4k"].active,
 #orderView .plan-option[data-tier="gptpro"].active,
@@ -7394,6 +7397,7 @@ body.light-mode #previewSection .preview-table-caption{
 #previewSection .order-preview-table td .preview-tier[data-tier="business"] .plan-tier-chip::after,
 #previewSection .order-preview-table td .preview-tier[data-tier="premium"] .plan-tier-chip::after,
 #previewSection .order-preview-table td .preview-tier[data-tier="vip"] .plan-tier-chip::after,
+#previewSection .order-preview-table td .preview-tier[data-tier="svip"] .plan-tier-chip::after,
 #previewSection .order-preview-table td .preview-tier[data-tier="go"] .plan-tier-chip::after,
 #previewSection .order-preview-table td .preview-tier[data-tier="4k"] .plan-tier-chip::after,
 #previewSection .order-preview-table td .preview-tier[data-tier="gptpro"] .plan-tier-chip::after,
@@ -10261,4 +10265,17 @@ body.light-mode .gp-bottomnav button.is-active{
     background:linear-gradient(160deg,rgba(255,255,255,.88),rgba(236,226,255,.7));
     box-shadow:0 6px 14px rgba(98,49,200,.16), inset 0 1px #fff;
   }
+}
+
+
+/* ===== SVIP tier (Wink SVIP): a deeper, rosier gold than VIP ===== */
+.plan-tier-badge[data-tier="svip"]{ border-color:#e5a35f; background:#ffd08f; color:#6b3a06; }
+#orderView .plan-option[data-tier="svip"]{ --tier:#8A3F10; --tier-2:#E08A2E; --tier-ink:#FFF1DC; }
+#previewSection .order-preview-table td .preview-tier[data-tier="svip"]{--tier:#8A3F10;--tier-2:#E08A2E;--tier-ink:#FFF1DC}
+
+/* Mobile: guest Login / Get Started buttons are not shown in the header
+   (the Account tab and the "create an account" popup cover signing in) */
+@media(max-width:767px){
+  .compact-header #loginBtn,
+  .compact-header #getStartedBtn{ display:none !important; }
 }

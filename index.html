@@ -2470,9 +2470,18 @@ category:"Editing",
 iconType: "image",
 icon: "assets/41054661-1713936918042-110deb4aa0105.jpg",
 search: "wink video editor vip",
-description:"have only 1 stock for china region",
+description:"China Region VIP / SVIP are private ready-made accounts -- sign in with Google.",
 plans: [
-{ name:"China Region – 1 Month – 4500 Ks", price:4500,outOfStock:true },
+{ name:"Wink VIP – China Region – 7 Days – 2000 Ks",
+  label:"Wink VIP", type:"Private Acc", tier:"vip",
+  duration:"7 Days", price:2000,
+  warranty:"Full Warranty", format:"Private account",
+  note:"Sign with Google\nPrivate ready made account" },
+{ name:"Wink SVIP – China Region – 7 Days – 2000 Ks",
+  label:"Wink SVIP", type:"Private Acc", tier:"svip",
+  duration:"7 Days", price:2000,
+  warranty:"Full Warranty", format:"Private account",
+  note:"Sign with Google\nPrivate ready made account" },
 { name:"👥Global Region – 1 Month – 7000 Ks (Share) – 1 Device", price:8000 },
 { name:"🔐Global Region – 1 Month – 18000 Ks (Private) – 3 Devices", price:18000 },
 { name:"🔐Global Region – 1 Year – 160000 Ks (Private) – 3 Devices", price:160000 }
@@ -4170,7 +4179,7 @@ if(document.readyState === "loading"){
 
     // Shared with the plan-option selector's own tier chip (renderOrder) --
     // a plan may name its own tier; otherwise it's read off the plan's name.
-    const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
+    const TIER_LABEL = {vip:"VIP", svip:"SVIP", max:"Max", premium:"Premium", business:"Business",
       team:"Team", education:"Education", individual:"Individual", family:"Family",
       pro:"Pro", proplus:"Pro Plus", plus:"Plus", go:"GO", lite:"Lite", credit:"Credit", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
       "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra", hobby:"Hobby"};
@@ -4698,7 +4707,7 @@ customHint.textContent = isInvalid
   let planName = plan.label ? plan.label : withoutPrice.replace(/\s*[–—-]?\s*(?:\d+\s*(?:minute|minutes|min|mins|hour|hours|hr|hrs|day|days|month|months|year|years|week|weeks)|coming\s+soon|preorder|dm)$/i, "").trim();
   planName = plan.label ? plan.label : planName.replace(/\b(private|share|own[- ]?mail|invite)\b/ig, "").replace(/[()]/g, "").replace(/\s*[·–—-]\s*/g, " ").replace(/\s{2,}/g, " ").replace(/^\W+|\W+$/g, "").trim() || "Digital plan";
   const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
-  const TIER_LABEL = {vip:"VIP", max:"Max", premium:"Premium", business:"Business",
+  const TIER_LABEL = {vip:"VIP", svip:"SVIP", max:"Max", premium:"Premium", business:"Business",
     team:"Team", education:"Education", individual:"Individual", family:"Family",
     pro:"Pro", pro5x:"Pro 5X", pro20x:"Pro 20X", proplus:"Pro Plus", plus:"Plus", go:"GO", lite:"Lite", credit:"Credit", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
     "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra", hobby:"Hobby"};
