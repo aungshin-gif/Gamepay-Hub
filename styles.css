@@ -10317,3 +10317,158 @@ body.light-mode .gp-bottomnav button.is-active{
   #orderView .plans-product-box{ margin-bottom:10px; }
   #orderView .plan-filters{ margin-bottom:10px; }
 }
+
+/* ===== Order journey: completed -> 30s digital countdown -> "open order chat" ===== */
+/* Three panes share one box; the active one grows (0fr -> 1fr) while the others fold away. */
+#orderStatusView .jy-pane{
+  display:grid; grid-template-rows:0fr; opacity:0; pointer-events:none;
+  transition:grid-template-rows .55s cubic-bezier(.4,0,.2,1), opacity .35s ease;
+}
+#orderStatusView .jy-pane-in{ min-height:0; overflow:hidden; padding:0 2px; }
+#orderStatusView .jy-steps .jy-pane-in{ padding:6px 2px 4px; }
+#orderStatusView .fig-os-journey[data-phase="track"] .jy-steps,
+#orderStatusView .fig-os-journey[data-phase="count"] .jy-steps,
+#orderStatusView .fig-os-journey[data-phase="count"] .jy-wait,
+#orderStatusView .fig-os-journey[data-phase="chat"] .jy-chat{
+  grid-template-rows:1fr; opacity:1; pointer-events:auto;
+}
+#orderStatusView .fig-os-journey[data-phase="count"] .jy-wait{ transition-delay:.12s; }
+#orderStatusView .fig-os-journey[data-phase="chat"] .jy-chat{ transition-delay:.18s; }
+#orderStatusView .fig-os-journey{ position:relative; }
+#orderStatusView .fig-os-journey::after{
+  content:""; position:absolute; inset:0; border-radius:18px; pointer-events:none; opacity:0;
+  box-shadow:0 10px 30px rgba(124,77,230,.32); transition:opacity .5s ease;
+}
+#orderStatusView .fig-os-journey[data-phase="chat"]::after{ opacity:1; animation:jyGlow 3.2s ease-in-out .8s infinite; }
+@keyframes jyGlow{ 0%,100%{ opacity:.25; } 50%{ opacity:1; } }
+
+/* countdown card */
+#orderStatusView .jy-wait-card{
+  margin-top:10px; padding:14px 12px 12px; text-align:center;
+  background:linear-gradient(160deg,#f4eeff 0%,#fbf9ff 60%,#efe7ff 100%);
+  border:1px solid #e3d9f6; border-radius:14px;
+}
+#orderStatusView .jy-wait-top{ display:flex; align-items:center; justify-content:center; gap:10px; text-align:left; }
+#orderStatusView .jy-wait-ico{
+  width:34px; height:34px; border-radius:11px; display:grid; place-items:center;
+  background:#fff; border:1px solid #e3d9f6; color:#6231c8; animation:osRingLoop 1.8s ease-out infinite;
+}
+#orderStatusView .jy-wait-ico svg{ width:18px; height:18px; }
+#orderStatusView .jy-wait-label{ display:flex; flex-direction:column; gap:1px; }
+#orderStatusView .jy-wait-label b{ font-size:13.5px; color:#2a1a55; }
+#orderStatusView .jy-wait-label small{ font-size:11.5px; color:#7d7390; font-weight:600; }
+
+#orderStatusView .jy-clock{ display:flex; align-items:center; justify-content:center; gap:6px; margin:12px 0 10px; }
+#orderStatusView .jy-digit{
+  position:relative; width:42px; height:58px; display:grid; place-items:center; overflow:hidden;
+  font:800 36px/1 ui-monospace,"SF Mono",Menlo,Consolas,"Roboto Mono",monospace; font-variant-numeric:tabular-nums;
+  color:#fff; border-radius:11px;
+  background:linear-gradient(180deg,#7a45e6 0%,#6231c8 50%,#5426b3 50%,#6a38d4 100%);
+  box-shadow:0 8px 16px rgba(98,49,200,.30), inset 0 1px 0 rgba(255,255,255,.25);
+  text-shadow:0 2px 6px rgba(30,10,80,.35);
+}
+/* the thin "flip clock" seam */
+#orderStatusView .jy-digit::after{
+  content:""; position:absolute; left:0; right:0; top:50%; height:1.5px; margin-top:-.75px;
+  background:rgba(25,8,70,.38);
+}
+#orderStatusView .jy-digit.tick{ animation:jyFlip .45s cubic-bezier(.3,1.3,.5,1) both; }
+@keyframes jyFlip{
+  0%{ transform:perspective(300px) rotateX(-80deg); filter:brightness(1.5); }
+  100%{ transform:perspective(300px) rotateX(0); filter:none; }
+}
+#orderStatusView .jy-colon{ display:flex; flex-direction:column; gap:9px; padding:0 1px; }
+#orderStatusView .jy-colon i{ width:7px; height:7px; border-radius:50%; background:#6231c8; animation:osBlink 1s ease-in-out infinite; }
+#orderStatusView .jy-bar{ height:5px; border-radius:5px; background:#e5def2; overflow:hidden; margin:0 6px; }
+#orderStatusView .jy-bar i{
+  display:block; height:100%; width:100%; transform-origin:left center; transform:scaleX(1);
+  background:linear-gradient(90deg,#9b6cf2,#6231c8); border-radius:5px; transition:transform .26s linear;
+}
+#orderStatusView .jy-wait-note{ margin-top:9px; font-size:11px; color:#9a8fb4; font-weight:600; }
+
+/* chat hand-off card */
+#orderStatusView .jy-chat-card{
+  position:relative; margin-top:8px; padding:16px 14px 14px; text-align:center; overflow:hidden;
+  background:linear-gradient(160deg,#f4eeff 0%,#fff 55%,#f1e9ff 100%);
+  border:1px solid #e3d9f6; border-radius:14px;
+}
+#orderStatusView .jy-transfer{ display:flex; align-items:center; justify-content:center; gap:0; margin:2px auto 12px; max-width:250px; }
+#orderStatusView .jy-node{
+  position:relative; flex:0 0 auto; width:52px; height:52px; border-radius:50%;
+  display:grid; place-items:center; background:#fff; border:1.5px solid #d6c4f7; color:#6231c8; z-index:1;
+  box-shadow:0 6px 14px rgba(98,49,200,.14);
+}
+#orderStatusView .jy-node svg{ width:24px; height:24px; }
+#orderStatusView .jy-node img{ width:34px; height:34px; border-radius:10px; object-fit:cover; }
+#orderStatusView .jy-node-hub::after{
+  content:""; position:absolute; inset:-1.5px; border-radius:50%; border:2px solid rgba(98,49,200,.45);
+  animation:jyPing 2s ease-out infinite;
+}
+@keyframes jyPing{ 0%{ transform:scale(1); opacity:.9; } 100%{ transform:scale(1.55); opacity:0; } }
+#orderStatusView .jy-flow{
+  position:relative; flex:1 1 auto; height:2px; min-width:60px; margin:0 -2px;
+  background:repeating-linear-gradient(90deg,#cdb6f7 0 6px,transparent 6px 12px);
+}
+#orderStatusView .jy-flow i{
+  position:absolute; top:50%; left:0; width:9px; height:9px; margin-top:-4.5px; border-radius:50%;
+  background:linear-gradient(135deg,#a77bf5,#6231c8); box-shadow:0 0 10px rgba(124,77,230,.7);
+  animation:jyDot 2s cubic-bezier(.45,0,.25,1) infinite; opacity:0;
+}
+#orderStatusView .jy-flow i:nth-child(2){ animation-delay:.5s; }
+#orderStatusView .jy-flow i:nth-child(3){ animation-delay:1s; }
+#orderStatusView .jy-flow i:nth-child(4){ animation-delay:1.5s; }
+@keyframes jyDot{
+  0%{ left:0; opacity:0; transform:scale(.5); }
+  15%{ opacity:1; transform:scale(1); }
+  85%{ opacity:1; transform:scale(1); }
+  100%{ left:calc(100% - 9px); opacity:0; transform:scale(.5); }
+}
+#orderStatusView .jy-chat-title{ font-size:16px; font-weight:800; color:#2a1a55; }
+#orderStatusView .jy-chat-desc{ margin:5px auto 13px; max-width:290px; font-size:12px; line-height:1.5; color:#7d7390; }
+#orderStatusView .jy-open{
+  position:relative; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  width:100%; max-width:320px; padding:13px 18px; border:0; border-radius:14px; cursor:pointer;
+  font-family:inherit; font-size:14.5px; font-weight:800; line-height:1; color:#fff !important;
+  background:linear-gradient(135deg,#7c4de6 0%,#6231c8 60%,#5426b3 100%);
+  box-shadow:0 10px 22px rgba(98,49,200,.38), inset 0 1px 0 rgba(255,255,255,.28);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+#orderStatusView .jy-open:active{ transform:scale(.97); box-shadow:0 5px 12px rgba(98,49,200,.34); }
+#orderStatusView .jy-open::after{
+  content:""; position:absolute; top:0; bottom:0; left:0; width:34%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.38),transparent);
+  animation:osSweep 2.6s ease-in-out 1s infinite; pointer-events:none;
+}
+#orderStatusView .jy-open svg{ width:19px; height:19px; display:block; }
+#orderStatusView .jy-open span{ color:#fff !important; }
+#orderStatusView .jy-open-arrow{ display:inline-flex; animation:jyNudge 1.4s ease-in-out infinite; }
+@keyframes jyNudge{ 0%,100%{ transform:translateX(0); } 50%{ transform:translateX(4px); } }
+/* when the chat phase appears, its pieces pop in one after another */
+#orderStatusView .fig-os-journey[data-phase="chat"] .jy-node-you{ animation:osPop .55s cubic-bezier(.34,1.56,.64,1) .35s both; }
+#orderStatusView .fig-os-journey[data-phase="chat"] .jy-node-hub{ animation:osPop .55s cubic-bezier(.34,1.56,.64,1) .5s both; }
+#orderStatusView .fig-os-journey[data-phase="chat"] .jy-chat-title,
+#orderStatusView .fig-os-journey[data-phase="chat"] .jy-chat-desc{ animation:osRise .5s ease .65s both; }
+#orderStatusView .fig-os-journey[data-phase="chat"] .jy-open{ animation:osPop .55s cubic-bezier(.34,1.56,.64,1) .8s both; }
+@media (max-width:380px){
+  #orderStatusView .jy-digit{ width:38px; height:54px; font-size:32px; }
+}
+
+/* ===== Order details / activity: open and close as one smooth motion =====
+   The box used to reach full height in .4s while its rows were still fading
+   in one by one until ~.7s, so it opened as an empty white box first. Now the
+   height, the fade and the rows all run on the same short clock. */
+@media all{
+  #orderStatusView .fig-os-collapse-body{ transition:grid-template-rows .45s cubic-bezier(.32,.72,0,1); }
+  #orderStatusView .fig-os-collapse-body > *{
+    transform:none; transition:opacity .28s ease;
+  }
+  #orderStatusView .fig-os-collapse.open .fig-os-collapse-body > *{ transition-delay:.05s; }
+  #orderStatusView .fig-os-collapse.open .order-status-details .order-preview-table tr{ animation:osRiseSoft .32s ease both; }
+  #orderStatusView .fig-os-collapse.open .order-status-details .order-preview-table tr:nth-child(2){ animation-delay:.03s; }
+  #orderStatusView .fig-os-collapse.open .order-status-details .order-preview-table tr:nth-child(3){ animation-delay:.06s; }
+  #orderStatusView .fig-os-collapse.open .order-status-details .order-preview-table tr:nth-child(4){ animation-delay:.09s; }
+  #orderStatusView .fig-os-collapse.open .order-status-details .order-preview-table tr:nth-child(5){ animation-delay:.12s; }
+  #orderStatusView .fig-os-collapse-chev{ transition:transform .45s cubic-bezier(.32,.72,0,1); }
+  #orderStatusView .fig-os-collapse-head{ -webkit-tap-highlight-color:transparent; }
+}
+@keyframes osRiseSoft{ from{ opacity:0; transform:translateY(5px); } to{ opacity:1; transform:none; } }

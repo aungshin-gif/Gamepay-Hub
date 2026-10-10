@@ -962,8 +962,9 @@
           </div>
         </div>
 
-        <section class="fig-os-journey">
+        <section class="fig-os-journey" id="journeyBox" data-phase="track">
         <div class="fig-os-rowhead fig-anim" style="--d:.20s"><span class="fig-os-section">Order journey</span><span class="fig-os-count" id="journeyCount">1 OF 3 COMPLETE</span></div>
+        <div class="jy-pane jy-steps"><div class="jy-pane-in">
         <div id="statusStepper" class="status-stepper fig-os-stepper fig-anim" style="--d:.24s">
           <div class="status-step done" data-step="placed"><span class="status-step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span><span class="status-step-text"><span class="status-step-label">Order placed</span><span class="status-step-sub" id="placedDateLabel">—</span></span></div>
           <div class="status-step-line done" data-line="1"></div>
@@ -971,6 +972,41 @@
           <div class="status-step-line" data-line="2"></div>
           <div class="status-step" data-step="approved"><span class="status-step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="status-step-text"><span class="status-step-label" id="journeyTitle3">Completed</span><span class="status-step-sub" id="journeySub3">Confirmation pending</span></span></div>
         </div>
+        </div></div>
+
+        <!-- Order completed: 30s digital countdown, then this box turns into the
+             "open your order chat" hand-off (account transfer). Driven by
+             syncJourneyHandoff() -- the stepper above is the normal view. -->
+        <div class="jy-pane jy-wait"><div class="jy-pane-in">
+          <div class="jy-wait-card">
+            <div class="jy-wait-top">
+              <span class="jy-wait-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5"/><path d="M9 2h6"/></svg></span>
+              <span class="jy-wait-label"><b>Order complete — nice!</b><small>Your order chat opens in</small></span>
+            </div>
+            <div class="jy-clock" id="jyClock" role="timer" aria-label="Seconds until the order chat opens">
+              <span class="jy-digit">0</span><span class="jy-digit">0</span><span class="jy-colon"><i></i><i></i></span><span class="jy-digit">3</span><span class="jy-digit">0</span>
+            </div>
+            <div class="jy-bar"><i id="jyBar"></i></div>
+            <div class="jy-wait-note">Hang tight. We are getting your private chat ready.</div>
+          </div>
+        </div></div>
+
+        <div class="jy-pane jy-chat"><div class="jy-pane-in">
+          <div class="jy-chat-card">
+            <div class="jy-transfer" aria-hidden="true">
+              <span class="jy-node jy-node-you"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+              <span class="jy-flow"><i></i><i></i><i></i><i></i></span>
+              <span class="jy-node jy-node-hub"><img id="jyHubLogo" alt=""></span>
+            </div>
+            <div class="jy-chat-title" id="jyChatTitle">Your order chat is ready</div>
+            <p class="jy-chat-desc" id="jyChatDesc">Send your account details here so we can complete your order. It's private, just you and our team.</p>
+            <button type="button" class="jy-open" id="jyOpenChat">
+              <span class="jy-open-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+              <span id="jyOpenLabel">Open order chat</span>
+              <span class="jy-open-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+            </button>
+          </div>
+        </div></div>
         </section>
 
         <div class="fig-os-notice fig-anim" style="--d:.30s">
@@ -5411,6 +5447,10 @@ function setOrderStatusUI(status, reason){
   const tlReviewTitle = document.getElementById("tlReviewTitle");
   const tlReviewSub = document.getElementById("tlReviewSub");
   const tlReviewTime = document.getElementById("tlReviewTime");
+  // Was this exact order showing "pending" a moment ago? Only then is a
+  // "completed" a live change worth a fresh 30s countdown (see syncJourneyHandoff).
+  const wasPending = uiShown.token === currentOrder?.access_token && uiShown.status === "pending";
+  uiShown = { token: currentOrder?.access_token || null, status };
   if(currentOrder){
     currentOrder.status = status;
     if(reason !== undefined) currentOrder.reject_reason = reason;
@@ -5472,6 +5512,76 @@ function setOrderStatusUI(status, reason){
   const osView = document.getElementById("orderStatusView");
   if(osView){ osView.dataset.state = (status === "approved" || status === "completed") ? "done" : (status === "rejected" ? "bad" : "wait"); }
   playOrderStatusAnimation();
+  syncJourneyHandoff(status, wasPending);
+}
+
+/* ---- Completed order: 30s digital countdown, then "open your order chat" ----
+   The Order journey box has three phases (data-phase): "track" (normal stepper),
+   "count" (stepper + countdown) and "chat" (the hand-off to the order chat).
+   The moment the order was completed is remembered per order, so a reload in
+   the middle of the countdown carries on instead of restarting, and an order
+   that was already completed long ago goes straight to the chat button. */
+const JOURNEY_COUNTDOWN_MS = 30000;
+let journeyTimer = 0;
+let uiShown = { token: null, status: null };
+function journeyDoneKey(o){ return "gph_order_done_" + o.access_token; }
+function readJourneyDoneAt(o){
+  try{ const n = Number(localStorage.getItem(journeyDoneKey(o))); return n > 0 ? n : 0; }catch(e){ return 0; }
+}
+function saveJourneyDoneAt(o, ts){
+  try{ localStorage.setItem(journeyDoneKey(o), String(ts)); }catch(e){}
+}
+function setJourneyPhase(phase){
+  document.getElementById("journeyBox")?.setAttribute("data-phase", phase);
+}
+function renderJourneyClock(msLeft){
+  const clock = document.getElementById("jyClock");
+  if(!clock) return;
+  const total = Math.max(0, Math.ceil(msLeft / 1000));
+  const txt = String(Math.floor(total / 60)).padStart(2, "0") + String(total % 60).padStart(2, "0");
+  clock.querySelectorAll(".jy-digit").forEach((el, i) => {
+    if(el.textContent === txt[i]) return;
+    el.textContent = txt[i];
+    el.classList.remove("tick"); void el.offsetWidth; el.classList.add("tick");
+  });
+  const bar = document.getElementById("jyBar");
+  if(bar) bar.style.transform = `scaleX(${Math.max(0, Math.min(1, msLeft / JOURNEY_COUNTDOWN_MS))})`;
+}
+function refreshJourneyChatCopy(){
+  const closed = Boolean(currentOrder?.chat_closed);
+  const t = document.getElementById("jyChatTitle");
+  const d = document.getElementById("jyChatDesc");
+  const l = document.getElementById("jyOpenLabel");
+  if(t) t.textContent = closed ? "Your order chat has ended" : "Your order chat is ready";
+  if(d) d.textContent = closed
+    ? "This conversation was closed by our team. You can still read it any time."
+    : "Send your account details here so we can complete your order. It's private, just you and our team.";
+  if(l) l.textContent = closed ? "View order chat" : "Open order chat";
+}
+function syncJourneyHandoff(status, live){
+  clearInterval(journeyTimer);
+  const done = status === "approved" || status === "completed";
+  if(!done || !currentOrder){ setJourneyPhase("track"); return; }
+  const order = currentOrder;
+  const logo = document.getElementById("jyHubLogo");
+  if(logo && !logo.getAttribute("src")) logo.src = siteLogoSrc();
+  let doneAt = readJourneyDoneAt(order);
+  if(!doneAt && live){ doneAt = Date.now(); saveJourneyDoneAt(order, doneAt); }
+  if(doneAt > Date.now()) doneAt = Date.now(); // device clock moved back
+  const showChat = () => { refreshJourneyChatCopy(); setJourneyPhase("chat"); };
+  if(!doneAt || Date.now() - doneAt >= JOURNEY_COUNTDOWN_MS){ showChat(); return; }
+  setJourneyPhase("count");
+  const tick = () => {
+    const view = document.getElementById("orderStatusView");
+    if(!view || view.classList.contains("hidden") || currentOrder?.access_token !== order.access_token){
+      clearInterval(journeyTimer); return;
+    }
+    const left = JOURNEY_COUNTDOWN_MS - (Date.now() - doneAt);
+    if(left <= 0){ clearInterval(journeyTimer); renderJourneyClock(0); showChat(); return; }
+    renderJourneyClock(left);
+  };
+  tick();
+  journeyTimer = setInterval(tick, 250);
 }
 
 
@@ -5540,7 +5650,7 @@ function ensureOrderChannel(order){
       // it's the one currently on screen, so the customer can't keep
       // typing into a conversation that no longer goes anywhere.
       const isActive = currentOrder?.access_token === order.access_token;
-      if(isActive) currentOrder.chat_closed = true;
+      if(isActive){ currentOrder.chat_closed = true; refreshJourneyChatCopy(); }
       const watchingChat = isActive && chatMode === "order" && !document.getElementById("chatView").classList.contains("hidden");
       if(watchingChat) lockChatInput(true);
     })
@@ -5642,6 +5752,8 @@ function toggleFigCollapse(collapseId, btn){
   // "View more" <-> "View less" label on the Order details card
   const more = el.querySelector(".fig-os-collapse-more");
   if(more) more.textContent = open ? "View less" : "View more";
+  // Once it has finished growing, glide just far enough that the whole box is on screen.
+  if(open) setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "nearest" }), 470);
 }
 
 // Replays the status animations (journey line fill, step pop, check draw).
@@ -5719,6 +5831,11 @@ function wireStatusButtons(){
   if(crumbBtn && !crumbBtn.dataset.wired){
     crumbBtn.dataset.wired = "1";
     crumbBtn.addEventListener("click", () => { openMyOrdersView(); });
+  }
+  const jyOpen = document.getElementById("jyOpenChat");
+  if(jyOpen && !jyOpen.dataset.wired){
+    jyOpen.dataset.wired = "1";
+    jyOpen.addEventListener("click", openChatView);
   }
   const supportBtn = document.getElementById("contactSupportBtn");
   if(supportBtn && !supportBtn.dataset.wired){
