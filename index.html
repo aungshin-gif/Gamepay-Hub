@@ -275,7 +275,7 @@
       <div class="auth-forgot-row" id="authForgotRow"><a id="authForgotLink">Forgot password?</a></div>
       <div class="auth-field hidden" id="authOtpField">
         <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><line x1="12" y1="15" x2="12" y2="17"/></svg></span>
-        <input id="authOtp" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="Code from email" />
+        <input id="authOtp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="12" placeholder="Code from email" />
       </div>
       <div class="auth-field hidden" id="authNewPasswordField">
         <span class="auth-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
@@ -6079,6 +6079,7 @@ const authPassword = document.getElementById("authPassword");
 
 function renderAuthUI(){
   if(currentUser){
+    clearPendingSignup();
     // Logout used to have its own header button; it now lives as a "Log
     // out" row inside My Account (see #accountLogoutBtn) so the header
     // stays down to My Account + Noti instead of four separate buttons.
@@ -6145,6 +6146,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 function openAuthModal(mode, pendingEmail){
+  if(mode !== "signup-sent") clearPendingSignup();
   authMode = mode;
   authError.textContent = "";
   authUsername.value = "";
@@ -6170,12 +6172,13 @@ function openAuthModal(mode, pendingEmail){
     authReferralField.classList.add("hidden");
     authForgotRow.classList.add("hidden");
     signupEmail = pendingEmail || signupEmail;
+    savePendingSignup(signupEmail);
     // The confirmation email carries a link and (once the template includes
     // it) a code. Both work: tap the link, or type the code here.
     authOtpField.classList.remove("hidden");
     authNewPasswordField.classList.add("hidden");
     document.getElementById("authModalTitle").textContent = "Check your email!";
-    document.getElementById("authModalSub").textContent = `We sent a confirmation email to ${signupEmail || "your email"}. Tap the button in it, or enter the code from it below. Check your Spam folder too.`;
+    document.getElementById("authModalSub").textContent = `We sent a verification code to ${signupEmail || "your email"}. Enter it below, or tap the link in the email. Check your Spam folder too.`;
     document.getElementById("authSubmitBtn").textContent = "Verify code";
     document.getElementById("authSwitchText").innerHTML = `Didn't get it? <a id="authResendLink">Resend email</a> · <a id="authSwitchLink">Back to Login</a>`;
     document.getElementById("authResendLink")?.addEventListener("click", () => resendSignupEmail(signupEmail));
@@ -6235,11 +6238,53 @@ function openAuthModal(mode, pendingEmail){
   document.getElementById("authForgotLink")?.addEventListener("click", () => openAuthModal("forgot-email"));
   authModalBackdrop.classList.remove("hidden");
 }
-document.getElementById("authCloseBtn")?.addEventListener("click", () => { afterAuthAction = null; authModalBackdrop.classList.add("hidden"); });
-authModalBackdrop?.addEventListener("click", (e) => { if(e.target === authModalBackdrop){ afterAuthAction = null; authModalBackdrop.classList.add("hidden"); } });
+document.getElementById("authCloseBtn")?.addEventListener("click", () => { afterAuthAction = null; if(authMode === "signup-sent") clearPendingSignup(); authModalBackdrop.classList.add("hidden"); });
+authModalBackdrop?.addEventListener("click", (e) => { if(e.target === authModalBackdrop){ afterAuthAction = null; if(authMode === "signup-sent") clearPendingSignup(); authModalBackdrop.classList.add("hidden"); } });
 
 // Raw GoTrue messages ("Email not confirmed", "Invalid login credentials",
 // rate limits) mean nothing to a shopper -- say what to do instead.
+// The "Check your email!" popup used to vanish if the shopper left the site
+// to read the email and the page reloaded when they came back. Remember the
+// pending signup for 30 minutes so it reopens, like an app would.
+const PENDING_SIGNUP_KEY = "gph_pending_signup";
+function savePendingSignup(email){
+  try{ localStorage.setItem(PENDING_SIGNUP_KEY, JSON.stringify({ email, ts: Date.now() })); }catch(e){}
+}
+function clearPendingSignup(){
+  try{ localStorage.removeItem(PENDING_SIGNUP_KEY); }catch(e){}
+}
+function readPendingSignup(){
+  try{
+    const o = JSON.parse(localStorage.getItem(PENDING_SIGNUP_KEY) || "null");
+    if(o && o.email && Date.now() - o.ts < 30 * 60 * 1000) return o;
+  }catch(e){}
+  return null;
+}
+
+// Signing up waits on the email being sent (a few seconds), so show that
+// something is happening and ignore repeat taps -- each extra tap used to
+// fire another signup and trip the email rate limit.
+let authBusy = false;
+function setAuthBusy(on){
+  const btn = document.getElementById("authSubmitBtn");
+  if(!btn) return;
+  if(on){
+    btn.dataset.prevLabel = btn.textContent;
+    btn.dataset.busyLabel = authMode === "login" ? "Logging in…" : "Creating account…";
+    btn.textContent = btn.dataset.busyLabel;
+    btn.disabled = true;
+    btn.classList.add("is-busy");
+  } else {
+    // A successful signup swaps the modal to "Check your email!" (new button
+    // label) before this runs -- only put the old label back if the button
+    // is still showing the busy one.
+    if(btn.dataset.prevLabel && btn.textContent === btn.dataset.busyLabel) btn.textContent = btn.dataset.prevLabel;
+    delete btn.dataset.prevLabel; delete btn.dataset.busyLabel;
+    btn.disabled = false;
+    btn.classList.remove("is-busy");
+  }
+}
+
 function friendlyAuthError(error){
   const code = String(error?.code || "");
   const msg = String(error?.message || "");
@@ -6247,7 +6292,12 @@ function friendlyAuthError(error){
     return "Please confirm your email first. Open the email we sent (check Spam too), tap Confirm, then log in.";
   if(code === "invalid_credentials" || /invalid login credentials/i.test(msg))
     return "Wrong email or password. New here? Tap Get Started to create an account.";
-  if(code === "over_email_send_rate_limit" || code === "over_request_rate_limit" || /rate limit/i.test(msg))
+  const waitSec = (msg.match(/after (\d+) seconds?/i) || [])[1];
+  if(waitSec)
+    return `Please wait ${waitSec} seconds before asking for another email.`;
+  if(code === "over_email_send_rate_limit" || /email rate limit/i.test(msg))
+    return "Too many emails were sent just now. Please wait a few minutes, then tap Resend email.";
+  if(code === "over_request_rate_limit" || /rate limit/i.test(msg))
     return "Too many attempts. Please wait a few minutes and try again.";
   if(code === "otp_expired" || /expired|invalid.*(token|otp)|token.*invalid/i.test(msg))
     return "That code is wrong or has expired. Tap Resend email to get a new one.";
@@ -6283,7 +6333,7 @@ document.getElementById("authSubmitBtn")?.addEventListener("click", async () => 
   if(!supabaseClient){ authError.textContent = "Backend not configured yet."; return; }
   authError.textContent = "";
   if(authMode === "signup-sent"){
-    const code = authOtp.value.trim();
+    const code = authOtp.value.replace(/[\s-]/g, "");
     if(!code){ authError.textContent = "Enter the code from the email, or tap the confirm button in the email and then log in."; return; }
     const btn = document.getElementById("authSubmitBtn");
     const prevLabel = btn.textContent; btn.disabled = true; btn.textContent = "Verifying…";
@@ -6339,6 +6389,10 @@ document.getElementById("authSubmitBtn")?.addEventListener("click", async () => 
     const refCode = authReferralCode.value.trim();
     if(refCode){ try{ localStorage.setItem("gph_referral_code", refCode); }catch(e){} }
   }
+  if(authBusy) return;
+  authBusy = true;
+  setAuthBusy(true);
+  try{
   const action = authMode === "login"
     ? supabaseClient.auth.signInWithPassword({ email, password })
     : supabaseClient.auth.signUp({ email, password, options: { data: { username } } });
@@ -6369,6 +6423,10 @@ document.getElementById("authSubmitBtn")?.addEventListener("click", async () => 
   showToast(authMode === "login" ? "Welcome back!" : "Account created!");
   flushPendingReferral();
   runAfterAuth();
+  }finally{
+    authBusy = false;
+    setAuthBusy(false);
+  }
 });
 
 /* ================= My Orders (order history) ================= */
@@ -7795,6 +7853,9 @@ document.getElementById("pwResetSubmitBtn")?.addEventListener("click", async () 
     }else if(session && hp.get("type") === "signup"){
       history.replaceState(null, "", location.pathname + location.search);
       showToast("Email confirmed — welcome!");
+    }else if(!session){
+      const pending = readPendingSignup();
+      if(pending) openAuthModal("signup-sent", pending.email);
     }
   }catch(e){}
 })();
