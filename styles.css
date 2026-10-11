@@ -10452,7 +10452,7 @@ body.light-mode .gp-bottomnav button.is-active{
 .intro-title{
   margin-top:calc(var(--logo)*.16);
   display:flex; gap:.55em; padding-left:.34em; font-weight:800; letter-spacing:.34em; line-height:1;
-  font-size:clamp(17px,5vw,26px); color:#2a1a63;
+  font-size:clamp(17px,5vw,26px); color:#241255;
 }
 .intro-title .w{
   display:inline-block; opacity:0; transform:translateY(14px); filter:blur(7px);
@@ -10460,19 +10460,19 @@ body.light-mode .gp-bottomnav button.is-active{
 }
 .intro-title .w.acc{
   transition-delay:.12s;
-  background:linear-gradient(100deg,#5b6cf0,#9a5cf0 55%,#e052c8);
+  background:linear-gradient(100deg,#2f7bff,#8a3dff 52%,#ff2fb4);
   -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
 }
 .intro-label{
   margin-top:11px; padding-left:.42em; font-size:9.5px; font-weight:600; letter-spacing:.42em;
-  color:#7a6aa8; opacity:0; transition:opacity .9s ease .4s;
+  color:#6d4fd0; opacity:0; transition:opacity .9s ease .4s;
 }
 .intro-splash.show-title .w{ opacity:1; transform:none; filter:none; }
 .intro-splash.show-title .intro-label{ opacity:1; }
 
 /* no WebGL: a drifting pastel gradient and a frosted glass tile instead */
 .intro-splash.no-gl{
-  background:linear-gradient(125deg,#efe9ff,#cdbdff 30%,#bfe0ff 55%,#ffd0ea 80%,#efe9ff); background-size:300% 300%;
+  background:linear-gradient(125deg,#f3eeff,#a98bff 28%,#6cc8ff 52%,#ff8fcf 78%,#ffd58a); background-size:300% 300%;
   animation:introFbBg 5s ease-in-out infinite;
 }
 .intro-splash.no-gl .intro-bg, .intro-splash.no-gl .intro-mark{ display:none; }
