@@ -9,7 +9,6 @@
   />
   <link rel="icon" href="assets/favicon.webp" type="image/webp" />
   <link rel="apple-touch-icon" href="assets/favicon.webp" />
-  <link rel="preload" as="image" href="assets/intro-logo.webp" />
   <!-- GitHub Pages doesn't let this static file set its own HTTP response
        headers, and mobile Chrome in particular can hold onto an old cached
        copy of this page well past a deploy -- these tell it (and any CDN
@@ -117,23 +116,35 @@
 <body class="light-mode lp-mode">
   <div class="neon-announcement" aria-label="Store announcement"><div class="neon-track"><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b><span>Premium digital products · Clear plans · Fast support</span><b>✦</b><span>GamePay Hub always supports education</span><b>✦</b><span>Student discounts available</span><b>✦</b></div></div>
   <div class="intro-splash" id="introSplash" aria-hidden="true">
-    <canvas class="intro-bg" id="introBg"></canvas>
     <div class="intro-stack">
-      <div class="intro-mark" id="introMark"></div>
-      <div class="intro-mark-fb"><img alt="" src="assets/intro-logo.webp"></div>
-      <div class="intro-title"><span class="w">GAMEPAY</span><span class="w acc">HUB</span></div>
-      <div class="intro-label">DIGITAL PREMIUM STORE</div>
+      <svg class="intro-logo" viewBox="6 4 142 116" xmlns="http://www.w3.org/2000/svg" focusable="false">
+        <defs>
+          <linearGradient id="ilGrad" gradientUnits="userSpaceOnUse" x1="16" y1="14" x2="134" y2="108"><stop offset="0" stop-color="#b8a2ff"/><stop offset="1" stop-color="#7a52e0"/></linearGradient>
+        </defs>
+        <circle class="il-ring" cx="76" cy="61" r="52"/>
+        <g class="il-all" fill="none" stroke="url(#ilGrad)" stroke-width="5.4" stroke-linecap="round" stroke-linejoin="round">
+          <path class="il-p il-g" pathLength="1" d="M76 31 L46 14 L16 31 L16 91 L46 108 L76 91 L76 66 L50 66"/>
+          <path class="il-p il-g2" pathLength="1" d="M66 37 L46 25 L26 37 L26 85 L46 97 L66 85" stroke-width="2.6" opacity=".5"/>
+          <path class="il-p il-a" pathLength="1" d="M64 33 L76 31 L71 20"/>
+          <path class="il-p il-h1" pathLength="1" d="M94 74 V108"/>
+          <path class="il-p il-h2" pathLength="1" d="M132 74 V108"/>
+          <path class="il-p il-h3" pathLength="1" d="M94 91 H132"/>
+          <circle class="il-d il-d1" cx="113" cy="33" r="5.6"/>
+          <circle class="il-d il-d2" cx="100" cy="47" r="5.6"/>
+          <circle class="il-d il-d3" cx="126" cy="47" r="5.6"/>
+          <circle class="il-d il-d4" cx="113" cy="61" r="5.6"/>
+        </g>
+      </svg>
+      <div class="intro-title"><span>GAMEPAY</span><span class="acc">HUB</span></div>
     </div>
   </div>
 <script>
-/* Intro: a clean "liquid glass" scene -- a soft pastel gradient and one frosted
-   glass tile that condenses from a droplet, refracts the gradient behind it and
-   is wiped in with the logo by a wet front; then a liquid-edged curtain lifts.
-   WebGL, one canvas, drawn at the screen's native pixel resolution (up to 4K) on
-   every display refresh (so 90Hz screens get 90fps); if the device can't keep up
-   the resolution is stepped down automatically. Shown once per browser session
-   (?intro=1 shows it again); tap or any key skips. Plain CSS fallback without
-   WebGL; skipped for reduced-motion / data-saver; a hard failsafe removes it. */
+/* Intro: Figma-style. Plain white page; the Gamepay Hub mark is drawn in soft
+   purple line-art (SVG, so it stays razor sharp at any resolution) -- the strokes
+   draw themselves, settle with a little bounce, the d-pad pops in, then it all
+   fades into the site. Pure CSS animation (see styles.css), no images.
+   Shown once per browser session (?intro=1 shows it again); tap or any key skips;
+   skipped for reduced-motion / data-saver; a hard failsafe always removes it. */
 (function(){
   var splash=document.getElementById("introSplash");
   if(!splash) return;
@@ -146,200 +157,17 @@
     sessionStorage.setItem("gph_intro_seen","1");
   }catch(e){}
   if(skip&&!forced){ splash.remove(); return; }
-
-  var done=false, glx=null;
-  function onResize(){ try{ layout(); }catch(e){} }
-  function finish(){
-    if(done) return; done=true;
-    removeEventListener("resize",onResize);
-    try{ var x=glx&&glx.getExtension("WEBGL_lose_context"); if(x) x.loseContext(); }catch(e){}
-    try{splash.remove();}catch(e){}
-  }
+  var done=false;
+  function finish(){ if(done) return; done=true; try{splash.remove();}catch(e){} }
   function leave(){
     if(splash.classList.contains("leave")) return;
     splash.classList.add("leave");
-    setTimeout(finish,1100);
+    setTimeout(finish,700);
   }
-  setTimeout(finish,7000); // hard failsafe
+  setTimeout(leave,3100);
+  setTimeout(finish,6000); // hard failsafe
   splash.addEventListener("pointerdown",leave);
   addEventListener("keydown",leave,{once:true});
-
-  var cv=document.getElementById("introBg"), mark=document.getElementById("introMark");
-  var T0=performance.now();
-  function fallback(){
-    splash.classList.add("no-gl");
-    setTimeout(function(){splash.classList.add("show-title");},500);
-    setTimeout(leave,2300);
-  }
-
-  var VERT="attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0.,1.);}";
-  var FRAG=
-    "#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n"+
-    "varying vec2 v;uniform vec2 uRes,uC;uniform float uT,uIn,uTile,uLogo,uSweep,uHS;uniform sampler2D uTex;\n"+
-    "float hash(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}\n"+
-    "float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}\n"+
-    "const mat2 M=mat2(.8,-.6,.6,.8);\n"+
-    "float fbm3(vec2 p){float a=.5,s=0.;for(int i=0;i<3;i++){s+=a*noise(p);p=M*p*2.03+3.7;a*=.5;}return s;}\n"+
-    /* the clean pastel gradient the glass refracts */
-    "vec3 bgCol(vec2 p,float t){\n"+
-    " vec2 a=vec2(sin(t*.31)*.5-.3,cos(t*.27)*.42+.22),b=vec2(cos(t*.23)*.55+.35,sin(t*.35)*.45-.25),c=vec2(sin(t*.19+2.)*.45,cos(t*.29+1.)*.55);\n"+
-    " float wa=exp(-dot(p-a,p-a)*1.6),wb=exp(-dot(p-b,p-b)*1.5),wc=exp(-dot(p-c,p-c)*1.9);\n"+
-    " vec3 col=vec3(1.);\n"+
-    " col=mix(col,vec3(.925,.905,.99),wa*.85);col=mix(col,vec3(.915,.94,1.),wb*.8);col=mix(col,vec3(.965,.925,.99),wc*.7);\n"+
-    " return col;}\n"+
-    "vec3 scene(vec2 p,float t){return bgCol(p,t);}\n"+
-    "float rbox(vec2 p,float hs,float rr){vec2 q=abs(p)-vec2(hs-rr);return length(max(q,0.))+min(max(q.x,q.y),0.)-rr;}\n"+
-    "float tileSD(vec2 tp){\n"+
-    " float hs=uHS*uTile;float ang=atan(tp.y,tp.x);\n"+
-    " float wob=(sin(ang*3.+uT*2.4)+.6*sin(ang*5.-uT*1.8))*.014*uHS*(1.-smoothstep(.55,1.,uTile));\n"+
-    " float morph=smoothstep(.12,.82,uTile);\n"+
-    " return mix(length(tp)-hs,rbox(tp,hs,hs*.46),morph)+wob;}\n"+
-    "float ord(vec2 l){return length(l-vec2(.14,.12))*.62+.34*fbm3(l*3.2+uT*.22);}\n"+
-    "void main(){\n"+
-    " vec2 asp=vec2(uRes.x/uRes.y,1.);vec2 p=(v-.5)*asp;float t=uT;\n"+
-    " vec3 col=scene(p,t);\n"+
-    " vec2 tp=p-uC;float sd=tileSD(tp);\n"+
-    " float hs=uHS*uTile;\n"+
-    " if(uTile>.02){\n"+
-    "  float e=.004;vec2 g=vec2(tileSD(tp+vec2(e,0.))-tileSD(tp-vec2(e,0.)),tileSD(tp+vec2(0.,e))-tileSD(tp-vec2(0.,e)));vec2 n=normalize(g+1e-6);\n"+
-    "  float sdS=tileSD(tp-vec2(.012,-.03)*uHS*5.);\n"+
-    "  float sh=(1.-smoothstep(-.01,.11*uHS*2.,sdS))*smoothstep(0.,.004,sd);\n"+
-    "  col*=1.-sh*.3*vec3(.5,.62,.3);\n"+
-    "  col-=exp(-max(sd,0.)/(uHS*.4))*vec3(.05,.08,.02)*uTile*(1.-step(sd,0.));\n"+
-    "  if(sd<0.){\n"+
-    "   float inner=clamp(-sd/(hs*.34+1e-4),0.,1.);float edgeF=1.-inner;\n"+
-    "   vec2 pr=p-n*edgeF*edgeF*hs*.5;\n"+
-    "   float bl=.05*uHS*3.;float ca=.012*edgeF*uHS*6.;\n"+
-    "   vec3 fr;fr.r=bgCol(pr+n*ca,t).r;fr.g=bgCol(pr,t).g;fr.b=bgCol(pr-n*ca,t).b;\n"+
-    "   vec3 bw=(bgCol(pr+vec2(bl,0.),t)+bgCol(pr-vec2(bl,0.),t)+bgCol(pr+vec2(0.,bl),t)+bgCol(pr-vec2(0.,bl),t))*.25;\n"+
-    "   fr=mix(fr,bw,.6);\n"+
-    "   vec3 gl=mix(fr,vec3(.985,.975,1.),.55);\n"+
-    "   float band=1.-smoothstep(0.,hs*.075,-sd);\n"+
-    "   float lit=max(dot(n,normalize(vec2(-.6,.8))),0.);\n"+
-    "   gl*=1.-.07*edgeF*(1.-lit);\n"+
-    "   gl+=band*(.25+1.1*pow(lit,2.))*vec3(1.,.98,1.);\n"+
-    "   gl+=band*pow(max(dot(n,normalize(vec2(.6,-.8))),0.),2.)*vec3(.55,.8,1.)*.5;\n"+
-    "   vec2 u=tp/(hs+1e-4);\n"+
-    "   gl+=smoothstep(.55,.0,abs(u.x*.7+u.y*.7+.62))*.2*(1.-smoothstep(.5,1.,u.y*-.5+.5));\n"+
-    "   gl+=edgeF*edgeF*vec3(.9,.94,1.)*.1;\n"+
-    "   gl+=pow(edgeF,3.)*(vec3(.45,.6,1.)*max(-n.x,0.)+vec3(.85,.5,1.)*max(n.x,0.))*.22;\n"+
-    "   float ir=(tp.x*.9-tp.y*.9)/hs*.5+uT*.25;gl+=(.5+.5*cos(6.2832*(ir+vec3(0.,.33,.67))))*.05*(.4+.6*edgeF);\n"+
-    "   gl+=(hash(gl_FragCoord.xy*.7)-.5)*.018;\n"+
-    "   vec2 lu=tp/(uHS*2.*.86)+.5;\n"+
-    "   float o=ord(lu);float thr=mix(-.18,1.12,uLogo);\n"+
-    "   float m=1.-smoothstep(thr-.12,thr+.01,o);\n"+
-    "   float bd=m*(1.-m)*4.;\n"+
-    "   vec2 gr=vec2(ord(lu+vec2(.012,0.))-o,ord(lu+vec2(0.,.012))-o)/.012;\n"+
-    "   vec2 s=lu+gr*bd*.02;\n"+
-    "   vec4 lg=vec4(0.);if(s.x>=0.&&s.x<=1.&&s.y>=0.&&s.y<=1.)lg=texture2D(uTex,s);\n"+
-    "   float sa=0.;if(lu.x>.0&&lu.x<1.&&lu.y>.0&&lu.y<1.)sa=texture2D(uTex,lu+vec2(.0,.03)).a;\n"+
-    "   gl*=1.-.16*sa*m*(1.-lg.a);\n"+
-    "   float gw=0.;for(int i=0;i<8;i++){float an=float(i)*.7853982;vec2 d=vec2(cos(an),sin(an));vec2 a1=lu+d*.045,a2=lu+d*.09;\n"+
-    "    if(a1.x>0.&&a1.x<1.&&a1.y>0.&&a1.y<1.)gw+=texture2D(uTex,a1).a;if(a2.x>0.&&a2.x<1.&&a2.y>0.&&a2.y<1.)gw+=texture2D(uTex,a2).a;}gw/=16.;\n"+
-    "   gl+=mix(vec3(.8,.45,1.),vec3(.3,.8,1.),clamp(lu.y,0.,1.))*gw*.35*m;\n"+
-    "   gl=gl*(1.-lg.a*m)+lg.rgb*m;\n"+
-    "   gl+=bd*vec3(1.)*lg.a*.55;\n"+
-    "   float sw=exp(-pow(u.x*.8+u.y*.6-uSweep+.6,2.)*30.)*.5*smoothstep(0.,.2,uLogo);gl+=sw;\n"+
-    "   gl=mix(gl,vec3(.80,.74,.97),(1.-smoothstep(0.,hs*.012,-sd))*.55);\n"+
-    "   float aa=1.-smoothstep(-.0025,.0015,sd);\n"+
-    "   col=mix(col,gl,aa);\n"+
-    "  }\n"+
-    " }\n"+
-    " col*=1.-.025*dot(p,p);\n"+
-    " col+=(hash(gl_FragCoord.xy+fract(t)*91.)-.5)*(1./170.);\n"+
-    " col=mix(vec3(1.),col,clamp(uIn,0.,1.));\n"+
-    " gl_FragColor=vec4(col,1.);\n"+
-    "}\n";
-
-  var gl=null,prog=null,u={},tex=null,texReady=false,markStart=null;
-  try{
-    gl=cv.getContext("webgl",{antialias:false,alpha:false,desynchronized:true,powerPreference:"high-performance"})||cv.getContext("experimental-webgl");
-    if(!gl) throw new Error("no webgl");
-    glx=gl;
-    function sh(type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s;}
-    prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,VERT));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FRAG));gl.linkProgram(prog);
-    if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(prog));
-    gl.useProgram(prog);
-    var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
-    var loc=gl.getAttribLocation(prog,"p");gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-    ["uRes","uC","uT","uIn","uTile","uLogo","uSweep","uHS","uTex"].forEach(function(n){u[n]=gl.getUniformLocation(prog,n);});
-  }catch(err){ if(window.console) console.warn("intro: WebGL unavailable, using fallback:",err&&err.message); fallback(); return; }
-
-  /* native resolution (4K cap = 8.4M pixels); q steps it down if frames get slow */
-  var q=1, MAXPX=8400000, tileC=[0,0], tileHS=.2;
-  function layout(){
-    var w=splash.clientWidth,h=splash.clientHeight;
-    var dpr=Math.min(window.devicePixelRatio||1,3)*q;
-    dpr=Math.min(dpr,Math.sqrt(MAXPX/(w*h)));
-    cv.width=Math.max(2,Math.round(w*dpr));cv.height=Math.max(2,Math.round(h*dpr));
-    var r=mark.getBoundingClientRect();
-    tileC=[((r.left+r.width/2)/w-.5)*(w/h),.5-(r.top+r.height/2)/h];
-    tileHS=(r.width/2)/h;
-  }
-  layout(); addEventListener("resize",onResize);
-
-  var img=new Image();
-  img.onload=function(){
-    try{
-      tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
-      gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,img);
-      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
-      texReady=true; markStart=(performance.now()-T0)/1000;
-    }catch(e){ texReady=false; }
-  };
-  img.src="assets/intro-logo.webp";
-
-  // timeline (seconds)
-  var LEAVE_AT=3.2, titleShown=false;
-  function ease(x){x=Math.min(1,Math.max(0,x));return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;}
-  function backOut(x){x=Math.min(1,Math.max(0,x));var c1=1.5,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2);}
-
-  /* frame pacing: after a short warm-up, compare the average frame time with the
-     best one seen (= the display's refresh interval). If we can't hold it, drop
-     the resolution a step (x0.78, or x0.55 if very slow; at most 4 times) and measure again. */
-  var last=0, frames=0, dts=[], adapts=0, steady=false;
-  var slow=0;
-  function pace(now){
-    var dt=now-last; last=now; frames++;
-    if(steady||frames<3||dt<=0) return;
-    // very slow device: two long frames in a row -> halve the resolution right away
-    slow=dt>150?slow+1:0;
-    if(slow>=2&&adapts<4&&q>.3){ slow=0; adapts++; q*=.5; dts.length=0; layout(); splash.setAttribute("data-q",q.toFixed(2)); return; }
-    if(frames<6||dt>1500) return;
-    dts.push(dt);
-    if(dts.length<10) return;
-    var sorted=dts.slice().sort(function(a,b){return a-b;}), sum=0;
-    for(var i=0;i<dts.length;i++) sum+=dts[i];
-    var avg=sum/dts.length, best=sorted[1];
-    dts.length=0;
-    if(avg>best*1.3&&avg>13&&q>.3&&adapts<4){ adapts++; q*=(avg>40?.55:.78); layout(); }
-    else steady=true;
-    splash.setAttribute("data-q",q.toFixed(2));
-  }
-
-  function frame(){
-    if(done) return;
-    var now=performance.now(); pace(now);
-    var t=(now-T0)/1000;
-    var tile=backOut((t-.45)/1.25);
-    var logo=0,sweep=0;
-    if(texReady&&markStart!==null){ var tl=t-Math.max(markStart,1.1); logo=ease(tl/1.1); sweep=Math.max(0,tl-1.1)/.8*1.9; }
-    try{
-      gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight);
-      gl.uniform2f(u.uRes,gl.drawingBufferWidth,gl.drawingBufferHeight);gl.uniform2f(u.uC,tileC[0],tileC[1]);
-      gl.uniform1f(u.uT,t);gl.uniform1f(u.uIn,t/.5);gl.uniform1f(u.uTile,tile);gl.uniform1f(u.uLogo,logo);
-      gl.uniform1f(u.uSweep,sweep);gl.uniform1f(u.uHS,tileHS);
-      if(texReady){gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(u.uTex,0);}
-      gl.drawArrays(gl.TRIANGLES,0,3);
-    }catch(e){ if(window.console) console.warn("intro: draw failed, using fallback:",e&&e.message); fallback(); return; }
-    if(!titleShown&&logo>.45){ titleShown=true; splash.classList.add("show-title"); }
-    if(t>=LEAVE_AT&&logo>=1){ leave(); }
-    else if(t>LEAVE_AT+1.6){ leave(); }
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
 })();
 </script>
   <canvas id="particles"></canvas>
