@@ -119,18 +119,19 @@
   <div class="intro-splash" id="introSplash" aria-hidden="true">
     <canvas class="intro-bg" id="introBg"></canvas>
     <div class="intro-stack">
-      <canvas class="intro-mark" id="introMark"></canvas>
-      <img class="intro-mark-fb" alt="" src="assets/intro-logo.webp">
+      <div class="intro-mark" id="introMark"></div>
+      <div class="intro-mark-fb"><img alt="" src="assets/intro-logo.webp"></div>
       <div class="intro-title"><span class="w">GAMEPAY</span><span class="w acc">HUB</span></div>
       <div class="intro-label">DIGITAL PREMIUM STORE</div>
     </div>
   </div>
 <script>
-/* Intro: a liquid WebGL background, with the logo "painted on" by a liquid
-   front, then a liquid curtain lifts. Shown once per browser session (add
-   ?intro=1 to the address to see it again); tap anywhere to skip. Falls back
-   to a simple CSS version without WebGL, and is skipped entirely for
-   reduced-motion / data-saver. Every path ends by removing the splash. */
+/* Intro: a calm "liquid glass" scene -- a soft pastel gradient with dew drops
+   and glass droplets on it, where the logo condenses into a frosted glass tile
+   and is wiped in by a wet front, then a liquid-edged curtain lifts.
+   WebGL, one canvas. Shown once per browser session (?intro=1 shows it again);
+   tap or any key skips. Plain CSS fallback without WebGL; skipped for
+   reduced-motion / data-saver; a hard failsafe always removes it. */
 (function(){
   var splash=document.getElementById("introSplash");
   if(!splash) return;
@@ -144,12 +145,12 @@
   }catch(e){}
   if(skip&&!forced){ splash.remove(); return; }
 
-  var done=false, ctxs=[];
+  var done=false, glx=null;
   function onResize(){ try{ layout(); }catch(e){} }
   function finish(){
     if(done) return; done=true;
     removeEventListener("resize",onResize);
-    ctxs.forEach(function(g){ try{ var x=g.getExtension("WEBGL_lose_context"); if(x) x.loseContext(); }catch(e){} });
+    try{ var x=glx&&glx.getExtension("WEBGL_lose_context"); if(x) x.loseContext(); }catch(e){}
     try{splash.remove();}catch(e){}
   }
   function leave(){
@@ -161,112 +162,149 @@
   splash.addEventListener("pointerdown",leave);
   addEventListener("keydown",leave,{once:true});
 
-  var bgCv=document.getElementById("introBg"), mkCv=document.getElementById("introMark");
+  var cv=document.getElementById("introBg"), mark=document.getElementById("introMark");
   var T0=performance.now();
   function fallback(){
     splash.classList.add("no-gl");
     setTimeout(function(){splash.classList.add("show-title");},500);
-    setTimeout(leave,2200);
+    setTimeout(leave,2300);
   }
 
   var VERT="attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0.,1.);}";
-  var COMMON=
+  var FRAG=
     "#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n"+
-    "varying vec2 v;\n"+
+    "varying vec2 v;uniform vec2 uRes,uC;uniform float uT,uIn,uTile,uLogo,uSweep,uHS,uDew;uniform sampler2D uTex;\n"+
     "float hash(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}\n"+
-    "float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);"+
-      "return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}\n"+
-    "const mat2 M=mat2(.8,-.6,.6,.8);\n";
-  var BG_FRAG=COMMON+
-    "uniform vec2 uRes;uniform float uT,uIn,uP;\n"+
-    "float fbm(vec2 p){float a=.5,s=0.;for(int i=0;i<4;i++){s+=a*noise(p);p=M*p*2.03+7.1;a*=.5;}return s;}\n"+
-    "void main(){\n"+
-    " vec2 asp=vec2(uRes.x/uRes.y,1.);vec2 c=(v-.5)*asp;float r=length(c);vec2 p=c*2.1;float t=uT;\n"+
-    " float rip=sin(r*15.-uP*10.)*exp(-abs(r-uP*.85)*4.5)*uP*(1.-uP)*3.;\n"+
-    " vec2 q=vec2(fbm(p+vec2(0.,t*.09)),fbm(p+vec2(5.2,1.3)-vec2(t*.07,0.)));\n"+
-    " vec2 w=p+2.5*q+rip*.45*normalize(p+1e-4);\n"+
-    " float e=.025;float h=fbm(w+t*.04),hx=fbm(w+vec2(e,0.)+t*.04),hy=fbm(w+vec2(0.,e)+t*.04);\n"+
-    " vec3 n=normalize(vec3((h-hx)/e*.9,(h-hy)/e*.9,1.));\n"+
-    " vec3 c0=vec3(.045,.015,.19),c1=vec3(.34,.14,.86),c2=vec3(.95,.27,.78),c3=vec3(.08,.72,1.);\n"+
-    " vec3 col=mix(c0,c1,smoothstep(.12,.5,h));\n"+
-    " col=mix(col,c2,smoothstep(.42,.74,q.x+.3*h));\n"+
-    " col=mix(col,c3,smoothstep(.5,.86,q.y)*.9);\n"+
-    " vec3 L=normalize(vec3(-.5,.65,.6));float diff=clamp(dot(n,L),0.,1.);\n"+
-    " vec3 Hh=normalize(L+vec3(0.,0.,1.));float spec=pow(clamp(dot(n,Hh),0.,1.),70.);\n"+
-    " float fres=pow(1.-n.z,2.2);\n"+
-    " col=col*(.5+.85*diff)+spec*vec3(1.,.92,1.)*.9+fres*c3*.55;\n"+
-    " col*=1.-.42*exp(-r*r*16.)*uP;\n"+
-    " col+=(c1*.5+c2*.25)*exp(-r*r*4.5)*(.1+.35*uP);\n"+
-    " col*=1.-.6*smoothstep(.3,1.,r);\n"+
-    " col+=(hash(gl_FragCoord.xy+fract(t)*91.)-.5)*(1./120.);\n"+
-    " gl_FragColor=vec4(col*uIn,1.);\n"+
-    "}\n";
-  var MARK_FRAG=COMMON+
-    "uniform sampler2D uTex;uniform float uP,uT,uSweep;\n"+
-    "const float PAD=.1666667;\n"+
+    "float h1(float n){return fract(sin(n*127.1)*43758.5453);}\n"+
+    "float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}\n"+
+    "const mat2 M=mat2(.8,-.6,.6,.8);\n"+
     "float fbm3(vec2 p){float a=.5,s=0.;for(int i=0;i<3;i++){s+=a*noise(p);p=M*p*2.03+3.7;a*=.5;}return s;}\n"+
+    /* the soft pastel gradient that everything refracts */
+    "vec3 bgCol(vec2 p,float t){\n"+
+    " vec2 a=vec2(sin(t*.31)*.5-.3,cos(t*.27)*.42+.22),b=vec2(cos(t*.23)*.55+.35,sin(t*.35)*.45-.25),c=vec2(sin(t*.19+2.)*.45,cos(t*.29+1.)*.55);\n"+
+    " float wa=exp(-dot(p-a,p-a)*2.1),wb=exp(-dot(p-b,p-b)*1.9),wc=exp(-dot(p-c,p-c)*2.5);\n"+
+    " vec3 col=vec3(.955,.94,1.);\n"+
+    " col=mix(col,vec3(.76,.68,1.),wa*.95);col=mix(col,vec3(.62,.82,1.),wb*.95);col=mix(col,vec3(1.,.74,.9),wc*.9);\n"+
+    " col+=.035*sin(p.x*5.+t*.6)*sin(p.y*4.-t*.5);\n"+
+    " return col;}\n"+
+    /* a glass bead: lens-refracts the gradient, bright rim, specular glints, soft shadow */
+    "vec3 bead(vec3 base,vec2 p,vec2 pc,float r,float t){\n"+
+    " vec2 d=p-pc;float len=length(d);\n"+
+    " vec2 ds=p-pc-vec2(.012,-.02)*r*7.;float sh=1.-smoothstep(r*.95,r*1.55,length(ds));\n"+
+    " base*=1.-sh*.16*(1.-smoothstep(r*.98,r*1.02,len));\n"+
+    " if(len>r) return base;\n"+
+    " float k=len/r;vec2 n=d/r;\n"+
+    " vec3 lens=bgCol(pc-d*.82+n*(1.-k)*r*.25,t);\n"+
+    " lens=lens*1.02+.012;\n"+
+    " float rimW=smoothstep(.72,1.,k);\n"+
+    " lens=mix(lens,lens*.7,rimW*(.55-.55*dot(n,vec2(-.6,.8))));\n"+
+    " lens+=rimW*.22*pow(max(dot(n,normalize(vec2(-.55,.75))),0.),2.);\n"+
+    " lens+=(1.-smoothstep(.0,.2,length(n-vec2(-.36,.42))))*.8;\n"+
+    " lens+=(1.-smoothstep(.0,.11,length(n-vec2(.38,-.45))))*.28;\n"+
+    " float edge=1.-smoothstep(.96,1.,k);\n"+
+    " return mix(base,lens,edge);}\n"+
+    "vec3 dew(vec3 base,vec2 p,float t,float sc,float seed,float grow){\n"+
+    " vec2 q=p*sc;vec2 id=floor(q);vec2 f=fract(q);\n"+
+    " float hh=hash(id+seed);\n"+
+    " if(hh<.74||grow<.01) return base;\n"+
+    " vec2 off=.5+(vec2(hash(id+seed+1.7),hash(id+seed+3.1))-.5)*.4;\n"+
+    " float r=(.1+.15*hash(id+seed+5.3))*grow*(.94+.06*sin(t*1.2+hh*30.));\n"+
+    " vec2 pc=(id+off)/sc;\n"+
+    " return bead(base,p,pc,r/sc,t);}\n"+
+    "vec3 scene(vec2 p,float t){\n"+
+    " vec3 col=bgCol(p,t);\n"+
+    " col=dew(col,p,t,16.,1.3,smoothstep(.1,1.3,uDew));\n"+
+    " col=dew(col,p,t,9.,7.9,smoothstep(.25,1.4,uDew));\n"+
+    " for(int i=0;i<4;i++){float fi=float(i);\n"+
+    "  vec2 pc=vec2((h1(fi+1.)-.5)*uRes.x/uRes.y*.95+sin(t*.17+fi*2.7)*.035,(h1(fi+9.)-.5)*.92+cos(t*.15+fi*2.1)*.035);\n"+
+    "  float r=(.05+.06*h1(fi+4.))*smoothstep(.2+fi*.1,1.5+fi*.1,uDew);\n"+
+    "  col=bead(col,p,pc,r,t);}\n"+
+    " return col;}\n"+
+    "float rbox(vec2 p,float hs,float rr){vec2 q=abs(p)-vec2(hs-rr);return length(max(q,0.))+min(max(q.x,q.y),0.)-rr;}\n"+
+    "float tileSD(vec2 tp){\n"+
+    " float hs=uHS*uTile;float ang=atan(tp.y,tp.x);\n"+
+    " float wob=(sin(ang*3.+uT*2.4)+.6*sin(ang*5.-uT*1.8))*.014*uHS*(1.-smoothstep(.55,1.,uTile));\n"+
+    " float morph=smoothstep(.12,.82,uTile);\n"+
+    " return mix(length(tp)-hs,rbox(tp,hs,hs*.46),morph)+wob;}\n"+
     "float ord(vec2 l){return length(l-vec2(.14,.12))*.62+.34*fbm3(l*3.2+uT*.22);}\n"+
-    "float alphaAt(vec2 l){if(l.x<0.||l.x>1.||l.y<0.||l.y>1.)return 0.;return texture2D(uTex,l).a;}\n"+
     "void main(){\n"+
-    " vec2 lp=(v-PAD)/(1.-2.*PAD);\n"+
-    " float o=ord(lp);float thr=mix(-.18,1.1,uP);\n"+
-    " float pm=1.-smoothstep(thr-.07,thr+.02,o);\n"+
-    " float lm=1.-smoothstep(thr-.42,thr-.26,o);\n"+
-    " float band=pm*(1.-lm);\n"+
-    " float e=.012;vec2 g=vec2(ord(lp+vec2(e,0.))-o,ord(lp+vec2(0.,e))-o)/e;\n"+
-    " vec2 s=lp+g*band*.028;\n"+
-    " vec4 lg=vec4(0.);if(s.x>=0.&&s.x<=1.&&s.y>=0.&&s.y<=1.)lg=texture2D(uTex,s);\n"+
-    " float a=lg.a;\n"+
-    " float k=clamp(lp.x*.55+lp.y*.5+.18*sin(uT*3.+lp.y*7.)+.2*fbm3(lp*4.+uT*.3),0.,1.);\n"+
-    " vec3 paint=mix(vec3(.5,.2,1.),vec3(.1,.82,1.),k);paint=mix(paint,vec3(1.,.3,.82),smoothstep(.55,.95,fbm3(lp*5.-uT*.4)));\n"+
-    " float edge=clamp(pm*(1.-pm)*4.,0.,1.);\n"+
-    " vec3 rgb=paint*a*pm*(1.-lm)+edge*vec3(1.,.86,1.)*a*.85+lg.rgb*lm*pm;\n"+
-    " float alpha=a*pm;\n"+
-    " float gl=0.;for(int i=0;i<8;i++){float an=float(i)*.7853982;vec2 d=vec2(cos(an),sin(an));gl+=alphaAt(lp+d*.035)+alphaAt(lp+d*.075);}gl/=16.;\n"+
-    " vec3 gc=mix(vec3(.58,.22,1.),vec3(.2,.8,1.),clamp(lp.y,0.,1.))*gl*(.75+.25*sin(uT*2.1));\n"+
-    " float gp=1.-smoothstep(thr-.25,thr+.05,o);\n"+
-    " rgb+=gc*.6*gp;alpha=max(alpha,gl*.55*gp);\n"+
-    " float sw=exp(-pow(lp.x*.8+lp.y*.6-uSweep+.5,2.)*55.)*a*lm*.6;rgb+=vec3(sw);\n"+
-    " alpha=clamp(max(alpha,max(rgb.r,max(rgb.g,rgb.b))),0.,1.);\n"+
-    " gl_FragColor=vec4(rgb,alpha);\n"+
+    " vec2 asp=vec2(uRes.x/uRes.y,1.);vec2 p=(v-.5)*asp;float t=uT;\n"+
+    " vec3 col=scene(p,t);\n"+
+    " vec2 tp=p-uC;float sd=tileSD(tp);\n"+
+    " float hs=uHS*uTile;\n"+
+    " if(uTile>.02){\n"+
+    "  float e=.004;vec2 g=vec2(tileSD(tp+vec2(e,0.))-tileSD(tp-vec2(e,0.)),tileSD(tp+vec2(0.,e))-tileSD(tp-vec2(0.,e)));vec2 n=normalize(g+1e-6);\n"+
+    "  float sdS=tileSD(tp-vec2(.012,-.03)*uHS*5.);\n"+
+    "  float sh=(1.-smoothstep(-.01,.11*uHS*2.,sdS))*smoothstep(0.,.004,sd);\n"+
+    "  col*=1.-sh*.2*vec3(.55,.7,.4);\n"+
+    "  if(sd<0.){\n"+
+    "   float inner=clamp(-sd/(hs*.34+1e-4),0.,1.);float edgeF=1.-inner;\n"+
+    "   vec2 pr=p-n*edgeF*edgeF*hs*.42;\n"+
+    "   float bl=.045*uHS*4.;\n"+
+    "   vec3 fr=(bgCol(pr,t)*2.+bgCol(pr+vec2(bl,0.),t)+bgCol(pr-vec2(bl,0.),t)+bgCol(pr+vec2(0.,bl),t)+bgCol(pr-vec2(0.,bl),t))/6.;\n"+
+    "   vec3 gl=mix(fr,vec3(1.),.4);\n"+
+    "   float band=1.-smoothstep(0.,hs*.075,-sd);\n"+
+    "   float lit=max(dot(n,normalize(vec2(-.6,.8))),0.);\n"+
+    "   gl+=band*(.25+1.1*pow(lit,2.))*vec3(1.,.98,1.);\n"+
+    "   gl+=band*pow(max(dot(n,normalize(vec2(.6,-.8))),0.),2.)*vec3(.55,.8,1.)*.5;\n"+
+    "   vec2 u=tp/(hs+1e-4);\n"+
+    "   gl+=smoothstep(.55,.0,abs(u.x*.7+u.y*.7+.62))*.2*(1.-smoothstep(.5,1.,u.y*-.5+.5));\n"+
+    "   gl+=edgeF*edgeF*vec3(.9,.94,1.)*.08;\n"+
+    "   vec2 lu=tp/(uHS*2.*.86)+.5;\n"+
+    "   float o=ord(lu);float thr=mix(-.18,1.12,uLogo);\n"+
+    "   float m=1.-smoothstep(thr-.12,thr+.01,o);\n"+
+    "   float bd=m*(1.-m)*4.;\n"+
+    "   vec2 gr=vec2(ord(lu+vec2(.012,0.))-o,ord(lu+vec2(0.,.012))-o)/.012;\n"+
+    "   vec2 s=lu+gr*bd*.02;\n"+
+    "   vec4 lg=vec4(0.);if(s.x>=0.&&s.x<=1.&&s.y>=0.&&s.y<=1.)lg=texture2D(uTex,s);\n"+
+    "   float sa=0.;if(lu.x>.0&&lu.x<1.&&lu.y>.0&&lu.y<1.)sa=texture2D(uTex,lu+vec2(.0,.03)).a;\n"+
+    "   gl*=1.-.16*sa*m*(1.-lg.a);\n"+
+    "   float gw=0.;for(int i=0;i<8;i++){float an=float(i)*.7853982;vec2 d=vec2(cos(an),sin(an));vec2 a1=lu+d*.045,a2=lu+d*.09;\n"+
+    "    if(a1.x>0.&&a1.x<1.&&a1.y>0.&&a1.y<1.)gw+=texture2D(uTex,a1).a;if(a2.x>0.&&a2.x<1.&&a2.y>0.&&a2.y<1.)gw+=texture2D(uTex,a2).a;}gw/=16.;\n"+
+    "   gl+=mix(vec3(.8,.45,1.),vec3(.3,.8,1.),clamp(lu.y,0.,1.))*gw*.35*m;\n"+
+    "   gl=gl*(1.-lg.a*m)+lg.rgb*m;\n"+
+    "   gl+=bd*vec3(1.)*lg.a*.55;\n"+
+    "   float sw=exp(-pow(u.x*.8+u.y*.6-uSweep+.6,2.)*30.)*.5*smoothstep(0.,.2,uLogo);gl+=sw;\n"+
+    "   float aa=1.-smoothstep(-.0025,.0015,sd);\n"+
+    "   col=mix(col,gl,aa);\n"+
+    "  }\n"+
+    " }\n"+
+    " col*=1.-.09*dot(p,p);\n"+
+    " col+=(hash(gl_FragCoord.xy+fract(t)*91.)-.5)*(1./150.);\n"+
+    " col=mix(vec3(.965,.95,1.),col,clamp(uIn,0.,1.));\n"+
+    " gl_FragColor=vec4(col,1.);\n"+
     "}\n";
 
-  function mk(cv,frag){
-    var gl=cv.getContext("webgl",{antialias:false,alpha:true,premultipliedAlpha:true,powerPreference:"high-performance"})||cv.getContext("experimental-webgl");
-    if(!gl) return null;
-    function sh(type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s;}
-    var pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,VERT));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,frag));gl.linkProgram(pr);
-    if(!gl.getProgramParameter(pr,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(pr));
-    gl.useProgram(pr); ctxs.push(gl);
-    var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
-    var loc=gl.getAttribLocation(pr,"p");gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-    var u={};["uRes","uT","uIn","uP","uSweep","uTex"].forEach(function(n){u[n]=gl.getUniformLocation(pr,n);});
-    return {gl:gl,u:u};
-  }
-  function size(cv,cssW,cssH,maxPx,dprCap){
-    var dpr=Math.min(window.devicePixelRatio||1,dprCap);
-    dpr=Math.min(dpr,Math.sqrt(maxPx/(cssW*cssH)));
-    cv.width=Math.max(2,Math.round(cssW*dpr));cv.height=Math.max(2,Math.round(cssH*dpr));
-  }
-
-  var bg,mk2,tex=null,texReady=false;
+  var gl=null,prog=null,u={},tex=null,texReady=false,markStart=null;
   try{
-    bg=mk(bgCv,BG_FRAG); mk2=mk(mkCv,MARK_FRAG);
-    if(!bg||!mk2) throw new Error("no webgl");
-  }catch(err){ fallback(); return; }
+    gl=cv.getContext("webgl",{antialias:false,alpha:false,powerPreference:"high-performance"})||cv.getContext("experimental-webgl");
+    if(!gl) throw new Error("no webgl");
+    glx=gl;
+    function sh(type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s;}
+    prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,VERT));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FRAG));gl.linkProgram(prog);
+    if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(prog));
+    gl.useProgram(prog);
+    var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    var loc=gl.getAttribLocation(prog,"p");gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+    ["uRes","uC","uT","uIn","uTile","uLogo","uSweep","uHS","uDew","uTex"].forEach(function(n){u[n]=gl.getUniformLocation(prog,n);});
+  }catch(err){ if(window.console) console.warn("intro: WebGL unavailable, using fallback:",err&&err.message); fallback(); return; }
 
+  var tileC=[0,0],tileHS=.2;
   function layout(){
     var w=splash.clientWidth,h=splash.clientHeight;
-    size(bgCv,w,h,2400000,2);
-    var r=mkCv.getBoundingClientRect();
-    size(mkCv,r.width||300,r.height||300,2000000,3);
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    dpr=Math.min(dpr,Math.sqrt(2600000/(w*h)));
+    cv.width=Math.max(2,Math.round(w*dpr));cv.height=Math.max(2,Math.round(h*dpr));
+    var r=mark.getBoundingClientRect();
+    tileC=[((r.left+r.width/2)/w-.5)*(w/h),.5-(r.top+r.height/2)/h];
+    tileHS=(r.width/2)/h;
   }
   layout(); addEventListener("resize",onResize);
 
   var img=new Image();
   img.onload=function(){
     try{
-      var gl=mk2.gl;tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);
+      tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
       gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,img);
       gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
@@ -277,28 +315,26 @@
   img.src="assets/intro-logo.webp";
 
   // timeline (seconds)
-  var markStart=null, TITLE_AT=1.75, LEAVE_AT=3.15, titleShown=false;
+  var LEAVE_AT=3.2, titleShown=false;
   function ease(x){x=Math.min(1,Math.max(0,x));return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;}
-  function draw(o,t,uni){
-    var gl=o.gl;gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight);
-    gl.useProgram(gl.getParameter(gl.CURRENT_PROGRAM));
-    uni(gl,o.u);gl.drawArrays(gl.TRIANGLES,0,3);
-  }
+  function backOut(x){x=Math.min(1,Math.max(0,x));var c1=1.5,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2);}
   function frame(){
     if(done) return;
     var t=(performance.now()-T0)/1000;
-    var prog=0,sweep=0;
-    if(texReady&&markStart!==null){
-      var tm=t-Math.max(markStart,.45);
-      prog=ease(tm/1.7); sweep=Math.max(0,tm-1.7)/.9*1.7;
-    }
+    var tile=backOut((t-.45)/1.25), dewT=t/1.1;
+    var logo=0,sweep=0;
+    if(texReady&&markStart!==null){ var tl=t-Math.max(markStart,1.1); logo=ease(tl/1.1); sweep=Math.max(0,tl-1.1)/.8*1.9; }
     try{
-      draw(bg,t,function(gl,u){gl.uniform2f(u.uRes,gl.drawingBufferWidth,gl.drawingBufferHeight);gl.uniform1f(u.uT,t);gl.uniform1f(u.uIn,Math.min(1,t/.55));gl.uniform1f(u.uP,prog);});
-      if(texReady) draw(mk2,t,function(gl,u){gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(u.uTex,0);gl.uniform1f(u.uT,t);gl.uniform1f(u.uP,prog);gl.uniform1f(u.uSweep,sweep);});
-    }catch(e){ fallback(); return; }
-    if(!titleShown&&prog>.55){ titleShown=true; splash.classList.add("show-title"); }
-    if(t>=LEAVE_AT&&prog>=1){ leave(); }
-    else if(t>LEAVE_AT+1.6){ leave(); }  // logo never loaded: don't hold the page
+      gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight);
+      gl.uniform2f(u.uRes,gl.drawingBufferWidth,gl.drawingBufferHeight);gl.uniform2f(u.uC,tileC[0],tileC[1]);
+      gl.uniform1f(u.uT,t);gl.uniform1f(u.uIn,t/.5);gl.uniform1f(u.uTile,tile);gl.uniform1f(u.uLogo,logo);
+      gl.uniform1f(u.uSweep,sweep);gl.uniform1f(u.uHS,tileHS);gl.uniform1f(u.uDew,dewT);
+      if(texReady){gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(u.uTex,0);}
+      gl.drawArrays(gl.TRIANGLES,0,3);
+    }catch(e){ if(window.console) console.warn("intro: draw failed, using fallback:",e&&e.message); fallback(); return; }
+    if(!titleShown&&logo>.45){ titleShown=true; splash.classList.add("show-title"); }
+    if(t>=LEAVE_AT&&logo>=1){ leave(); }
+    else if(t>LEAVE_AT+1.6){ leave(); }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
