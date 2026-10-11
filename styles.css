@@ -10506,3 +10506,68 @@ body.light-mode .gp-bottomnav button.is-active{
 .intro-title .acc{ background:linear-gradient(115deg,#9a7cf5,#6231c8); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
 @keyframes ilText{ to{ opacity:1; transform:none; } }
 @media (prefers-reduced-motion:reduce){ .intro-splash{ display:none !important; } }
+
+
+/* ===== Order slip: a more realistic paper stock (same layout as before) ===== */
+/* Warm thermal paper built from layers: shade where it leaves the slot, faint
+   feed-roller banding, mottled tone, long fibres, fine grain and a soft sheen. */
+#previewSection .pv3-slip{
+  background-color:#fdfcf8;
+  background-image:
+    linear-gradient(to bottom, rgba(70,58,34,.1), rgba(70,58,34,0) 40px),
+    repeating-linear-gradient(to bottom, rgba(120,108,84,.022) 0 1px, transparent 1px 3px),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='m' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='3' seed='11' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55  0 0 0 0 .5  0 0 0 0 .38  0 0 0 .2 -.085'/></filter><rect width='320' height='320' filter='url(%23m)'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='f' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.55 .018' numOctaves='2' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .45  0 0 0 0 .36  0 0 0 .2 -.07'/></filter><rect width='220' height='220' filter='url(%23f)'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='g' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .36  0 0 0 0 .33  0 0 0 0 .27  0 0 0 .34 -.115'/></filter><rect width='140' height='140' filter='url(%23g)'/></svg>"),
+    linear-gradient(105deg,#ffffff,#f9f7f1 52%,#fffefb);
+  background-size:100% 100%, 100% 3px, 320px 320px, 220px 220px, 140px 140px, 100% 100%;
+  box-shadow:inset 0 0 22px rgba(128,112,80,.07), inset 1px 0 0 rgba(255,255,255,.9), inset -1px 0 0 rgba(140,124,92,.1);
+  color:#1c1b18;
+}
+#previewSection .pv3-paper{
+  filter:drop-shadow(0 1px 1px rgba(60,50,30,.16)) drop-shadow(0 12px 14px rgba(60,50,30,.13));
+  box-shadow:none;
+}
+/* thermal ink: very slightly soft edges, warm grey rules */
+#previewSection .pv3-slip *{ text-shadow:0 0 .4px rgba(28,27,24,.22); }
+#previewSection .pv3-sect,
+#previewSection .pv3-total{ border-color:#cfc8b8; }
+#previewSection .pv3-slip .pv3-slipbrand,
+#previewSection .pv3-slip .pv3-itemrow b,
+#previewSection .pv3-slip .pv3-amount,
+#previewSection .pv3-slip .pv3-dt,
+#previewSection .pv3-slip .pv3-row > span,
+#previewSection .pv3-slip .pv3-row > b,
+#previewSection .pv3-slip .pv3-total-l b{ color:#1c1b18; }
+#previewSection .pv3-barcode svg{ color:#1c1b18; }
+/* the torn edge matches the paper and casts its own little shadow */
+#previewSection .pv3-zigzag{ fill:#f4f2ec; filter:drop-shadow(0 2px 1px rgba(60,50,30,.16)); }
+
+/* ===== Slip page: less scrolling ===== */
+#previewSection .pv3-topbar{ margin-bottom:4px; }
+#previewSection .pv3-back, #previewSection .pv3-printslip{ min-height:32px; }
+#previewSection .pv3-shell{ padding-top:0; padding-bottom:18px; }
+@media (min-width:640px){ #previewSection .pv3-card{ padding:10px 20px 8px; } }
+#previewSection .pv3-card{ padding-top:6px; padding-bottom:8px; }
+#previewSection .pv3-statusline{ margin-bottom:0; }
+#previewSection .pv3-slip{ padding:10px 20px; }
+#previewSection .pv3-sect{ margin-top:5px; padding-top:5px; }
+#previewSection .pv3-rows{ margin-top:6px; gap:4px; }
+#previewSection .pv3-total{ margin-top:5px; padding:6px 0; }
+#previewSection .pv3-barcode{ margin-top:6px; }
+#previewSection .pv3-totalrow{ margin-top:6px; padding:6px 12px; }
+#previewSection .pv3-foot{ margin-top:10px; padding:12px 0; }
+
+/* ===== printer sound toggle ===== */
+#previewSection .pv3-statusbtns{ display:inline-flex; align-items:center; gap:2px; }
+#previewSection .pv3-sound{
+  display:inline-flex; align-items:center; justify-content:center; width:34px; min-height:34px; padding:0;
+  background:none; border:0; border-radius:8px; cursor:pointer; color:#555e6e;
+}
+#previewSection .pv3-sound:hover{ background:rgba(255,255,255,.7); }
+#previewSection .pv3-sound svg{ width:16px; height:16px; }
+#previewSection .pv3-sound .pv3-sound-off{ display:none; }
+#previewSection .pv3-sound.is-off{ color:#9aa3b2; }
+#previewSection .pv3-sound.is-off .pv3-sound-on{ display:none; }
+#previewSection .pv3-sound.is-off .pv3-sound-off{ display:inline; }
+@media print{ #previewSection .pv3-sound{ display:none !important; } }
