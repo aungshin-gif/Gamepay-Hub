@@ -17,7 +17,8 @@ mental model and the result, not syntax).
 ## Git / release workflow
 - Work on the branch the session assigns, commit with a clear message, push with `git push -u origin <branch>`.
 - **Do not open a PR unless the owner says "Pr"** (or asks for one). Then open it into **`mainu`**.
-  The owner merges it; GitHub Pages deploys **only from `mainu`** (`.github/workflows/jekyll-gh-pages.yml`), about 1 minute later.
+  The owner merges it; GitHub Pages deploys from **`mainu`** (`.github/workflows/jekyll-gh-pages.yml`), about 1 minute later.
+  (`static.yml` also exists but only triggers on a `main` branch, which this repo does not use.)
 - After a PR is merged, restart the branch from the latest base before more work:
   `git fetch origin mainu && git checkout -B <branch> origin/mainu`. Check for unmerged commits first
   (`git log origin/mainu..HEAD`); an earlier reset dropped commits twice.
