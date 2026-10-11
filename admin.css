@@ -637,3 +637,129 @@
   }
   .telegram-admin-status.pending .telegram-admin-badge{ background:var(--warn-soft); color:var(--warn); }
   .telegram-admin-status.linked .telegram-admin-badge{ background:var(--good-soft); color:var(--good); }
+
+/* ===== Order chat (admin): same look as the customer's order chat ===== */
+.card.chat-panel{
+  padding:0; overflow:hidden; display:flex; flex-direction:column;
+  border:2px solid rgba(212,168,67,.65); border-radius:22px;
+  background:linear-gradient(160deg,rgba(255,251,240,.96),rgba(233,215,255,.82));
+  box-shadow:0 0 0 4px rgba(168,124,224,.16), 0 18px 40px rgba(93,72,137,.18), inset 0 1px rgba(255,255,255,.85);
+}
+.chat-head{
+  display:flex; align-items:center; gap:10px; padding:13px 14px;
+  background:linear-gradient(135deg,#d4a843,#a87ce0); color:#2c1f42;
+}
+.chat-head-avatar{
+  flex:0 0 auto; width:40px; height:40px; border-radius:50%; background:#fff; color:#7a35c7;
+  display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px;
+  box-shadow:0 0 0 2px rgba(255,255,255,.5);
+}
+.chat-head-info{ flex:1; min-width:0; }
+.chat-head-name{ font-weight:800; font-size:14.5px; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.chat-head-sub{ display:flex; align-items:center; gap:5px; font-size:11px; color:rgba(44,31,66,.78); margin-top:2px; }
+.chat-head-dot{ width:7px; height:7px; border-radius:50%; background:#22c55e; box-shadow:0 0 6px #22c55e; flex:0 0 auto; }
+.chat-head-tag{
+  flex:0 0 auto; align-self:flex-start; padding:4px 8px; border-radius:7px;
+  font-size:8.5px; font-weight:900; letter-spacing:.05em; background:rgba(255,255,255,.4); color:#2c1f42;
+}
+.chat-end-btn{
+  flex:0 0 auto; padding:6px 11px; font-size:11.5px; border-radius:999px;
+  background:rgba(255,255,255,.5); color:#2c1f42; border:1px solid rgba(255,255,255,.7);
+}
+.chat-end-btn:hover{ background:rgba(255,255,255,.75); }
+.chat-end-btn:disabled{ opacity:.7; }
+.card.chat-panel .chat-order-strip{
+  margin:10px 12px 0; padding:8px 12px; border-radius:12px; font-size:12px; color:#5b4a7a;
+  background:rgba(255,255,255,.62); border:1px solid rgba(212,168,67,.35);
+}
+.card.chat-panel .chat-order-strip b{ color:#2c1f42; }
+.card.chat-panel .chat-ended-banner{ margin:10px 12px 0; }
+.card.chat-panel .chat-messages{
+  margin:10px 0 0; padding:14px; gap:6px; min-height:260px; max-height:46vh;
+  background:rgba(255,255,255,.35);
+}
+.chat-panel .empty-note{ color:#8c7cb0; }
+.chat-panel .msg-row{ max-width:84%; }
+.chat-panel .bubble{ max-width:100%; padding:9px 14px; border-radius:18px; font-size:13.5px; }
+.chat-panel .bubble.admin{
+  background:linear-gradient(135deg,#7a35c7,#b86bff); color:#fff; border-bottom-right-radius:5px;
+  box-shadow:0 3px 10px rgba(122,53,199,.25);
+}
+.chat-panel .bubble.customer{
+  background:rgba(255,255,255,.85); color:#372b52; border:1px solid rgba(212,168,67,.38);
+  border-bottom-left-radius:5px; box-shadow:0 1px 3px rgba(93,72,137,.08);
+}
+.chat-panel .bubble-image{ cursor:zoom-in; max-height:240px; object-fit:cover; }
+.chat-panel .msg-avatar{ width:24px; height:24px; font-size:10.5px; }
+.chat-panel .chat-input-row{ margin:0; padding:10px 12px 12px; gap:8px; align-items:center; background:rgba(255,255,255,.28); }
+.chat-panel .chat-input-row input[type="text"]{
+  flex:1 1 auto; min-width:0; margin:0; border-radius:999px; padding:10px 15px; border-color:rgba(168,124,224,.4); background:#fff;
+}
+.chat-panel .chat-attach-btn{
+  width:40px; height:40px; background:rgba(255,255,255,.7); border:1px solid rgba(212,168,67,.45); color:#5b4a7a;
+}
+.chat-panel .chat-attach-btn svg{ width:17px; height:17px; }
+.chat-panel .chat-attach-btn:hover,
+.chat-panel .chat-attach-btn.active{ background:#f2ecff; color:#6d28d9; border-color:#a87ce0; }
+.chat-send-btn{
+  flex:0 0 auto; width:40px; height:40px; padding:0; border-radius:50%;
+  background:linear-gradient(135deg,#7a35c7,#b86bff); box-shadow:0 4px 12px rgba(122,53,199,.35);
+}
+.chat-send-btn:hover{ background:linear-gradient(135deg,#6d28d9,#a855f7); }
+.chat-send-btn svg{ width:17px; height:17px; }
+.chat-panel .chat-image-preview{ margin:0; padding:8px 14px 0; }
+
+/* template popover (Email / Password / 2FA) */
+.tpl-box{
+  margin:0 12px 8px; padding:11px 12px 12px; border-radius:16px; background:#fff;
+  border:1px solid rgba(168,124,224,.5); box-shadow:0 10px 26px rgba(93,72,137,.2);
+  animation:tplIn .22s cubic-bezier(.32,.72,0,1);
+}
+@keyframes tplIn{ from{ opacity:0; transform:translateY(8px) scale(.98); } to{ opacity:1; transform:none; } }
+.tpl-box-title{ display:flex; align-items:center; flex-wrap:wrap; gap:7px; font-size:12.5px; font-weight:800; color:#2c1f42; margin-bottom:9px; }
+.tpl-box-title .icon{ color:#7a35c7; }
+.tpl-box-hint{ margin-left:auto; font-size:10.5px; font-weight:600; color:#8c7cb0; }
+.tpl-field{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+.tpl-field label{ flex:0 0 64px; font-size:10px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#8c7cb0; }
+.tpl-field input{ margin:0; padding:8px 11px; font-size:13px; border-radius:10px; }
+.tpl-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:9px; }
+.tpl-actions button{ padding:8px 14px; font-size:12.5px; border-radius:999px; }
+.tpl-actions button:not(.ghost){ background:linear-gradient(135deg,#7a35c7,#b86bff); }
+
+/* account-details card inside a bubble: one copy button per line */
+.chat-panel .msg-row:has(.bubble.cred){ max-width:96%; }
+.chat-panel .bubble.cred{ background:none; border:0; box-shadow:none; padding:0; white-space:normal; }
+.cred-card{
+  min-width:290px; overflow:hidden; background:#fff; border:1px solid rgba(168,124,224,.45);
+  border-radius:16px; box-shadow:0 6px 16px rgba(93,72,137,.15); color:#2a1a55; text-align:left;
+}
+.cred-head{
+  display:flex; align-items:center; gap:7px; padding:8px 12px; font-size:11.5px; font-weight:800; color:#4b2a8a;
+  background:linear-gradient(135deg,#f3ebff,#fbf6e8); border-bottom:1px solid #eee5fb;
+}
+.cred-head svg{ width:14px; height:14px; color:#7a35c7; }
+.cred-row{ display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"label btn" "value btn"; column-gap:10px; row-gap:2px; align-items:center; padding:8px 9px 8px 12px; }
+.cred-row + .cred-row{ border-top:1px dashed #ece6f7; }
+.cred-label{ grid-area:label; font-size:9.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#8c7cb0; }
+.cred-value{ grid-area:value; min-width:0; overflow-wrap:anywhere; font-weight:700; font-size:12.5px; line-height:1.35; color:#2a1a55 !important; font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; user-select:text; }
+.cred-card .cred-copy{
+  grid-area:btn; width:30px; height:30px; padding:0; border-radius:9px;
+  background:#f4f0fa; border:1px solid #e3d9f6; color:#6231c8; transition:background .15s, color .15s, transform .15s;
+}
+.cred-card .cred-copy:hover{ background:#ebe3fa; }
+.cred-card .cred-copy:active{ transform:scale(.92); }
+.cred-card .cred-copy svg{ width:15px; height:15px; }
+.cred-card .cred-copy.copied{ background:#dcfce7; border-color:#a7e9c0; color:#16a34a; }
+
+/* narrow screens: keep the chat header readable and the account card inside the panel */
+.chat-head-sub span:last-child{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.chat-panel .bubble.cred{ min-width:0; }
+.cred-card{ max-width:100%; }
+@media (max-width:600px){
+  .chat-head{ padding:11px 12px; gap:9px; }
+  .chat-head-tag{ display:none; }
+  .cred-card{ min-width:0; width:270px; }
+  .chat-panel .msg-row:has(.bubble.cred){ max-width:100%; }
+  .tpl-box-hint{ margin-left:0; flex-basis:100%; }
+  .tpl-field label{ flex-basis:58px; }
+}
