@@ -126,12 +126,14 @@
     </div>
   </div>
 <script>
-/* Intro: a calm "liquid glass" scene -- a soft pastel gradient with dew drops
-   and glass droplets on it, where the logo condenses into a frosted glass tile
-   and is wiped in by a wet front, then a liquid-edged curtain lifts.
-   WebGL, one canvas. Shown once per browser session (?intro=1 shows it again);
-   tap or any key skips. Plain CSS fallback without WebGL; skipped for
-   reduced-motion / data-saver; a hard failsafe always removes it. */
+/* Intro: a clean "liquid glass" scene -- a soft pastel gradient and one frosted
+   glass tile that condenses from a droplet, refracts the gradient behind it and
+   is wiped in with the logo by a wet front; then a liquid-edged curtain lifts.
+   WebGL, one canvas, drawn at the screen's native pixel resolution (up to 4K) on
+   every display refresh (so 90Hz screens get 90fps); if the device can't keep up
+   the resolution is stepped down automatically. Shown once per browser session
+   (?intro=1 shows it again); tap or any key skips. Plain CSS fallback without
+   WebGL; skipped for reduced-motion / data-saver; a hard failsafe removes it. */
 (function(){
   var splash=document.getElementById("introSplash");
   if(!splash) return;
@@ -173,53 +175,21 @@
   var VERT="attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0.,1.);}";
   var FRAG=
     "#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n"+
-    "varying vec2 v;uniform vec2 uRes,uC;uniform float uT,uIn,uTile,uLogo,uSweep,uHS,uDew;uniform sampler2D uTex;\n"+
+    "varying vec2 v;uniform vec2 uRes,uC;uniform float uT,uIn,uTile,uLogo,uSweep,uHS;uniform sampler2D uTex;\n"+
     "float hash(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}\n"+
-    "float h1(float n){return fract(sin(n*127.1)*43758.5453);}\n"+
     "float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}\n"+
     "const mat2 M=mat2(.8,-.6,.6,.8);\n"+
     "float fbm3(vec2 p){float a=.5,s=0.;for(int i=0;i<3;i++){s+=a*noise(p);p=M*p*2.03+3.7;a*=.5;}return s;}\n"+
-    /* the soft pastel gradient that everything refracts */
+    /* the clean pastel gradient the glass refracts */
     "vec3 bgCol(vec2 p,float t){\n"+
     " vec2 a=vec2(sin(t*.31)*.5-.3,cos(t*.27)*.42+.22),b=vec2(cos(t*.23)*.55+.35,sin(t*.35)*.45-.25),c=vec2(sin(t*.19+2.)*.45,cos(t*.29+1.)*.55);\n"+
-    " float wa=exp(-dot(p-a,p-a)*2.1),wb=exp(-dot(p-b,p-b)*1.9),wc=exp(-dot(p-c,p-c)*2.5);\n"+
-    " vec3 col=vec3(.955,.94,1.);\n"+
-    " col=mix(col,vec3(.76,.68,1.),wa*.95);col=mix(col,vec3(.62,.82,1.),wb*.95);col=mix(col,vec3(1.,.74,.9),wc*.9);\n"+
-    " col+=.035*sin(p.x*5.+t*.6)*sin(p.y*4.-t*.5);\n"+
+    " float wa=exp(-dot(p-a,p-a)*1.9),wb=exp(-dot(p-b,p-b)*1.7),wc=exp(-dot(p-c,p-c)*2.2);\n"+
+    " vec3 col=vec3(.965,.955,1.);\n"+
+    " col=mix(col,vec3(.72,.64,1.),wa*.95);col=mix(col,vec3(.55,.78,1.),wb*.95);col=mix(col,vec3(1.,.7,.88),wc*.9);\n"+
+    " col+=exp(-pow(p.x*.6+p.y*.8-sin(t*.2)*.4-.1,2.)*7.)*.13;\n"+
+    " col+=.03*sin(p.x*5.+t*.6)*sin(p.y*4.-t*.5);\n"+
     " return col;}\n"+
-    /* a glass bead: lens-refracts the gradient, bright rim, specular glints, soft shadow */
-    "vec3 bead(vec3 base,vec2 p,vec2 pc,float r,float t){\n"+
-    " vec2 d=p-pc;float len=length(d);\n"+
-    " vec2 ds=p-pc-vec2(.012,-.02)*r*7.;float sh=1.-smoothstep(r*.95,r*1.55,length(ds));\n"+
-    " base*=1.-sh*.16*(1.-smoothstep(r*.98,r*1.02,len));\n"+
-    " if(len>r) return base;\n"+
-    " float k=len/r;vec2 n=d/r;\n"+
-    " vec3 lens=bgCol(pc-d*.82+n*(1.-k)*r*.25,t);\n"+
-    " lens=lens*1.02+.012;\n"+
-    " float rimW=smoothstep(.72,1.,k);\n"+
-    " lens=mix(lens,lens*.7,rimW*(.55-.55*dot(n,vec2(-.6,.8))));\n"+
-    " lens+=rimW*.22*pow(max(dot(n,normalize(vec2(-.55,.75))),0.),2.);\n"+
-    " lens+=(1.-smoothstep(.0,.2,length(n-vec2(-.36,.42))))*.8;\n"+
-    " lens+=(1.-smoothstep(.0,.11,length(n-vec2(.38,-.45))))*.28;\n"+
-    " float edge=1.-smoothstep(.96,1.,k);\n"+
-    " return mix(base,lens,edge);}\n"+
-    "vec3 dew(vec3 base,vec2 p,float t,float sc,float seed,float grow){\n"+
-    " vec2 q=p*sc;vec2 id=floor(q);vec2 f=fract(q);\n"+
-    " float hh=hash(id+seed);\n"+
-    " if(hh<.74||grow<.01) return base;\n"+
-    " vec2 off=.5+(vec2(hash(id+seed+1.7),hash(id+seed+3.1))-.5)*.4;\n"+
-    " float r=(.1+.15*hash(id+seed+5.3))*grow*(.94+.06*sin(t*1.2+hh*30.));\n"+
-    " vec2 pc=(id+off)/sc;\n"+
-    " return bead(base,p,pc,r/sc,t);}\n"+
-    "vec3 scene(vec2 p,float t){\n"+
-    " vec3 col=bgCol(p,t);\n"+
-    " col=dew(col,p,t,16.,1.3,smoothstep(.1,1.3,uDew));\n"+
-    " col=dew(col,p,t,9.,7.9,smoothstep(.25,1.4,uDew));\n"+
-    " for(int i=0;i<4;i++){float fi=float(i);\n"+
-    "  vec2 pc=vec2((h1(fi+1.)-.5)*uRes.x/uRes.y*.95+sin(t*.17+fi*2.7)*.035,(h1(fi+9.)-.5)*.92+cos(t*.15+fi*2.1)*.035);\n"+
-    "  float r=(.05+.06*h1(fi+4.))*smoothstep(.2+fi*.1,1.5+fi*.1,uDew);\n"+
-    "  col=bead(col,p,pc,r,t);}\n"+
-    " return col;}\n"+
+    "vec3 scene(vec2 p,float t){return bgCol(p,t);}\n"+
     "float rbox(vec2 p,float hs,float rr){vec2 q=abs(p)-vec2(hs-rr);return length(max(q,0.))+min(max(q.x,q.y),0.)-rr;}\n"+
     "float tileSD(vec2 tp){\n"+
     " float hs=uHS*uTile;float ang=atan(tp.y,tp.x);\n"+
@@ -239,17 +209,22 @@
     "  col*=1.-sh*.2*vec3(.55,.7,.4);\n"+
     "  if(sd<0.){\n"+
     "   float inner=clamp(-sd/(hs*.34+1e-4),0.,1.);float edgeF=1.-inner;\n"+
-    "   vec2 pr=p-n*edgeF*edgeF*hs*.42;\n"+
-    "   float bl=.045*uHS*4.;\n"+
-    "   vec3 fr=(bgCol(pr,t)*2.+bgCol(pr+vec2(bl,0.),t)+bgCol(pr-vec2(bl,0.),t)+bgCol(pr+vec2(0.,bl),t)+bgCol(pr-vec2(0.,bl),t))/6.;\n"+
-    "   vec3 gl=mix(fr,vec3(1.),.4);\n"+
+    "   vec2 pr=p-n*edgeF*edgeF*hs*.5;\n"+
+    "   float bl=.05*uHS*3.;float ca=.012*edgeF*uHS*6.;\n"+
+    "   vec3 fr;fr.r=bgCol(pr+n*ca,t).r;fr.g=bgCol(pr,t).g;fr.b=bgCol(pr-n*ca,t).b;\n"+
+    "   vec3 bw=(bgCol(pr+vec2(bl,0.),t)+bgCol(pr-vec2(bl,0.),t)+bgCol(pr+vec2(0.,bl),t)+bgCol(pr-vec2(0.,bl),t))*.25;\n"+
+    "   fr=mix(fr,bw,.6);\n"+
+    "   vec3 gl=mix(fr*1.04,vec3(1.),.2);\n"+
     "   float band=1.-smoothstep(0.,hs*.075,-sd);\n"+
     "   float lit=max(dot(n,normalize(vec2(-.6,.8))),0.);\n"+
+    "   gl*=1.-.07*edgeF*(1.-lit);\n"+
     "   gl+=band*(.25+1.1*pow(lit,2.))*vec3(1.,.98,1.);\n"+
     "   gl+=band*pow(max(dot(n,normalize(vec2(.6,-.8))),0.),2.)*vec3(.55,.8,1.)*.5;\n"+
     "   vec2 u=tp/(hs+1e-4);\n"+
     "   gl+=smoothstep(.55,.0,abs(u.x*.7+u.y*.7+.62))*.2*(1.-smoothstep(.5,1.,u.y*-.5+.5));\n"+
-    "   gl+=edgeF*edgeF*vec3(.9,.94,1.)*.08;\n"+
+    "   gl+=edgeF*edgeF*vec3(.9,.94,1.)*.1;\n"+
+    "   gl+=pow(edgeF,3.)*(vec3(.55,.75,1.)*max(-n.x,0.)+vec3(1.,.6,.85)*max(n.x,0.))*.28;\n"+
+    "   gl+=(hash(gl_FragCoord.xy*.7)-.5)*.018;\n"+
     "   vec2 lu=tp/(uHS*2.*.86)+.5;\n"+
     "   float o=ord(lu);float thr=mix(-.18,1.12,uLogo);\n"+
     "   float m=1.-smoothstep(thr-.12,thr+.01,o);\n"+
@@ -269,15 +244,15 @@
     "   col=mix(col,gl,aa);\n"+
     "  }\n"+
     " }\n"+
-    " col*=1.-.09*dot(p,p);\n"+
-    " col+=(hash(gl_FragCoord.xy+fract(t)*91.)-.5)*(1./150.);\n"+
+    " col*=1.-.07*dot(p,p);\n"+
+    " col+=(hash(gl_FragCoord.xy+fract(t)*91.)-.5)*(1./170.);\n"+
     " col=mix(vec3(.965,.95,1.),col,clamp(uIn,0.,1.));\n"+
     " gl_FragColor=vec4(col,1.);\n"+
     "}\n";
 
   var gl=null,prog=null,u={},tex=null,texReady=false,markStart=null;
   try{
-    gl=cv.getContext("webgl",{antialias:false,alpha:false,powerPreference:"high-performance"})||cv.getContext("experimental-webgl");
+    gl=cv.getContext("webgl",{antialias:false,alpha:false,desynchronized:true,powerPreference:"high-performance"})||cv.getContext("experimental-webgl");
     if(!gl) throw new Error("no webgl");
     glx=gl;
     function sh(type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s;}
@@ -286,14 +261,15 @@
     gl.useProgram(prog);
     var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
     var loc=gl.getAttribLocation(prog,"p");gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-    ["uRes","uC","uT","uIn","uTile","uLogo","uSweep","uHS","uDew","uTex"].forEach(function(n){u[n]=gl.getUniformLocation(prog,n);});
+    ["uRes","uC","uT","uIn","uTile","uLogo","uSweep","uHS","uTex"].forEach(function(n){u[n]=gl.getUniformLocation(prog,n);});
   }catch(err){ if(window.console) console.warn("intro: WebGL unavailable, using fallback:",err&&err.message); fallback(); return; }
 
-  var tileC=[0,0],tileHS=.2;
+  /* native resolution (4K cap = 8.4M pixels); q steps it down if frames get slow */
+  var q=1, MAXPX=8400000, tileC=[0,0], tileHS=.2;
   function layout(){
     var w=splash.clientWidth,h=splash.clientHeight;
-    var dpr=Math.min(window.devicePixelRatio||1,2);
-    dpr=Math.min(dpr,Math.sqrt(2600000/(w*h)));
+    var dpr=Math.min(window.devicePixelRatio||1,3)*q;
+    dpr=Math.min(dpr,Math.sqrt(MAXPX/(w*h)));
     cv.width=Math.max(2,Math.round(w*dpr));cv.height=Math.max(2,Math.round(h*dpr));
     var r=mark.getBoundingClientRect();
     tileC=[((r.left+r.width/2)/w-.5)*(w/h),.5-(r.top+r.height/2)/h];
@@ -318,17 +294,42 @@
   var LEAVE_AT=3.2, titleShown=false;
   function ease(x){x=Math.min(1,Math.max(0,x));return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;}
   function backOut(x){x=Math.min(1,Math.max(0,x));var c1=1.5,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2);}
+
+  /* frame pacing: after a short warm-up, compare the average frame time with the
+     best one seen (= the display's refresh interval). If we can't hold it, drop
+     the resolution a step (x0.78, or x0.55 if very slow; at most 4 times) and measure again. */
+  var last=0, frames=0, dts=[], adapts=0, steady=false;
+  var slow=0;
+  function pace(now){
+    var dt=now-last; last=now; frames++;
+    if(steady||frames<3||dt<=0) return;
+    // very slow device: two long frames in a row -> halve the resolution right away
+    slow=dt>150?slow+1:0;
+    if(slow>=2&&adapts<4&&q>.3){ slow=0; adapts++; q*=.5; dts.length=0; layout(); splash.setAttribute("data-q",q.toFixed(2)); return; }
+    if(frames<6||dt>1500) return;
+    dts.push(dt);
+    if(dts.length<10) return;
+    var sorted=dts.slice().sort(function(a,b){return a-b;}), sum=0;
+    for(var i=0;i<dts.length;i++) sum+=dts[i];
+    var avg=sum/dts.length, best=sorted[1];
+    dts.length=0;
+    if(avg>best*1.3&&avg>13&&q>.3&&adapts<4){ adapts++; q*=(avg>40?.55:.78); layout(); }
+    else steady=true;
+    splash.setAttribute("data-q",q.toFixed(2));
+  }
+
   function frame(){
     if(done) return;
-    var t=(performance.now()-T0)/1000;
-    var tile=backOut((t-.45)/1.25), dewT=t/1.1;
+    var now=performance.now(); pace(now);
+    var t=(now-T0)/1000;
+    var tile=backOut((t-.45)/1.25);
     var logo=0,sweep=0;
     if(texReady&&markStart!==null){ var tl=t-Math.max(markStart,1.1); logo=ease(tl/1.1); sweep=Math.max(0,tl-1.1)/.8*1.9; }
     try{
       gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight);
       gl.uniform2f(u.uRes,gl.drawingBufferWidth,gl.drawingBufferHeight);gl.uniform2f(u.uC,tileC[0],tileC[1]);
       gl.uniform1f(u.uT,t);gl.uniform1f(u.uIn,t/.5);gl.uniform1f(u.uTile,tile);gl.uniform1f(u.uLogo,logo);
-      gl.uniform1f(u.uSweep,sweep);gl.uniform1f(u.uHS,tileHS);gl.uniform1f(u.uDew,dewT);
+      gl.uniform1f(u.uSweep,sweep);gl.uniform1f(u.uHS,tileHS);
       if(texReady){gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(u.uTex,0);}
       gl.drawArrays(gl.TRIANGLES,0,3);
     }catch(e){ if(window.console) console.warn("intro: draw failed, using fallback:",e&&e.message); fallback(); return; }
