@@ -10432,50 +10432,76 @@ body.light-mode .gp-bottomnav button.is-active{
 .chat-row .chat-bubble.cred{ animation:osPop .45s cubic-bezier(.34,1.56,.64,1) both; }
 
 
-/* ===== Intro: Figma-style line-art logo on plain white (see the script under #introSplash) ===== */
+/* ===== Intro: Figma-style purple-glass line-art logo on plain white (see the script under #introSplash) ===== */
 .intro-splash{
   position:fixed; inset:0; z-index:99999; display:grid; place-items:center; background:#fff;
-  cursor:pointer; touch-action:manipulation;
-  transition:opacity .6s ease;
+  cursor:pointer; touch-action:manipulation; transition:opacity .8s ease;
 }
 .intro-splash.leave{ opacity:0; pointer-events:none; }
-.intro-stack{ display:flex; flex-direction:column; align-items:center; margin-top:-3vh; transition:transform .7s cubic-bezier(.4,0,.2,1), filter .6s ease; }
+.intro-stack{ display:flex; flex-direction:column; align-items:center; margin-top:-3vh; perspective:900px; transition:transform .8s cubic-bezier(.4,0,.2,1), filter .7s ease; }
 .intro-splash.leave .intro-stack{ transform:scale(1.07); filter:blur(3px); }
-.intro-logo{ display:block; width:clamp(96px,26vw,150px); height:auto; overflow:visible; }
-.intro-logo *{ transform-box:fill-box; transform-origin:center; }
-
-/* every stroke draws itself, drifting in from a slight offset and settling with a little overshoot */
-.il-p{
-  stroke-dasharray:1 2; stroke-dashoffset:1.03; opacity:0;
-  animation:ilDraw var(--dur,.8s) cubic-bezier(.65,0,.25,1) var(--dl,0s) forwards,
-            ilSettle calc(var(--dur,.8s) + .45s) cubic-bezier(.22,.95,.3,1) var(--dl,0s) both;
+.intro-logo-wrap{ animation:ilFloat 4.2s ease-in-out 4.2s infinite; }
+.intro-logo{
+  display:block; width:clamp(120px,34vw,210px); height:auto; overflow:visible;
+  filter:drop-shadow(0 10px 12px rgba(98,49,200,.2));
+  animation:ilTilt 3.8s cubic-bezier(.22,.8,.25,1) .1s both;
 }
-.il-g { --dl:.25s; --dur:.95s; --dx:-12px; --dy:10px;  --rot:-7deg; }
-.il-g2{ --dl:.55s; --dur:.8s;  --dx:-8px;  --dy:6px;   --rot:-5deg; }
-.il-a { --dl:.85s; --dur:.5s;  --dx:6px;   --dy:-10px; --rot:6deg; }
-.il-h1{ --dl:1s;   --dur:.5s;  --dx:10px;  --dy:12px;  --rot:5deg; }
-.il-h2{ --dl:1.1s; --dur:.5s;  --dx:12px;  --dy:10px;  --rot:-5deg; }
-.il-h3{ --dl:1.3s; --dur:.35s; --dx:0px;   --dy:8px;   --rot:0deg; }
+.intro-logo *{ transform-box:fill-box; transform-origin:center; }
+@keyframes ilTilt{
+  0%{ transform:rotateY(-26deg) rotateX(10deg) scale(.95); }
+  100%{ transform:none; }
+}
+@keyframes ilFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-4px); } }
+
+/* each stroked piece = four stacked layers: depth shadow, purple glass, core, specular edge */
+.il-piece{
+  stroke-dasharray:1 2; stroke-dashoffset:1.03; opacity:0;
+  animation:ilDraw var(--dur,1s) cubic-bezier(.6,0,.25,1) var(--dl,0s) forwards,
+            ilSettle calc(var(--dur,1s) + .55s) cubic-bezier(.22,.95,.3,1) var(--dl,0s) both;
+}
+.il-piece path{ fill:none; }
+.l-sh   { stroke:#5a2fc4; stroke-opacity:.22; stroke-width:calc(var(--w)*1.55px); transform:translate(2px,3.4px); }
+.l-glass{ stroke:url(#ilGlass); stroke-width:calc(var(--w)*1.4px); }
+.l-core { stroke:url(#ilCore);  stroke-width:calc(var(--w)*.72px); }
+.l-hi   { stroke:#fff; stroke-opacity:.9; stroke-width:calc(var(--w)*.2px); transform:translate(-1.1px,-1.3px); }
+.il-g { --dl:.3s;  --dur:1.6s; --dx:-14px; --dy:12px;  --rot:-7deg; }
+.il-g2{ --dl:1s;   --dur:1.2s; --dx:-9px;  --dy:7px;   --rot:-5deg; }
+.il-a { --dl:1.7s; --dur:.9s;  --dx:8px;   --dy:-12px; --rot:7deg; }
+.il-h1{ --dl:2.1s; --dur:.8s;  --dx:10px;  --dy:14px;  --rot:5deg; }
+.il-h2{ --dl:2.3s; --dur:.8s;  --dx:12px;  --dy:12px;  --rot:-5deg; }
+.il-h3{ --dl:2.8s; --dur:.55s; --dx:0px;   --dy:9px;   --rot:0deg; }
 @keyframes ilDraw{ 0%{ stroke-dashoffset:1.03; opacity:0; } 3%{ opacity:1; } 100%{ stroke-dashoffset:0; opacity:1; } }
 @keyframes ilSettle{
   0%{ transform:translate(var(--dx,0),var(--dy,0)) rotate(var(--rot,0deg)) scale(.92); }
   70%{ transform:translate(calc(var(--dx,0)*-.07),calc(var(--dy,0)*-.07)) rotate(calc(var(--rot,0deg)*-.05)) scale(1.02); }
   100%{ transform:none; }
 }
-/* the four d-pad buttons pop in one after another */
-.il-d{ transform:scale(0); animation:ilPop .55s cubic-bezier(.34,1.8,.5,1) var(--dl,0s) forwards; }
-.il-d1{ --dl:1.45s; } .il-d3{ --dl:1.55s; } .il-d4{ --dl:1.65s; } .il-d2{ --dl:1.75s; }
-@keyframes ilPop{ from{ transform:scale(0); } to{ transform:scale(1); } }
-/* once it has formed: a small breath and one soft ring */
-.il-all{ animation:ilBreath .7s cubic-bezier(.3,0,.3,1) 2.05s both; }
-@keyframes ilBreath{ 0%,100%{ transform:scale(1); } 45%{ transform:scale(1.045); } }
-.il-ring{ fill:none; stroke:#b8a2ff; stroke-width:1.6; opacity:0; animation:ilRing 1.1s cubic-bezier(.2,.7,.3,1) 2.05s both; }
-@keyframes ilRing{ 0%{ opacity:.55; transform:scale(.6); } 100%{ opacity:0; transform:scale(1.7); } }
+/* the arrow head gets a faint glass fill once its outline is drawn */
+.il-fill{ fill:url(#ilGlass); stroke:none; opacity:0; animation:ilFade .7s ease 2.4s forwards; }
+@keyframes ilFade{ to{ opacity:.55; } }
+
+/* d-pad: four glossy glass buttons with an arrow each */
+.il-d{ transform:scale(0); animation:ilPop .7s cubic-bezier(.34,1.8,.5,1) var(--dl,0s) forwards; }
+.il-d1{ --dl:3s; } .il-d3{ --dl:3.2s; } .il-d4{ --dl:3.4s; } .il-d2{ --dl:3.6s; } .il-d5{ --dl:3.9s; }
+@keyframes ilPop{ from{ transform:scale(0) rotate(-40deg); } to{ transform:scale(1) rotate(0); } }
+.b-sh{ fill:#5a2fc4; opacity:.25; }
+.b-body{ fill:url(#ilBtn); stroke:#7f5cea; stroke-width:1.2; }
+.b-bevel{ fill:none; stroke:#fff; stroke-opacity:.38; stroke-width:.8; }
+.b-gloss{ fill:none; stroke:#fff; stroke-width:1.2; stroke-linecap:round; opacity:.95; }
+.b-arrow{ fill:#fff; opacity:.92; }
+
+/* finish: one soft ring, a small breath, a floor shadow that grounds the mark */
+.il-all{ animation:ilBreath .8s cubic-bezier(.3,0,.3,1) 4.1s both; }
+@keyframes ilBreath{ 0%,100%{ transform:scale(1); } 45%{ transform:scale(1.04); } }
+.il-ring{ fill:none; stroke:#b8a2ff; stroke-width:1.4; opacity:0; animation:ilRing 1.3s cubic-bezier(.2,.7,.3,1) 4.1s both; }
+@keyframes ilRing{ 0%{ opacity:.5; transform:scale(.6); } 100%{ opacity:0; transform:scale(1.7); } }
+.il-floor{ fill:#6a3fd6; opacity:0; transform-origin:center; animation:ilFloor 1.2s ease 3.4s forwards; }
+@keyframes ilFloor{ from{ opacity:0; transform:scale(.4); } to{ opacity:.22; transform:scale(1); } }
 
 .intro-title{
-  display:flex; gap:.6em; margin-top:clamp(18px,4vh,30px); padding-left:.32em;
-  font-weight:700; letter-spacing:.32em; font-size:clamp(13px,3.6vw,17px); line-height:1; color:#4a3a86;
-  opacity:0; transform:translateY(8px); animation:ilText .8s ease 1.9s forwards;
+  display:flex; gap:.6em; margin-top:clamp(20px,4.4vh,34px); padding-left:.32em;
+  font-weight:700; letter-spacing:.32em; font-size:clamp(13px,3.6vw,18px); line-height:1; color:#4a3a86;
+  opacity:0; transform:translateY(8px); animation:ilText 1s ease 3.9s forwards;
 }
 .intro-title .acc{ background:linear-gradient(115deg,#9a7cf5,#6231c8); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
 @keyframes ilText{ to{ opacity:1; transform:none; } }
