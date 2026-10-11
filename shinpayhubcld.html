@@ -17,7 +17,7 @@
        this a browser that already has admin.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time admin.css changes. -->
-  <link rel="stylesheet" href="admin.css?v=8">
+  <link rel="stylesheet" href="admin.css?v=11">
 
 </head>
 <body>
@@ -128,17 +128,36 @@
             <div class="order-actions" id="orderApproveRow"></div>
           </div>
           <div class="card chat-panel">
-            <div class="card-title" style="justify-content:space-between;">
-              <span style="display:flex;align-items:center;gap:8px;"><span class="icon" style="font-size:16px;line-height:1;">👾</span>Chat</span>
-              <button type="button" id="endChatBtn" class="ghost" style="padding:6px 12px;font-size:11.5px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>End Chat</button>
+            <div class="chat-head">
+              <span class="chat-head-avatar" id="chatHeadAvatar">?</span>
+              <div class="chat-head-info">
+                <div class="chat-head-name" id="chatHeadName">Customer</div>
+                <div class="chat-head-sub"><span class="chat-head-dot"></span><span id="chatHeadSub">Order chat</span></div>
+              </div>
+              <span class="chat-head-tag">ORDER CHAT</span>
+              <button type="button" id="endChatBtn" class="chat-end-btn"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>End Chat</button>
             </div>
             <div id="chatOrderStrip" class="chat-order-strip"></div>
-            <div id="chatCustomerHeader"></div>
+            <div id="chatCustomerHeader" class="hidden"></div>
             <div id="chatEndedBanner" class="chat-ended-banner hidden">This conversation has ended.</div>
             <div id="chatMessages" class="chat-messages"></div>
+            <div id="chatTemplateBox" class="tpl-box hidden">
+              <div class="tpl-box-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>Account details<span class="tpl-box-hint">Customer gets a copy button on each line</span></div>
+              <div class="tpl-field"><label for="tplEmail">Email</label><input id="tplEmail" type="text" placeholder="account@email.com" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+              <div class="tpl-field"><label for="tplPassword">Password</label><input id="tplPassword" type="text" placeholder="Password" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+              <div class="tpl-field"><label for="tplTwofa">2FA</label><input id="tplTwofa" type="text" placeholder="2FA code or secret key" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+              <div class="tpl-actions">
+                <button type="button" id="tplCancelBtn" class="ghost">Cancel</button>
+                <button type="button" id="tplSendBtn"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Send details</button>
+              </div>
+            </div>
+            <div id="chatImagePreview" class="chat-image-preview hidden"></div>
             <form id="chatForm" class="chat-input-row">
+              <input id="chatImageInput" type="file" accept="image/*" class="hidden" />
+              <button type="button" id="chatAttachBtn" class="chat-attach-btn" aria-label="Attach image" title="Attach image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></button>
+              <button type="button" id="chatTplBtn" class="chat-attach-btn" aria-label="Account details template" title="Account details template" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></button>
               <input id="chatInput" type="text" placeholder="Reply to customer…" autocomplete="off" />
-              <button type="submit"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Send</button>
+              <button type="submit" class="chat-send-btn" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
             </form>
           </div>
         </div>
@@ -923,6 +942,11 @@ function renderChatCustomerHeader(label){
   if(el) el.innerHTML = `<div class="chat-customer-header">${ICON_USER}Chatting with <b>${escapeHtml(label)}</b></div>`;
   const clean = String(label).replace("@", "").replace("Loading…", "").trim();
   currentChatCustomerInitial = (clean[0] || "?").toUpperCase();
+  // The chat header shows who this is (textContent: label can be customer-controlled).
+  const headName = document.getElementById("chatHeadName");
+  const headAvatar = document.getElementById("chatHeadAvatar");
+  if(headName) headName.textContent = label;
+  if(headAvatar) headAvatar.textContent = currentChatCustomerInitial;
 }
 
 const ICON_SUPPORT = `👾`;
@@ -1910,7 +1934,7 @@ async function selectOrder(id){
   orderChannel
     .on("broadcast", { event: "new_message" }, (msg) => {
       if(msg.payload.sender === "customer" && selectedOrderId === order.id){
-        appendBubble("customer", msg.payload.body);
+        appendBubble("customer", msg.payload.body, msg.payload.image_url);
       }
     })
     .subscribe();
@@ -1934,6 +1958,10 @@ async function selectOrder(id){
   `;
   document.getElementById("chatOrderStrip").innerHTML =
     `<span>${escapeHtml(order.order_code)}</span><b>${Number(order.amount).toLocaleString()} Ks</b>${statusBadge(order.archived ? "archived" : order.status)}`;
+  const headSub = document.getElementById("chatHeadSub");
+  if(headSub) headSub.textContent = "Order " + order.order_code;
+  closeChatTemplate();
+  clearChatAttach("chatImageInput", "chatImagePreview");
   updateChatEndedUI(order);
   renderChatCustomerHeader(order.user_id ? "Loading…" : (order.account_info || "this customer (guest)"));
   if(order.user_id){
@@ -2022,6 +2050,7 @@ function updateChatEndedUI(order){
   const closed = Boolean(order.chat_closed);
   banner?.classList.toggle("hidden", !closed);
   form?.classList.toggle("is-disabled", closed);
+  if(closed) closeChatTemplate();
   if(endBtn){
     endBtn.disabled = closed;
     endBtn.textContent = closed ? "Chat Ended" : "";
@@ -2055,7 +2084,66 @@ async function setArchived(order, archived){
   selectOrder(order.id);
 }
 
-function appendBubble(sender, body){
+// ---- Account-details template ----------------------------------------
+// The admin fills Email / Password / 2FA in a small box and sends it as one
+// message. It travels as plain text ("[Account details]" + "Label: value"
+// lines) so nothing in the database changes; the customer's page recognises
+// the marker and draws it as a card with a copy button on every line.
+const CRED_MARK = "[Account details]";
+function buildCredBody(fields){
+  const lines = fields.filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`);
+  return lines.length ? CRED_MARK + "\n" + lines.join("\n") : "";
+}
+function parseCredBody(body){
+  if(typeof body !== "string" || !body.startsWith(CRED_MARK)) return null;
+  const rows = body.slice(CRED_MARK.length).split("\n").map(l => l.trim()).filter(Boolean).map(l => {
+    const i = l.indexOf(":");
+    return i < 1 ? null : [l.slice(0, i).trim(), l.slice(i + 1).trim()];
+  }).filter(r => r && r[1]);
+  return rows.length ? rows : null;
+}
+const ICON_COPY = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+const ICON_COPIED = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+const ICON_KEY = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>`;
+async function copyTextToClipboard(text){
+  try{ await navigator.clipboard.writeText(text); return true; }
+  catch(e){
+    try{
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      const ok = document.execCommand("copy"); ta.remove(); return ok;
+    }catch(_){ return false; }
+  }
+}
+function renderCredCard(rows){
+  const card = document.createElement("div");
+  card.className = "cred-card";
+  const head = document.createElement("div");
+  head.className = "cred-head";
+  head.innerHTML = ICON_KEY + "<span>Account details</span>";
+  card.appendChild(head);
+  rows.forEach(([label, value]) => {
+    const row = document.createElement("div");
+    row.className = "cred-row";
+    const l = document.createElement("span"); l.className = "cred-label"; l.textContent = label;
+    const v = document.createElement("span"); v.className = "cred-value"; v.textContent = value;
+    const btn = document.createElement("button");
+    btn.type = "button"; btn.className = "cred-copy"; btn.setAttribute("aria-label", "Copy " + label);
+    btn.innerHTML = ICON_COPY;
+    btn.addEventListener("click", async () => {
+      const ok = await copyTextToClipboard(value);
+      if(!ok){ showAdminToast("Could not copy", true); return; }
+      btn.classList.add("copied"); btn.innerHTML = ICON_COPIED;
+      setTimeout(() => { btn.classList.remove("copied"); btn.innerHTML = ICON_COPY; }, 1300);
+    });
+    row.append(l, v, btn);
+    card.appendChild(row);
+  });
+  return card;
+}
+
+function appendBubble(sender, body, imageUrl){
   const empty = chatMessages.querySelector(".empty-note");
   if(empty) empty.remove();
   const isAdmin = sender === "admin";
@@ -2072,7 +2160,23 @@ function appendBubble(sender, body){
   }
   const b = document.createElement("div");
   b.className = "bubble " + (isAdmin ? "admin" : "customer");
-  b.textContent = body;
+  const cred = parseCredBody(body);
+  if(cred){
+    b.classList.add("cred");
+    b.appendChild(renderCredCard(cred));
+  } else {
+    if(imageUrl){
+      const img = document.createElement("img");
+      img.src = imageUrl; img.alt = "Attached image"; img.className = "bubble-image";
+      img.addEventListener("click", () => window.open(imageUrl, "_blank", "noopener"));
+      b.appendChild(img);
+    }
+    if(body){
+      const t = document.createElement("div");
+      t.textContent = body;
+      b.appendChild(t);
+    }
+  }
   row.appendChild(avatar);
   row.appendChild(b);
   chatMessages.appendChild(row);
@@ -2084,23 +2188,82 @@ async function loadMessages(orderId){
   const { data, error } = await sb.from("messages").select("*").eq("order_id", orderId).order("created_at", { ascending: true });
   chatMessages.innerHTML = "";
   if(!error && data && data.length){
-    data.forEach(m => appendBubble(m.sender, m.body));
+    data.forEach(m => appendBubble(m.sender, m.body, m.image_url));
   } else {
     chatMessages.innerHTML = "<div class='empty-note'>No messages yet.</div>";
   }
+}
+
+// One place that saves + shows + broadcasts an admin message in the order
+// chat, used by the text box, the image button and the template box.
+async function sendOrderChatMessage(order, text, file){
+  if(!order || order.chat_closed || (!text && !file)) return false;
+  let imageUrl = null;
+  if(file){
+    try{ imageUrl = await uploadChatImage(file); }
+    catch(upErr){ showAdminToast("Image upload failed: " + upErr.message, true); if(!text) return false; }
+  }
+  // image_url is only sent when there is an image, so plain text keeps working
+  // even before the order-chat-images migration has been applied.
+  const row = { order_id: order.id, sender: "admin", body: text };
+  if(imageUrl) row.image_url = imageUrl;
+  const { error } = await sb.from("messages").insert(row);
+  if(error){
+    showAdminToast(imageUrl && /image_url/i.test(error.message)
+      ? "Images in order chat need the latest database update (order_chat_images)."
+      : "Send failed: " + error.message, true);
+    return false;
+  }
+  appendBubble("admin", text, imageUrl);
+  sb.channel("order-" + order.access_token).send({ type: "broadcast", event: "new_message", payload: { sender: "admin", body: text, image_url: imageUrl } });
+  return true;
 }
 
 document.getElementById("chatForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const input = document.getElementById("chatInput");
   const text = input.value.trim();
+  const file = adminChatFiles["chatImageInput"];
   const order = orders.find(o => o.id === selectedOrderId);
-  if(!text || !order || order.chat_closed) return;
+  if((!text && !file) || !order || order.chat_closed) return;
   input.value = "";
-  const { error } = await sb.from("messages").insert({ order_id: order.id, sender: "admin", body: text });
-  if(error){ showAdminToast("Send failed: " + error.message, true); return; }
-  appendBubble("admin", text);
-  sb.channel("order-" + order.access_token).send({ type: "broadcast", event: "new_message", payload: { sender: "admin", body: text } });
+  clearChatAttach("chatImageInput", "chatImagePreview");
+  await sendOrderChatMessage(order, text, file);
+});
+wireChatAttach("chatAttachBtn", "chatImageInput", "chatImagePreview");
+
+// Template box: compact popover above the input row.
+const tplBox = document.getElementById("chatTemplateBox");
+const tplBtn = document.getElementById("chatTplBtn");
+const tplFields = ["tplEmail", "tplPassword", "tplTwofa"].map(id => document.getElementById(id));
+function openChatTemplate(){
+  tplBox.classList.remove("hidden");
+  tplBtn.setAttribute("aria-expanded", "true");
+  tplBtn.classList.add("active");
+  tplFields[0]?.focus();
+  tplBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+function closeChatTemplate(){
+  if(!tplBox) return;
+  tplBox.classList.add("hidden");
+  tplBtn?.setAttribute("aria-expanded", "false");
+  tplBtn?.classList.remove("active");
+}
+tplBtn?.addEventListener("click", () => tplBox.classList.contains("hidden") ? openChatTemplate() : closeChatTemplate());
+document.getElementById("tplCancelBtn")?.addEventListener("click", closeChatTemplate);
+document.getElementById("tplSendBtn")?.addEventListener("click", async () => {
+  const order = orders.find(o => o.id === selectedOrderId);
+  const body = buildCredBody([
+    ["Email", tplFields[0].value.trim()],
+    ["Password", tplFields[1].value.trim()],
+    ["2FA", tplFields[2].value.trim()]
+  ]);
+  if(!body){ showAdminToast("Fill in at least one field first.", true); tplFields[0].focus(); return; }
+  const btn = document.getElementById("tplSendBtn");
+  btn.disabled = true;
+  const ok = await sendOrderChatMessage(order, body, null);
+  btn.disabled = false;
+  if(ok){ tplFields.forEach(f => { f.value = ""; }); closeChatTemplate(); }
 });
 
 document.getElementById("endChatBtn")?.addEventListener("click", () => {

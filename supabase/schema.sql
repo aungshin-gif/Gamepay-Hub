@@ -64,6 +64,8 @@ create table if not exists public.messages (
   body text not null,
   created_at timestamptz not null default now()
 );
+-- Optional image on a message (public URL in the "chat-images" bucket).
+alter table public.messages add column if not exists image_url text;
 
 -- 3. Admin allow-list (who may use shinpayhubcld.html) --------------------
 create table if not exists public.admins (
@@ -165,17 +167,19 @@ language sql security definer set search_path = public as $$
   select status, order_code from public.orders where access_token = p_token;
 $$;
 
-create or replace function public.get_messages(p_token uuid)
-returns table(sender text, body text, created_at timestamptz)
+drop function if exists public.get_messages(uuid);
+create function public.get_messages(p_token uuid)
+returns table(sender text, body text, created_at timestamptz, image_url text)
 language sql security definer set search_path = public as $$
-  select m.sender, m.body, m.created_at
+  select m.sender, m.body, m.created_at, m.image_url
   from public.messages m
   join public.orders o on o.id = m.order_id
   where o.access_token = p_token
   order by m.created_at asc;
 $$;
 
-create or replace function public.send_customer_message(p_token uuid, p_body text)
+drop function if exists public.send_customer_message(uuid, text);
+create function public.send_customer_message(p_token uuid, p_body text, p_image_url text default null)
 returns void
 language plpgsql security definer set search_path = public as $$
 declare v_order_id uuid; v_chat_closed boolean;
@@ -189,7 +193,17 @@ begin
   if v_chat_closed then
     raise exception 'this conversation has ended';
   end if;
-  insert into public.messages(order_id, sender, body) values (v_order_id, 'customer', p_body);
+  if coalesce(btrim(p_body), '') = '' and p_image_url is null then
+    raise exception 'empty message';
+  end if;
+  if char_length(coalesce(p_body, '')) > 4000 then
+    raise exception 'message too long';
+  end if;
+  if p_image_url is not null and p_image_url not like '%/storage/v1/object/public/chat-images/%' then
+    raise exception 'invalid image';
+  end if;
+  insert into public.messages(order_id, sender, body, image_url)
+    values (v_order_id, 'customer', coalesce(p_body, ''), p_image_url);
 end;
 $$;
 

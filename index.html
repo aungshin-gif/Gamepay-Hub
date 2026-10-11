@@ -5639,7 +5639,7 @@ function ensureOrderChannel(order){
       const isActive = currentOrder?.access_token === order.access_token;
       const watchingChat = isActive && !document.getElementById("chatView").classList.contains("hidden");
       if(watchingChat){
-        appendChatBubble("admin", msg.payload.body);
+        appendChatBubble("admin", msg.payload.body, msg.payload.image_url);
       } else {
         showToast("New message from support");
         bumpUnseenBadge();
@@ -5882,6 +5882,58 @@ function siteLogoSrc(){
   }));
 })();
 
+// "[Account details]" + "Label: value" lines, sent by the admin's template box.
+const CRED_MARK = "[Account details]";
+function parseCredBody(body){
+  if(typeof body !== "string" || !body.startsWith(CRED_MARK)) return null;
+  const rows = body.slice(CRED_MARK.length).split("\n").map(l => l.trim()).filter(Boolean).map(l => {
+    const i = l.indexOf(":");
+    return i < 1 ? null : [l.slice(0, i).trim(), l.slice(i + 1).trim()];
+  }).filter(r => r && r[1]);
+  return rows.length ? rows : null;
+}
+const CRED_ICON_COPY = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+const CRED_ICON_DONE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+const CRED_ICON_KEY = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>`;
+async function copyTextToClipboard(text){
+  try{ await navigator.clipboard.writeText(text); return true; }
+  catch(e){
+    try{
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      const ok = document.execCommand("copy"); ta.remove(); return ok;
+    }catch(_){ return false; }
+  }
+}
+function renderCredCard(rows){
+  const card = document.createElement("div");
+  card.className = "cred-card";
+  const head = document.createElement("div");
+  head.className = "cred-head";
+  head.innerHTML = CRED_ICON_KEY + "<span>Your account details</span>";
+  card.appendChild(head);
+  rows.forEach(([label, value]) => {
+    const row = document.createElement("div");
+    row.className = "cred-row";
+    const l = document.createElement("span"); l.className = "cred-label"; l.textContent = label;
+    const v = document.createElement("span"); v.className = "cred-value"; v.textContent = value;
+    const btn = document.createElement("button");
+    btn.type = "button"; btn.className = "cred-copy"; btn.setAttribute("aria-label", "Copy " + label);
+    btn.innerHTML = CRED_ICON_COPY;
+    btn.addEventListener("click", async () => {
+      const ok = await copyTextToClipboard(value);
+      if(!ok){ showToast("Could not copy. Press and hold the text to copy it."); return; }
+      btn.classList.add("copied"); btn.innerHTML = CRED_ICON_DONE;
+      showToast(label + " copied");
+      setTimeout(() => { btn.classList.remove("copied"); btn.innerHTML = CRED_ICON_COPY; }, 1300);
+    });
+    row.append(l, v, btn);
+    card.appendChild(row);
+  });
+  return card;
+}
+
 function appendChatBubble(sender, body, imageUrl){
   const box = document.getElementById("chatMessages");
   if(box.querySelector(".chat-empty")) box.innerHTML = "";
@@ -5897,17 +5949,26 @@ function appendChatBubble(sender, body, imageUrl){
   avatar.style.background = isAdmin ? "#fff" : (myPhoto ? (AVATAR_BG_PALETTE[getAvatarBg()] || "#fff") : DEFAULT_AVATAR_GRADIENT);
   const bubble = document.createElement("div");
   bubble.className = "chat-bubble " + (isAdmin ? "admin" : "customer");
-  if(imageUrl){
-    const img = document.createElement("img");
-    img.src = imageUrl;
-    img.alt = "Attached image";
-    img.className = "chat-bubble-image";
-    bubble.appendChild(img);
-  }
-  if(body){
-    const textEl = document.createElement("div");
-    textEl.textContent = body;
-    bubble.appendChild(textEl);
+  // The team's "Account details" template arrives as a card with one copy
+  // button per line (Email / Password / 2FA) instead of a plain text bubble.
+  const cred = isAdmin ? parseCredBody(body) : null;
+  if(cred){
+    bubble.classList.add("cred");
+    bubble.appendChild(renderCredCard(cred));
+  } else {
+    if(imageUrl){
+      const img = document.createElement("img");
+      img.src = imageUrl;
+      img.alt = "Attached image";
+      img.className = "chat-bubble-image";
+      img.addEventListener("click", () => window.open(imageUrl, "_blank", "noopener"));
+      bubble.appendChild(img);
+    }
+    if(body){
+      const textEl = document.createElement("div");
+      textEl.textContent = body;
+      bubble.appendChild(textEl);
+    }
   }
   if(isAdmin){ row.appendChild(avatar); row.appendChild(bubble); }
   else { row.appendChild(bubble); row.appendChild(avatar); }
@@ -5966,7 +6027,7 @@ async function openChatView(){
   const { data, error } = await supabaseClient.rpc("get_messages", { p_token: currentOrder.access_token });
   box.innerHTML = "";
   if(!error && data && data.length){
-    data.forEach(m => appendChatBubble(m.sender, m.body));
+    data.forEach(m => appendChatBubble(m.sender, m.body, m.image_url));
   } else {
     box.innerHTML = "<div class='chat-empty'>No messages yet. Say hello!</div>";
   }
@@ -6081,12 +6142,28 @@ document.getElementById("chatForm")?.addEventListener("submit", async (e) => {
     supportChannel?.send({ type: "broadcast", event: "new_message", payload: { sender: "customer", body: text, image_url: imageUrl } });
     return;
   }
-  if(!text || !supabaseClient) return;
+  const orderImage = selectedChatImageFile;
+  if((!text && !orderImage) || !supabaseClient) return;
   if(!currentOrder || currentOrder.chat_closed) return;
   input.value = "";
-  appendChatBubble("customer", text);
-  await supabaseClient.rpc("send_customer_message", { p_token: currentOrder.access_token, p_body: text });
-  orderChannel?.send({ type: "broadcast", event: "new_message", payload: { sender: "customer", body: text } });
+  clearChatImageSelection();
+  let orderImageUrl = null;
+  if(orderImage){
+    // Orders need an account, so there is always a user folder to upload into.
+    const ext = (orderImage.name.split(".").pop() || "jpg").toLowerCase();
+    const path = `${currentUser?.id || "guest"}/${crypto.randomUUID()}.${ext}`;
+    const { error: upErr } = await supabaseClient.storage.from("chat-images").upload(path, orderImage);
+    if(upErr){ showToast("Image upload failed: " + upErr.message); if(!text) return; }
+    else orderImageUrl = supabaseClient.storage.from("chat-images").getPublicUrl(path).data.publicUrl;
+  }
+  appendChatBubble("customer", text, orderImageUrl);
+  // p_image_url is only sent with an image, so plain text keeps working
+  // even before the order-chat-images migration is applied.
+  const args = { p_token: currentOrder.access_token, p_body: text };
+  if(orderImageUrl) args.p_image_url = orderImageUrl;
+  const { error: sendErr } = await supabaseClient.rpc("send_customer_message", args);
+  if(sendErr){ showToast("Message could not be sent. Please try again."); return; }
+  orderChannel?.send({ type: "broadcast", event: "new_message", payload: { sender: "customer", body: text, image_url: orderImageUrl } });
 });
 
 function clearChatImageSelection(){
