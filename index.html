@@ -1003,7 +1003,10 @@
         <section class="pv3-card" aria-label="Order preview">
           <div class="pv3-statusline">
             <span class="pv3-status" id="pvPrintingLabel"><span class="pv3-dot" aria-hidden="true"></span><span id="pvStatusText">Printing your preview&hellip;</span></span>
+            <span class="pv3-statusbtns">
+            <button type="button" class="pv3-sound" id="pvSoundBtn" aria-pressed="true" aria-label="Printer sound" title="Printer sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><g class="pv3-sound-on"><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></g><g class="pv3-sound-off"><path d="m16 9 5 6"/><path d="m21 9-5 6"/></g></svg></button>
             <button type="button" class="pv3-replay" id="pvReplayBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 2.6-6.3"/><path d="M3 4v5h5"/></svg><span>Replay</span></button>
+            </span>
           </div>
 
           <div class="pv3-printer" id="pvPrinter">
@@ -3330,9 +3333,13 @@ reviewOrderBtn?.addEventListener("click", () => {
   previewSection.classList.remove("hidden");
   document.body.classList.add("preview-mode");
   updatePreview();
+  // The checkout page was scrolled down; without this the slip opened part-way
+  // down the page with the printer's top cut off, and had to be scrolled up.
+  window.scrollTo(0, 0);
   pvPlayPrint();
 });
 previewBackBtn?.addEventListener("click", () => {
+  pvStopSound(false);
   previewSection.classList.add("hidden");
   document.body.classList.remove("preview-mode");
   checkoutSection.classList.remove("hidden");
@@ -3370,6 +3377,7 @@ function pvPrintingDone(){
   pvPrinter?.classList.remove("is-printing");
   pvPrinter?.classList.add("is-done");
   pvSetPrinting(false);
+  pvStopSound(true);
   if(pvPrintLabel) pvPrintLabel.textContent = "READY";
   if(pvStatusText) pvStatusText.textContent = "Your slip is ready";
   pvPrintingLabel?.classList.add("is-done");
@@ -3378,6 +3386,100 @@ function pvPrintingDone(){
     pvReplayBtn.classList.remove("is-busy");
   }
 }
+/* ---- printer sound ----
+   Synthesised with the Web Audio API (no audio files to download): a soft motor
+   hum, a thermal print-head "tk-tk-tk", paper rustle while the slip feeds out,
+   then a little tear and a "ding" when it is ready. It only ever starts from the
+   customer's own tap (Review order / Replay / PRINT), stays quiet (low master
+   volume), stops when they leave, and the speaker button turns it off for good
+   on that device (localStorage "gph_slip_sound" = "0"). */
+let pvAudioCtx = null, pvSoundRun = null;
+function pvSoundEnabled(){
+  try{ return localStorage.getItem("gph_slip_sound") !== "0"; }catch(e){ return true; }
+}
+function pvRefreshSoundBtn(){
+  const on = pvSoundEnabled();
+  const btn = document.getElementById("pvSoundBtn");
+  if(!btn) return;
+  btn.classList.toggle("is-off", !on);
+  btn.setAttribute("aria-pressed", on ? "true" : "false");
+  btn.title = on ? "Printer sound: on" : "Printer sound: off";
+}
+function pvNoise(ctx, seconds){
+  const buf = ctx.createBuffer(1, Math.max(1, Math.floor(ctx.sampleRate * seconds)), ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for(let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  return buf;
+}
+function pvStopSound(finish){
+  const run = pvSoundRun; pvSoundRun = null;
+  if(!run) return;
+  const ctx = run.ctx, t = ctx.currentTime;
+  try{
+    run.master.gain.cancelScheduledValues(t);
+    run.master.gain.setValueAtTime(run.master.gain.value, t);
+    run.master.gain.linearRampToValueAtTime(0, t + 0.12);
+    run.sources.forEach(n => { try{ n.stop(t + 0.15); }catch(e){} });
+    if(finish){
+      // paper tear + soft "ding"
+      const tear = ctx.createBufferSource(); tear.buffer = pvNoise(ctx, 0.14);
+      const tf = ctx.createBiquadFilter(); tf.type = "bandpass"; tf.frequency.value = 3200; tf.Q.value = 0.9;
+      const tg = ctx.createGain(); tg.gain.setValueAtTime(0.0001, t + 0.1); tg.gain.exponentialRampToValueAtTime(0.5, t + 0.12); tg.gain.exponentialRampToValueAtTime(0.0001, t + 0.28);
+      tear.connect(tf); tf.connect(tg); tg.connect(ctx.destination); tear.start(t + 0.1); tear.stop(t + 0.3);
+      [[1318.5, 0.2], [1760, 0.2]].forEach(([f, v], i) => {
+        const o = ctx.createOscillator(); o.type = "sine"; o.frequency.value = f;
+        const g = ctx.createGain(); const st = t + 0.34 + i * 0.07;
+        g.gain.setValueAtTime(0.0001, st); g.gain.exponentialRampToValueAtTime(v * 0.5, st + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, st + 0.7);
+        o.connect(g); g.connect(ctx.destination); o.start(st); o.stop(st + 0.75);
+      });
+    }
+  }catch(e){}
+}
+function pvStartSound(){
+  pvStopSound(false);
+  if(!pvSoundEnabled()) return;
+  try{
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return;
+    if(!pvAudioCtx) pvAudioCtx = new AC();
+    const ctx = pvAudioCtx;
+    if(ctx.state === "suspended") ctx.resume();
+    const t = ctx.currentTime;
+    const master = ctx.createGain(); master.gain.setValueAtTime(0.0001, t); master.gain.linearRampToValueAtTime(0.2, t + 0.25);
+    master.connect(ctx.destination);
+    const sources = [];
+    // motor hum
+    const hum = ctx.createOscillator(); hum.type = "sawtooth"; hum.frequency.setValueAtTime(58, t); hum.frequency.linearRampToValueAtTime(66, t + 6);
+    const hf = ctx.createBiquadFilter(); hf.type = "lowpass"; hf.frequency.value = 220;
+    const hg = ctx.createGain(); hg.gain.value = 0.28;
+    hum.connect(hf); hf.connect(hg); hg.connect(master); hum.start(t); sources.push(hum);
+    // print head: band-passed noise chopped by a ~16Hz square wave
+    const head = ctx.createBufferSource(); head.buffer = pvNoise(ctx, 1.5); head.loop = true;
+    const bf = ctx.createBiquadFilter(); bf.type = "bandpass"; bf.frequency.value = 2300; bf.Q.value = 1.1;
+    const am = ctx.createGain(); am.gain.value = 0.5;
+    const lfo = ctx.createOscillator(); lfo.type = "square"; lfo.frequency.setValueAtTime(15, t); lfo.frequency.linearRampToValueAtTime(19, t + 6);
+    const depth = ctx.createGain(); depth.gain.value = 0.5;
+    lfo.connect(depth); depth.connect(am.gain);
+    head.connect(bf); bf.connect(am); am.connect(master); head.start(t); lfo.start(t); sources.push(head, lfo);
+    // paper rustle
+    const rus = ctx.createBufferSource(); rus.buffer = pvNoise(ctx, 1.5); rus.loop = true;
+    const rf = ctx.createBiquadFilter(); rf.type = "highpass"; rf.frequency.value = 4200;
+    const rg = ctx.createGain(); rg.gain.value = 0.07;
+    rus.connect(rf); rf.connect(rg); rg.connect(master); rus.start(t); sources.push(rus);
+    pvSoundRun = { ctx, master, sources };
+  }catch(e){ pvSoundRun = null; }
+}
+document.getElementById("pvSoundBtn")?.addEventListener("click", () => {
+  const nowOn = !pvSoundEnabled();
+  try{ localStorage.setItem("gph_slip_sound", nowOn ? "1" : "0"); }catch(e){}
+  pvRefreshSoundBtn();
+  if(!nowOn) pvStopSound(false);
+  else if(pvPrinter?.classList.contains("is-printing")) pvStartSound();
+});
+pvRefreshSoundBtn();
+// never keep printing noises going in a background tab or after leaving the slip
+document.addEventListener("visibilitychange", () => { if(document.hidden) pvStopSound(false); });
+
 // (Re)start the receipt-printer animation: the slip feeds out of the slot.
 function pvPlayPrint(){
   if(!pvPrinter) return;
@@ -3395,6 +3497,7 @@ function pvPlayPrint(){
   const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(reduceMotion){ pvPrintingDone(); return; } // CSS keeps the slip visible
   pvPrinter.classList.add("is-printing");
+  pvStartSound();
 }
 pvPaper?.addEventListener("animationend", (e) => {
   if(e.animationName === "pv3Feed") pvPrintingDone();
@@ -3405,11 +3508,13 @@ pvReplayBtn?.addEventListener("click", () => { if(pvReplayBtn && !pvReplayBtn.di
 // "Confirm order" places the order through the real submitOrder() flow.
 previewOrderBtn?.addEventListener("click", () => {
   if(!previewOrderBtn || previewOrderBtn.disabled) return;
+  pvStopSound(false);
   submitOrder();
 });
 
 // Breadcrumb "My orders" goes back to the dashboard (same as the old back button).
 function pvGoBack(){
+  pvStopSound(false);
   previewSection?.classList.add("hidden");
   document.body.classList.remove("preview-mode");
   const ov = document.getElementById("orderView");
