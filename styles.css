@@ -10434,7 +10434,7 @@ body.light-mode .gp-bottomnav button.is-active{
 
 /* ===== Intro: Figma-style purple-glass line-art logo on plain white (see the script under #introSplash) ===== */
 /* Timeline (s): strokes draw slowly 0.4 to 5.5, d-pad pops 5.2 to 7.1, finish ring 7.6, title in 7.0 to 8.2,
-   then everything holds until the script lifts the splash at ~12.4 (title visible for about 4s). */
+   then everything holds until the script lifts the splash at ~11.2 (title visible for about 3s). */
 .intro-splash{
   position:fixed; inset:0; z-index:99999; display:grid; place-items:center; background:#fff;
   cursor:pointer; touch-action:manipulation; transition:opacity .9s ease;
