@@ -79,11 +79,12 @@ Tier badge colours live in `.plan-tier-badge[data-tier=...]` and `#orderView .pl
 - Mobile "My account" for guests opens the login modal.
 
 ## Intro animation (first visit of a session)
-SVG line-art logo on a plain white page, drawn by CSS animation (no images, no WebGL): ~6s, then fades into the site.
+SVG line-art logo on a plain white page, drawn by CSS animation (no images, no WebGL): ~12.4s, then fades into the site. The strokes draw slowly (about 5s), the d-pad pops in, the title is fully in at ~8.2s and then **holds for about 4s** (the owner asked for this). Timings live in `styles.css` (`--dl` / `--dur`, `ilText`) and the `setTimeout(leave, ...)` in `index.html`; keep them in step.
 Shown once per browser session (`sessionStorage gph_intro_seen`); `?intro=1` forces it; tap or any key skips; skipped for
-reduced-motion and data-saver; hard failsafe removes it at 9s.
+reduced-motion and data-saver; hard failsafe removes it at 16s.
 The owner's design requirements: **white background**; **soft purple glass, semi-3D** (not fully 3D) strokes; the arrow points **up and to the right**;
 the **H leans left toward the G** and is larger; the G's inner arm hooks **down**; the **four d-pad buttons** are detailed glossy glass buttons placed high next to the arrow.
+Each stroke is seven stacked layers (depth, rim, glass, inner light, core, broad + crisp highlight) for a crisp UHD glass look.
 Earlier attempts the owner rejected: marbled liquid paint, dew drops / bubbles, colourful gradients, a raster logo.
 
 ## Testing (nothing in the repo; set up in the scratchpad)
@@ -100,3 +101,8 @@ Earlier attempts the owner rejected: marbled liquid paint, dew drops / bubbles, 
 - Strict GLSL ES 1.00 rejects float-vs-int comparisons (`x<1` must be `x<1.`).
 - `@supabase/supabase-js@2` is loaded **unpinned** from the CDN; pinning a version is a worthwhile follow-up.
 - Leaked-password protection needs the Supabase Pro plan, so it is off.
+
+## Order slip (receipt-printer preview)
+The preview opens at the top of the page (`window.scrollTo(0,0)` in the Review Order handler). The slip paper is a layered CSS texture.
+Printer sound is synthesised with Web Audio (no files), starts only from the customer's own tap, stops on leave / background tab, and a speaker button
+mutes it per device (`gph_slip_sound` = `0`). It is on by default.
