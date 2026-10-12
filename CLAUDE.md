@@ -79,7 +79,7 @@ Tier badge colours live in `.plan-tier-badge[data-tier=...]` and `#orderView .pl
 - Mobile "My account" for guests opens the login modal.
 
 ## Intro animation (first visit of a session)
-SVG line-art logo on a plain white page, drawn by CSS animation (no images, no WebGL): ~11.2s, then fades into the site. The strokes draw slowly (about 5s; the owner likes this speed), the d-pad pops in, the title is fully in at ~8.2s and then **holds for about 3s** (the owner first asked for 4s, then set it back to 3s). Timings live in `styles.css` (`--dl` / `--dur`, `ilText`) and the `setTimeout(leave, ...)` in `index.html`; keep them in step.
+SVG line-art logo on a plain white page, drawn by CSS animation (no images, no WebGL): ~10.2s, then fades into the site. The strokes draw over about 4.5s (the owner shortened the drawing by 1s), the d-pad pops in, the title is fully in at ~7.2s and then **holds for about 3s** (the owner first asked for 4s, then set it back to 3s). Timings live in `styles.css` (`--dl` / `--dur`, `ilText`) and the `setTimeout(leave, ...)` in `index.html`; keep them in step.
 Shown once per browser session (`sessionStorage gph_intro_seen`); `?intro=1` forces it; tap or any key skips; skipped for
 reduced-motion and data-saver; hard failsafe removes it at 16s.
 The owner's design requirements: **white background**; **soft purple glass, semi-3D** (not fully 3D) strokes; the arrow points **up and to the right**;
