@@ -1671,24 +1671,55 @@
 },
       {
   id: "gemini",
-  name: "Gemini AI Pro",
+  name: "Gemini AI",
   top: true,
   subtitle: "Tap to see prices",
   badge: "available",
   category: "AI",
   iconType: "image",
   icon: "assets/file_00000000168071fa8d5d17512a7591b5.png",
-  search: "gemini ai pro google ai",
+  search: "gemini ai pro plus google ai",
   description: "✉️ Own Mail Invite includes Full Warranty and monthly renewal.\n👑 Family Manager access includes the warranty stated for the selected duration.\n🔗 Link access has No Warranty.\n🛍 Choose Own Mail, Family, or Link carefully before purchase.",
   benefits: {
-    subtitle: "Everything included with Gemini AI Pro",
+    subtitle: "Gemini AI Pro vs Gemini AI Plus",
+    tiers: [{ key: "pro", label: "Pro" }, { key: "plus", label: "Plus" }],
     rows: [
-      { icon: "brain", label: "Models", values: "Gemini 3.1 Pro (flagship, 1M-token context window) for the hardest tasks, plus Gemini 3.8 Flash for quick everyday replies — both included." },
-      { icon: "image", label: "Video generation", values: "Veo 3.1 Lite, Google's video-generation model, included as a limited trial." },
-      { icon: "zap", label: "Deep Research", values: "Included — Gemini runs a multi-step research task on its own and reports back with sources." },
-      { icon: "chat", label: "Google AI Studio", values: "<b>Included</b> — Pro-tier model access in AI Studio, not just the Flash-only models the free tier is limited to." },
-      { icon: "image", label: "Google Flow", values: "<b>Included</b> — 1,000 Flow credits every month for Google's AI video/story creative studio (refreshes each billing cycle, doesn't roll over)." },
-      { icon: "upload", label: "Everyday use", values: "Gemini built into Gmail, Docs and the rest of Workspace, plus 1,000 monthly AI credits and higher usage limits than the free tier." }
+      { icon: "brain", label: "Models", values: {
+        pro: "Gemini 3.1 Pro (flagship, 1M-token context window) for the hardest tasks, plus Gemini 3.8 Flash for quick everyday replies.",
+        plus: "Higher usage limits and access to advanced models like Gemini 3.1 Pro, plus limited access to Gemini Omni Flash." } },
+      { icon: "image", label: "Google Flow", values: {
+        pro: "<b>1,000</b> Flow credits every month for Google's AI video/story creative studio (refreshes each billing cycle, doesn't roll over).",
+        plus: "<b>200</b> Flow credits per month for AI video and scene creation." } },
+      { icon: "upload", label: "Everyday use", values: {
+        pro: "Gemini built into Gmail, Docs and the rest of Workspace, plus 1,000 monthly AI credits and higher usage limits than the free tier.",
+        plus: "AI features built into Google apps: proofread in Gmail and work smarter in Docs and Sheets." } },
+      { icon: "image", label: "Video generation", values: {
+        pro: "Veo 3.1 Lite, Google's video-generation model, included as a limited trial.",
+        plus: "Not listed" } },
+      { icon: "zap", label: "Deep Research", values: {
+        pro: "Included — Gemini runs a multi-step research task on its own and reports back with sources.",
+        plus: "Not listed" } },
+      { icon: "chat", label: "Google AI Studio", values: {
+        pro: "<b>Included</b> — Pro-tier model access in AI Studio, not just the Flash-only models the free tier is limited to.",
+        plus: "Not listed" } },
+      { icon: "mic", label: "Flow Music", values: {
+        pro: "<b>Included</b>",
+        plus: "<b>3,000</b> Flow Music credits per month." } },
+      { icon: "sparkles", label: "Google Photos", values: {
+        pro: "<b>Included</b> — the extra generative AI features in Google Photos.",
+        plus: "Extra generative AI in Google Photos, such as Remix and Photo-to-video." } },
+      { icon: "fileText", label: "NotebookLM", values: {
+        pro: "<b>Included</b> — higher limits for sources, audio/video overviews and deep research reports.",
+        plus: "Increased limits for sources, audio/video overviews and deep research reports." } },
+      { icon: "cloud", label: "Cloud storage", values: {
+        pro: "Up to <b>5 TB</b> shared across Google Drive, Gmail and Google Photos.",
+        plus: "<b>200 GB to 400 GB</b> shared across Google Drive, Gmail and Google Photos (depends on region and plan variant)." } },
+      { icon: "users", label: "Family sharing", values: {
+        pro: "Up to five other members of a Google family group — on the <b>Family Manager</b> plan.",
+        plus: "Share the benefits and storage with up to five other members of a Google family group." } },
+      { icon: "plug", label: "Other connected tools", values: {
+        pro: "Every other Google tool that connects to your Gemini account is included.",
+        plus: "Not listed" } }
     ]
   },
   plans: [
@@ -1707,11 +1738,16 @@
         duration: "3 Months", price: 10000, ownMail: true,
         warranty: "Full Warranty", format: "Own Mail",
         note: "This is an Invite Plan -- heavy, nonstop use can hit the limit within minutes, but the chance of that happening stays low as long as you don't run extra codes or other heavy tools on it." },
-      { name: "Gemini AI Pro – Own Mail – 4 Months – 12000 Ks",
+      { name: "Gemini AI Pro – Own Mail – 5 Months – 12000 Ks",
         label: "Gemini AI Pro", type: "Own Mail", tier: "pro",
-        duration: "4 Months", price: 12000, ownMail: true,
+        duration: "5 Months", price: 12000, ownMail: true,
         warranty: "Full Warranty", format: "Own Mail",
         note: "This is an Invite Plan -- heavy, nonstop use can hit the limit within minutes, but the chance of that happening stays low as long as you don't run extra codes or other heavy tools on it." },
+      { name: "Gemini AI Plus – Own Mail – 1 Year – 10000 Ks",
+        label: "Gemini AI Plus", type: "Own Mail", tier: "plus",
+        duration: "1 Year", price: 10000, ownMail: true,
+        warranty: "5 Months Warranty", format: "Activate on your mail",
+        note: "5 Months Warranty\nActivation on your mail" },
       { name: "Family Manager – Own Mail – 3 Months – 10000 Ks",
         label: "Family Manager", type: "Own Mail", tier: "family",
         duration: "3 Months", price: 10000, ownMail: true,
@@ -2010,6 +2046,11 @@ plans: [
     { name: "Supabase Pro – Own Mail – 1 Month – 120000 Ks",
       label: "Supabase Pro", type: "Own Mail", tier: "pro",
       duration: "1 Month", price: 120000, ownMail: true,
+      warranty: "Full Warranty", format: "Own Mail",
+      note: "On your account\nFull Warranty" },
+    { name: "Supabase Pro – Own Mail – 12 Months – 300000 Ks",
+      label: "Supabase Pro", type: "Own Mail", tier: "pro",
+      duration: "12 Months", price: 300000, ownMail: true,
       warranty: "Full Warranty", format: "Own Mail",
       note: "On your account\nFull Warranty" }
   ]
