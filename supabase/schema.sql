@@ -707,9 +707,9 @@ insert into public.catalog_plans (product_id, plan_name, price, custom, base_amo
 ('gemini', 'Family Manager – Own Mail – 3 Months – 10000 Ks', 10000, false, null, null, false),
 ('gemini', 'Family Manager – Own Mail – 12 Months – 15000 Ks', 15000, false, null, null, false),
 ('gemini', 'Gemini Link – Own Mail – 1.5 Years – 8000 Ks', 8000, false, null, null, false),
-('zoom', '🔐 Private – 14 Days – 5000 Ks', 5000, false, null, null, false),
-('zoom', '🔐 Private – 1 Month – 8000 Ks', 8000, false, null, null, false),
-('zoom', '🔐 Private – 2 Months – 15000 Ks', 15000, false, null, null, false),
+('zoom', '🔐 Private – 14 Days – 3000 Ks', 3000, false, null, null, false),
+('zoom', '🔐 Private – 1 Month – 5000 Ks', 5000, false, null, null, false),
+('zoom', '🔐 Private – 2 Months – 8000 Ks', 8000, false, null, null, false),
 ('hbomax', '👤1 Profile - 8500 Ks
 1 Month', 8500, false, null, null, false),
 ('hbomax', '👥2 Profiles - 13000 Ks
