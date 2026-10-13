@@ -2797,6 +2797,8 @@ body.preview-mode{ overflow:hidden !important; }
 .pb-t-go{ color:#6a6280; }
 .pb-t-plus{ color:#7650b8; }
 .pb-t-pro{ color:#4a3a9e; }
+.pb-t-share{ color:#6a6280; }
+.pb-t-private{ color:#7650b8; }
 .pb-t-pro5x{ color:#4a3a9e; }
 .pb-t-pro20x{ color:#8a6520; }
 
@@ -10647,3 +10649,6 @@ body.light-mode .gp-bottomnav button.is-active{
 #accountView .avatar-popover{ top:84px; }
 #accountView .acct-card-title{ padding:11px 0 2px; }
 #accountView .acct-row{ padding:10px 0; }
+
+/* Discount cards: the whole card opens the product's plan choice */
+.gp-card{ cursor:pointer; }

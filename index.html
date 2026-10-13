@@ -1821,12 +1821,34 @@ iconType: "image",
 icon: "assets/IMG_20260307_042958_666.jpg",
 search: "picsart photo edit",
 description: "Private accountတွေပါ အာမခံပါတယ်။History/Projects အကုန် privateပါ။",
+benefits: {
+  subtitle: "Everything included with PicsArt Pro",
+  tiers: [{ key: "share", label: "Share" }, { key: "private", label: "Private" }],
+  rows: [
+    { icon: "sparkles", label: "AI generation", values: "<b>500 AI credits</b> every month. Video models like OpenAI Sora, Veo 3.1, Kling V3 and Luma Ray 2, and <b>unlimited</b> image generation with the Flex.2 Klein model." },
+    { icon: "badgeCheck", label: "Commercially safe", values: "Getty Images-backed AI models, so generated visuals are safe to use in commercial marketing." },
+    { icon: "layers", label: "Faster workflow", values: "Bulk edit up to <b>50 images</b> at once, 3+ active Brand Kits, and Picsart Flows to chain generation, background removal, upscaling and styling into one repeatable step." },
+    { icon: "image", label: "Precision editing", values: "1-Tap Image Enhancer (smart upscaling for blurry or old photos) and advanced background and object erasing, even fine details like flyaway hair." },
+    { icon: "folder", label: "Content library", values: "Getty stock photos and video clips inside the app, plus <b>10,000+</b> premium templates, fonts and stickers." },
+    { icon: "cloud", label: "Storage & devices", values: {
+      share: "<b>100 GB</b> cloud storage synced across web, iOS and Android. Use it on <b>1 device only</b>.",
+      private: "<b>100 GB</b> cloud storage synced across web, iOS and Android, and up to <b>10 devices</b> logged in at once." } }
+  ]
+},
 plans: [
-{ name:"1 Month (👥Share) – 4000 Ks", price:4000},
-{ name:"1 Month (🔐Private) – 5700 Ks", price:5700,bestSeller:true },
-{ name:"3 Months – 14000 Ks", price:14000,outOfStock:true },
-{ name:"1 Year – 50000 Ks", price:50000 },
-{ name:"Own Mail - 1 Month – 24000 Ks", price:24000,outOfStock:true }
+{ name: "PicsArt Pro – Share (one device) – 7 Days – 1000 Ks",
+  label: "PicsArt Pro", type: "Share (one device)", tier: "pro",
+  duration: "7 Days", price: 1000, access: "share",
+  warranty: "Full Warranty", format: "Share account",
+  note: "Share account: 1 device only." },
+{ name: "PicsArt Pro – Private – 7 Days – 2000 Ks",
+  label: "PicsArt Pro", type: "Private", tier: "pro",
+  duration: "7 Days", price: 2000, access: "private",
+  warranty: "Full Warranty", format: "Private account" },
+{ name: "PicsArt Pro – Private – 30 Days – 8000 Ks",
+  label: "PicsArt Pro", type: "Private", tier: "pro",
+  duration: "30 Days", price: 8000, access: "private",
+  warranty: "Full Warranty", format: "Private account" }
 ]
 },
       {
@@ -3604,6 +3626,7 @@ const landingShell = document.getElementById("landingShell");
 const catalogShell = document.getElementById("catalogShell");
 
 function showProductsPage(){
+  setGpNavActive("store");
   // My Account/My Orders/Order Status leave body.order-mode set (it force-
   // hides .catalog-shell via CSS) -- clear it here too, not just in their
   // own Back buttons, so the grid still shows up no matter which path got
@@ -3626,6 +3649,7 @@ function showProductsPage(){
   }, 430);
 }
 function showLandingPage(){
+  setGpNavActive("store");
   document.body.classList.remove("order-mode");
   orderView?.classList.add("hidden");
   catalogShell.classList.add("hidden");
@@ -3674,6 +3698,7 @@ function returnFromNotiSubview(){
   }
 }
 function returnToStoreHome(){
+  setGpNavActive("store");
   document.body.classList.remove("hub-page-mode");
   if(cameFromLanding){
     cameFromLanding = false;
@@ -3794,8 +3819,24 @@ function renderGpCarousel(){
     : `<div class="gp-empty">No discounted plans in this category yet.<br><button type="button" onclick="window.gpReloadDiscounts()" style="margin-top:8px;padding:6px 12px;border:1px solid #d8c9eb;border-radius:8px;background:#fff;color:#6231c8;font-size:12px;cursor:pointer;">Retry</button></div>`;
   document.getElementById("gpCount").textContent = list.length;
   document.getElementById("gpFound").textContent = `${list.length} discounted products found`;
-  carousel.querySelectorAll("[data-gp-view-plans]").forEach(btn => {
-    btn.addEventListener("click", () => showProductsPage());
+  // Tapping a discount card (or its View plans button) lands on that product's
+  // plan choice, the same screen Hot Products and Buy now open, with the
+  // best-discounted in-stock plan preselected.
+  carousel.querySelectorAll(".gp-card[data-id]").forEach(card => {
+    card.addEventListener("click", () => {
+      const product = products.find(p => String(p.id) === card.dataset.id);
+      if(!product) return;
+      openHotProduct(product);
+      let best = -1, bestPct = -1;
+      (product.plans || []).forEach((pl, i) => {
+        const pct = Number(pl.discountPercent) || 0;
+        if(!pl.outOfStock && pct > bestPct){ best = i; bestPct = pct; }
+      });
+      if(best >= 0 && bestPct > 0){
+        currentPlanIndex = best;
+        selectedPlanByProduct.set(product.id, best);
+      }
+    });
   });
 }
 
@@ -4018,12 +4059,18 @@ document.getElementById("gpAccountBtn")?.addEventListener("click", () => openAcc
 document.getElementById("gpBrandHome")?.addEventListener("click", () => goToMainPage());
 
 /* ---- Shared nav (header, footer, mobile bottom nav) ---- */
+// Single owner of the highlighted nav item. Pages call it when they open or
+// close (not just the nav click), so coming back with a Back button, the
+// logo or the News & updates button never leaves the old tab lit.
+function setGpNavActive(dest){
+  document.querySelectorAll(".gp-nav-link.is-active, .gp-bottomnav button.is-active").forEach(b => b.classList.remove("is-active"));
+  document.querySelectorAll(`[data-gpnav="${dest}"]`).forEach(b => b.classList.add("is-active"));
+}
 document.querySelectorAll("[data-gpnav]").forEach(el => {
   el.addEventListener("click", () => {
     const dest = el.dataset.gpnav;
     if(dest === "account" && !currentUser){ openAuthModal("login"); return; }
-    document.querySelectorAll(".gp-nav-link.is-active, .gp-bottomnav button.is-active").forEach(b => b.classList.remove("is-active"));
-    document.querySelectorAll(`[data-gpnav="${dest}"]`).forEach(b => b.classList.add("is-active"));
+    setGpNavActive(dest);
     if(dest === "store") goToMainPage();
     else if(dest === "orders") openMyOrdersView();
     else if(dest === "news") openNewsFeed();
@@ -7149,6 +7196,7 @@ function renderMyOrdersListFiltered(){
 }
 
 async function openMyOrdersView(){
+  setGpNavActive("orders");
   clearUnseenBadge();
   // "My Orders" is reachable from the header on the landing page too, but
   // only showProductsPage() ever hid #landingShell -- opening it straight
@@ -7704,6 +7752,7 @@ async function loadNewsFeed(){
   if(m && newsPostsData.some(p => String(p.id) === m[1])) openNewsDetail(m[1]);
 }
 function openNewsFeed(){
+  setGpNavActive("news");
   document.getElementById("newsFeedView")?.classList.remove("hidden");
   document.body.classList.add("news-feed-open");
   closeNewsDetail();
@@ -7719,8 +7768,14 @@ function openNewsFeed(){
   loadNewsFeed();
 }
 function closeNewsFeed(){
+  const wasOpen = !document.getElementById("newsFeedView")?.classList.contains("hidden");
   document.getElementById("newsFeedView")?.classList.add("hidden");
   document.body.classList.remove("news-feed-open");
+  // light up whichever page News was opened over (Orders / Account / Store)
+  if(wasOpen){
+    const shown = id => { const el = document.getElementById(id); return el && !el.classList.contains("hidden"); };
+    setGpNavActive(shown("accountView") ? "account" : shown("myOrdersView") ? "orders" : "store");
+  }
 }
 document.getElementById("newsFeedBtn")?.addEventListener("click", openNewsFeed);
 document.getElementById("newsFeedBackBtn")?.addEventListener("click", closeNewsFeed);
@@ -7916,6 +7971,7 @@ async function loadAccountStats(){
 // Plans (and Security/Invite Friends within the account hub) so it doesn't
 // read as an abrupt cut.
 function openAccountView(){
+  setGpNavActive("account");
   if(!currentUser){ openAuthModal("login"); return; }
   cameFromLanding = !landingShell.classList.contains("hidden");
   landingShell.classList.add("hidden");
