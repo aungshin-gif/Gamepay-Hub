@@ -710,14 +710,14 @@ insert into public.catalog_plans (product_id, plan_name, price, custom, base_amo
 ('zoom', '🔐 Private – 14 Days – 3000 Ks', 3000, false, null, null, false),
 ('zoom', '🔐 Private – 1 Month – 5000 Ks', 5000, false, null, null, false),
 ('zoom', '🔐 Private – 2 Months – 8000 Ks', 8000, false, null, null, false),
-('hbomax', '👤1 Profile - 8500 Ks
-1 Month', 8500, false, null, null, false),
-('hbomax', '👥2 Profiles - 13000 Ks
-1 Month', 13000, false, null, null, false),
-('hbomax', 'Each Profile - 6000 Ks
-Above 3 Pf', 6000, false, null, null, false),
-('hbomax', '🔥HBO Head - 25000 Ks
-1 Month', 25000, false, null, null, false),
+('hbomax', '👤1 Profile - 5000 Ks
+1 Month', 5000, false, null, null, false),
+('hbomax', '👥2 Profiles - 7000 Ks
+1 Month', 7000, false, null, null, false),
+('hbomax', '👥4 Profiles - 9000 Ks
+1 Month', 9000, false, null, null, false),
+('hbomax', '🔥HBO Head - 12000 Ks
+1 Month', 12000, false, null, null, false),
 ('picsart', 'PicsArt Pro – Share (one device) – 7 Days – 1000 Ks', 1000, false, null, null, false),
 ('picsart', 'PicsArt Pro – Private – 7 Days – 2000 Ks', 2000, false, null, null, false),
 ('picsart', 'PicsArt Pro – Private – 30 Days – 8000 Ks', 8000, false, null, null, false),
