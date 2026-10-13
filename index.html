@@ -2930,9 +2930,11 @@ plans: [
   iconType: "image",
   icon: "assets/duolingo-duo-owl-logo-2022.jpg",
   search: "duolingo individual family own mail",
-  description: "✅ Full Warranty\n✅ Own Mail\n🛍 Select the required account type before purchase.",
+  description: "🛍 Select the required plan before purchase.\n✅ Check each plan's warranty and mail type.",
   plans: [
-    { name: "Individual Plan – 1 Month – 5000 Ks", price: 5000, ownMail: true, bestSeller: true },
+    { name: "Individual Plan – 2 Months – 5000 Ks", price: 5000, ownMail: true, bestSeller: true, warranty: "Full Warranty", format: "Own Mail", note: "Own Mail\nFull Warranty" },
+    { name: "Individual Plan – 7 Months – 10000 Ks", price: 10000, ownMail: true, warranty: "Full Warranty", format: "Own Mail", note: "Own Mail\nFull Warranty\nCan't Renew" },
+    { name: "Individual Plan – 1 Year – 20000 Ks", price: 20000, warranty: "6 months warranty", note: "6 months warranty\nCan't Renew" },
     { name: "Family Plan – Coming Soon", price: 0, outOfStock: true }
   ]
 },
