@@ -2801,6 +2801,8 @@ body.preview-mode{ overflow:hidden !important; }
 .pb-t-private{ color:#7650b8; }
 .pb-t-pro5x{ color:#4a3a9e; }
 .pb-t-pro20x{ color:#8a6520; }
+.pb-t-proplus{ color:#7650b8; }
+.pb-t-max{ color:#8a6520; }
 
 .pb-yn{ display:inline-flex; width:17px; height:17px; border-radius:50%; align-items:center; justify-content:center; font-size:10px; font-weight:900; }
 .pb-yn.yes{ background:rgba(47,158,116,.14); color:#1f7d54; }

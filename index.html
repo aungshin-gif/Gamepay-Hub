@@ -68,7 +68,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=76">
+  <link rel="stylesheet" href="styles.css?v=77">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -2296,6 +2296,33 @@ subtitle: "Tap to see prices",
   iconType: "image",
   icon: "assets/github-copilot-icon.png",
   search: " GitHub copilot own mail",
+  benefits: {
+    subtitle: "Pro, Pro+ and Max, side by side",
+    tiers: [
+      { key: "pro", label: "Pro" },
+      { key: "proplus", label: "Pro+" },
+      { key: "max", label: "Max" }
+    ],
+    rows: [
+      { icon: "brain", label: "Model access", values: {
+        pro: "Fast and versatile models: Claude Sonnet and Haiku, GPT-5.4, GPT-5.3-Codex, Kimi K3, plus Auto model selection.",
+        proplus: "Everything in Pro, plus premium models: Claude Opus and Fable, and the top GPT models (Sol / Astra, GPT-5.5).",
+        max: "Everything in Pro+, plus Claude Opus 4.6 and priority access to new models as they launch."
+      }},
+      { icon: "zap", label: "Included usage & credits", values: {
+        pro: "$15 monthly total credits.",
+        proplus: "$70 monthly total credits — 4x+ the included usage of Pro.",
+        max: "$200 monthly total credits — 2.9x+ the included usage of Pro+, built for sustained high-volume agent work."
+      }},
+      { icon: "bot", label: "Agents & code review", values: "All tiers: Copilot cloud agent and code review, plus access to 3rd-party agents (Claude Code and Codex)." },
+      { icon: "sparkles", label: "Code completion", values: "All tiers: unlimited code completion and next edit suggestions, with model selection." },
+      { icon: "shield", label: "Extras", values: {
+        pro: "Standard platform access.",
+        proplus: "Adds audit logs.",
+        max: "Audit logs, plus priority access to new models and features."
+      }}
+    ]
+  },
   description: "💥 Full Warranty ပါ။\n✔️ Renewal ရပါတယ်။\n✔️ Own Mail ပိုပြေပါတယ်။\n🛍 Access is provided on your account.",
 plans: [
     { name: "GitHub Copilot Pro – 1 Month – 48000 Ks", price: 48000, ownMail: true, bestSeller: true },
