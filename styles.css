@@ -10647,3 +10647,6 @@ body.light-mode .gp-bottomnav button.is-active{
 #accountView .avatar-popover{ top:84px; }
 #accountView .acct-card-title{ padding:11px 0 2px; }
 #accountView .acct-row{ padding:10px 0; }
+
+/* Discount cards: the whole card opens the product's plan choice */
+.gp-card{ cursor:pointer; }
