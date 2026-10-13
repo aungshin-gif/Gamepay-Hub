@@ -68,7 +68,7 @@
        this a browser that already has styles.css cached from a previous
        visit keeps using the old one after a deploy (looks like the new
        CSS "didn't take"). Bump the number any time styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=75">
+  <link rel="stylesheet" href="styles.css?v=77">
   <!-- The hero's first carousel slide is above the fold and the page's
        largest image -- preloading it (on top of loading="eager" +
        fetchpriority="high" on the <img> itself) means the browser starts
@@ -1877,7 +1877,8 @@ plans: [
     intro: "Speed optimization protocol guides and tutorials are delivered directly with your account credentials.",
     rows: [
       { icon: "check", label: "Device limits & compatibility", values: "Private Account: supports 5–7 simultaneous devices.<br>Shared Account: 1 device only." },
-      { icon: "x", label: "OS warning", values: PB_YES + " Tailored for Android — superior speed.<br>" + PB_NO + " Incompatible with iOS (connection drops/delays). Do not purchase for iOS." }
+      { icon: "x", label: "OS warning", values: PB_YES + " Tailored for Android — superior speed.<br>" + PB_NO + " Incompatible with iOS (connection drops/delays). Do not purchase for iOS." },
+      { icon: "globe", label: "Best regions", values: "🇲🇾 Malaysia – <b>Kuala Lumpur</b><br>🇮🇩 Indonesia – <b>Jakarta</b><br>🇸🇬 Singapore – <b>Singapore</b><br>🇹🇭 Thailand – <b>Bangkok</b><br>🇯🇵 Japan – <b>Tokyo</b><br>🇵🇭 Philippines – <b>Manila</b><br>🇰🇭 Cambodia – <b>Phnom Penh</b><br>🇺🇸 USA – <b>Phoenix</b>" }
     ]
   },
   plans: [
@@ -1927,9 +1928,9 @@ search: "telegram premium tg",
 description:"Link planသည် linkကိုactivationလုပ်မှ premiumရတာပါ/Giftက usernameဆီပို့ပေးရတာပါ။premium featuresချင်းအကုန်အတူတူပါပဲ",
 plans: [
 { name:"Login Method – 1 Month – 20500 Ks", price:20500,bestSeller:true },
-{ name:"Gift Plan – 3 Months – 50000 Ks", price:50000 },
-{ name:"Gift Plan – 6 Months – 67000 Ks", price:67000 },
-{ name:"Gift Plan – 9 Months – 118000 Ks", price:118000 },
+{ name:"Gift Plan – 3 Months – 50000 Ks", price:50000, tier:"gift" },
+{ name:"Gift Plan – 6 Months – 67000 Ks", price:67000, tier:"gift" },
+{ name:"Gift Plan – 9 Months – 118000 Ks", price:118000, tier:"gift" },
 { name:"Link Plan – 3 Months – 44000 Ks", price:44000,discount:true },
 { name:"Link Plan – 6 Months – 65000 Ks", price:65000 },
 { name:"Link Plan – 12 Months – 118000 Ks", price:118000 }
@@ -2233,6 +2234,18 @@ plans: [
   iconType: "image",
   icon: "assets/perplexity-ai-icon.png",
   search: "perplexity ai pro own mail",
+  benefits: {
+    subtitle: "Everything included with the Perplexity Pro plan",
+    rows: [
+      { icon: "brain", label: "Multiple AI models", values: "Switch between top-tier models such as GPT, Claude and Gemini, including thinking / reasoning models." },
+      { icon: "search", label: "Extended Pro & Deep Research", values: "Run a high volume of multi-step research queries that search and synthesize information on their own for several minutes." },
+      { icon: "layers", label: "10x citation depth", values: "10 times as many inline citations per answer for clearer sources and easy verification." },
+      { icon: "upload", label: "File & photo analysis", values: "Upload and analyze PDFs, CSVs, audio, video and photos (up to 50 files per project)." },
+      { icon: "folder", label: "Create files & apps", values: "Build dashboards, spreadsheets, presentations and lightweight web apps right inside the platform." },
+      { icon: "image", label: "Image & video generation", values: "Generate images and short videos with the built-in AI tools." },
+      { icon: "zap", label: "Priority & Pro support", values: "Faster responses at peak hours and access to the dedicated Pro channel on Discord." }
+    ]
+  },
   description: "💥 Full Warranty ပါ။\n✔️ Renewal ရပါတယ်။\n✔️ Own Mail ပိုပြေပါတယ်။\n🛍 Access is provided on your account.",
   plans: [
     { name: "Perplexity AI Pro – 1 Month – 43000 Ks", price: 43000, ownMail: true, bestSeller: true }
@@ -2283,6 +2296,33 @@ subtitle: "Tap to see prices",
   iconType: "image",
   icon: "assets/github-copilot-icon.png",
   search: " GitHub copilot own mail",
+  benefits: {
+    subtitle: "Pro, Pro+ and Max, side by side",
+    tiers: [
+      { key: "pro", label: "Pro" },
+      { key: "proplus", label: "Pro+" },
+      { key: "max", label: "Max" }
+    ],
+    rows: [
+      { icon: "brain", label: "Model access", values: {
+        pro: "Fast and versatile models: Claude Sonnet and Haiku, GPT-5.4, GPT-5.3-Codex, Kimi K3, plus Auto model selection.",
+        proplus: "Everything in Pro, plus premium models: Claude Opus and Fable, and the top GPT models (Sol / Astra, GPT-5.5).",
+        max: "Everything in Pro+, plus Claude Opus 4.6 and priority access to new models as they launch."
+      }},
+      { icon: "zap", label: "Included usage & credits", values: {
+        pro: "$15 monthly total credits.",
+        proplus: "$70 monthly total credits — 4x+ the included usage of Pro.",
+        max: "$200 monthly total credits — 2.9x+ the included usage of Pro+, built for sustained high-volume agent work."
+      }},
+      { icon: "bot", label: "Agents & code review", values: "All tiers: Copilot cloud agent and code review, plus access to 3rd-party agents (Claude Code and Codex)." },
+      { icon: "sparkles", label: "Code completion", values: "All tiers: unlimited code completion and next edit suggestions, with model selection." },
+      { icon: "shield", label: "Extras", values: {
+        pro: "Standard platform access.",
+        proplus: "Adds audit logs.",
+        max: "Audit logs, plus priority access to new models and features."
+      }}
+    ]
+  },
   description: "💥 Full Warranty ပါ။\n✔️ Renewal ရပါတယ်။\n✔️ Own Mail ပိုပြေပါတယ်။\n🛍 Access is provided on your account.",
 plans: [
     { name: "GitHub Copilot Pro – 1 Month – 48000 Ks", price: 48000, ownMail: true, bestSeller: true },
@@ -2917,9 +2957,11 @@ plans: [
   iconType: "image",
   icon: "assets/duolingo-duo-owl-logo-2022.jpg",
   search: "duolingo individual family own mail",
-  description: "✅ Full Warranty\n✅ Own Mail\n🛍 Select the required account type before purchase.",
+  description: "🛍 Select the required plan before purchase.\n✅ Check each plan's warranty and mail type.",
   plans: [
-    { name: "Individual Plan – 1 Month – 5000 Ks", price: 5000, ownMail: true, bestSeller: true },
+    { name: "Individual Plan – 2 Months – 5000 Ks", price: 5000, ownMail: true, bestSeller: true, warranty: "Full Warranty", format: "Own Mail", note: "Own Mail\nFull Warranty" },
+    { name: "Individual Plan – 7 Months – 10000 Ks", price: 10000, ownMail: true, warranty: "Full Warranty", format: "Own Mail", note: "Own Mail\nFull Warranty\nCan't Renew" },
+    { name: "Individual Plan – 1 Year – 20000 Ks", price: 20000, warranty: "6 months warranty", note: "6 months warranty\nCan't Renew" },
     { name: "Family Plan – Coming Soon", price: 0, outOfStock: true }
   ]
 },
@@ -4712,7 +4754,7 @@ if(document.readyState === "loading"){
     // a plan may name its own tier; otherwise it's read off the plan's name.
     const TIER_LABEL = {vip:"VIP", svip:"SVIP", max:"Max", premium:"Premium", business:"Business",
       team:"Team", education:"Education", individual:"Individual", family:"Family",
-      pro:"Pro", proplus:"Pro Plus", plus:"Plus", go:"GO", lite:"Lite", credit:"Credit", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
+      pro:"Pro", proplus:"Pro Plus", plus:"Plus", go:"GO", lite:"Lite", credit:"Credit", link:"Link", gift:"Gift", basic:"Basic", core:"Core", standard:"Standard",
       "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra", hobby:"Hobby"};
     function planTier(plan){
       if(plan.tier) return plan.tier;
@@ -5240,7 +5282,7 @@ customHint.textContent = isInvalid
   const ownMailLabel = plan.ownMail ? '<span class="plan-access-badge">Own Mail</span>' : '';
   const TIER_LABEL = {vip:"VIP", svip:"SVIP", max:"Max", premium:"Premium", business:"Business",
     team:"Team", education:"Education", individual:"Individual", family:"Family",
-    pro:"Pro", pro5x:"Pro 5X", pro20x:"Pro 20X", proplus:"Pro Plus", plus:"Plus", go:"GO", lite:"Lite", credit:"Credit", link:"Link", basic:"Basic", core:"Core", standard:"Standard",
+    pro:"Pro", pro5x:"Pro 5X", pro20x:"Pro 20X", proplus:"Pro Plus", plus:"Plus", go:"GO", lite:"Lite", credit:"Credit", link:"Link", gift:"Gift", basic:"Basic", core:"Core", standard:"Standard",
     "4k":"4K Premium", gptpro:"Pro", ultra:"Ultra", hobby:"Hobby"};
   const tierChipFor = t => t ? `<span class="plan-tier-chip">${TIER_LABEL[t] || t}</span>` : "";
   // How the account is delivered. Explicit plan.type wins; otherwise infer.

@@ -2801,6 +2801,8 @@ body.preview-mode{ overflow:hidden !important; }
 .pb-t-private{ color:#7650b8; }
 .pb-t-pro5x{ color:#4a3a9e; }
 .pb-t-pro20x{ color:#8a6520; }
+.pb-t-proplus{ color:#7650b8; }
+.pb-t-max{ color:#8a6520; }
 
 .pb-yn{ display:inline-flex; width:17px; height:17px; border-radius:50%; align-items:center; justify-content:center; font-size:10px; font-weight:900; }
 .pb-yn.yes{ background:rgba(47,158,116,.14); color:#1f7d54; }
@@ -5368,6 +5370,7 @@ body.light-mode #checkoutSection .pay-option.active{
 #orderView .plan-option[data-tier="family"]    { --tier:#8A4210; --tier-2:#C97A2A; --tier-ink:#FFF2E4; }
 #orderView .plan-option[data-tier="go"]        { --tier:#D4AF37; --tier-2:#F6DFA0; --tier-ink:#5C4310; }
 #orderView .plan-option[data-tier="link"]      { --tier:#0E5468; --tier-2:#2B8AA6; --tier-ink:#E9F7FB; }
+#orderView .plan-option[data-tier="gift"]      { --tier:#A3234F; --tier-2:#DE5A8A; --tier-ink:#FFEEF4; }
 #orderView .plan-option[data-tier="basic"]     { --tier:#475569; --tier-2:#6B7A90; --tier-ink:#F1F4F9; }
 #orderView .plan-option[data-tier="4k"]        { --tier:#0B4F6C; --tier-2:#1C9FC6; --tier-ink:#E8FBFF; }
 #orderView .plan-option[data-tier="gptpro"]    { --tier:#1B2F6B; --tier-2:#3F6FD6; --tier-ink:#EDF2FF; }
@@ -7307,6 +7310,7 @@ body.light-mode #previewSection .preview-table-caption{
 #previewSection .order-preview-table td .preview-tier[data-tier="family"]{--tier:#8A4210;--tier-2:#C97A2A;--tier-ink:#FFF2E4}
 #previewSection .order-preview-table td .preview-tier[data-tier="go"]{--tier:#D4AF37;--tier-2:#F6DFA0;--tier-ink:#5C4310}
 #previewSection .order-preview-table td .preview-tier[data-tier="link"]{--tier:#0E5468;--tier-2:#2B8AA6;--tier-ink:#E9F7FB}
+#previewSection .order-preview-table td .preview-tier[data-tier="gift"]{--tier:#A3234F;--tier-2:#DE5A8A;--tier-ink:#FFEEF4}
 #previewSection .order-preview-table td .preview-tier[data-tier="basic"]{--tier:#475569;--tier-2:#6B7A90;--tier-ink:#F1F4F9}
 #previewSection .order-preview-table td .preview-tier[data-tier="4k"]{--tier:#0B4F6C;--tier-2:#1C9FC6;--tier-ink:#E8FBFF}
 #previewSection .order-preview-table td .preview-tier[data-tier="gptpro"]{--tier:#2A1B6B;--tier-2:#5B3FD6;--tier-ink:#F1EDFF}
@@ -9252,6 +9256,7 @@ body.light-mode .gp-bottomnav button.is-active{
 .plan-tier-badge[data-tier="vip"]{ border-color:#e9c16f; background:#ffe391; color:#75510e; }
 .plan-tier-badge[data-tier="max"]{ border-color:#c7acf1; background:#e4d5ff; color:#693a9d; }
 .plan-tier-badge[data-tier="ultra"]{ border-color:#efaacf; background:#ffd6ea; color:#96326d; }
+.plan-tier-badge[data-tier="gift"]{ border-color:#f1a7c2; background:#ffdbe8; color:#a3234f; }
 .plan-tier-badge[data-tier="basic"],
 .plan-tier-badge[data-tier="core"],
 .plan-tier-badge[data-tier="standard"],
