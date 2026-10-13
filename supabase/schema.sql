@@ -718,7 +718,7 @@ insert into public.catalog_plans (product_id, plan_name, price, custom, base_amo
 Above 3 Pf', 6000, false, null, null, false),
 ('hbomax', '🔥HBO Head - 25000 Ks
 1 Month', 25000, false, null, null, false),
-('picsart', 'PicsArt Pro – Share – 7 Days – 1000 Ks', 1000, false, null, null, false),
+('picsart', 'PicsArt Pro – Share (one device) – 7 Days – 1000 Ks', 1000, false, null, null, false),
 ('picsart', 'PicsArt Pro – Private – 7 Days – 2000 Ks', 2000, false, null, null, false),
 ('picsart', 'PicsArt Pro – Private – 30 Days – 8000 Ks', 8000, false, null, null, false),
 ('hma_vpn', '👥 1 Month – Share – 1400 Ks', 1400, false, null, null, false),

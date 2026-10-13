@@ -7,7 +7,7 @@
 
 -- step 1
 insert into public.catalog_plans (product_id, plan_name, price, custom, base_amount, min_amount, out_of_stock) values
-('picsart', 'PicsArt Pro – Share – 7 Days – 1000 Ks',    1000, false, null, null, false),
+('picsart', 'PicsArt Pro – Share (one device) – 7 Days – 1000 Ks', 1000, false, null, null, false),
 ('picsart', 'PicsArt Pro – Private – 7 Days – 2000 Ks',  2000, false, null, null, false),
 ('picsart', 'PicsArt Pro – Private – 30 Days – 8000 Ks', 8000, false, null, null, false)
 on conflict (product_id, plan_name) do nothing;
