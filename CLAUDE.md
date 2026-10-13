@@ -52,6 +52,9 @@ Mobile first: at ≤767px the top header is hidden and a floating glass bottom n
 5. A line in `CATALOG_MANIFEST` in `shinpayhubcld.html` (one-line compact JSON).
 6. The logo in `assets/` (flat folder).
 
+**Renaming or replacing a plan** changes its key (the name embeds the price): insert the new `catalog_plans` row first, deploy, then delete the old row (see `20261013_*` migrations). Never delete first, or a cached old page cannot order.
+Per-plan comparison tables in the benefits box: `benefits.tiers` + a row `values` object keyed by tier (keys need no relation to plan tiers; add a `.pb-t-<key>` colour in `styles.css`). Used by Gemini (Pro/Plus) and PicsArt (Share/Private).
+
 `create_order` prices orders **on the server** from `catalog_plans`, looked up by `plan_name`.
 The name must match `index.html` **character for character** (en dash `–`, and it embeds the price).
 Tier badge colours live in `.plan-tier-badge[data-tier=...]` and `#orderView .plan-option[data-tier=...]`;
@@ -61,6 +64,7 @@ Tier badge colours live in `.plan-tier-badge[data-tier=...]` and `#orderView .pl
 - Orders require a logged-in account: client gate `requireLoginFor()` plus a server-side guard inside `create_order`.
 - Customers read their own rows by RLS; admins via `is_admin()`. Many RPCs are `SECURITY DEFINER`; `admin_*` functions check `is_admin()` inside.
 - **Applying SQL**: the Supabase MCP `apply_migration` / `DELETE` calls have been cancelled before. Give the owner the SQL to paste in the SQL Editor, then verify with a read-only query.
+  (A plain additive `INSERT ... on conflict do nothing` through `execute_sql` has worked when the owner was away; `DELETE` was cancelled again on 2026-10-13, so leave deletes to the owner.)
 - Email: Supabase Auth custom SMTP through **Resend** (sender `hello@gamepayhub.shop`), DKIM/SPF verified, DMARC `p=none`. OTP length is 6; templates use `{{ .Token }}`, `{{ .ConfirmationURL }}`, `{{ .Email }}`.
   The Gmail sender avatar cannot be changed without BIMI (needs DMARC enforcement and a VMC/CMC certificate).
 - Storage: public `chat-images` bucket (customers upload under `<user id>/`, admins under `admin/`, 8MB).
@@ -75,6 +79,9 @@ Tier badge colours live in `.plan-tier-badge[data-tier=...]` and `#orderView .pl
   `chat` (a hand-off card with "Open order chat"). The completion time is stored per order (`gph_order_done_<token>`); orders completed earlier skip the countdown.
 - **Order chat** supports images both ways (`messages.image_url`, migration `20261011_order_chat_images.sql`; text still works without it).
   The admin "template" button sends `[Account details]` + `Label: value` lines; **only admin messages** are drawn as a card with a copy button per line.
+- **Highlighted nav item** (header `.gp-nav-link` and mobile `.gp-bottomnav`): only `setGpNavActive(dest)` changes it, and every page open/close calls it (`showLandingPage`, `showProductsPage`, `returnToStoreHome`, `openMyOrdersView`, `openAccountView`, `openNewsFeed`, `closeNewsFeed`). Do not toggle `is-active` by hand.
+- **Orders / Account / Security pages** have their own `.acct-tabbar` (Store / Orders / News / Account, the News tab runs `openNewsFromTabbar`), styled as the same floating frosted glass as the store; `.acct-screen` is transparent so the page gradient shows. The account page is tightened with `#accountView ...` overrides at the end of `styles.css`.
+- **Discount cards** (`.gp-card`): the whole card opens that product's plan choice through `openHotProduct`, with the best-discounted in-stock plan preselected. Do not send them to the products grid.
 - Signup: the submit button goes busy and ignores repeat taps (repeat taps used to trip the email rate limit).
 - Mobile "My account" for guests opens the login modal.
 
@@ -86,6 +93,13 @@ The owner's design requirements: **white background**; **soft purple glass, semi
 the **H leans left toward the G** and is larger; the G's inner arm hooks **down**; the **four d-pad buttons** are detailed glossy glass buttons placed high next to the arrow.
 Each stroke is seven stacked layers (depth, rim, glass, inner light, core, broad + crisp highlight) for a crisp UHD glass look.
 Earlier attempts the owner rejected: marbled liquid paint, dew drops / bubbles, colourful gradients, a raster logo.
+
+## Where things stand (handoff, 2026-10-13)
+- Everything is merged up to PR #216; the branch was restarted from `origin/mainu` afterwards. Live `catalog_plans` matches the code (Gemini AI incl. Pro 5 Months and Plus, Supabase Pro 12 Months, PicsArt Pro Share (one device) / Private 7 / Private 30 Days; the old Gemini 4 Months and old PicsArt rows are gone). No SQL is waiting.
+- Open questions for the owner (all optional): Gemini benefits comparison still shows "Not listed" on the Plus side for Video generation, Deep Research, AI Studio and Other connected tools, and Pro Flow Music has no credit number; the PicsArt benefits text comes from a Google AI Overview screenshot, not from the vendor; the PicsArt description line is still the old Burmese "Private accounts are covered" text.
+- Not checked on a real phone: discount-card tap while the marquee moves, glass blur performance, intro timing (about 9.2s now).
+- Supabase had a Realtime latency incident on 2026-10-13 (order status and chat can arrive late); the project has no Edge Functions.
+- Follow-up ideas: pin the `@supabase/supabase-js` version; account header could be folded into one row.
 
 ## Testing (nothing in the repo; set up in the scratchpad)
 - Serve with `python3 -m http.server 8123` (it dies between commands; restart it inline).
