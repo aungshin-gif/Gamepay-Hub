@@ -6,11 +6,12 @@ CSS = """
 @font-face{font-family:NM;font-weight:400;src:url(@@F@@/noto-sans-myanmar/files/noto-sans-myanmar-myanmar-400-normal.woff2)}
 @font-face{font-family:NM;font-weight:500;src:url(@@F@@/noto-sans-myanmar/files/noto-sans-myanmar-myanmar-500-normal.woff2)}
 @font-face{font-family:NM;font-weight:700;src:url(@@F@@/noto-sans-myanmar/files/noto-sans-myanmar-myanmar-700-normal.woff2)}
-@font-face{font-family:Inter;font-weight:400;src:url(@@F@@/inter/files/inter-latin-400-normal.woff2)}
-@font-face{font-family:Inter;font-weight:600;src:url(@@F@@/inter/files/inter-latin-600-normal.woff2)}
-@font-face{font-family:Inter;font-weight:700;src:url(@@F@@/inter/files/inter-latin-700-normal.woff2)}
-@font-face{font-family:JB;font-weight:400;src:url(@@F@@/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2)}
-@font-face{font-family:JB;font-weight:600;src:url(@@F@@/jetbrains-mono/files/jetbrains-mono-latin-600-normal.woff2)}
+@font-face{font-family:Inter,NM;font-weight:400;src:url(@@F@@/inter/files/inter-latin-400-normal.woff2)}
+@font-face{font-family:Inter,NM;font-weight:600;src:url(@@F@@/inter/files/inter-latin-600-normal.woff2)}
+@font-face{font-family:Inter,NM;font-weight:700;src:url(@@F@@/inter/files/inter-latin-700-normal.woff2)}
+@font-face{font-family:JB,NM;font-weight:400;src:url(@@F@@/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2)}
+@font-face{font-family:JB,NM;font-weight:600;src:url(@@F@@/jetbrains-mono/files/jetbrains-mono-latin-600-normal.woff2)}
+.bx{display:inline-block;width:.8em;height:.8em;border:1.5px solid #a87ce0;border-radius:3px;vertical-align:-.1em}
 :root{--v:#6231c8;--a:#7a35c7;--o:#a87ce0;--mist:#efe7ff;--tint:#f6f3fd;--bd:#e3d9f6;--ink:#2a1a55;--mu:#7d7390;
 --mint:#2fbe8c;--amber:#f2a93b;--coral:#e2568c}
 @page{size:150mm 215mm;margin:15mm 13mm 17mm 13mm;
@@ -27,8 +28,8 @@ h3{font-size:11.5pt;line-height:1.6;margin:1.1em 0 .3em;color:var(--ink);break-a
 ul,ol{margin:0 0 .7em;padding-left:1.35em}
 li{margin:.12em 0}
 a{color:var(--v);text-decoration:none}
-code{font-family:JB,Inter,monospace;font-size:8.6pt;background:var(--mist);padding:.05em .38em;border-radius:6px;color:#3e1f99}
-pre.code{font-family:JB,monospace;font-size:7.6pt;line-height:1.55;background:#faf7ff;border:1px solid var(--bd);border-radius:14px;padding:10px 12px;white-space:pre-wrap;word-break:break-all;margin:.5em 0 .9em;color:#2a1a55;break-inside:avoid}
+code{font-family:JB,NM,Inter,monospace;font-size:8.6pt;background:var(--mist);padding:.05em .38em;border-radius:6px;color:#3e1f99}
+pre.code{font-family:JB,NM,monospace;font-size:7.6pt;line-height:1.55;background:#faf7ff;border:1px solid var(--bd);border-radius:14px;padding:10px 12px;white-space:pre-wrap;word-break:break-all;margin:.5em 0 .9em;color:#2a1a55;break-inside:avoid}
 pre.code.long{break-inside:auto;font-size:7pt}
 .cover{width:150mm;height:215mm;position:relative;overflow:hidden;background:linear-gradient(155deg,#f6f3fd 0%,#efe7ff 45%,#e3d4ff 100%);page-break-after:always;break-after:page}
 .cover .blob1{position:absolute;width:120mm;height:120mm;border-radius:50%;background:radial-gradient(circle,#a87ce0 0%,rgba(168,124,224,0) 70%);top:-30mm;right:-35mm;opacity:.55}
@@ -66,11 +67,11 @@ table.tbl td:first-child{border-left:1px solid var(--bd)}table.tbl td:last-child
 table.tbl tr:last-child td{border-bottom:1px solid var(--bd)}
 table.tbl tr:last-child td:first-child{border-bottom-left-radius:12px}table.tbl tr:last-child td:last-child{border-bottom-right-radius:12px}
 table.tbl tr:nth-child(even) td{background:var(--tint)}
-table.tbl td.n,table.tbl th.n{text-align:right;font-family:Inter;white-space:nowrap}
+table.tbl td.n,table.tbl th.n{text-align:right;font-family:Inter,NM;white-space:nowrap}
 table.tbl td.hl{background:#efe7ff!important;font-weight:700}
 .steps{list-style:none;padding:0;margin:.6em 0;counter-reset:s}
 .steps>li{counter-increment:s;position:relative;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:8px 12px 6px 48px;margin:0 0 9px;box-shadow:0 4px 14px rgba(98,49,200,.06);break-inside:avoid}
-.steps>li:before{content:counter(s);position:absolute;left:11px;top:9px;width:27px;height:27px;border-radius:50%;background:var(--v);color:#fff;font-family:Inter;font-weight:700;font-size:10pt;line-height:27px;text-align:center}
+.steps>li:before{content:counter(s);position:absolute;left:11px;top:9px;width:27px;height:27px;border-radius:50%;background:var(--v);color:#fff;font-family:Inter,NM;font-weight:700;font-size:10pt;line-height:27px;text-align:center}
 .steps>li .t{font-weight:700;color:var(--v);display:block;margin-bottom:1px}
 .steps .see{display:block;font-size:8.8pt;color:#1b7f5c;background:#eefaf5;border-radius:10px;padding:1px 9px;margin:3px 0 3px}
 figure{margin:.6em 0 1em;break-inside:avoid}
@@ -84,7 +85,7 @@ figcaption{font-size:8pt;color:var(--mu);text-align:center;margin-top:3px;line-h
 .quote{border-left:4px solid var(--o);background:var(--tint);padding:6px 12px 3px;border-radius:0 14px 14px 0;margin:.5em 0 .9em;font-size:9.2pt;break-inside:avoid}
 .toc{margin:0;padding:0;list-style:none}
 .toc li{display:flex;gap:10px;align-items:baseline;border-bottom:1px dashed var(--bd);padding:1px 0;line-height:1.6}
-.toc .n{font-family:Inter;font-weight:700;color:var(--v);width:2em}
+.toc .n{font-family:Inter,NM;font-weight:700;color:var(--v);width:2em}
 .small{font-size:8.6pt;color:var(--mu)}
 """
 
@@ -166,7 +167,7 @@ g_hi = C.stacked_hbar([("မေးတာ", 31, C.V), ("စဉ်းစားတ�
 BODY = f"""
 <div class="cover"><div class="blob1"></div><div class="blob2"></div>
 <div class="in">
-  <span class="badge">VIBE CODER FIELD GUIDE · v1</span>
+  <span class="badge">VIBE CODER FIELD GUIDE · v2</span>
   <h1>ကိုယ့် <span>AI Gateway</span><br>ကိုယ်တိုင် ဆောက်မယ်</h1>
   <div class="sub">API key ကို ကိုယ်တိုင်ထုတ်၊ တစ်ယောက်ချင်း ကန့်သတ်၊ ပိုက်ဆံမဆုံးရအောင် တွက်တတ်ဖို့ — လက်တွေ့ လုပ်ခဲ့တဲ့ မှတ်တမ်းနဲ့ Clone လုပ်နည်း လမ်းညွှန်</div>
   <div class="en">Build Your Own AI API Gateway — a step-by-step record</div>
@@ -403,12 +404,12 @@ Redemption code၊ payment တွေ ကိုသုံးချင်မှ။ 
 <div class="c"><h4>၆။ မသိတာကို မသိဘူးပြော</h4><p>"ကျွန်တော်မမြင်ရဘူး၊ မစစ်ရသေးဘူး" လို့ ဝန်ခံခိုင်းတယ်။</p></div></div>
 
 <h2>ကူးယူသုံးလို့ရတဲ့ Prompt template များ</h2>
-<div class="quote"><b>① အသေးစိတ်မရှင်းခင်</b><br>"ဒါကို mental model အရင်ရှင်းပြပါ (diagram နဲ့)၊ ပြီးမှ အဆင့်တွေပေးပါ။"</div>
-<div class="quote"><b>② Screenshot နဲ့</b><br>"ဒီ screenshot မှာ ကျွန်တော် ဘယ်မှာရောက်နေလဲ၊ နောက်တစ်ဆင့် တစ်ခုပဲ ပြောပါ။ (key ပါရင် ဖုံးထားပါတယ်)"</div>
-<div class="quote"><b>③ ရိုးသားမှု</b><br>"ဘာတွေကို ကိုယ်တိုင်စစ်ပြီး၊ ဘာတွေကို မစစ်ရသေးလဲ ခွဲပြောပါ။ မသေချာရင် ခန့်မှန်းချက်လို့ ပြောပါ။"</div>
-<div class="quote"><b>④ မသိတာ မဖန်တီးခိုင်း</b><br>"Endpoint/API နာမည်တွေကို မကြံဖန်ပါနဲ့။ မသေချာရင် ငါ့ကို docs ပြပါ၊ မေးပါ။"</div>
-<div class="quote"><b>⑤ Chat အသစ်မကူးခင်</b><br>"ဒီ project ရဲ့ လက်ရှိအခြေအနေ၊ ဆုံးဖြတ်ချက်၊ ဆက်လုပ်ရမယ့်အရာတွေကို HANDOFF.md ဖိုင်တစ်ခုထဲ repo ထဲမှာ ရေးပေးပါ။ Secret မထည့်ပါနဲ့။"</div>
-<div class="quote"><b>⑥ Chat အသစ်စတာ</b><br>"repo ထဲက CLAUDE.md နဲ့ HANDOFF.md ကိုဖတ်ပါ။ နားလည်တာကို အတိုချုပ်ပြောပြီး ဘာဆက်လုပ်ရမလဲ တစ်ဆင့်ပဲပြောပါ။"</div>
+<div class="quote"><b>(1) အသေးစိတ်မရှင်းခင်</b><br>"ဒါကို mental model အရင်ရှင်းပြပါ (diagram နဲ့)၊ ပြီးမှ အဆင့်တွေပေးပါ။"</div>
+<div class="quote"><b>(2) Screenshot နဲ့</b><br>"ဒီ screenshot မှာ ကျွန်တော် ဘယ်မှာရောက်နေလဲ၊ နောက်တစ်ဆင့် တစ်ခုပဲ ပြောပါ။ (key ပါရင် ဖုံးထားပါတယ်)"</div>
+<div class="quote"><b>(3) ရိုးသားမှု</b><br>"ဘာတွေကို ကိုယ်တိုင်စစ်ပြီး၊ ဘာတွေကို မစစ်ရသေးလဲ ခွဲပြောပါ။ မသေချာရင် ခန့်မှန်းချက်လို့ ပြောပါ။"</div>
+<div class="quote"><b>(4) မသိတာ မဖန်တီးခိုင်း</b><br>"Endpoint/API နာမည်တွေကို မကြံဖန်ပါနဲ့။ မသေချာရင် ငါ့ကို docs ပြပါ၊ မေးပါ။"</div>
+<div class="quote"><b>(5) Chat အသစ်မကူးခင်</b><br>"ဒီ project ရဲ့ လက်ရှိအခြေအနေ၊ ဆုံးဖြတ်ချက်၊ ဆက်လုပ်ရမယ့်အရာတွေကို HANDOFF.md ဖိုင်တစ်ခုထဲ repo ထဲမှာ ရေးပေးပါ။ Secret မထည့်ပါနဲ့။"</div>
+<div class="quote"><b>(6) Chat အသစ်စတာ</b><br>"repo ထဲက CLAUDE.md နဲ့ HANDOFF.md ကိုဖတ်ပါ။ နားလည်တာကို အတိုချုပ်ပြောပြီး ဘာဆက်လုပ်ရမလဲ တစ်ဆင့်ပဲပြောပါ။"</div>
 
 <h2>Railway template ဆိုတာ ဘာလဲ</h2>
 <p><b>Template = တစ်ခါလုပ်ပြီးသား အလုပ်ကို ပုံစံချထားပြီး နောက်တစ်ခါ တူတူပြန်သုံးတာ။</b> ဒီ project မှာ အရေးအကြီးဆုံး template က <b>Railway template</b> ပါ။ ဟင်းချက်ဖို့ ပစ္စည်းအကုန် အထုပ်လိုက်ပြင်ထားတဲ့ "meal kit" လိုပဲ — ကိုယ်တိုင် server၊ database၊ Docker မတပ်ရဘဲ <b>Deploy</b> တစ်ချက်နှိပ်ရုံနဲ့ gateway တစ်ခုလုံး ပေါ်လာတယ်။</p>
@@ -438,7 +439,7 @@ Redemption code၊ payment တွေ ကိုသုံးချင်မှ။ 
 
 <h3>တခြား "template" ၃ မျိုး (ဒီစာအုပ်ထဲမှာ ရှိတာ)</h3>
 <ul>
-<li><b>Prompt template</b> — အပေါ်က ① မှ ⑥ မေးခွန်းပုံစံများ။</li>
+<li><b>Prompt template</b> — အပေါ်က (1) မှ (6) မေးခွန်းပုံစံများ။</li>
 <li><b>Memory template</b> — <b>CLAUDE.md</b> (စည်းမျဉ်း) + <b>HANDOFF.md</b> (လက်ရှိအခြေအနေ)၊ chat အသစ်ကို မှတ်ဉာဏ်ပေးတာ။</li>
 <li><b>Pricing preset</b> — Gateway ရဲ့ စျေးသတ်မှတ်ပုံစံ (Fixed price)။</li>
 </ul>
@@ -469,15 +470,15 @@ Redemption code၊ payment တွေ ကိုသုံးချင်မှ။ 
 
 <h2>လုံခြုံရေး စစ်ဆေးစာရင်း</h2>
 <table class="tbl"><tr><th style="width:8%"> </th><th>အချက်</th><th style="width:22%">ဘယ်အချိန်</th></tr>
-<tr><td>☐</td><td><b>Admin password</b> ကို ခိုင်ခံ့အောင်၊ password manager ထဲ သိမ်း။</td><td>Wizard မှာ</td></tr>
-<tr><td>☐</td><td>Chat ထဲ ပေါ်ခဲ့တဲ့ key အားလုံးကို <b>ဖျက်ပြီး အသစ်ထုတ်</b>။</td><td>စမ်းပြီးတာနဲ့</td></tr>
-<tr><td>☐</td><td>Public <b>sign-up ပိတ်</b> (member တွေအကောင့်မလိုရင်) — System Settings → Authentication {UN}။</td><td>Live မဖြစ်ခင်</td></tr>
-<tr><td>☐</td><td><b>2FA</b> ဖွင့် (Security &amp; Access ထဲမှာ ရှိရင်) {UN}။</td><td>Live မဖြစ်ခင်</td></tr>
-<tr><td>☐</td><td>Member key တိုင်း: <b>quota</b>၊ <b>model ကန့်သတ်</b> (flash)၊ <b>သက်တမ်း</b>။</td><td>Key ထုတ်တိုင်း</td></tr>
-<tr><td>☐</td><td>DeepSeek <b>Balance alert</b> ဖွင့်၊ ထုတ်ပေးတဲ့ quota စုစုပေါင်း ≤ DeepSeek ပိုက်ဆံ။</td><td>Key မထုတ်ခင်</td></tr>
-<tr><td>☐</td><td>Railway <b>usage limit</b> သတ်မှတ်၊ Trial $5 ကို ကြည့်ပါ။</td><td>တစ်ပတ်တစ်ခါ</td></tr>
-<tr><td>☐</td><td>Provider terms ဖတ် (key မျှဝေတာ၊ ပြန်ရောင်းတာ)။</td><td>Provider အသစ်တိုင်း</td></tr>
-<tr><td>☐</td><td>Upstream key ကို Gateway ထဲပဲထား၊ chat/screenshot/repo ထဲ မထည့်။</td><td>အမြဲတမ်း</td></tr></table>
+<tr><td><span class="bx"></span></td><td><b>Admin password</b> ကို ခိုင်ခံ့အောင်၊ password manager ထဲ သိမ်း။</td><td>Wizard မှာ</td></tr>
+<tr><td><span class="bx"></span></td><td>Chat ထဲ ပေါ်ခဲ့တဲ့ key အားလုံးကို <b>ဖျက်ပြီး အသစ်ထုတ်</b>။</td><td>စမ်းပြီးတာနဲ့</td></tr>
+<tr><td><span class="bx"></span></td><td>Public <b>sign-up ပိတ်</b> (member တွေအကောင့်မလိုရင်) — System Settings → Authentication {UN}။</td><td>Live မဖြစ်ခင်</td></tr>
+<tr><td><span class="bx"></span></td><td><b>2FA</b> ဖွင့် (Security &amp; Access ထဲမှာ ရှိရင်) {UN}။</td><td>Live မဖြစ်ခင်</td></tr>
+<tr><td><span class="bx"></span></td><td>Member key တိုင်း: <b>quota</b>၊ <b>model ကန့်သတ်</b> (flash)၊ <b>သက်တမ်း</b>။</td><td>Key ထုတ်တိုင်း</td></tr>
+<tr><td><span class="bx"></span></td><td>DeepSeek <b>Balance alert</b> ဖွင့်၊ ထုတ်ပေးတဲ့ quota စုစုပေါင်း ≤ DeepSeek ပိုက်ဆံ။</td><td>Key မထုတ်ခင်</td></tr>
+<tr><td><span class="bx"></span></td><td>Railway <b>usage limit</b> သတ်မှတ်၊ Trial $5 ကို ကြည့်ပါ။</td><td>တစ်ပတ်တစ်ခါ</td></tr>
+<tr><td><span class="bx"></span></td><td>Provider terms ဖတ် (key မျှဝေတာ၊ ပြန်ရောင်းတာ)။</td><td>Provider အသစ်တိုင်း</td></tr>
+<tr><td><span class="bx"></span></td><td>Upstream key ကို Gateway ထဲပဲထား၊ chat/screenshot/repo ထဲ မထည့်။</td><td>အမြဲတမ်း</td></tr></table>
 
 <h2>ဥပဒေ/စည်းမျဉ်း ကိုင်တွယ်ပုံ</h2>
 <p>New-api က <b>compliance terms</b> ကို ဖတ်ပြီး အတည်ပြုမှ payment/redemption code တွေ ဖွင့်ပေးတယ်။ ၆ ချက်စလုံးကို ဖတ်ပါ။ အဓိကအချက်တွေက — (၁) သုံးတဲ့ API/key/account အတွက် <b>တရားဝင်ခွင့်ပြုချက်ရှိတယ်</b> (၂) ခွင့်ပြုချက်အတိုင်းပဲ သုံးမယ်၊ <b>ခွင့်ပြုချက်မရှိဘဲ ပြန်ရောင်း/ကုန်သွယ်တာ မလုပ်ဘူး</b> (၃) ဥပဒေအရ တာဝန်ကို <b>ကိုယ်တိုင်ခံယူ</b>မယ်။ ကျွန်တော်တို့ ဒီအချက်ကို ဖတ်ပြီး <b>ပြန်မရောင်း၊ giveaway နဲ့ပဲသွား</b>မယ်လို့ ဆုံးဖြတ်ခဲ့တယ်။ ဒါပေမဲ့ <b>giveaway ဟာလည်း provider (DeepSeek) ရဲ့ စည်းမျဉ်းနဲ့ ဆန့်ကျင်သလားဆိုတာ မစစ်ရသေးဘူး</b> {UN}။ Member အများကြီးမပေးခင် DeepSeek ရဲ့ terms ကိုဖတ်ပါ။</p>
@@ -581,13 +582,13 @@ GW_MODEL=deepseek-v4-pro python chat.py          # pro နဲ့ chat</pre>
 </section>
 
 <section class="chapter">
-<div class="opener" style="margin-top:8mm"><div class="num">✓</div><h1>ဆက်လုပ်မယ်ဆိုရင်</h1><p class="promise">ဒီစာအုပ်ကို ပြီးဆုံးတဲ့ဘေးမှာ ဒီ ၃ ခုကို ပထမလုပ်ပါ။</p></div>
+<div class="opener" style="margin-top:8mm"><div class="num">OK</div><h1>ဆက်လုပ်မယ်ဆိုရင်</h1><p class="promise">ဒီစာအုပ်ကို ပြီးဆုံးတဲ့ဘေးမှာ ဒီ ၃ ခုကို ပထမလုပ်ပါ။</p></div>
 <ol class="steps">
 <li><span class="t">Key အားလုံးကို သန့်ရှင်း</span>Chat/screenshot ထဲ ပေါ်ခဲ့တဲ့ key တွေ ဖျက်၊ အသစ်ထုတ်၊ password manager ထဲ သိမ်း။</li>
 <li><span class="t">Member ၁ ယောက်နဲ့ စမ်း</span>Quota 1.2 နဲ့ key တစ်ခုထုတ်၊ Usage Logs နဲ့ DeepSeek Usage ကိုက်လား ကြည့်။</li>
 <li><span class="t">မစစ်ရသေးတာကို စစ်</span>အပိုင်း A6 စာရင်းကို တစ်ခုချင်း အတည်ပြု၊ ပြီးမှ Usage page ရေး။</li></ol>
 {callout('why','ဘာကြောင့်','<p>ဒီစာအုပ်က ပြီးပြည့်စုံတာ မဟုတ်ပါ — <b>အလုပ်လုပ်နေတုန်းရဲ့ မှတ်တမ်း</b>ပါ။ ပြင်ပြီးတာတွေ၊ ပြောင်းသွားတာတွေ ရှိလာရင် handoff ဖိုင်ကိုလည်း update လုပ်ပါ၊ ဒါမှ နောက်လူတွေ (AI အပါအဝင်) မမှားပါဘူး။</p>')}
-<p class="small" style="margin-top:20px;text-align:center">GamePay Hub · AI Gateway Field Guide · v1 · 2026-10-15</p>
+<p class="small" style="margin-top:20px;text-align:center">GamePay Hub · AI Gateway Field Guide · v2 · 2026-10-15</p>
 </section>
 """
 
