@@ -198,7 +198,7 @@ BODY = f"""
 <li><span class="n">04</span><span>တည်ဆောက်ကြစို့ — အဆင့် ၁၀ ဆင့်</span></li>
 <li><span class="n">05</span><span>စျေးနှုန်းနဲ့ credit တွက်နည်း</span></li>
 <li><span class="n">06</span><span>Model ထည့်နည်း၊ ဝယ်နည်း</span></li>
-<li><span class="n">07</span><span>Claude နဲ့ အလုပ်လုပ်ပုံ + Template သဘောတရား</span></li>
+<li><span class="n">07</span><span>Claude နဲ့ အလုပ်လုပ်ပုံ + Railway template</span></li>
 <li><span class="n">08</span><span>လုံခြုံရေးနဲ့ ကျွန်တော်တို့ လုပ်မိတဲ့ အမှားများ</span></li>
 <li><span class="n">09</span><span>အဖွဲ့ဝင်တွေကို key ပေးမယ် + Usage page</span></li>
 <li><span class="n">A</span><span>နောက်ဆက်တွဲ — စကားလုံးရှင်းလင်းချက်၊ command စာရင်း၊ ပြဿနာရှင်းနည်း၊ chat.py</span></li>
@@ -391,7 +391,7 @@ Redemption code၊ payment တွေ ကိုသုံးချင်မှ။ 
 </section>
 
 <section class="chapter">
-<div class="opener"><div class="num">07</div><h1>Claude နဲ့ အလုပ်လုပ်ပုံ</h1><p class="promise">ကိုယ့်ကိုယ်ကိုယ် coder မဟုတ်ဘဲ ဒီ project ကို ဘယ်လိုခိုင်းခဲ့လဲ။ Template ဆိုတာ ဘာလဲ။</p></div>
+<div class="opener"><div class="num">07</div><h1>Claude နဲ့ အလုပ်လုပ်ပုံ</h1><p class="promise">ကိုယ့်ကိုယ်ကိုယ် coder မဟုတ်ဘဲ ဒီ project ကို ဘယ်လိုခိုင်းခဲ့လဲ။ Railway template နဲ့ gateway ကို one-click ဆောက်ပုံ။</p></div>
 
 <h2>ခိုင်းပုံ ၆ ချက်</h2>
 <div class="cards">
@@ -410,15 +410,38 @@ Redemption code၊ payment တွေ ကိုသုံးချင်မှ။ 
 <div class="quote"><b>⑤ Chat အသစ်မကူးခင်</b><br>"ဒီ project ရဲ့ လက်ရှိအခြေအနေ၊ ဆုံးဖြတ်ချက်၊ ဆက်လုပ်ရမယ့်အရာတွေကို HANDOFF.md ဖိုင်တစ်ခုထဲ repo ထဲမှာ ရေးပေးပါ။ Secret မထည့်ပါနဲ့။"</div>
 <div class="quote"><b>⑥ Chat အသစ်စတာ</b><br>"repo ထဲက CLAUDE.md နဲ့ HANDOFF.md ကိုဖတ်ပါ။ နားလည်တာကို အတိုချုပ်ပြောပြီး ဘာဆက်လုပ်ရမလဲ တစ်ဆင့်ပဲပြောပါ။"</div>
 
-<h2>"Template" ဆိုတာ ဘာလဲ</h2>
-<p><b>Template = တစ်ခါလုပ်ပြီးသား အလုပ်ကို ပုံစံချထားပြီး နောက်တစ်ခါ တူတူပြန်သုံးတာ။</b> ဒီ project မှာ template ၅ မျိုး ကြုံခဲ့တယ်:</p>
+<h2>Railway template ဆိုတာ ဘာလဲ</h2>
+<p><b>Template = တစ်ခါလုပ်ပြီးသား အလုပ်ကို ပုံစံချထားပြီး နောက်တစ်ခါ တူတူပြန်သုံးတာ။</b> ဒီ project မှာ အရေးအကြီးဆုံး template က <b>Railway template</b> ပါ။ ဟင်းချက်ဖို့ ပစ္စည်းအကုန် အထုပ်လိုက်ပြင်ထားတဲ့ "meal kit" လိုပဲ — ကိုယ်တိုင် server၊ database၊ Docker မတပ်ရဘဲ <b>Deploy</b> တစ်ချက်နှိပ်ရုံနဲ့ gateway တစ်ခုလုံး ပေါ်လာတယ်။</p>
+
+<h3>Template က ဘာတွေ တပ်ပေးလဲ</h3>
+<table>
+<tr><th>Service</th><th>အလုပ်</th><th>Volume (ဒေတာသိမ်း)</th></tr>
+<tr><td><b>new-api</b></td><td>Gateway ကိုယ်တိုင်။ key စစ်၊ quota ဖြတ်၊ DeepSeek ဆီ ပို့။</td><td><code>new-api-volume</code></td></tr>
+<tr><td><b>MySQL</b></td><td>Database — user၊ key၊ log၊ စျေးနှုန်း setting တွေ သိမ်း။</td><td><code>mysql-volume</code></td></tr>
+<tr><td><b>Redis</b></td><td>မြန်မြန်ဖတ်ဖို့ cache။</td><td>—</td></tr>
+</table>
+{callout('why','Volume ဘာကြောင့်လိုလဲ','<p>Volume မရှိရင် service ပြန်စတိုင်း ဒေတာပျောက်နိုင်တယ်။ Key တွေ၊ quota တွေ ပျောက်သွားရင် member အားလုံး ပြန်ပေးရမယ်။ ဒါကြောင့် <b>volume ၂ ခုပါတာ မဖျက်ပါနဲ့</b>။</p>')}
+
+<h3>Template သုံးပြီးနောက် ကိုယ်တိုင်လုပ်ရတာ</h3>
 <div class="cards">
-<div class="c"><h4>၁။ Railway template</h4><p>Project တစ်ခုလုံးရဲ့ ပုံစံ (gateway + database + redis + volumes + password/secret ပါ) ကို one-click နဲ့ ပြန်ဆောက်တာ။ ကိုယ်တိုင် Docker မရေးရ။ {UN} Community က လုပ်ထားတာမို့ ယုံခင်းစစ်။</p></div>
-<div class="c"><h4>၂။ Pricing template</h4><p>Gateway ရဲ့ စျေးသတ်မှတ်တဲ့ preset (Fixed price၊ Tiered၊ Claude Opus ... စသည်)။ ကျွန်တော်တို့ <b>Fixed price</b> ပုံစံကိုသုံးတယ်။</p></div>
-<div class="c"><h4>၃။ Prompt template</h4><p>အပေါ်က ① မှ ⑥ — ပြန်သုံးလို့ရတဲ့ မေးခွန်းပုံစံ။</p></div>
-<div class="c"><h4>၄။ Memory template</h4><p><b>CLAUDE.md</b> (project ရဲ့ စည်းမျဉ်း) + <b>HANDOFF.md</b> (လက်ရှိအခြေအနေ)။ Chat အသစ်ကို အစကနေ မရှင်းရအောင် AI ကို "မှတ်ဉာဏ်" ပေးတယ်။</p></div>
-<div class="c"><h4>၅။ Message template</h4><p>GamePay store ရဲ့ order chat မှာ admin က "[Account details] Label: value" ပုံစံနဲ့ account ပို့တာ — တူတာကို ပြန်ရိုက်စရာမလို။</p></div></div>
-{callout('why','ဘာကြောင့်','<p>Template တွေရဲ့ အလုပ်က <b>အမှားနည်းအောင်၊ အချိန်သက်သာအောင်</b> ပါ။ ဒါပေမဲ့ template တိုင်းကို <b>ကိုယ်တိုင်ဖွင့်ကြည့်ပြီး ယုံမယုံ စစ်</b>ပါ (အထူးသဖြင့် community က လုပ်တာ)၊ ကိုယ့် secret ကို ထည့်မယ့်နေရာဖြစ်လို့။</p>')}
+<div class="c"><h4>၁။ Admin account</h4><p>Setup wizard မှာ ကိုယ့် admin username/password ကိုယ်ဆောက်။ <b>Password manager</b> ထဲသိမ်း။</p></div>
+<div class="c"><h4>၂။ Upstream key</h4><p>DeepSeek key ကို <b>Channel</b> ထဲပဲ ထည့်။ Chat/repo/screenshot ထဲ မထည့်ပါနဲ့။</p></div>
+<div class="c"><h4>၃။ စျေးနှုန်း</h4><p>Model တစ်ခုချင်းစီ စျေးသတ်မှတ် (အခန်း ၅)။ မသတ်ရင် default $75/1M ပေါ်မယ်။</p></div>
+<div class="c"><h4>၄။ Railway usage limit</h4><p>မမေ့ပါနဲ့ — ကန့်သတ်မထားရင် ကိုယ်မသိဘဲ ကုန်ကျနိုင်တယ်။</p></div></div>
+<p>Domain (ဥပမာ <code>api.</code> subdomain) က optional။ Railway က URL တစ်ခု အလိုအလျောက်ပေးထားပြီးသား။</p>
+
+{callout('mistake','ကျွန်တော်တို့ လုပ်မိတဲ့ အမှား','<p>Project ကို ဖျက်ပြီးနောက် အဲဒီ project ရဲ့ <b>အဟောင်း <code>/new/template/...</code> URL</b> ကို ပြန်ဖွင့်တော့ Railway က "Oh No! the train derailed" ပြတယ်။ <b>အဖြေ:</b> အဟောင်း link မသုံးဘဲ <code>railway.com/deploy/new-api-template</code> ကနေ ပြန်စ။</p>')}
+{callout('warn','ယုံခင်း စစ်ပါ','<p>ဒါက <b>community</b> က လုပ်ထားတဲ့ template ပါ (Railway တရားဝင်မဟုတ်)။ Secret ထည့်မယ့်နေရာဖြစ်လို့ deploy ပြီးရင် new-api service ရဲ့ image က <code>calciumion/new-api</code> (official) ဟုတ်မဟုတ် စစ်ပါ။ {UN}</p>')}
+
+<h3>ကိုယ်တိုင် template လုပ်ချင်ရင်</h3>
+<p>ကိုယ်ဆောက်ထားတဲ့ project ကို template အဖြစ် ပြန်ထုတ်ပြီး မိတ်ဆွေတွေကို ပေးလို့ရမလား၊ ဘယ်လိုလုပ်လဲ ဆိုတာ ကျွန်တော်တို့ <b>မစမ်းရသေးပါ</b> {UN}။ Railway docs မှာ စစ်ပါ။ ပြီးရင် <b>secret တွေ template ထဲ မပါအောင်</b> အရင်စစ်ပါ။</p>
+
+<h3>တခြား "template" ၃ မျိုး (ဒီစာအုပ်ထဲမှာ ရှိတာ)</h3>
+<ul>
+<li><b>Prompt template</b> — အပေါ်က ① မှ ⑥ မေးခွန်းပုံစံများ။</li>
+<li><b>Memory template</b> — <b>CLAUDE.md</b> (စည်းမျဉ်း) + <b>HANDOFF.md</b> (လက်ရှိအခြေအနေ)၊ chat အသစ်ကို မှတ်ဉာဏ်ပေးတာ။</li>
+<li><b>Pricing preset</b> — Gateway ရဲ့ စျေးသတ်မှတ်ပုံစံ (Fixed price)။</li>
+</ul>
 
 <h2>Handoff ဖိုင်ရဲ့ သဘော</h2>
 <p>Chat တစ်ခု ရှည်လာရင် AI က အစက အချက်တွေ မေ့လာတတ်တယ်။ ဒါကြောင့် <b>လက်ရှိအခြေအနေ၊ ဆုံးဖြတ်ချက်၊ အမှားတွေ၊ နောက်အဆင့်</b> ကို repo ထဲ ဖိုင်တစ်ခုအဖြစ် ရေးထားပြီး AI အသစ်ကို အဲဒါဖတ်ခိုင်းတာ။ ဒီစာအုပ်ကိုယ်တိုင်လည်း အဲဒီ handoff ဖိုင်ကနေ ထုတ်ထားတာပါ။ {OK}</p>
