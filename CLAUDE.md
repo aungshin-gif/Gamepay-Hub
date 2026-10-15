@@ -18,7 +18,7 @@ mental model and the result, not syntax).
 The owner is also building an **API gateway (new-api on Railway + DeepSeek)** to give team members limited-quota API keys,
 a token-usage page, and a Burmese PDF book about the journey. It now lives in its **own repo, `aungshin-gif/gamepay-api-hub`**
 (notes under `notes/`: read `HANDOFF.md` first, then `BOOK_BRIEF.md`). Do not add API-gateway work to this store repo.
-The old copy in `_notes/api-gateway/` is kept only until the owner confirms the move. Never commit secrets in either repo.
+The old copy in `_notes/api-gateway/` was deleted after the move. Never commit secrets in either repo.
 
 ## Git / release workflow
 - Work on the branch the session assigns, commit with a clear message, push with `git push -u origin <branch>`.
