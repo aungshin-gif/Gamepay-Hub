@@ -1,0 +1,578 @@
+import charts as C
+
+FONTS = "node_modules/@fontsource"
+
+CSS = """
+@font-face{font-family:NM;font-weight:400;src:url(@@F@@/noto-sans-myanmar/files/noto-sans-myanmar-myanmar-400-normal.woff2)}
+@font-face{font-family:NM;font-weight:500;src:url(@@F@@/noto-sans-myanmar/files/noto-sans-myanmar-myanmar-500-normal.woff2)}
+@font-face{font-family:NM;font-weight:700;src:url(@@F@@/noto-sans-myanmar/files/noto-sans-myanmar-myanmar-700-normal.woff2)}
+@font-face{font-family:Inter;font-weight:400;src:url(@@F@@/inter/files/inter-latin-400-normal.woff2)}
+@font-face{font-family:Inter;font-weight:600;src:url(@@F@@/inter/files/inter-latin-600-normal.woff2)}
+@font-face{font-family:Inter;font-weight:700;src:url(@@F@@/inter/files/inter-latin-700-normal.woff2)}
+@font-face{font-family:JB;font-weight:400;src:url(@@F@@/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2)}
+@font-face{font-family:JB;font-weight:600;src:url(@@F@@/jetbrains-mono/files/jetbrains-mono-latin-600-normal.woff2)}
+:root{--v:#6231c8;--a:#7a35c7;--o:#a87ce0;--mist:#efe7ff;--tint:#f6f3fd;--bd:#e3d9f6;--ink:#2a1a55;--mu:#7d7390;
+--mint:#2fbe8c;--amber:#f2a93b;--coral:#e2568c}
+@page{size:150mm 215mm;margin:15mm 13mm 17mm 13mm;
+  @bottom-center{content:counter(page);font-family:Inter,NM;font-size:8pt;color:#7d7390}
+  @bottom-left{content:"GamePay Hub · AI Gateway Field Guide";font-family:Inter,NM;font-size:7pt;color:#a99fc0}}
+@page :first{margin:0;@bottom-center{content:none}@bottom-left{content:none}}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:Inter,NM,sans-serif;font-size:10pt;line-height:1.82;color:var(--ink);margin:0;background:#fff}
+p{margin:0 0 .65em}
+b,strong{font-weight:700}
+h2{font-size:14.5pt;line-height:1.5;margin:1.3em 0 .45em;color:var(--v);break-after:avoid}
+h3{font-size:11.5pt;line-height:1.6;margin:1.1em 0 .3em;color:var(--ink);break-after:avoid}
+ul,ol{margin:0 0 .7em;padding-left:1.35em}
+li{margin:.12em 0}
+a{color:var(--v);text-decoration:none}
+code{font-family:JB,Inter,monospace;font-size:8.6pt;background:var(--mist);padding:.05em .38em;border-radius:6px;color:#3e1f99}
+pre.code{font-family:JB,monospace;font-size:7.6pt;line-height:1.55;background:#faf7ff;border:1px solid var(--bd);border-radius:14px;padding:10px 12px;white-space:pre-wrap;word-break:break-all;margin:.5em 0 .9em;color:#2a1a55;break-inside:avoid}
+pre.code.long{break-inside:auto;font-size:7pt}
+.cover{width:150mm;height:215mm;position:relative;overflow:hidden;background:linear-gradient(155deg,#f6f3fd 0%,#efe7ff 45%,#e3d4ff 100%);page-break-after:always;break-after:page}
+.cover .blob1{position:absolute;width:120mm;height:120mm;border-radius:50%;background:radial-gradient(circle,#a87ce0 0%,rgba(168,124,224,0) 70%);top:-30mm;right:-35mm;opacity:.55}
+.cover .blob2{position:absolute;width:100mm;height:100mm;border-radius:50%;background:radial-gradient(circle,#2fbe8c 0%,rgba(47,190,140,0) 70%);bottom:-35mm;left:-30mm;opacity:.28}
+.cover .in{position:absolute;inset:0;padding:22mm 16mm 16mm;display:flex;flex-direction:column}
+.cover .badge{display:inline-block;align-self:flex-start;background:#fff;border:1px solid var(--bd);border-radius:999px;padding:3px 14px;font-size:8pt;font-weight:600;color:var(--v);letter-spacing:.04em}
+.cover h1{font-size:27pt;line-height:1.55;margin:16mm 0 4mm;color:var(--ink)}
+.cover h1 span{color:var(--v)}
+.cover .sub{font-size:12pt;line-height:1.8;color:#4a3a7a;max-width:112mm}
+.cover .en{margin-top:6mm;font-size:9.5pt;font-weight:600;color:var(--a);letter-spacing:.02em}
+.cover .card{margin-top:auto;background:rgba(255,255,255,.72);border:1px solid var(--bd);border-radius:20px;padding:12px 16px;box-shadow:0 10px 30px rgba(98,49,200,.12);font-size:9pt;line-height:1.8}
+.cover .card b{color:var(--v)}
+.chapter{break-before:page}
+.opener{background:linear-gradient(135deg,#6231c8,#a87ce0);color:#fff;border-radius:22px;padding:16px 18px 18px;margin:0 0 14px;box-shadow:0 12px 28px rgba(98,49,200,.22);break-inside:avoid}
+.opener .num{font-family:Inter,NM;font-size:30pt;font-weight:700;line-height:1.2;opacity:.9}
+.opener h1{font-size:19pt;line-height:1.55;margin:2px 0 6px}
+.opener .promise{font-size:10pt;line-height:1.85;opacity:.95;margin:0}
+.callout{border-radius:16px;padding:9px 13px 7px;margin:.7em 0 .9em;border:1px solid var(--bd);background:var(--tint);break-inside:avoid;position:relative}
+.callout .lbl{display:inline-block;font-size:7.8pt;font-weight:700;letter-spacing:.03em;color:#fff;border-radius:999px;padding:0 10px;margin-bottom:3px;line-height:1.7}
+.callout p:last-child{margin-bottom:.2em}
+.callout.tip{background:#eefaf5;border-color:#bfead9}.callout.tip .lbl{background:var(--mint)}
+.callout.warn{background:#fff6e6;border-color:#f6dba8}.callout.warn .lbl{background:#d98b12}
+.callout.mistake{background:#fdeef4;border-color:#f4c3d6}.callout.mistake .lbl{background:var(--coral)}
+.callout.sec{background:var(--mist);border-color:#d6c3fb}.callout.sec .lbl{background:var(--v)}
+.callout.why{background:#f4eefc;border-color:var(--bd)}.callout.why .lbl{background:var(--o)}
+.tag{display:inline-block;font-size:7.6pt;font-weight:700;border-radius:999px;padding:0 9px;line-height:1.7;vertical-align:1px;white-space:nowrap}
+.tag.ok{background:#dff6ec;color:#1b7f5c}.tag.un{background:#fff0cf;color:#a76a00}
+table.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:.6em 0 1em;font-size:8.3pt;line-height:1.7}
+table.tbl tr{break-inside:avoid}
+table.tbl thead{display:table-header-group}
+table.tbl th{background:var(--v);color:#fff;text-align:left;padding:6px 8px;font-weight:700}
+table.tbl th:first-child{border-top-left-radius:12px}table.tbl th:last-child{border-top-right-radius:12px}
+table.tbl td{padding:5px 8px;border-top:1px solid var(--bd);vertical-align:top}
+table.tbl td:first-child{border-left:1px solid var(--bd)}table.tbl td:last-child{border-right:1px solid var(--bd)}
+table.tbl tr:last-child td{border-bottom:1px solid var(--bd)}
+table.tbl tr:last-child td:first-child{border-bottom-left-radius:12px}table.tbl tr:last-child td:last-child{border-bottom-right-radius:12px}
+table.tbl tr:nth-child(even) td{background:var(--tint)}
+table.tbl td.n,table.tbl th.n{text-align:right;font-family:Inter;white-space:nowrap}
+table.tbl td.hl{background:#efe7ff!important;font-weight:700}
+.steps{list-style:none;padding:0;margin:.6em 0;counter-reset:s}
+.steps>li{counter-increment:s;position:relative;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:8px 12px 6px 48px;margin:0 0 9px;box-shadow:0 4px 14px rgba(98,49,200,.06);break-inside:avoid}
+.steps>li:before{content:counter(s);position:absolute;left:11px;top:9px;width:27px;height:27px;border-radius:50%;background:var(--v);color:#fff;font-family:Inter;font-weight:700;font-size:10pt;line-height:27px;text-align:center}
+.steps>li .t{font-weight:700;color:var(--v);display:block;margin-bottom:1px}
+.steps .see{display:block;font-size:8.8pt;color:#1b7f5c;background:#eefaf5;border-radius:10px;padding:1px 9px;margin:3px 0 3px}
+figure{margin:.6em 0 1em;break-inside:avoid}
+figure svg{width:100%;height:auto;display:block}
+figcaption{font-size:8pt;color:var(--mu);text-align:center;margin-top:3px;line-height:1.6}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:.6em 0 1em}
+.cards .c{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:8px 11px 5px;box-shadow:0 4px 14px rgba(98,49,200,.06);break-inside:avoid}
+.cards .c h4{margin:0 0 2px;font-size:10pt;color:var(--v);line-height:1.6}
+.cards .c p{font-size:8.8pt;line-height:1.8;margin:0 0 .3em}
+.formula{background:var(--mist);border:1px solid #d6c3fb;border-radius:16px;padding:9px 14px;margin:.6em 0 .9em;font-family:Inter,NM;font-weight:600;text-align:center;font-size:10.5pt;color:#3e1f99;break-inside:avoid;line-height:1.8}
+.quote{border-left:4px solid var(--o);background:var(--tint);padding:6px 12px 3px;border-radius:0 14px 14px 0;margin:.5em 0 .9em;font-size:9.2pt;break-inside:avoid}
+.toc{margin:0;padding:0;list-style:none}
+.toc li{display:flex;gap:10px;align-items:baseline;border-bottom:1px dashed var(--bd);padding:1px 0;line-height:1.6}
+.toc .n{font-family:Inter;font-weight:700;color:var(--v);width:2em}
+.small{font-size:8.6pt;color:var(--mu)}
+"""
+
+
+def callout(kind, label, body):
+    return f'<div class="callout {kind}"><span class="lbl">{label}</span>{body}</div>'
+
+
+def fig(svg, cap):
+    return f'<figure>{svg}<figcaption>{cap}</figcaption></figure>'
+
+
+OK = '<span class="tag ok">စစ်ဆေးပြီး</span>'
+UN = '<span class="tag un">မစစ်ရသေး</span>'
+
+CHAT_PY = """import os, json, time, subprocess
+
+URL = "https://<your-gateway>/v1/chat/completions"
+KEY = os.environ["GW_KEY"]
+MODEL = os.environ.get("GW_MODEL", "deepseek-flash")
+PRICE = 1.2  # $ per 1M tokens (right for flash)
+
+def call(body):
+    for i in range(3):
+        p = subprocess.run(
+            ["curl", "-s", "--max-time", "90", URL,
+             "-H", "Authorization: Bearer " + KEY,
+             "-H", "Content-Type: application/json",
+             "-d", body],
+            capture_output=True, text=True)
+        if p.stdout.strip():
+            try:
+                return json.loads(p.stdout)
+            except Exception:
+                pass
+        print("(retry...)", flush=True)
+        time.sleep(2)
+    return None
+
+msgs = []
+used = 0
+print("Chat start. Type /exit to quit.")
+
+while True:
+    try:
+        q = input("\\nYou: ").strip()
+    except EOFError:
+        break
+    if q == "/exit":
+        break
+    if not q:
+        continue
+    msgs.append({"role": "user", "content": q})
+    print("(waiting...)", flush=True)
+    t0 = time.time()
+    d = call(json.dumps({"model": MODEL, "messages": msgs}))
+    if not d or "choices" not in d:
+        print("Error:", json.dumps(d)[:300] if d else "no response")
+        msgs.pop()
+        continue
+    a = d["choices"][0]["message"]["content"]
+    msgs.append({"role": "assistant", "content": a})
+    t = d["usage"]["total_tokens"]
+    used += t
+    print("\\nAI:", a)
+    print(f"[{time.time()-t0:.1f}s | token {t} | total {used} | cost ~ ${used*PRICE/1e6:.6f}]")
+"""
+
+g1 = C.bar_chart(["input သက်သက်", "input 50 / output 50", "output သက်သက်"],
+                 [("Peak (အမြင့်ဆုံးစျေး)", C.V, [0.30, 0.75, 1.20]), ("Off-peak (တစ်ဝက်)", C.O, [0.15, 0.375, 0.60])],
+                 1.4, [0, 0.4, 0.8, 1.2], line=(1.2, "Gateway ကောက်ခံတာ $1.20", C.CORAL), fmt="{:.2f}")
+g2 = C.bar_chart(["300K", "500K", "1M", "3M"], [("key quota ($) = token (သန်း) × 1.2", C.V, [0.36, 0.6, 1.2, 3.6])],
+                 4.2, [0, 1, 2, 3, 4], fmt="{:.2f}")
+g3 = C.bar_chart(["$2", "$6", "$12", "$24"],
+                 [("အဆိုးဆုံး ($1.2 / ဦး)", C.CORAL, [1, 5, 10, 20]), ("ပျမ်းမျှ ($0.75 / ဦး)", C.MINT, [2, 8, 16, 32])],
+                 36, [0, 10, 20, 30], prefix="", fmt="{:.0f}")
+g_hi = C.stacked_hbar([("မေးတာ", 31, C.V), ("စဉ်းစားတာ", 25, C.AMBER), ("အဖြေ", 10, C.MINT)], '"hi" တစ်လုံးအတွက် စုစုပေါင်း 66 token')
+
+BODY = f"""
+<div class="cover"><div class="blob1"></div><div class="blob2"></div>
+<div class="in">
+  <span class="badge">VIBE CODER FIELD GUIDE · v1</span>
+  <h1>ကိုယ့် <span>AI Gateway</span><br>ကိုယ်တိုင် ဆောက်မယ်</h1>
+  <div class="sub">API key ကို ကိုယ်တိုင်ထုတ်၊ တစ်ယောက်ချင်း ကန့်သတ်၊ ပိုက်ဆံမဆုံးရအောင် တွက်တတ်ဖို့ — လက်တွေ့ လုပ်ခဲ့တဲ့ မှတ်တမ်းနဲ့ Clone လုပ်နည်း လမ်းညွှန်</div>
+  <div class="en">Build Your Own AI API Gateway — a step-by-step record</div>
+  <div class="card"><b>ဒီစာအုပ်ထဲမှာ</b> ပုံစံချ အဆင့် ၁၀ ဆင့် · စျေးတွက်နည်း ဇယား/graph · လုပ်မိတဲ့ အမှားများ · လုံခြုံရေး စစ်ဆေးစာရင်း · Claude နဲ့ အလုပ်လုပ်ပုံ template များ<br>
+  <span class="small">GamePay Hub · Claude နဲ့ အတူ ရေးသားသည် · 2026 အောက်တိုဘာ (စျေးနှုန်းများကို 2026-10-15 မှာ မြင်ခဲ့တဲ့အတိုင်း)</span></div>
+</div></div>
+
+<section class="chapter" style="break-before:auto">
+<div class="opener"><div class="num">00</div><h1>စမဖတ်ခင်</h1><p class="promise">ဒီစာအုပ်ကို ဘယ်လိုဖတ်ရမလဲ၊ ဘာကို ယုံရမလဲ၊ ဘာကို ကိုယ်တိုင်ပြန်စစ်ရမလဲ။</p></div>
+
+<h2>ဒီစာအုပ်က ဘာအတွက်လဲ</h2>
+<p>ဒီစာအုပ်က <b>"ကျွန်တော်တို့ တကယ်လုပ်ခဲ့တာ"</b> ကို မှတ်တမ်းတင်ထားတာပါ။ Server မတည်ဆောက်ဖူးတဲ့ vibe coder တစ်ယောက်က Claude ကို ခိုင်းပြီး ကိုယ်ပိုင် AI Gateway တစ်ခု တည်ဆောက်ပြီး၊ အဖွဲ့ဝင်တွေကို ကန့်သတ်ထားတဲ့ API key တွေ ထုတ်ပေးနိုင်တဲ့အထိ ရောက်ခဲ့တဲ့ ခရီးပါ။ ဖတ်ပြီးတဲ့အခါ သင်က <b>ဒီ project ကို clone လုပ်နိုင်ရမယ်</b>။</p>
+
+<h2>သင်္ကေတတွေ</h2>
+<table class="tbl"><tr><th style="width:26%">အမှတ်အသား</th><th>ဆိုလိုတာ</th></tr>
+<tr><td>{OK}</td><td>ရှင့် screenshot ထဲမှာ ကိုယ်တိုင်မြင်ခဲ့ရတာ၊ ကိုယ်တိုင်စမ်းပြီး အလုပ်လုပ်တာ။</td></tr>
+<tr><td>{UN}</td><td>ခန့်မှန်းချက် (သို့) မစစ်ရသေးတာ။ <b>ကိုယ်တိုင် အတည်ပြုပြီးမှ ယုံပါ။</b></td></tr>
+<tr><td><span class="tag" style="background:#6231c8;color:#fff">လုံခြုံရေး</span></td><td>ပိုက်ဆံ/အကောင့် ဆုံးရှုံးနိုင်တဲ့ အချက်။</td></tr>
+<tr><td><span class="tag" style="background:#e2568c;color:#fff">အမှား</span></td><td>ကျွန်တော်တို့ တကယ်လုပ်မိခဲ့တဲ့ အမှား (သင်မလုပ်မိဖို့)။</td></tr></table>
+
+{callout('warn','သတိ', '<p><b>ဒါက ဥပဒေအကြံ မဟုတ်ပါ။</b> စျေးနှုန်းတွေ၊ ခလုတ်နာမည်တွေ၊ provider စည်းမျဉ်းတွေ မကြာခဏ ပြောင်းပါတယ်။ ဒီစာအုပ်ထဲက ဂဏန်းတွေက <b>2026-10-15</b> မှာ မြင်ခဲ့တာ၊ မလုပ်ခင် official စာမျက်နှာမှာ ပြန်စစ်ပါ။</p>')}
+{callout('sec','လုံခြုံရေး', '<p><b>Key၊ password ကို chat ထဲ၊ screenshot ထဲ၊ စာအုပ်ထဲ ဘယ်တော့မှ မထည့်ပါနဲ့။</b> ဒီစာအုပ်ထဲက key တွေအားလုံး ဥပမာအတုတွေပါ။ ကျွန်တော်တို့ကိုယ်တိုင် screenshot ထဲမှာ key အပြည့် ပေါ်သွားလို့ ပြန်ဖျက်ခဲ့ရဖူးတယ် (အခန်း ၈ ကိုကြည့်)။</p>')}
+
+<h2>မာတိကာ</h2>
+<ul class="toc">
+<li><span class="n">01</span><span>ဇာတ်လမ်း — ဘာကြောင့် Gateway လိုလာတာလဲ</span></li>
+<li><span class="n">02</span><span>စိတ်ထဲမှာ မြင်ရမယ့်ပုံများ (token၊ key၊ gateway၊ credit)</span></li>
+<li><span class="n">03</span><span>ကိရိယာ ပစ္စည်းများ (platforms)</span></li>
+<li><span class="n">04</span><span>တည်ဆောက်ကြစို့ — အဆင့် ၁၀ ဆင့်</span></li>
+<li><span class="n">05</span><span>စျေးနှုန်းနဲ့ credit တွက်နည်း</span></li>
+<li><span class="n">06</span><span>Model ထည့်နည်း၊ ဝယ်နည်း</span></li>
+<li><span class="n">07</span><span>Claude နဲ့ အလုပ်လုပ်ပုံ + Template သဘောတရား</span></li>
+<li><span class="n">08</span><span>လုံခြုံရေးနဲ့ ကျွန်တော်တို့ လုပ်မိတဲ့ အမှားများ</span></li>
+<li><span class="n">09</span><span>အဖွဲ့ဝင်တွေကို key ပေးမယ် + Usage page</span></li>
+<li><span class="n">A</span><span>နောက်ဆက်တွဲ — စကားလုံးရှင်းလင်းချက်၊ command စာရင်း၊ ပြဿနာရှင်းနည်း၊ chat.py</span></li>
+</ul>
+</section>
+
+<section class="chapter">
+<div class="opener"><div class="num">01</div><h1>ဇာတ်လမ်း</h1><p class="promise">GamePay Hub store ကနေ ကိုယ်ပိုင် AI Gateway ဆီ ဘယ်လိုရောက်လာသလဲ၊ ဘာကိုဆုံးဖြတ်ခဲ့သလဲ။</p></div>
+
+<h2>စခဲ့တဲ့နေရာ</h2>
+<p><b>GamePay Hub</b> က မြန်မာ customer တွေအတွက် AI tools၊ streaming၊ VPN၊ game top-up တွေကို ရောင်းတဲ့ website ပါ။ GitHub Pages ပေါ်မှာ တင်ထားပြီး Supabase ကို backend အဖြစ်သုံးတယ်။ Owner က code ကို ကိုယ်တိုင်မရေးဘဲ Claude ကို ခိုင်းပြီး ဆောက်တဲ့ <b>"vibe coding"</b> သမားပါ — syntax ထက် <b>ပုံစံ (mental model) နဲ့ ရလဒ်</b> ကို ဂရုစိုက်တယ်။</p>
+
+<h2>စိတ်ကူး</h2>
+<p>Store အပြင် နောက်ထပ်တစ်ခု လိုချင်လာတယ် — <b>AI API token</b> တွေပါ။ ဆန္ဒက ၃ ခု ရောနေတာ:</p>
+<ol><li>ကိုယ်တိုင် chatbot ထဲမှာ သုံးချင်တယ်။</li><li>Key တွေကို <b>ကိုယ်တိုင် ထုတ်ပေးချင်တယ်</b> (တစ်ယောက်ချင်းစီ၊ ကန့်သတ်ပြီး)။</li><li>နောက်ဆုံး website ပေါ်မှာ ကိုယ့်ပုံစံနဲ့ token အသုံးပြုမှုကို ပြချင်တယ်။</li></ol>
+
+<h2>အရေးကြီးတဲ့ ဆုံးဖြတ်ချက် ၃ ခု</h2>
+<div class="cards">
+<div class="c"><h4>၁။ အပေါဆုံးကို မလိုက်ဘူး</h4><p>အင်တာနက်ပေါ်မှာ Claude/GPT ကို အလွန်ပေါတဲ့စျေးနဲ့ ရောင်းတဲ့နေရာတွေ ရှိတယ်။ ဒါတွေက ခိုးကတ်/ခိုးထားတဲ့ key ဖြစ်နိုင်လို့ <b>မဝယ်ဘူး</b>။</p></div>
+<div class="c"><h4>၂။ ပြန်မရောင်းဘူး</h4><p>Provider တွေရဲ့ စည်းမျဉ်း (key ရောင်းဝယ်တာ၊ account ပြန်ငှားတာ တားမြစ်) ကိုဖတ်ပြီး <b>ကိုယ်သုံး + team giveaway</b> နဲ့ပဲ သွားမယ်လို့ ဆုံးဖြတ်တယ်။</p></div>
+<div class="c"><h4>၃။ ကိုယ်ပိုင် Gateway</h4><p>Open-source <b>new-api</b> ကို Railway မှာ တင်ပြီး key တွေကို ကိုယ်တိုင်ထုတ်မယ်။ Upstream key (DeepSeek) ကို gateway ထဲပဲ သိမ်းမယ်။</p></div>
+<div class="c"><h4>ပန်းတိုင်</h4><p>Team project ထဲက member တစ်ယောက်ချင်းစီကို <b>DeepSeek flash 1M token</b> စီ giveaway ပေးမယ်။</p></div>
+</div>
+{fig(C.timeline(), 'ခရီးလမ်းကြောင်း (အကျဉ်း)')}
+{callout('why','ဘာကြောင့်', '<p>အကျိုးအမြတ်ရောင်းဖို့ထက် <b>ကန့်သတ်ပြီး ခွဲဝေပေးတတ်ဖို့</b> က ပိုအရေးကြီးတယ်လို့ တွေ့ခဲ့တယ်။ ကန့်သတ်ချက်မရှိရင် တစ်ယောက်က ပိုက်ဆံအကုန်သုံးသွားနိုင်တယ်၊ ဒါကြောင့် Gateway လိုတာ။</p>')}
+</section>
+
+<section class="chapter">
+<div class="opener"><div class="num">02</div><h1>စိတ်ထဲမှာ မြင်ရမယ့်ပုံများ</h1><p class="promise">ခလုတ်မနှိပ်ခင် ပုံစံကို နားလည်ထားရင် ပြဿနာတက်တိုင်း ဘယ်နေရာမှာလဲ ကိုယ်တိုင်ခန့်မှန်းနိုင်မယ်။</p></div>
+
+<h2>Token ဆိုတာ</h2>
+<p>AI က စာကို <b>token</b> လို့ခေါ်တဲ့ အပိုင်းအစလေးတွေအဖြစ် ဖတ်တယ်၊ ရေးတယ်။ စျေးနှုန်းကို <b>"token ၁သန်း = $ဘယ်လောက်"</b> နဲ့ တွက်တယ်။ မေးတာ (<b>input</b>) နဲ့ ဖြေတာ (<b>output</b>) စျေးမတူဘူး။</p>
+{fig(g_hi, 'ကျွန်တော်တို့ ကိုယ်တိုင်တွေ့ခဲ့တာ — "hi" လို့ပဲမေးတာ 66 token ကုန်။ ဖြေတဲ့ 35 ထဲက 25 က <b>စဉ်းစားတာ (reasoning)</b>။')}
+{callout('tip','အကြံ', '<p>DeepSeek flash က default အနေနဲ့ <b>စဉ်းစား (thinking) mode</b> ဖြစ်တယ်။ စဉ်းစားတဲ့ token တွေကိုလည်း output အဖြစ် ရေတွက်ပြီး ပိုက်ဆံကောက်တယ်။ ဒါကြောင့် ရိုးရိုးမေးခွန်းလေးတောင် မျှော်မှန်းထက် token ပိုကုန်နိုင်တယ်။</p>')}
+
+<h2>API key ဆိုတာ</h2>
+<p>Key ဆိုတာ <b>"ဝင်ခွင့်ပါတ်စ်"</b> ပါ။ <code>sk-...</code> နဲ့ စတဲ့ စာလုံးအရှည်ကြီးတစ်ခု။ ပြင်ပ app က ဒီ key ကို ပြမှ Gateway က ဝင်ခွင့်ပေးတယ်။ Key တစ်ခုချင်းစီမှာ <b>သုံးခွင့်ပမာဏ (quota)</b> သတ်မှတ်လို့ရတယ်။</p>
+
+<h2>Gateway ဆိုတာ</h2>
+<p>ဟိုတယ်ရဲ့ <b>reception</b> လို စဉ်းစားပါ။ Customer (app) က ဟိုတယ်မီးဖိုချောင် (DeepSeek) ကို တိုက်ရိုက်မဝင်ရဘူး — reception (Gateway) ကို အရင်ပြောရတယ်။ Reception က (၁) key မှန်လား စစ်၊ (၂) quota ကျန်လား စစ်၊ (၃) သုံးသလောက် နှုတ်၊ (၄) မှတ်တမ်းတင်။ ပြီးမှ ကိုယ့်ရဲ့ <b>အစစ်အမှန် key</b> နဲ့ မီးဖိုချောင်ကို ပြောပေးတယ်။</p>
+{fig(C.architecture(), 'စနစ်တစ်ခုလုံးရဲ့ပုံ။ အပြာနှင်းဆီရောင်မျဉ်းတွေက member key၊ စိမ်းရောင်က ကိုယ့်ရဲ့ အစစ်အမှန် DeepSeek key။')}
+{callout('sec','လုံခြုံရေး', '<p>အကြီးဆုံး အကျိုးက <b>DeepSeek key ကို member တွေ မမြင်ရတာ</b> ပါ။ သူတို့မြင်ရတာ Gateway ထုတ်ပေးတဲ့ key ပဲ။ ပေါက်သွားရင် အဲဒီ key တစ်ခုတည်း ဖျက်ရုံပဲ။</p>')}
+
+<h2>Credit ဆိုတာ</h2>
+<p><b>Credit (quota)</b> က လူတစ်ယောက်ချင်းစီ၊ key တစ်ခုချင်းစီအတွက် <b>"သုံးခွင့်ရှိတဲ့ အတွင်းစာရင်း"</b> ပါ။ ပိုက်ဆံအစစ်မဟုတ်ဘူး၊ ဂဏန်းတစ်ခုပဲ — ဒါပေမဲ့ သုံးတိုင်း ကျတယ်၊ ကုန်ရင် Gateway က ပိတ်တယ်။ ရှင်တစ်ယောက်တည်းသုံးရင် မထိတွေ့ရတာက ရှင့်မှာ အစကတည်းက ပမာဏကြီးကြီး ($200 ဝန်းကျင်) ပါလာလို့။</p>
+
+<h2>ကန့်သတ်ချက် ၃ ထပ်</h2>
+{fig(C.three_limits(), 'Request တစ်ခုကို ၃ ထပ်လုံးကျော်မှ ခွင့်ပြုတယ်။ အသေးဆုံးတစ်ခုက အနိုင်ရတယ်။')}
+{callout('why','ဘာကြောင့်', '<p>ပြဿနာအများစု ဒီ ၃ ထပ်ကို မခွဲမြင်လို့ ရှုပ်တာပါ။ ဥပမာ — Gateway မှာ $200 ရှိပေမဲ့ DeepSeek မှာ $1.99 ပဲရှိရင် တကယ့်ကန့်သတ်က DeepSeek ပါ။ ပြောင်းပြန် — DeepSeek မှာ ပိုက်ဆံရှိပေမဲ့ Gateway balance ကုန်ရင်လည်း ပိတ်တယ်။</p>')}
+
+<h2>Playground နဲ့ API key ကွာခြားချက်</h2>
+<table class="tbl"><tr><th>စမ်းတဲ့နည်း</th><th>ဘယ်လိုဝင်လဲ</th><th>ဘာကနေ နှုတ်လဲ</th></tr>
+<tr><td><b>Playground</b> (Gateway ထဲက chat)</td><td>Login လုပ်ထားတဲ့ <b>session</b> — key မလိုဘူး</td><td>User balance</td></tr>
+<tr><td><b>ပြင်ပ app</b> (VS Code၊ Termux၊ bot)</td><td><b>API key</b> + Base URL</td><td>Key quota (နောက်ကွယ်မှာ user balance)</td></tr></table>
+<p>ဒါကြောင့် key ကိုဖျက်ပြီးတောင် Playground က ဆက်အလုပ်လုပ်တာ ပုံမှန်ပါ။ {OK}</p>
+</section>
+
+<section class="chapter">
+<div class="opener"><div class="num">03</div><h1>ကိရိယာ ပစ္စည်းများ</h1><p class="promise">ဘာတွေသုံးခဲ့လဲ၊ ဘာအတွက်လဲ၊ ဘာကုန်ကျလဲ၊ ဘာသတိထားရမလဲ။</p></div>
+<table class="tbl">
+<tr><th style="width:17%">Platform</th><th>ဘာလဲ / ဘာအတွက်</th><th style="width:21%">ကုန်ကျ</th><th style="width:27%">သတိထားရန်</th></tr>
+<tr><td><b>DeepSeek Platform</b></td><td>AI model ပေးသူ + ငွေကြိုဖြည့်ရတဲ့နေရာ။ Key ထုတ်၊ Usage ကြည့်။</td><td>$2 ဖြည့်ခဲ့ (Visa နဲ့ အောင်) {OK}</td><td>Key ကို ဖန်တီးချိန်မှာပဲ တစ်ခါမြင်ရ။ Usage dashboard က 5 မိနစ်လောက် နှောင့်နှေး။</td></tr>
+<tr><td><b>Railway</b></td><td>Server မစီမံဘဲ app run ပေးတဲ့ cloud။ Gateway ကို ဒီမှာတင်။</td><td>Trial "30 ရက် သို့ $5" {OK}။ နောက်ပိုင်းစျေး {UN}</td><td>Usage အလိုက်ကောက်၊ ၃ service run လို့ $5 မြန်ကုန်နိုင်။ Usage limit သတ်မှတ်။</td></tr>
+<tr><td><b>new-api</b></td><td>Open-source gateway: key ထုတ်၊ quota၊ model စျေးသတ်မှတ်၊ log။</td><td>အခမဲ့ (AGPL-3.0)</td><td>Compliance terms အတည်ပြုရ။ UI version အလိုက် ကွာ။</td></tr>
+<tr><td><b>Termux</b></td><td>Android ဖုန်းထဲက terminal။ curl/Python နဲ့ စမ်းသပ်။</td><td>အခမဲ့</td><td>Paste လုပ်ရင် <code>[200~</code> အမှိုက်ပါတတ်။</td></tr>
+<tr><td><b>GitHub + Pages</b></td><td>Code သိမ်း၊ website ထုတ်ပြန်၊ notes သိမ်း။</td><td>အခမဲ့</td><td>Pages ပေါ်ရောက်တာ public။ Secret မထည့်ရ။</td></tr>
+<tr><td><b>Hostinger</b></td><td>Domain DNS။ <code>api.</code> subdomain ချိတ်ဖို့ (စီစဉ်ထား)။</td><td>ရှိပြီးသား</td><td>CNAME တန်ဖိုးကို Railway ပေးတာအတိုင်း။</td></tr>
+<tr><td><b>Supabase</b></td><td>GamePay store ရဲ့ backend (ဒီ Gateway နဲ့ သီးသန့်)။</td><td>Free plan</td><td>—</td></tr>
+<tr><td><b>Claude Code</b></td><td>AI လက်ထောက်: ညွှန်၊ ရှင်းပြ၊ code/script ရေး။</td><td>—</td><td>Secret မပေးရ။ ကိုယ့် dashboard ကို မနှိပ်နိုင်ဘူး။</td></tr>
+</table>
+{callout('tip','အကြံ', '<p>မသိတဲ့ platform တစ်ခုချင်းစီကို ရှင်းပြတဲ့ "အဘိဓာန်" ကို နောက်ဆက်တွဲ A မှာ ထည့်ထားတယ်။</p>')}
+</section>
+
+<section class="chapter">
+<div class="opener"><div class="num">04</div><h1>တည်ဆောက်ကြစို့ — အဆင့် ၁၀ ဆင့်</h1><p class="promise">တစ်ဆင့်ချင်း လုပ်ပါ။ ဆင့်တိုင်းမှာ "ဘာမြင်ရမလဲ" ရှိတယ်၊ မမြင်ရရင် ရပ်ပြီး မဆက်ပါနဲ့။</p></div>
+
+<ol class="steps">
+<li><span class="t">DeepSeek: account၊ key၊ ပိုက်ဆံဖြည့်</span>
+<b>platform.deepseek.com</b> မှာ အကောင့်ဖွင့်၊ <b>API keys → Create new API key</b>။ ပေါ်လာတဲ့ key ကို <b>ချက်ချင်း copy</b> လုပ်ပြီး password manager ထဲ သိမ်း (တစ်ခါပဲ မြင်ရ)။ <b>Top up</b> မှာ ကတ်နဲ့ $2 လောက် ဖြည့်။ Usage စာမျက်နှာမှာ <b>Balance alert</b> ဖွင့်။
+<span class="see">မြင်ရမယ့်ပုံ: Usage စာမျက်နှာမှာ "Topped-up balance $2.00"။</span></li>
+<li><span class="t">Railway account</span>
+railway.com မှာ ဝင်။ Dashboard ထိပ်မှာ "Limited Trial — 30 days or $5" ပြတယ်။ အခမဲ့စမ်းလို့ရတယ်။
+<span class="see">မြင်ရမယ့်ပုံ: Dashboard + "New" ခလုတ်။</span></li>
+<li><span class="t">Template deploy</span>
+<b>railway.com/deploy/new-api-template</b> ကိုဖွင့်၊ <b>Deploy</b>။ Service ၃ ခု (<b>new-api</b>၊ <b>MySQL</b>၊ <b>Redis</b>) နဲ့ volume ၂ ခုပေါ်လာမယ်။ <b>new-api</b> က "Building" ကနေ "Online" ဖြစ်အောင် စောင့်။
+<span class="see">မြင်ရမယ့်ပုံ: အနီ error မပါဘဲ ၃ ခုလုံး Online။</span>
+{UN} Community template ဖြစ်လို့ image နာမည်က <code>calciumion/new-api</code> (official) ဟုတ်မဟုတ် service ထဲမှာ စစ်။</li>
+<li><span class="t">Public domain ယူ</span>
+<b>new-api → Settings → Networking → Generate Domain</b>။ <code>xxxx.up.railway.app</code> ရလာမယ်။ ဖွင့်ကြည့်ရင် Gateway စာမျက်နှာပေါ်။
+<span class="see">မြင်ရမယ့်ပုံ: "Initialize New API" setup wizard။</span></li>
+<li><span class="t">Setup wizard + Admin</span>
+Database check → <b>Administrator account</b> (username/password ကိုယ်တိုင်သတ်မှတ်၊ <b>ချက်ချင်း မှတ်</b>) → Usage mode <b>External operations</b> → Review။ ပြီးရင် <b>Login</b> (Sign up မဟုတ်)။
+<span class="see">မြင်ရမယ့်ပုံ: Profile မှာ Role = Root၊ ဘယ်ဘက်မှာ ADMIN အပိုင်း (Channels, Models, Users …)။</span></li>
+<li><span class="t">Channel ထည့် (DeepSeek ချိတ်)</span>
+<b>Channels → Create Channel → DeepSeek</b>။ Name၊ <b>Base URL ဗလာထား</b>၊ API Key ကို paste၊ <b>Fetch from Upstream</b> နှိပ်ပြီး <code>deepseek-flash</code>၊ <code>deepseek-v4-pro</code> ကိုရွေး၊ Group <code>default</code> → <b>Create</b>။
+<span class="see">မြင်ရမယ့်ပုံ: Fetch လုပ်လို့ model စာရင်းပေါ်ရင် key မှန်တာ သက်သေ။</span></li>
+<li><span class="t">Model စျေးသတ်မှတ် (အရေးကြီးဆုံး)</span>
+<b>Models → deepseek-flash → Pricing → Expression tab</b> → <b>Input 1.2 / Output 1.2</b> → <b>Save model prices</b>။ <code>deepseek-v4-pro</code> မှာ <b>1.32 / 3.96</b>။ အပေါ်က <b>Current Billing</b> ပြောင်းသွားရမယ်။ (အကြောင်းအရင်းကို အခန်း ၅ မှာ)
+{callout('mistake','အမှား', '<p>စျေးမသတ်မှတ်ရသေးတဲ့ model တွေကို Gateway က <b>$75 / 1M</b> လို့ ပုံသေတွက်တယ်၊ Playground မှာ "Model Price Not Configured" ပေါ်တယ်။ <b>Input 0 / Output 0 လို့ မသိမ်းပါနဲ့</b> — အခမဲ့ model ဖြစ်သွားမယ်။ "Per-token (deprecated)" tab ကိုလည်း မထိပါနဲ့။</p>')}</li>
+<li><span class="t">Compliance အတည်ပြု (လိုမှ)</span>
+Redemption code၊ payment တွေ ကိုသုံးချင်မှ။ <b>System Settings → Billing &amp; Payment → Payment Gateway → Confirm compliance</b>။ စည်းမျဉ်း ၆ ချက်ကို <b>ဖတ်ပြီးမှ</b> အတည်ပြု — ကိုယ့်တာဝန်ယူတဲ့ ကတိပါ။ စာသားကို ဘောက်စ် ၄ ခုမှာ <b>တစ်လုံးမကျန်</b> ကိုက်အောင်ရိုက်ရတယ် (အမှားတစ်လုံးနဲ့ ပိတ်တယ်)။
+{UN} ဥပဒေအကြံမဟုတ်။</li>
+<li><span class="t">Member key ထုတ်</span>
+<b>API Keys → Create API Key</b>: Name၊ Group <code>default</code>၊ Expiration၊ <b>Quota (USD)</b> (ပုံသေ 10 ကို ပြောင်း — 1M token ဆို <b>1.2</b>)၊ <b>Unlimited Quota ပိတ်</b>၊ Advanced Settings မှာ model ကန့်သတ်ချက်ရှိရင် flash တစ်ခုတည်း {UN}။
+<span class="see">မြင်ရမယ့်ပုံ: စာရင်းမှာ key ပေါ်ပြီး Quota ကော်လံမှာ ဂဏန်းပြ။</span></li>
+<li><span class="t">စမ်းသပ်အတည်ပြု</span>
+(က) Playground မှာ "hi"။ (ခ) Termux မှာ curl (အခန်း A)။ (ဂ) Gateway <b>Usage Logs</b> မှာ request ပေါ်လား၊ <b>5 မိနစ်လောက်နေပြီး</b> DeepSeek Usage မှာ request/token အရေအတွက် ကိုက်လား ကြည့်။
+<span class="see">ကျွန်တော်တို့ရလဒ်: Gateway နဲ့ DeepSeek ရဲ့ request/token အရေအတွက် ကိုက်ညီခဲ့ {OK}။</span></li>
+</ol>
+{callout('tip','အကြံ', '<p>Step တစ်ခုအောင်တိုင်း screenshot ရိုက်ထား (key မပါအောင်)။ ပြဿနာဖြစ်ရင် Claude ကို ပြပြီး "နောက်တစ်ဆင့်" မေးလို့ရတယ်။</p>')}
+</section>
+
+<section class="chapter">
+<div class="opener"><div class="num">05</div><h1>စျေးနှုန်းနဲ့ credit တွက်နည်း</h1><p class="promise">"1M token ပေးမယ်" ဆိုတာကို ဘယ်လို $ ပြောင်းမလဲ၊ ဘာကြောင့် 1.2 လဲ၊ ရှုံးမှာကို ဘယ်လိုကာကွယ်မလဲ။</p></div>
+
+<h2>အခြေခံ ပုံသေနည်း</h2>
+{fig(C.credit_flow(), 'ကျသင့်ငွေ = (မေးတဲ့ token × input စျေး + ဖြေတဲ့ token × output စျေး) ÷ 1,000,000')}
+<div class="formula">ကျသင့်ငွေ ($) = ( input token × input စျေး + output token × output စျေး ) ÷ 1,000,000</div>
+<p>Gateway ရဲ့ အတွင်းယူနစ်က <b>$1 = 500,000 quota ယူနစ်</b> ပါ။ ကျွန်တော်တို့ တကယ်တိုင်းတာတဲ့ ဥပမာ: <b>1,186 token × 1.2 ÷ 1,000,000 = $0.001423</b> — Termux chat script ပြတာနဲ့ အတိအကျကိုက်တယ်။ {OK}</p>
+
+<h2>DeepSeek ရဲ့ စျေးအစစ် (၁သန်း token)</h2>
+<table class="tbl">
+<tr><th></th><th class="n">flash Off-peak</th><th class="n">flash Peak</th><th class="n">pro Off-peak</th><th class="n">pro Peak</th></tr>
+<tr><td>Input (cache hit)</td><td class="n">$0.003</td><td class="n">$0.006</td><td class="n">$0.022</td><td class="n">$0.044</td></tr>
+<tr><td>Input (cache miss)</td><td class="n">$0.15</td><td class="n hl">$0.30</td><td class="n">$0.66</td><td class="n hl">$1.32</td></tr>
+<tr><td>Output</td><td class="n">$0.60</td><td class="n hl">$1.20</td><td class="n">$1.98</td><td class="n hl">$3.96</td></tr></table>
+<p class="small">အရင်းအမြစ်: api-docs.deepseek.com/quick_start/pricing (2026-10-15 မှာ မြင်ခဲ့တာ) {OK}။ <b>Off-peak က Peak ရဲ့ တစ်ဝက်</b>။ Peak အချိန် = UTC 01:00–04:00 နဲ့ 06:00–10:00၊ တနင်္လာ–သောကြာ (တရုတ်အားလပ်ရက်မပါ) = <b>မြန်မာအချိန် 07:30–10:30 နဲ့ 12:30–16:30</b>။ ကျန်အချိန်အကုန် (စနေ၊ တနင်္ဂနွေပါ) Off-peak။ စျေးတွေ ပြောင်းနိုင်လို့ ပြန်စစ်ပါ။</p>
+
+<h2>ဘာကြောင့် flash ကို Input 1.2 / Output 1.2 ထားတာလဲ</h2>
+<p>Gateway မှာ key ကန့်သတ်ချက်က <b>$ နဲ့ပဲ</b> သတ်မှတ်လို့ရတယ်၊ <b>token အရေအတွက်နဲ့ တိုက်ရိုက်မရဘူး</b>။ ဒါပေမဲ့ <b>input နဲ့ output စျေးကို တူအောင်</b> ထားလိုက်ရင် "1M token" ဟာ <b>စာလုံးအတိုင်း</b> ဖြစ်သွားတယ်:</p>
+<div class="formula">စျေးကို 1.2 ထားရင် &nbsp; quota $1.2 = token 1,000,000 (input + output ပေါင်း)</div>
+<p><b>ဘာကြောင့် 1.2 လဲ?</b> DeepSeek flash ရဲ့ <b>အမြင့်ဆုံးစျေး</b> (output၊ Peak) က $1.2 ပါ။ အဲဒီစျေးကို input/output နှစ်ခုလုံးမှာ ကောက်ရင် <b>ဘယ်လိုသုံးသုံး ကိုယ်ပေးရတာ ကောက်တာထက် မများနိုင်ဘူး</b>။</p>
+{fig(g1, 'Token 1M ရဲ့ ကိုယ့်တကယ့်ကုန်ကျစရိတ် (flash)။ အစက်ဖြတ်မျဉ်းက Gateway ကောက်တာ ($1.20)၊ ဘယ်ဆီမှာမှ မျဉ်းကို မကျော်ဘူး — ဒါက ကာကွယ်ချက်။')}
+{callout('why','ဘာကြောင့်', '<p>ပိုက်ဆံရှုံးတာ (ကောက်တာ &lt; ပေးရတာ) ကို ကာကွယ်ဖို့ <b>အမြင့်ဆုံးစျေးကို ရွေး</b>တယ်။ Off-peak (တစ်ဝက်)၊ cache hit၊ input များတာတွေက ကိုယ့်ဘက် အပိုလက်ကျန် ဖြစ်စေတယ်။</p>')}
+{callout('warn','သတိ', '<p><b>အားနည်းချက်:</b> input များတဲ့ member (ကုဒ်အကြီးကြီး ထည့်မေးတဲ့သူ) က တကယ့်ကုန်ကျစရိတ်ထက် ပိုကောက်ခံရလို့ quota မြန်ကုန်တယ်။ Giveaway မှာ ရပါတယ်၊ ရောင်းမယ်ဆိုရင်တော့ ဒီပုံစံ မသင့်။</p>')}
+
+<h2>Member ကို ဘယ်လောက်ပေးမလဲ</h2>
+{fig(g2, 'စျေး 1.2 ထားရင် key quota = token (သန်း) × 1.2')}
+<table class="tbl"><tr><th>ပေးမယ့် token</th><th class="n">Key quota ($)</th><th class="n">ကိုယ်ကုန်ဆုံးရှုံးမှု အများဆုံး ($)</th></tr>
+<tr><td>300K</td><td class="n hl">0.36</td><td class="n">0.36</td></tr>
+<tr><td>500K</td><td class="n hl">0.60</td><td class="n">0.60</td></tr>
+<tr><td>1M</td><td class="n hl">1.20</td><td class="n">1.20</td></tr>
+<tr><td>3M</td><td class="n hl">3.60</td><td class="n">3.60</td></tr></table>
+
+<h2>DeepSeek ပိုက်ဆံက member ဘယ်နှယောက်ကို ဖြည့်နိုင်လဲ</h2>
+{fig(g3, 'အဆိုးဆုံး = member တိုင်း 1M ကို output သက်သက်၊ Peak မှာသုံး ($1.2/ဦး)။ ပျမ်းမျှ = 50/50၊ Peak ($0.75/ဦး)။ ခန့်မှန်းချက်များ။')}
+<p>Thinking mode ကြောင့် output ပိုကုန်တတ်လို့ <b>အဆိုးဆုံးတန်ဖိုးကို ယုံပါ</b>၊ ပျမ်းမျှကို မယုံပါနဲ့။ DeepSeek ထဲက ပိုက်ဆံ ≥ (ထုတ်ပေးတဲ့ key quota စုစုပေါင်း) ဖြစ်ရမယ်။</p>
+
+<h2>Pro ကို giveaway မှာ မပေးသင့်ဘူး</h2>
+<p>Pro ရဲ့ Output ($3.96) က flash ($1.2) ထက် <b>၃ ဆကျော်</b> စျေးကြီးတယ်။ ဒါကြောင့် member key မှာ <b>model ကို flash တစ်ခုတည်း</b> ကန့်သတ် (Advanced Settings မှာ ရှိရင်) {UN}။ ကိုယ်ကိုယ်တိုင်သုံးမယ့် pro စျေးက <b>1.32 / 3.96</b> ဖြစ်လို့ input/output မတူတာကို သတိထားပါ — "1M token = $X" ရိုးရိုးမဖြစ်တော့ဘူး။</p>
+
+<h2>Model ratio (docs ကနေ ခန့်မှန်းတာ)</h2>
+<p>New-api docs ရဲ့ ဥပမာတွေကိုကြည့်ရင် <b>model ratio ≈ input $/1M ÷ 2</b>၊ <b>completion ratio ≈ output ÷ input</b> လို့ ထင်ရတယ်။ ဒါပေမဲ့ <b>ကိုယ်တိုင်အတည်မပြုရသေးလို့</b> {UN}၊ ကျွန်တော်တို့က ratio မသုံးဘဲ UI ရဲ့ <b>$ / 1M token</b> ထည့်တဲ့နည်း (Expression editor) ကိုပဲ သုံးခဲ့တယ်။</p>
+</section>
+
+<section class="chapter">
+<div class="opener"><div class="num">06</div><h1>Model ထည့်နည်း၊ ဝယ်နည်း</h1><p class="promise">Provider ဘယ်လိုရွေးမလဲ၊ ငွေဘယ်လိုဖြည့်မလဲ၊ Channel form က ဘာတွေလဲ၊ ဘာကို မဝယ်သင့်လဲ။</p></div>
+
+<h2>Provider ရွေးတဲ့အခါ မေးရမယ့်မေးခွန်း ၄ ခု</h2>
+<ol><li>ငွေဘယ်လိုဖြည့်လဲ၊ မြန်မာကနေ ကိုယ့်ကတ်နဲ့ ရလား? (DeepSeek: Visa နဲ့ ရခဲ့ {OK}။)</li>
+<li>စျေးဘယ်လောက်လဲ၊ input/output တူလား၊ peak ရှိလား?</li>
+<li>စည်းမျဉ်းက ခွဲဝေပေးခွင့် ပြုလား?</li>
+<li>OpenAI-compatible လား (Gateway ချိတ်ဖို့)?</li></ol>
+
+<h2>ကျွန်တော်တို့ ရှာဖွေခဲ့တာ</h2>
+<table class="tbl">
+<tr><th style="width:22%">Provider</th><th>အချက်</th><th style="width:18%">အခြေအနေ</th></tr>
+<tr><td><b>DeepSeek</b></td><td>စျေးအပေါဆုံးဘက်၊ Visa နဲ့ ဖြည့်လို့ရ၊ flash + pro၊ OpenAI-format။ ကိုယ်တိုင် အသုံးပြုခဲ့။</td><td>{OK}</td></tr>
+<tr><td><b>OpenAI</b></td><td>platform.openai.com → Billing မှာ ငွေဖြည့်၊ API key ထုတ်။ <b>Myanmar က ထောက်ပံ့တဲ့နိုင်ငံစာရင်းထဲ ပါတယ်လို့ ရှာတွေ့</b> (စာမျက်နှာအစစ်မှာ ပြန်စစ်)။ <b>Services Agreement မှာ account ပြန်ငှား/ရောင်းတာ နဲ့ API key ရောင်းဝယ်လွှဲပြောင်းတာ တားမြစ်ထား</b>။ GPT-6 Sol စျေး $2 / $10 (၁သန်း) ဆိုတာ third-party စာမျက်နှာကနေသာ ရှာတွေ့ — official စာမျက်နှာနဲ့ တိုက်စစ်။</td><td>{UN}</td></tr>
+<tr><td><b>Anthropic</b></td><td>Commercial Terms အရ Anthropic ခွင့်ပြုမှ API ပြန်ရောင်းလို့ရ။ ကိုယ့် app ထဲ ထည့်ပြီး ကိုယ့် user တွေကို ဝန်ဆောင်မှုပေးတာတော့ ပြု။</td><td>{UN}</td></tr>
+<tr><td><b>Gateway အစားထိုး</b></td><td>one-api (မူလ)၊ LiteLLM (self-host)၊ OpenRouter-အမျိုးအစား aggregator များ။ ဒါတွေက ပြန်ရောင်းဖို့ discount program မဟုတ်၊ ရင်းမြစ်ပေါင်းစုံကို တစ်နေရာထဲက ခေါ်ဖို့။</td><td>{UN}</td></tr></table>
+
+{callout('sec','လုံခြုံရေး', '<p><b>"Claude/GPT ကို အလွန်ပေါတဲ့စျေးနဲ့" ရောင်းတဲ့ နေရာတွေကို မဝယ်ပါနဲ့။</b> ခိုးကတ်၊ ခိုးထားတဲ့ key၊ ဝေမျှထားတဲ့ credit တွေကနေ လာတာ များတယ်။ ဘယ်အချိန်မဆို key ပိတ်ခံရနိုင်ပြီး ကိုယ့် member တွေ ဒုက္ခရောက်မယ်။</p>')}
+
+<h2>Channel form က ဘာတွေလဲ</h2>
+<table class="tbl"><tr><th style="width:26%">Field</th><th>ဘာလဲ / ဘာထည့်မလဲ</th></tr>
+<tr><td><b>Name</b></td><td>ကိုယ်ကြိုက်တဲ့နာမည် (ဥပမာ DeepSeek)။</td></tr>
+<tr><td><b>Base URL</b></td><td>Official provider (DeepSeek စသည်) မှာ <b>ဗလာထား</b> — Gateway မှာ ပါပြီးသား။ တတိယပါတီ proxy မှာပဲ ဖြည့်။ <code>/v1</code> မထည့်ရ။</td></tr>
+<tr><td><b>API Key</b></td><td>Provider ဆီက ရတဲ့ <b>အစစ်</b> key (Gateway ရဲ့ key မဟုတ်)။ Single Key mode။</td></tr>
+<tr><td><b>Models</b></td><td><b>Fetch from Upstream</b> က provider ဆီက စာရင်းအစစ်ကို ဆွဲ (key မှန်ကြောင်းလည်း သက်သေ)။ <b>Fill Related Models</b> က preset စာရင်း (provider မတူတာတွေပါနိုင်လို့ သတိ)။</td></tr>
+<tr><td><b>Groups</b></td><td><code>default</code>။ ဘယ် user group က ဒီ channel သုံးလို့ရလဲ။</td></tr>
+<tr><td><b>Set up model redirects</b></td><td>Member ကို "my-model" လို နာမည်တစ်ခုပေး၊ နောက်ကွယ်မှာ ဘယ် model သုံးလဲ ကိုယ်ပြောင်းလို့ရ {UN} (မစမ်းရသေး)။</td></tr></table>
+
+<h2>Model အသစ်ထည့်တဲ့ အလုပ်စဉ်</h2>
+<div class="cards">
+<div class="c"><h4>၁။ Provider key ယူ</h4><p>Provider မှာ ငွေဖြည့်၊ key ထုတ်။</p></div>
+<div class="c"><h4>၂။ Channel ထည့်</h4><p>Create Channel → provider → key → Fetch from Upstream။</p></div>
+<div class="c"><h4>၃။ စျေးသတ်မှတ်</h4><p>Models → Pricing → input/output ($/1M)။ <b>မသတ်မှတ်ရင် $75 ပုံသေ</b>။</p></div>
+<div class="c"><h4>၄။ စမ်းပြီး တိုက်စစ်</h4><p>Playground → Usage Logs → Provider usage။</p></div></div>
+</section>
+
+<section class="chapter">
+<div class="opener"><div class="num">07</div><h1>Claude နဲ့ အလုပ်လုပ်ပုံ</h1><p class="promise">ကိုယ့်ကိုယ်ကိုယ် coder မဟုတ်ဘဲ ဒီ project ကို ဘယ်လိုခိုင်းခဲ့လဲ။ Template ဆိုတာ ဘာလဲ။</p></div>
+
+<h2>ခိုင်းပုံ ၆ ချက်</h2>
+<div class="cards">
+<div class="c"><h4>၁။ Screenshot ဦးစားပေး</h4><p>ပြဿနာကို စာနဲ့ရှင်းမပြဘဲ <b>screenshot ပို့</b>။ Claude က ဖတ်ပြီး နောက်တစ်ဆင့်ပြောတယ်။</p></div>
+<div class="c"><h4>၂။ တစ်ခါမှာ တစ်ခုပဲ</h4><p>ရှုပ်လာရင် <b>"ဘာဆက်လုပ်ရမလဲ တစ်ဆင့်ပဲ"</b> လို့ ပြောတယ်။</p></div>
+<div class="c"><h4>၃။ ပုံစံအရင်၊ ခလုတ်နောက်</h4><p>"ဘယ်လိုလည်ပတ်လဲ" ကို diagram နဲ့ မေးပြီးမှ ခလုတ်နှိပ်တယ်။</p></div>
+<div class="c"><h4>၄။ နားမလည်ရင် ပြန်မေး</h4><p>"မင်းဘယ်လိုတွက်တာလဲ" ဆိုတဲ့ မေးခွန်းက ရှင်းပြချက်ကို ပိုရိုးရှင်းစေတယ်။</p></div>
+<div class="c"><h4>၅။ ဆုံးဖြတ်ချက်က ကိုယ့်လက်ထဲ</h4><p>"ပြန်မရောင်းဘူး" ဆိုတာ owner ဆုံးဖြတ်တာ၊ Claude က အစီအစဉ်ကို ပြင်တယ်။</p></div>
+<div class="c"><h4>၆။ မသိတာကို မသိဘူးပြော</h4><p>"ကျွန်တော်မမြင်ရဘူး၊ မစစ်ရသေးဘူး" လို့ ဝန်ခံခိုင်းတယ်။</p></div></div>
+
+<h2>ကူးယူသုံးလို့ရတဲ့ Prompt template များ</h2>
+<div class="quote"><b>① အသေးစိတ်မရှင်းခင်</b><br>"ဒါကို mental model အရင်ရှင်းပြပါ (diagram နဲ့)၊ ပြီးမှ အဆင့်တွေပေးပါ။"</div>
+<div class="quote"><b>② Screenshot နဲ့</b><br>"ဒီ screenshot မှာ ကျွန်တော် ဘယ်မှာရောက်နေလဲ၊ နောက်တစ်ဆင့် တစ်ခုပဲ ပြောပါ။ (key ပါရင် ဖုံးထားပါတယ်)"</div>
+<div class="quote"><b>③ ရိုးသားမှု</b><br>"ဘာတွေကို ကိုယ်တိုင်စစ်ပြီး၊ ဘာတွေကို မစစ်ရသေးလဲ ခွဲပြောပါ။ မသေချာရင် ခန့်မှန်းချက်လို့ ပြောပါ။"</div>
+<div class="quote"><b>④ မသိတာ မဖန်တီးခိုင်း</b><br>"Endpoint/API နာမည်တွေကို မကြံဖန်ပါနဲ့။ မသေချာရင် ငါ့ကို docs ပြပါ၊ မေးပါ။"</div>
+<div class="quote"><b>⑤ Chat အသစ်မကူးခင်</b><br>"ဒီ project ရဲ့ လက်ရှိအခြေအနေ၊ ဆုံးဖြတ်ချက်၊ ဆက်လုပ်ရမယ့်အရာတွေကို HANDOFF.md ဖိုင်တစ်ခုထဲ repo ထဲမှာ ရေးပေးပါ။ Secret မထည့်ပါနဲ့။"</div>
+<div class="quote"><b>⑥ Chat အသစ်စတာ</b><br>"repo ထဲက CLAUDE.md နဲ့ HANDOFF.md ကိုဖတ်ပါ။ နားလည်တာကို အတိုချုပ်ပြောပြီး ဘာဆက်လုပ်ရမလဲ တစ်ဆင့်ပဲပြောပါ။"</div>
+
+<h2>"Template" ဆိုတာ ဘာလဲ</h2>
+<p><b>Template = တစ်ခါလုပ်ပြီးသား အလုပ်ကို ပုံစံချထားပြီး နောက်တစ်ခါ တူတူပြန်သုံးတာ။</b> ဒီ project မှာ template ၅ မျိုး ကြုံခဲ့တယ်:</p>
+<div class="cards">
+<div class="c"><h4>၁။ Railway template</h4><p>Project တစ်ခုလုံးရဲ့ ပုံစံ (gateway + database + redis + volumes + password/secret ပါ) ကို one-click နဲ့ ပြန်ဆောက်တာ။ ကိုယ်တိုင် Docker မရေးရ။ {UN} Community က လုပ်ထားတာမို့ ယုံခင်းစစ်။</p></div>
+<div class="c"><h4>၂။ Pricing template</h4><p>Gateway ရဲ့ စျေးသတ်မှတ်တဲ့ preset (Fixed price၊ Tiered၊ Claude Opus ... စသည်)။ ကျွန်တော်တို့ <b>Fixed price</b> ပုံစံကိုသုံးတယ်။</p></div>
+<div class="c"><h4>၃။ Prompt template</h4><p>အပေါ်က ① မှ ⑥ — ပြန်သုံးလို့ရတဲ့ မေးခွန်းပုံစံ။</p></div>
+<div class="c"><h4>၄။ Memory template</h4><p><b>CLAUDE.md</b> (project ရဲ့ စည်းမျဉ်း) + <b>HANDOFF.md</b> (လက်ရှိအခြေအနေ)။ Chat အသစ်ကို အစကနေ မရှင်းရအောင် AI ကို "မှတ်ဉာဏ်" ပေးတယ်။</p></div>
+<div class="c"><h4>၅။ Message template</h4><p>GamePay store ရဲ့ order chat မှာ admin က "[Account details] Label: value" ပုံစံနဲ့ account ပို့တာ — တူတာကို ပြန်ရိုက်စရာမလို။</p></div></div>
+{callout('why','ဘာကြောင့်','<p>Template တွေရဲ့ အလုပ်က <b>အမှားနည်းအောင်၊ အချိန်သက်သာအောင်</b> ပါ။ ဒါပေမဲ့ template တိုင်းကို <b>ကိုယ်တိုင်ဖွင့်ကြည့်ပြီး ယုံမယုံ စစ်</b>ပါ (အထူးသဖြင့် community က လုပ်တာ)၊ ကိုယ့် secret ကို ထည့်မယ့်နေရာဖြစ်လို့။</p>')}
+
+<h2>Handoff ဖိုင်ရဲ့ သဘော</h2>
+<p>Chat တစ်ခု ရှည်လာရင် AI က အစက အချက်တွေ မေ့လာတတ်တယ်။ ဒါကြောင့် <b>လက်ရှိအခြေအနေ၊ ဆုံးဖြတ်ချက်၊ အမှားတွေ၊ နောက်အဆင့်</b> ကို repo ထဲ ဖိုင်တစ်ခုအဖြစ် ရေးထားပြီး AI အသစ်ကို အဲဒါဖတ်ခိုင်းတာ။ ဒီစာအုပ်ကိုယ်တိုင်လည်း အဲဒီ handoff ဖိုင်ကနေ ထုတ်ထားတာပါ။ {OK}</p>
+</section>
+
+<section class="chapter">
+<div class="opener"><div class="num">08</div><h1>လုံခြုံရေးနဲ့ အမှားများ</h1><p class="promise">ကျွန်တော်တို့ တကယ်လုပ်မိတဲ့ အမှားတွေ။ သင်မဖြစ်ရအောင်။</p></div>
+
+<h2>လုပ်မိတဲ့ အမှားစာရင်း</h2>
+<table class="tbl">
+<tr><th style="width:30%">ဖြစ်ခဲ့တာ</th><th style="width:30%">ဘာကြောင့်</th><th>ဘယ်လိုရှင်းလဲ</th></tr>
+<tr><td>Key အပြည့် screenshot မှာ ပေါ်သွား</td><td>Key ဘောက်စ်ကို ဖုံးမထား</td><td>Key ကို ဖျက်ပြီး အသစ်ထုတ်။ Screenshot မပို့ခင် crop/ဖုံး။</td></tr>
+<tr><td>Admin menu မပေါ်</td><td><b>Login</b> အစား <b>Sign up</b> နှိပ်ပြီး ပုံမှန် user (ID 2) ဖြစ်သွား</td><td>Wizard မှာ ဖန်တီးတဲ့ root နဲ့ Login။ Password ကို ချက်ချင်းမှတ်။ မှတ်မိရင်မလုံရင် project အသစ်ပြန်စ။</td></tr>
+<tr><td>Playground ပွင့်ပေမဲ့ model မပေါ်</td><td>Channel မထည့်ရသေး</td><td>Channel ထည့် (အဆင့် ၆)။</td></tr>
+<tr><td>"Model Price Not Configured"</td><td>စျေးမသတ်မှတ်ရသေး ($75 ပုံသေ)</td><td>Models → Pricing (အဆင့် ၇)။</td></tr>
+<tr><td>Compliance box မလွှတ်</td><td>စာတစ်လုံးမှား ("deloyment")</td><td>ဘောက်စ် ၄ ခုလုံး တစ်လုံးမကျန် ကိုက်အောင်။</td></tr>
+<tr><td>Key ဖျက်ပေမဲ့ Playground ဆက်သုံးလို့ရ</td><td>Playground က key မသုံး၊ session သုံး</td><td>ပုံမှန်ပါ။ ပြင်ပ curl နဲ့ စမ်းမှ ဖျက်ပြီးလား သိ။</td></tr>
+<tr><td>Termux "command not found: [200~python"</td><td>Paste မှာ <code>[200~</code> အမှိုက်ပါ</td><td>တိုတဲ့ command ကို ကိုယ်တိုင်ရိုက်။</td></tr>
+<tr><td>Chat script ထဲ cat… paste မိ</td><td><code>You:</code> prompt ရှေ့မှာ paste</td><td><code>~ $</code> မြင်မှ command paste။ Ctrl+C နဲ့ ရပ်။</td></tr>
+<tr><td>Python <code>IncompleteRead</code></td><td>urllib နဲ့ Railway edge ကြား ပြတ်</td><td>Script က <b>curl</b> ကိုခေါ်အောင် ပြောင်း။</td></tr>
+<tr><td>စျေး Input 0 / Output 0 နီးပါး သိမ်းမိ</td><td>ဖောင်ဗလာနဲ့ Save</td><td>ဂဏန်းမှန်ပြီးမှ Save၊ "Current Billing" ပြောင်းလား စစ်။</td></tr>
+<tr><td>Railway "Oh No! the train derailed"</td><td>ဖျက်ပြီးသား project ရဲ့ URL အဟောင်း</td><td>Dashboard မှာ အသစ်ပြန်စ။</td></tr>
+<tr><td>DeepSeek က request ၁ ခုလျော့ပြ</td><td>Usage dashboard က 5 မိနစ်လောက် နှောင့်နှေး</td><td>5 မိနစ်စောင့်ပြီး ပြန်ကြည့်။</td></tr>
+</table>
+
+<h2>လုံခြုံရေး စစ်ဆေးစာရင်း</h2>
+<table class="tbl"><tr><th style="width:8%"> </th><th>အချက်</th><th style="width:22%">ဘယ်အချိန်</th></tr>
+<tr><td>☐</td><td><b>Admin password</b> ကို ခိုင်ခံ့အောင်၊ password manager ထဲ သိမ်း။</td><td>Wizard မှာ</td></tr>
+<tr><td>☐</td><td>Chat ထဲ ပေါ်ခဲ့တဲ့ key အားလုံးကို <b>ဖျက်ပြီး အသစ်ထုတ်</b>။</td><td>စမ်းပြီးတာနဲ့</td></tr>
+<tr><td>☐</td><td>Public <b>sign-up ပိတ်</b> (member တွေအကောင့်မလိုရင်) — System Settings → Authentication {UN}။</td><td>Live မဖြစ်ခင်</td></tr>
+<tr><td>☐</td><td><b>2FA</b> ဖွင့် (Security &amp; Access ထဲမှာ ရှိရင်) {UN}။</td><td>Live မဖြစ်ခင်</td></tr>
+<tr><td>☐</td><td>Member key တိုင်း: <b>quota</b>၊ <b>model ကန့်သတ်</b> (flash)၊ <b>သက်တမ်း</b>။</td><td>Key ထုတ်တိုင်း</td></tr>
+<tr><td>☐</td><td>DeepSeek <b>Balance alert</b> ဖွင့်၊ ထုတ်ပေးတဲ့ quota စုစုပေါင်း ≤ DeepSeek ပိုက်ဆံ။</td><td>Key မထုတ်ခင်</td></tr>
+<tr><td>☐</td><td>Railway <b>usage limit</b> သတ်မှတ်၊ Trial $5 ကို ကြည့်ပါ။</td><td>တစ်ပတ်တစ်ခါ</td></tr>
+<tr><td>☐</td><td>Provider terms ဖတ် (key မျှဝေတာ၊ ပြန်ရောင်းတာ)။</td><td>Provider အသစ်တိုင်း</td></tr>
+<tr><td>☐</td><td>Upstream key ကို Gateway ထဲပဲထား၊ chat/screenshot/repo ထဲ မထည့်။</td><td>အမြဲတမ်း</td></tr></table>
+
+<h2>ဥပဒေ/စည်းမျဉ်း ကိုင်တွယ်ပုံ</h2>
+<p>New-api က <b>compliance terms</b> ကို ဖတ်ပြီး အတည်ပြုမှ payment/redemption code တွေ ဖွင့်ပေးတယ်။ ၆ ချက်စလုံးကို ဖတ်ပါ။ အဓိကအချက်တွေက — (၁) သုံးတဲ့ API/key/account အတွက် <b>တရားဝင်ခွင့်ပြုချက်ရှိတယ်</b> (၂) ခွင့်ပြုချက်အတိုင်းပဲ သုံးမယ်၊ <b>ခွင့်ပြုချက်မရှိဘဲ ပြန်ရောင်း/ကုန်သွယ်တာ မလုပ်ဘူး</b> (၃) ဥပဒေအရ တာဝန်ကို <b>ကိုယ်တိုင်ခံယူ</b>မယ်။ ကျွန်တော်တို့ ဒီအချက်ကို ဖတ်ပြီး <b>ပြန်မရောင်း၊ giveaway နဲ့ပဲသွား</b>မယ်လို့ ဆုံးဖြတ်ခဲ့တယ်။ ဒါပေမဲ့ <b>giveaway ဟာလည်း provider (DeepSeek) ရဲ့ စည်းမျဉ်းနဲ့ ဆန့်ကျင်သလားဆိုတာ မစစ်ရသေးဘူး</b> {UN}။ Member အများကြီးမပေးခင် DeepSeek ရဲ့ terms ကိုဖတ်ပါ။</p>
+</section>
+
+<section class="chapter">
+<div class="opener"><div class="num">09</div><h1>အဖွဲ့ဝင်တွေကို key ပေးမယ် + Usage page</h1><p class="promise">Team member တစ်ယောက်ချင်းစီကို 1M token ပေးပြီး သူတို့သုံးတာကို ပြမယ့် စာမျက်နှာ စိတ်ကူး။</p></div>
+
+<h2>Member key ပေးတဲ့ လုပ်ငန်းစဉ်</h2>
+<ol class="steps">
+<li><span class="t">တစ်ခါပဲလုပ် — flash စျေး 1.2 / 1.2</span>Models → flash → Pricing → Input 1.2 / Output 1.2 → Save။ (Current Billing စစ်)</li>
+<li><span class="t">Member တစ်ယောက်ကို key တစ်ခု</span>API Keys → Create API Key။ Name = member နာမည်၊ Quota = <b>1.2</b> (1M)၊ Unlimited <b>ပိတ်</b>၊ ရှိရင် flash တစ်ခုတည်း၊ သက်တမ်း။</li>
+<li><span class="t">ပေးရမယ့်အချက် ၃ ခု</span><b>Base URL</b> (<code>https://&lt;gateway&gt;/v1</code>)၊ <b>API key</b>၊ <b>Model</b> <code>deepseek-flash</code>။</li>
+<li><span class="t">Member ဘယ်လိုသုံးလဲ</span>VS Code (Cline/Continue) မှာ "OpenAI Compatible" ရွေးပြီး ၃ ချက်ထည့်၊ ဒါမှမဟုတ် Cherry Studio လို chat app၊ ဒါမှမဟုတ် Termux script။</li>
+<li><span class="t">သင့်ဘက်က စောင့်ကြည့်</span>Gateway ရဲ့ <b>Usage Logs</b> မှာ key နာမည်အလိုက် မြင်ရ။ DeepSeek Usage နဲ့ ကိုက်လား တစ်ပတ်တစ်ခါစစ်။</li></ol>
+{callout('tip','အကြံ', '<p><b>ပထမ ၁ ယောက်နဲ့ စမ်းပြီး</b> Usage Logs ကို ကြည့်ပါ၊ နောက်မှ ကျန်သူတွေကို ပေးပါ။ Thinking mode ကြောင့် quota က မျှော်မှန်းထက် မြန်ကုန်နိုင်လို့ 300K–500K နဲ့ စပါ။</p>')}
+
+<h2>Usage page ဆိုတာ</h2>
+<p>စိတ်ကူးက — <b>member က website မှာ ကိုယ့် key ကိုထည့်ပြီး "ကန့်သတ်ချက်၊ သုံးပြီး၊ ကျန်" ကိုမြင်ရတာ</b>၊ model လည်းရွေးလို့ရ။ GamePay Hub ရဲ့ lavender ပုံစံနဲ့ ရေးမယ်။</p>
+{fig(C.phone_wireframe(), 'Usage page ရဲ့ ပုံစံကြမ်း။ ဂဏန်းတွေက ပုံစံပြပဲ၊ တကယ့်ဒေတာ မဟုတ်။')}
+
+<h2>မစစ်ရသေးတဲ့ အဓိကပြဿနာ</h2>
+{callout('warn','သတိ', f'<p><b>Plain API key တစ်ခုက ကိုယ့်ကျန်ရှိ quota ကို Gateway ကနေ ဖတ်လို့ရလား</b> ဆိုတာ {UN}။ အချို့ gateway တွေက balance ကြည့်ဖို့ <b>admin token</b> ကိုပဲ ခွင့်ပြုတယ်၊ ဒါဆိုရင် admin token ကို <b>public website ထဲ ဘယ်တော့မှ မထည့်ရ</b> — server-side (ဥပမာ Supabase Edge Function) ကနေ ကြားဝင်ရမယ်။ Endpoint အတိအကျကို <b>docs.newapi.ai</b> (သို့) source code မှာ အတည်ပြုပြီးမှ UI ကိုရေးပါ။ မကြံဖန်ပါနဲ့။</p>')}
+<table class="tbl"><tr><th>အခြေအနေ</th><th>လုပ်ရမယ့်နည်း</th></tr>
+<tr><td>Key ကိုယ်တိုင်နဲ့ လက်ကျန်ဖတ်လို့ရ + browser ကနေခေါ်ခွင့်ရ (CORS)</td><td>Static page (GitHub Pages) တစ်ခုတည်း လုံလောက်။</td></tr>
+<tr><td>Admin token လို</td><td>Server-side proxy လို (secret ကို ဒီမှာသိမ်း)။</td></tr>
+<tr><td>CORS ပိတ်</td><td>Proxy လိုမယ်။</td></tr></table>
+
+<h2>Repo တစ်ခုတည်းလား၊ ခွဲမလား</h2>
+<p>ကျွန်တော်တို့ <b>GamePay repo ထဲမှာပဲ</b> ထားဖို့ အကြံပေးတယ်: Usage page ကို <code>gamepayhub.shop</code> ထဲမှာပဲထည့်ရင် link ချိတ်ရလွယ်၊ CLAUDE.md ကို AI တိုင်း အလိုလိုဖတ်လို့ context မပျောက်ဘူး။ <b>သတိ:</b> GitHub Pages က repo တစ်ခုလုံးကို ထုတ်ပြန်တယ်၊ Jekyll က <code>_</code> နဲ့စတဲ့ folder (ဥပမာ <code>_notes/</code>) ကို မထုတ်ဘူး။ ဒါပေမဲ့ repo က public ဖြစ်နိုင်လို့ <b>secret ဘယ်တော့မှ မထည့်ရ</b>။ Usage page က backend ပါလာရင် repo သီးသန့်ခွဲပါ။</p>
+</section>
+
+<section class="chapter">
+<div class="opener"><div class="num">A</div><h1>နောက်ဆက်တွဲ</h1><p class="promise">စကားလုံးရှင်းလင်းချက်၊ command စာရင်း၊ ပြဿနာရှင်းနည်း၊ Termux chat script၊ ဆက်ဖတ်ရန်။</p></div>
+
+<h2>A1 · စကားလုံးရှင်းလင်းချက်</h2>
+<table class="tbl"><tr><th style="width:24%">စကားလုံး</th><th>အဓိပ္ပါယ်</th></tr>
+<tr><td><b>Token</b></td><td>AI က စာကိုဖတ်/ရေးတဲ့ အပိုင်းအစ။ စျေးကို token ၁သန်းနဲ့ တွက်။</td></tr>
+<tr><td><b>Input / Output</b></td><td>မေးတဲ့ token / ဖြေတဲ့ token (စျေးမတူ)။</td></tr>
+<tr><td><b>Reasoning / Thinking</b></td><td>AI စဉ်းစားတဲ့ token (output အဖြစ် ရေတွက်ခံရ)။</td></tr>
+<tr><td><b>API</b></td><td>Program တစ်ခုကို တခြား program က ခေါ်သုံးတဲ့ ပေါက်ဝ။</td></tr>
+<tr><td><b>API key</b></td><td><code>sk-…</code> ဝင်ခွင့်ပါတ်စ်။ လျှို့ဝှက်ထား။</td></tr>
+<tr><td><b>Gateway</b></td><td>Key စစ်၊ quota နှုတ်၊ မှတ်တမ်းတင်ပြီး provider ဆီ ပို့ပေးတဲ့ reception။</td></tr>
+<tr><td><b>Channel</b></td><td>Gateway ထဲမှာ provider တစ်ခုချင်းရဲ့ ချိတ်ဆက်မှု (provider key ပါ)။</td></tr>
+<tr><td><b>Group</b></td><td>User/key တွေကို အုပ်စုခွဲတာ။ <code>default</code> ပုံသေ။</td></tr>
+<tr><td><b>Quota / Credit</b></td><td>သုံးခွင့်ရှိတဲ့ ပမာဏ ($ တန်ဖိုး)။ $1 = 500,000 ယူနစ်။</td></tr>
+<tr><td><b>Base URL</b></td><td>App က ခေါ်ရမယ့် Gateway လိပ်စာ (<code>https://…/v1</code>)။</td></tr>
+<tr><td><b>Playground</b></td><td>Gateway ထဲက စမ်းသုံး chat (login session သုံး၊ key မလို)။</td></tr>
+<tr><td><b>Cache hit / miss</b></td><td>အရင်မေးထားတဲ့ အပိုင်းကို ပြန်သုံးရင် hit (စျေးသက်သာ)။</td></tr>
+<tr><td><b>Peak / Off-peak</b></td><td>DeepSeek ရဲ့ အချိန်အလိုက်စျေး (Off-peak က တစ်ဝက်)။</td></tr>
+<tr><td><b>Docker / Container / Image</b></td><td>Program ကို လိုတာအကုန်နဲ့ ပုံးတစ်ခုထဲ ထည့်ထားတာ (image = မှို၊ container = run နေတဲ့ပုံး)။</td></tr>
+<tr><td><b>Volume</b></td><td>Container ပျက်ပေမဲ့ data မပျောက်အောင် သိမ်းတဲ့ပြင်ပနေရာ။</td></tr>
+<tr><td><b>Template (Railway)</b></td><td>Project ပုံစံပြင်ပြီးသား one-click blueprint။</td></tr>
+<tr><td><b>DNS / CNAME</b></td><td>Domain နာမည်ကို server လိပ်စာဆီ ညွှန်တဲ့ မှတ်တမ်း။</td></tr>
+<tr><td><b>CORS</b></td><td>Website တစ်ခုက တခြား domain ကို browser ကနေ ခေါ်ခွင့်ရှိမရှိ ထိန်းတဲ့စည်းမျဉ်း။</td></tr>
+<tr><td><b>Root admin</b></td><td>Setup wizard မှာ ဖန်တီးတဲ့ အကြီးဆုံး admin အကောင့် (User ID 1)။</td></tr></table>
+
+<h2>A2 · Command စာရင်း (Termux)</h2>
+<pre class="code">pkg install curl python -y
+export GW_KEY="paste-your-key-here"      # key ကို ကိုယ်တိုင်ထည့်၊ chat မှာမပို့နဲ့
+echo ${{#GW_KEY}}                          # key ရှိလား (အရှည်ပြ)
+
+curl https://&lt;your-gateway&gt;/v1/chat/completions -H "Authorization: Bearer $GW_KEY" -H "Content-Type: application/json" -d '{{"model":"deepseek-flash","messages":[{{"role":"user","content":"hi"}}]}}'
+
+python chat.py                                   # flash နဲ့ chat
+GW_MODEL=deepseek-v4-pro python chat.py          # pro နဲ့ chat</pre>
+{callout('tip','အကြံ', '<p>Termux ကို ပိတ်ပြီးပြန်ဖွင့်ရင် <code>GW_KEY</code> ပျောက်တယ်၊ <code>export</code> ကို ပြန်ရိုက်ရမယ်။ အရှည် command (ဖိုင်ဖန်တီး) ကို paste လုပ်လို့ရတယ်၊ တိုတဲ့ command ကိုတော့ ကိုယ်တိုင်ရိုက်ပါ။</p>')}
+
+<h2>A3 · ပြဿနာရှင်းနည်း</h2>
+<table class="tbl"><tr><th style="width:31%">ဖြစ်တာ</th><th style="width:30%">ဖြစ်နိုင်တာ</th><th>လုပ်ရမယ့်အရာ</th></tr>
+<tr><td>401 / invalid token</td><td>Key မှား / ဖျက်ပြီး</td><td>Key အသစ်ထုတ်၊ ပြန်ကူးထည့်။</td></tr>
+<tr><td>quota / insufficient</td><td>Key ရဲ့ quota ကုန် / user balance ကုန်</td><td>Key quota တိုး၊ user balance စစ်။</td></tr>
+<tr><td>Model Price Not Configured</td><td>စျေးမသတ်မှတ်ရသေး</td><td>Models → Pricing။</td></tr>
+<tr><td>Could not resolve host</td><td>Domain စာလုံးပေါင်းမှား</td><td>Browser လိပ်စာဘားနဲ့ တိုက်စစ်။</td></tr>
+<tr><td>ပြင်ပ app မှာ model မပေါ်</td><td>Channel မှာ model မပါ / key ကန့်သတ်</td><td>Channel models စစ်၊ key model limit စစ်။</td></tr>
+<tr><td>Playground ရ၊ key နဲ့မရ</td><td>Playground က session သုံး</td><td>Key၊ Base URL (<code>/v1</code> ပါလား) စစ်။</td></tr>
+<tr><td>DeepSeek usage လျော့ပြ</td><td>5 မိနစ် နှောင့်နှေး</td><td>စောင့်ပြီး refresh။</td></tr>
+<tr><td>Railway error စာမျက်နှာ</td><td>URL အဟောင်း / ယာယီ</td><td>Dashboard ကနေ ပြန်စ။</td></tr></table>
+
+<h2>A4 · Termux chat script (<code>chat.py</code>)</h2>
+<p class="small">Key မပါ။ <code>GW_KEY</code> ကို environment ကဖတ်တယ်။ <b>curl</b> ကိုခေါ်တာက Python <code>urllib</code> နဲ့ <code>IncompleteRead</code> ဖြစ်ခဲ့လို့။ <code>&lt;your-gateway&gt;</code> နေရာမှာ ကိုယ့် domain ထည့်။ ဖိုင်ဖန်တီးရန်: <code>cat &gt; chat.py &lt;&lt; 'EOF'</code> ပြီးရင် အောက်ကကုဒ်ကို paste၊ နောက်ဆုံးစာကြောင်း <code>EOF</code>။</p>
+<pre class="code long">{CHAT_PY.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")}</pre>
+
+<h2>A5 · ဆက်ဖတ်ရန် (အရင်းအမြစ်)</h2>
+<ul>
+<li>DeepSeek စျေးနှုန်း: <code>api-docs.deepseek.com/quick_start/pricing</code></li>
+<li>New-api docs: <code>docs.newapi.ai</code> (rate settings၊ redemption codes၊ top-up)</li>
+<li>Railway template: <code>railway.com/deploy/new-api-template</code></li>
+<li>OpenAI ထောက်ပံ့တဲ့နိုင်ငံများ: <code>help.openai.com/en/articles/5347006</code></li>
+<li>OpenAI Services Agreement: <code>cdn.openai.com/osa/openai-services-agreement.pdf</code></li>
+<li>Anthropic Commercial Terms: <code>anthropic.com/legal/commercial-terms</code></li></ul>
+
+<h2>A6 · မစစ်ရသေးတာတွေ (ကိုယ်တိုင်အတည်ပြုပါ)</h2>
+<ul>
+<li>Railway ရဲ့ ၃-service template ရဲ့ တစ်လကုန်ကျစရိတ်။ New-api ရဲ့ အနည်းဆုံး RAM။</li>
+<li>Plain API key နဲ့ ကိုယ့်လက်ကျန်ဖတ်လို့ရလား၊ endpoint၊ CORS။</li>
+<li>Create API Key ရဲ့ Advanced Settings ထဲက model limit / IP rules။</li>
+<li>DeepSeek က key တစ်ခုချင်း spending cap ပေးလား၊ DeepSeek ရဲ့ terms က key မျှဝေတာကို ပြုလား။</li>
+<li>"model ratio = input ÷ 2" စည်းကမ်း (docs ဥပမာကနေ ခန့်မှန်းတာ)။</li>
+<li>Gateway ရဲ့ "self-use mode" အတိအကျ အပြုအမူ။</li></ul>
+</section>
+
+<section class="chapter">
+<div class="opener" style="margin-top:8mm"><div class="num">✓</div><h1>ဆက်လုပ်မယ်ဆိုရင်</h1><p class="promise">ဒီစာအုပ်ကို ပြီးဆုံးတဲ့ဘေးမှာ ဒီ ၃ ခုကို ပထမလုပ်ပါ။</p></div>
+<ol class="steps">
+<li><span class="t">Key အားလုံးကို သန့်ရှင်း</span>Chat/screenshot ထဲ ပေါ်ခဲ့တဲ့ key တွေ ဖျက်၊ အသစ်ထုတ်၊ password manager ထဲ သိမ်း။</li>
+<li><span class="t">Member ၁ ယောက်နဲ့ စမ်း</span>Quota 1.2 နဲ့ key တစ်ခုထုတ်၊ Usage Logs နဲ့ DeepSeek Usage ကိုက်လား ကြည့်။</li>
+<li><span class="t">မစစ်ရသေးတာကို စစ်</span>အပိုင်း A6 စာရင်းကို တစ်ခုချင်း အတည်ပြု၊ ပြီးမှ Usage page ရေး။</li></ol>
+{callout('why','ဘာကြောင့်','<p>ဒီစာအုပ်က ပြီးပြည့်စုံတာ မဟုတ်ပါ — <b>အလုပ်လုပ်နေတုန်းရဲ့ မှတ်တမ်း</b>ပါ။ ပြင်ပြီးတာတွေ၊ ပြောင်းသွားတာတွေ ရှိလာရင် handoff ဖိုင်ကိုလည်း update လုပ်ပါ၊ ဒါမှ နောက်လူတွေ (AI အပါအဝင်) မမှားပါဘူး။</p>')}
+<p class="small" style="margin-top:20px;text-align:center">GamePay Hub · AI Gateway Field Guide · v1 · 2026-10-15</p>
+</section>
+"""
+
+SCRIPT = """<script>
+document.querySelectorAll('table.tbl').forEach(t=>{const r=t.rows[0];if(r&&r.cells[0].tagName==='TH'){const th=document.createElement('thead');t.insertBefore(th,t.firstChild);th.appendChild(r);}});
+</script>"""
+
+html = f"""<!doctype html><html lang="my"><head><meta charset="utf-8"><title>AI Gateway Field Guide</title>
+<style>{CSS.replace('@@F@@', FONTS)}</style></head><body>{BODY}{SCRIPT}</body></html>"""
+open("book.html", "w", encoding="utf-8").write(html)
+print("book.html written", len(html))
