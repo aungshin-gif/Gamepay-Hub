@@ -14,6 +14,12 @@ mental model and the result, not syntax).
 - When the owner sends several corrections, do them together in one commit.
 - **Never ask the owner to paste secrets** (Resend API key, service keys) into chat.
 
+## Second project: the owner's own LLM API gateway
+The owner is also building an **API gateway (new-api on Railway + DeepSeek)** to give team members limited-quota API keys,
+a token-usage page, and a Burmese PDF book about the journey. It is documented in **`_notes/api-gateway/`**:
+read `HANDOFF.md` first (current state, decisions, next steps, mistakes to avoid), then `BOOK_BRIEF.md` for the book.
+`_notes/` starts with an underscore so Jekyll does not publish it on the website. Never commit secrets there.
+
 ## Git / release workflow
 - Work on the branch the session assigns, commit with a clear message, push with `git push -u origin <branch>`.
 - **Do not open a PR unless the owner says "Pr"** (or asks for one). Then open it into **`mainu`**.
